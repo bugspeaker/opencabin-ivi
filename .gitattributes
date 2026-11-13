@@ -1,0 +1,6 @@
+# 저장소에는 LF 로 둔다. CI 의 Linux 호스트에서 gradlew 가 CRLF 면 실행되지 않는다
+* text=auto eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.jar binary
+*.png binary

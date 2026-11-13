@@ -1,0 +1,150 @@
+# OpenCabin IVI CI/CT
+#
+#  build  (GitHub 호스트)   앱 컴파일 확인 (assembleDebug)
+#  unit   (GitHub 호스트)   테스트 프레임워크 자체 검증 (기기 없음)
+#  e2e    (self-hosted Test Bench)  AAOS 에뮬레이터 + 태블릿에 같은 테스트를 병렬 실행
+#
+# 이벤트별 범위 (Shift-left: 빠른 것부터, 넓은 것은 Nightly)
+#  pull_request       smoke                   (약 30초, 머지 전 게이트)
+#  push(main)         smoke or sanity         (약 1~2분)
+#  schedule(Nightly)  전체 (smoke+sanity+regression+spike)
+#  workflow_dispatch  입력한 마커
+#
+# Test Bench 준비 (Windows PC 한 대):
+#  - self-hosted runner, 라벨 `ivi-bench`. 이 PC 의 사용자 계정으로 실행 (AAOS priv-app 과 같은 debug 서명 키를 쓰려고)
+#  - AAOS 에뮬레이터(-writable-system, priv-app 설치 완료), 태블릿 USB 연결, Appium 서버(127.0.0.1:4723) 상시 실행
+#  - 자세한 내용: docs/phase4-operations.md
+name: ivi-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 18 * * *"   # 매일 03:00 KST
+  workflow_dispatch:
+    inputs:
+      markers:
+        description: "pytest -m 식 (비우면 전체)"
+        required: false
+        default: "smoke or sanity"
+      repeat:
+        description: "반복 횟수 (안정성 측정)"
+        required: false
+        default: "1"
+
+# Test Bench 는 하나뿐이라 E2E 는 한 번에 하나만 돈다 (뒤에 온 실행은 기다린다)
+concurrency:
+  group: ivi-bench-${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ivi-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Android SDK (android.car 라이브러리가 든 platform 35)
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;34.0.0" > /dev/null
+      - name: Build
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk-ci
+          path: ivi-app/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+  unit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ivi-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m pytest unit --junitxml=reports/junit-unit.xml
+
+  e2e:
+    needs: [build, unit]
+    runs-on: [self-hosted, windows, ivi-bench]
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      JAVA_HOME: C:\Program Files\Android\Android Studio\jbr
+      GRADLE_USER_HOME: C:\dev\.gradle
+      ANDROID_HOME: C:\android
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: false   # reports/history (flaky 누적 기록)를 지우지 않는다
+
+      - name: Bench 점검 (기기·Appium)
+        run: |
+          adb devices -l
+          $status = try { Invoke-RestMethod http://127.0.0.1:4723/status -TimeoutSec 5 } catch { $null }
+          if (-not $status.value.ready) { throw "Appium 서버가 응답하지 않습니다 (127.0.0.1:4723)" }
+
+      # GitHub 호스트에서 만든 APK 는 서명 키가 달라 priv-app 을 덮어쓸 수 없다 → Bench 에서 다시 빌드
+      - name: Build APK on bench
+        working-directory: ivi-app
+        run: .\gradlew assembleDebug --console=plain
+
+      - name: Python 환경
+        working-directory: ivi-tests
+        run: |
+          if (-not (Test-Path .venv)) { py -m venv .venv }
+          .venv\Scripts\python -m pip install -q -r requirements.txt
+
+      - name: 앱 설치 (같은 APK 면 건너뜀)
+        working-directory: ivi-tests
+        run: .venv\Scripts\python tools\install_app.py ..\ivi-app\app\build\outputs\apk\debug\app-debug.apk
+
+      - name: E2E (기기 병렬)
+        id: e2e
+        working-directory: ivi-tests
+        run: |
+          $markers = switch ("${{ github.event_name }}") {
+            "pull_request"      { "smoke" }
+            "schedule"          { "" }
+            "workflow_dispatch" { "${{ inputs.markers }}" }
+            default             { "smoke or sanity" }
+          }
+          $repeat = if ("${{ inputs.repeat }}") { "${{ inputs.repeat }}" } else { "1" }
+          $pyArgs = @("--repeat", $repeat, "--reruns", "1", "--reruns-delay", "2")
+          if ($markers) { $pyArgs += @("-m", $markers) }
+          Write-Host "markers='$markers' repeat=$repeat"
+          .venv\Scripts\python tools\run_bench.py @pyArgs
+
+      - name: Flaky 리포트
+        if: always()
+        working-directory: ivi-tests
+        run: |
+          .venv\Scripts\python tools\flaky_report.py --last 20 --out reports\flaky-report.md
+          Get-Content reports\flaky-report.md -Encoding utf8 | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          exit 0   # 격리 후보가 있어도 리포트 단계는 실패시키지 않는다 (요약에 표시)
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-reports-${{ github.run_number }}
+          path: |
+            ivi-tests/reports/junit-*.xml
+            ivi-tests/reports/runs/
+            ivi-tests/reports/logs/
+            ivi-tests/reports/artifacts/
+            ivi-tests/reports/flaky-report.md
+          retention-days: 14

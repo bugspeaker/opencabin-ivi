@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- AAOS 에서도, 일반 태블릿에서도 설치된다 -->
+    <uses-feature android:name="android.hardware.type.automotive" android:required="false" />
+
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />          <!-- dangerous: 실행 중 요청 -->
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />     <!-- normal -->
+    <uses-permission android:name="android.car.permission.CONTROL_CAR_CLIMATE" /> <!-- signature|privileged: priv-app 설치 필요 -->
+
+    <application
+        android:name=".IviApp"
+        android:label="OpenCabin"
+        android:theme="@style/Theme.OpenCabin">
+
+        <uses-library android:name="android.car" android:required="false" />
+
+        <!-- 주행 중에도 쓰는 화면: Distraction Optimized -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|density|uiMode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="distractionOptimized" android:value="true" />
+        </activity>
+
+        <!-- 영상: DO 가 아니다. AAOS 는 주행 중에 시스템이 막고, 태블릿(Mock)에서는 앱이 직접 막는다 -->
+        <activity
+            android:name=".VideoActivity"
+            android:exported="true" />
+    </application>
+</manifest>

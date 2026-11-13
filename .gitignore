@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+reports/
+*.apk
+local.properties
+.gradle/
+build/
+.shot_*.png
+.kotlin/
+.idea/
+*.iml

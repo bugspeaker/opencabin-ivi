@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OEM 시스템 앱처럼 priv-app 으로 설치할 때 허용할 privileged 권한 목록 -->
+<permissions>
+    <privapp-permissions package="dev.opencabin.ivi">
+        <permission name="android.car.permission.CONTROL_CAR_CLIMATE" />
+    </privapp-permissions>
+</permissions>
