@@ -84,3 +84,31 @@ def test_tap_mode_by_brand_and_override(monkeypatch, brand, forced, expected):
         monkeypatch.delenv("IVI_TAP", raising=False)
     device = Device("serial", FakeAdb(), False, 0, "model", brand, MockVehicle(FakeAdb()))
     assert device.tap_mode == expected
+
+
+class FlakyAdb(FakeAdb):
+    """VHAL --set 이 처음 n 번은 실패하는 adb."""
+
+    def __init__(self, failures):
+        super().__init__()
+        self.failures = failures
+
+    def shell(self, *args, **_):
+        self.calls.append(args)
+        if "--set" in args and self.failures > 0:
+            self.failures -= 1
+            return "failed to set property: VehiclePropValue{...}"
+        return "Set property: VehiclePropValue{...}"
+
+
+def test_vhal_set_retries_once_and_records_it(monkeypatch):
+    monkeypatch.setattr("ivi.vehicle.time.sleep", lambda _: None)
+    car = AaosVehicle(FlakyAdb(failures=1))
+    car.park()
+    assert len(car.retried) == 1 and "2번째에 성공" in car.retried[0]
+
+
+def test_vhal_set_fails_after_two_attempts(monkeypatch):
+    monkeypatch.setattr("ivi.vehicle.time.sleep", lambda _: None)
+    with pytest.raises(RuntimeError, match="2회"):
+        AaosVehicle(FlakyAdb(failures=2)).park()

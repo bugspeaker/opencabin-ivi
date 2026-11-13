@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 앱 아이콘: 어두운 원 안의 아쿠아 블루 계기판 호 (제조사 로고를 쓰지 않는 자체 아이콘) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#FF070B10" android:pathData="M54,4a50,50 0,1 1,0 100a50,50 0,1 1,0 -100z" />
+    <path
+        android:strokeColor="#FF34C6D8"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:pathData="M28,72a30,30 0,1 1,52 0" />
+    <path android:fillColor="#FFEAF1F6" android:pathData="M54,54m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+    <path
+        android:strokeColor="#FFEAF1F6"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M54,54L70,38" />
+</vector>

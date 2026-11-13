@@ -45,6 +45,7 @@ class Recorder:
             "outcome": None,
             "reruns": 0,
             "relaunches": 0,
+            "infra_retries": 0,
             "duration": 0.0,
             "message": "",
             "first_error": "",
@@ -61,6 +62,8 @@ class Recorder:
         rec["duration"] = round(rec["duration"] + report.duration, 3)
         relaunches = sum(1 for key, _ in report.user_properties if key == "app_relaunch")
         rec["relaunches"] = max(rec["relaunches"], relaunches)
+        retries = sum(1 for key, _ in report.user_properties if key == "vhal_retry")
+        rec["infra_retries"] = max(rec["infra_retries"], retries)
 
         if report.outcome == "rerun":
             rec["reruns"] += 1
@@ -109,6 +112,7 @@ class Recorder:
             "duration": round(time.time() - self.started, 1),
             "counts": counts,
             "relaunches": sum(rec["relaunches"] for rec in self.records.values()),
+            "infra_retries": sum(rec["infra_retries"] for rec in self.records.values()),
             "gate": "fail" if counts.get("failed") or counts.get("error") else "pass",
         }
 

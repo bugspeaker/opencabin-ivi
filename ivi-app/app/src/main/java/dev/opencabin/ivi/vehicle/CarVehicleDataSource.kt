@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.update
  * AAOS 의 CarService 와 연결한다.
  * 속도·기어는 구독만, 공조 온도는 구독 + 쓰기. 주행 중 제한은 CarUxRestrictionsManager 를 그대로 따른다.
  */
+// registerCallback·unregisterCallback·CarPropertyValue.status 는 API 35 에서 deprecated 다.
+// 대상 기기(AAOS 에뮬레이터)가 API 34 라 대체 API(subscribePropertyEvents, propertyStatus)를 쓸 수 없어 그대로 둔다.
+@Suppress("DEPRECATION")
 class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
     override val kind = "AAOS"
 

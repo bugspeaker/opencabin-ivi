@@ -118,3 +118,11 @@ def test_flaky_report_cli_writes_markdown(tmp_path):
     out = tmp_path / "report.md"
     assert flaky_report.main(["--history", str(history), "--out", str(out)]) == 0
     assert "# Flaky 리포트" in out.read_text(encoding="utf-8")
+
+
+def test_vhal_retry_is_counted(recorder):
+    props = [("vhal_retry", "VHAL --set 0x11600207=0.0: 2번째에 성공")]
+    run(recorder, "t::v", ("setup", "passed", {}), ("call", "passed", {}), ("teardown", "passed", {"props": props}))
+    assert recorder.records["t::v"]["infra_retries"] == 1
+    assert recorder.records["t::v"]["outcome"] == "passed"
+    assert recorder.summary()["infra_retries"] == 1

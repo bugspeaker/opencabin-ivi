@@ -106,7 +106,7 @@ def pytest_terminal_summary(terminalreporter, config):
         counts = ", ".join(f"{key} {value}" for key, value in sorted(summary["counts"].items()))
         terminalreporter.write_sep("-", "ivi run")
         terminalreporter.write_line(f"{summary['kind']}:{summary['serial']}  gate={summary['gate']}  {counts}  "
-                                    f"relaunch {summary['relaunches']}  ({summary['duration']}s)")
+                                    f"relaunch {summary['relaunches']}  vhal_retry {summary.get('infra_retries', 0)}  ({summary['duration']}s)")
         terminalreporter.write_line(f"기록: {run_file}")
 
 
@@ -140,6 +140,7 @@ def app(device, driver, request):
     device.vehicle.prepare()
     yield screen
     device.vehicle.cleanup()
+    _record_retries(device, request)
 
 
 def _start_app(device, screen, request, attempts=2):
@@ -164,10 +165,18 @@ def car(app, device):
 
 
 @pytest.fixture
-def vehicle(device):
+def vehicle(device, request):
     device.vehicle.prepare()
     yield device.vehicle
     device.vehicle.cleanup()
+    _record_retries(device, request)
+
+
+def _record_retries(device, request):
+    """신호 주입 도구(VHAL)를 다시 시도한 일이 있으면 JUnit property(vhal_retry)로 남긴다. 숨기지 않고 통계로 본다."""
+    for note in device.vehicle.retried:
+        request.node.user_properties.append(("vhal_retry", note))
+    device.vehicle.retried.clear()
 
 
 # ---------------- 실패 자료 ----------------
@@ -177,19 +186,20 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
     # 정리(teardown) 전에 남겨야 실패 순간의 화면·차량 상태가 보인다. 재시도로 사라질 실패도 남긴다 (flaky 원인 분석용)
-    if report.when in ("setup", "call") and report.failed:
-        folder = _save_artifacts(item)
+    # 정리 단계 실패(예: 정차로 되돌리는 VHAL 쓰기 실패)도 남긴다 — 5단계에서 이 경우 자료가 없어 원인 추적이 늦었다
+    if report.failed:
+        folder = _save_artifacts(item, suffix="__teardown" if report.when == "teardown" else "")
         if folder:
             report.sections.append(("ivi artifacts", str(folder)))
 
 
-def _save_artifacts(item):
+def _save_artifacts(item, suffix=""):
     device = getattr(item.config, "ivi_device", None)
     if device is None:
         return None
     name = re.sub(r"[^\w.\-\[\]]+", "_", item.nodeid)[:150]
     attempt = getattr(item, "execution_count", 1)  # pytest-rerunfailures 가 붙이는 시도 번호
-    folder = REPORT_DIR / "artifacts" / (name if attempt == 1 else f"{name}__try{attempt}")
+    folder = REPORT_DIR / "artifacts" / ((name if attempt == 1 else f"{name}__try{attempt}") + suffix)
     folder.mkdir(parents=True, exist_ok=True)
     driver = item.funcargs.get("driver")
 

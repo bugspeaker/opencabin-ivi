@@ -53,7 +53,12 @@ class Adb:
     def resumed_activities(self):
         """화면(디스플레이)마다 맨 위에 있는 액티비티 목록. AAOS 에뮬레이터는 메인 + 클러스터 2개다."""
         out = self.shell("dumpsys", "activity", "activities")
-        return re.findall(r"topResumedActivity=ActivityRecord\{\S+ u\d+ (\S+) t\d+\}", out)
+        # AAOS(API 34): 'topResumedActivity=ActivityRecord{…}' (디스플레이마다)
+        # 화웨이(Android 12 기반): 'mResumedActivity: ActivityRecord{…}' 만 나온다 (5단계 재점검에서 발견)
+        found = re.findall(r"topResumedActivity=ActivityRecord\{\S+ u\d+ (\S+) t-?\d+\}", out)
+        if not found:
+            found = re.findall(r"mResumedActivity: ActivityRecord\{\S+ u\d+ (\S+) t-?\d+\}", out)
+        return found
 
     # ---- 로그 ----
     def logcat_clear(self):

@@ -141,7 +141,8 @@ class Media(Screen):
         return self
 
     def select_track(self, index):
-        title = self.text(f"track_{index}")
+        # 목록 한 줄(track_N)은 제목·가수를 담는 줄이라 자기 글자가 없다. 제목은 track_N_title 에서 읽는다 (5단계 디자인 개편)
+        title = self.text(f"track_{index}_title")
         self.tap(f"track_{index}")
         return title
 

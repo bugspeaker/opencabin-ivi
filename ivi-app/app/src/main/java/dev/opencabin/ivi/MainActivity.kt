@@ -5,11 +5,22 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.opencabin.ivi.ui.IviRoot
 import dev.opencabin.ivi.ui.IviTheme
 
 class MainActivity : ComponentActivity() {
+
+    /** 권한을 받으면 속도 구독을 다시 하도록 CarService 연결을 새로 만든다. */
+    private val carPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            val vehicle = (application as IviApp).vehicle
+            vehicle.stop()
+            vehicle.start()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestCarPermissions()
@@ -27,20 +38,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** CAR_SPEED 는 dangerous 권한이라 실행 중에 요청한다. 자동화에서는 adb 로 미리 준다 (pm grant). */
+    /** CAR_SPEED 는 dangerous 권한이라 실행 중에 요청한다. 자동화에서는 adb 로 미리 준다 (pm grant --user 10). */
     private fun requestCarPermissions() {
         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE)) return
         if (checkSelfPermission(CAR_SPEED) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(CAR_SPEED), 1)
+            carPermission.launch(CAR_SPEED)
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // 권한을 받은 뒤 속도 구독을 다시 하도록 연결을 새로 만든다
-        val vehicle = (application as IviApp).vehicle
-        vehicle.stop()
-        vehicle.start()
     }
 
     private companion object {

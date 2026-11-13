@@ -10,6 +10,7 @@ MockVehicle (일반 Android, 앱 안의 가짜 차량)
   - 앱 프로세스가 떠 있어야 받는다. 그래서 prepare() 는 앱을 띄운 다음에 부른다.
 """
 import re
+import time
 from abc import ABC, abstractmethod
 from enum import Enum
 
@@ -61,6 +62,7 @@ class VehicleController(ABC):
 
     def __init__(self, adb):
         self.adb = adb
+        self.retried = []  # 신호 주입 도구의 일시 오류로 다시 시도한 기록 (conftest 가 테스트 결과에 옮긴다)
 
     def prepare(self):
         """테스트 시작 전: 정차 + 기본 온도."""
@@ -134,11 +136,20 @@ class AaosVehicle(VehicleController):
         if "successfully" not in out:
             raise RuntimeError(f"property {hex(prop)} 쓰기 실패: {out.strip()}")
 
-    def force(self, prop, value, area=Area.GLOBAL):
+    def force(self, prop, value, area=Area.GLOBAL, attempts=2):
+        """VHAL 에 값을 직접 넣는다. 에뮬레이터 VHAL 이 드물게 'failed to set property' 를 돌려줘서
+        (2026-11-13, 누적 200여 회 중 1회, 정차로 되돌리는 정리 단계) 한 번 더 시도한다. 두 번 다 실패하면 그대로 실패시킨다.
+        테스트 대상(앱)이 아니라 신호를 넣는 도구 쪽 일시 오류라 여기서 흡수하고, 다시 시도한 사실은 retried 에 남긴다."""
         kind = "-f" if isinstance(value, float) else "-i"
-        out = self.adb.shell("dumpsys", VHAL, "--set", str(prop), kind, str(value), "-a", str(area))
-        if "Set property" not in out:
-            raise RuntimeError(f"VHAL --set {hex(prop)} 실패: {out.strip()[:200]}")
+        out = ""
+        for attempt in range(1, attempts + 1):
+            out = self.adb.shell("dumpsys", VHAL, "--set", str(prop), kind, str(value), "-a", str(area))
+            if "Set property" in out:
+                if attempt > 1:
+                    self.retried.append(f"VHAL --set {hex(prop)}={value}: {attempt}번째에 성공")
+                return
+            time.sleep(0.3)
+        raise RuntimeError(f"VHAL --set {hex(prop)} 실패 ({attempts}회): {out.strip()[:200]}")
 
     def save(self, prop, area=Area.GLOBAL):
         self.adb.shell("dumpsys", VHAL, "--save-prop", str(prop), "-a", str(area))

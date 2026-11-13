@@ -23,10 +23,11 @@ Compose `testTag` 를 `testTagsAsResourceId = true` 로 노출한다. Appium 에
 
 | 화면 | 태그 |
 |---|---|
-| 공통 | `nav_home` `nav_climate` `nav_media`, `source_badge`(AAOS/Mock), `restriction_banner`, `vehicle_disconnected`, `vehicle_error` |
-| 홈 | `speed_value`, `gear_value`, `home_driver_temp`, `home_passenger_temp` |
+| 공통 | `nav_home` `nav_climate` `nav_media` (5단계부터 아래 앱 바), `source_badge`(AAOS/Mock), `restriction_banner`, `vehicle_disconnected`, `vehicle_error` |
+| 주행 정보(항상 보임) | `speed_value`, `gear_value` (5단계부터 지금 기어 칸 자체) |
+| 홈 | `home_media_title`, `home_driver_temp`, `home_passenger_temp` |
 | 공조 | `driver_temp_value` `driver_temp_up` `driver_temp_down`, `passenger_…` 같은 형식, 권한 없으면 `hvac_unavailable` |
-| 미디어 | `track_0`~`track_4`, `now_playing_title`, `playback_state`, `play_pause`, `open_video`, 주행 중 `video_restricted_notice` |
+| 미디어 | `track_0`~`track_4` (줄), `track_N_title` (제목, 5단계 추가), `now_playing_title`, `playback_state`, `play_pause`, `open_video`, 주행 중 `video_restricted_notice` |
 | 영상 | `video_player` `video_elapsed` `video_close`, 앱이 막으면 `video_blocked` |
 
 ## AAOS 에서 확인한 것 (에뮬레이터, 2026-11-13)

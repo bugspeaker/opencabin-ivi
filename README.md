@@ -3,6 +3,8 @@
 가상 차량 인포테인먼트(IVI) 앱과, 그 앱을 **UI 조작부터 차량 신호(VHAL)까지** E2E 로 검증하는 테스트 자동화 환경입니다.
 같은 테스트를 AAOS 에뮬레이터(실제 CarService·VHAL)와 일반 Android 태블릿(Mock 차량 서비스)에서 돌리는 것이 목표입니다.
 
+![주행 중 홈 화면](docs/images/home-driving.png)
+
 ## 진행 상황
 
 | 단계 | 내용 | 상태 |
@@ -11,6 +13,7 @@
 | 2. IVI 앱 | Kotlin + Compose. 홈 · 공조 · 미디어 · 영상(주행 중 차단), `VehicleDataSource` (CarPropertyManager / Mock), priv-app 설치 | ✅ AAOS 에뮬레이터 · 태블릿 모두 확인 [docs/phase2-app.md](docs/phase2-app.md) |
 | 3. 테스트 프레임워크 | 기기 어댑터(AAOS/Mock), 화면 객체, smoke / sanity / regression 31개, 실패 자료 자동 수집 | ✅ [docs/phase3-framework.md](docs/phase3-framework.md) |
 | 4. 운영 | 재시도·flaky 판정·격리·통계, 두 기기 병렬 실행, 프레임워크 단위 테스트, GitHub Actions(호스트 build·unit + self-hosted Bench e2e) | ✅ [docs/phase4-operations.md](docs/phase4-operations.md) (워크플로는 GitHub 에서 아직 미실행) |
+| 5. 재점검·디자인 | 1~4단계 재점검, 양산 IVI 구조(왼쪽 주행 정보 · 오른쪽 앱 · 아래 앱 바) 참고 디자인 개편, 회귀에서 찾은 3건 수정 | ✅ [docs/phase5-design.md](docs/phase5-design.md) |
 
 ## 구조
 
@@ -67,7 +70,7 @@ docs/                 단계별 설계·검증 기록
 |---|---|---|
 | AAOS 에뮬레이터 | 30 passed, 1 xfailed | 약 2분 10초 ~ 2분 35초 |
 | 화웨이 태블릿 (Mock) | 25 passed, 6 skipped (AAOS 전용) | 약 1분 22초 |
-| 두 기기 병렬 (`run_bench.py`, 재시도 1) | 3회 모두 게이트 통과, flaky 0, 앱 재실행 0 | 2분 13초 ~ 2분 37초 |
-| 프레임워크 단위 테스트 (`pytest unit`) | 22 passed | 0.3초 |
+| 두 기기 병렬 (`run_bench.py`, 재시도 1) | 디자인 개편 후 3회 모두 게이트 통과, flaky 0, 앱 재실행 0 | 2분 10초 ~ 2분 22초 |
+| 프레임워크 단위 테스트 (`pytest unit`) | 25 passed | 0.3초 |
 
 xfail 1건은 1단계에서 찾은 레이아웃 결함입니다 (운전석 온도 ▲ 가 홈 버튼에 가려짐).
