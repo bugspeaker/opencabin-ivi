@@ -140,7 +140,12 @@ CI: build 작업에 `./gradlew testDebugUnitTest` 를 넣었다.
 | 앱 단위 테스트 (`CabinAssistantTest`) | 17 passed |
 | 프레임워크 단위 테스트 (`pytest unit`) | 26 passed |
 | AAOS 에뮬레이터 전체 E2E (84개) | **82 passed, 1 skipped, 1 xfailed**, gate pass, 앱 재실행 0, VHAL 재시도 0 (5분 47초) |
+| 화웨이 태블릿 (Mock) 전체 E2E (84개) | **78 passed, 6 skipped** (AAOS 전용), gate pass, 앱 재실행 0 (5분 46초) |
 
 - skipped 1: 12시간 시계 (AAOS 는 시스템 바가 시계를 보여 줘서 앱 시계가 없다, 태블릿 전용). xfailed 1: 1단계에서 찾은 SystemUI 결함.
-- **화웨이 태블릿(Mock)은 이번에 돌리지 않았다.** 새 APK 설치에 기기 화면 승인이 필요해서 (4단계 운영 규칙: 설치 전 미리 알림). 다음 실행 때 확인한다.
-- 두 기기 병렬(`run_bench.py`)·반복 안정성 측정도 태블릿 확인과 함께 한다.
+- 태블릿은 설치 전에 알리고 기기 화면에서 설치를 승인받은 뒤 돌렸다 (4단계 운영 규칙).
+- 두 기기 병렬(`run_bench.py`)·반복 안정성 측정은 아직 하지 않았다 (각 기기 1회씩 전체 실행).
+
+태블릿(2560×1600)에서도 같은 배치가 늘어나 맞는다:
+
+![tablet](images/p7-tablet.png)

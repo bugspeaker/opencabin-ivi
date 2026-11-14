@@ -66,7 +66,7 @@ docs/                 단계별 설계·검증 기록
 | `IVI_TAP` | 화웨이·아너 `adb`, 그 외 `appium` | 요소를 누르는 방법 |
 | `APPIUM_URL` | `http://127.0.0.1:4723` | Appium 서버 |
 
-7단계 결과 (2026-11-14): AAOS 에뮬레이터 E2E 84개 중 **82 passed, 1 skipped, 1 xfailed** (5분 47초), 앱 단위 17 passed, 프레임워크 단위 26 passed. 태블릿은 아직 미실행 ([docs/phase7-pleos.md](docs/phase7-pleos.md)).
+7단계 결과 (2026-11-14): AAOS 에뮬레이터 E2E 84개 중 **82 passed, 1 skipped, 1 xfailed** (5분 47초), 화웨이 태블릿 **78 passed, 6 skipped** (AAOS 전용, 5분 46초), 앱 단위 17 passed, 프레임워크 단위 26 passed ([docs/phase7-pleos.md](docs/phase7-pleos.md)).
 
 6단계까지의 결과 (2026-11-13)
 
