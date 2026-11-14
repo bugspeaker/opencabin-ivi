@@ -16,9 +16,9 @@ def by_tag(tag):
 
 
 def parse_celsius(text):
-    """'25.0°C' → 25.0, '--' → None"""
+    """'25.0°C' → 25.0, '25.0°' (아래 바) → 25.0, '--' → None"""
     text = text.strip()
-    return None if text in ("", "--") else float(text.removesuffix("°C"))
+    return None if text in ("", "--") else float(text.removesuffix("°C").removesuffix("°"))
 
 
 class Screen:
@@ -65,9 +65,13 @@ class Screen:
 
 
 class IviApp(Screen):
-    """메인 화면의 공통 영역 (탭, 상태 배지)."""
+    """메인 화면의 공통 영역 (아래 바, 상단 바, 주행 정보).
 
-    TABS = ("nav_home", "nav_navi", "nav_radio", "nav_media", "nav_phone", "nav_climate", "nav_settings")
+    7단계(Pleos Connect 구조)부터 아래 바에는 차량·공조·미디어·전화·내비·AI·앱 목록만 고정이다.
+    라디오·설정은 앱 목록에서 연다 → 테스트는 그대로 두고, 여는 길만 여기서 바꿨다.
+    """
+
+    BAR = ("nav_vehicle", "nav_climate", "nav_media", "nav_phone", "nav_home", "nav_assistant", "nav_apps")
 
     def source_badge(self):
         return self.text("source_badge")
@@ -92,11 +96,17 @@ class IviApp(Screen):
         return self._screen(Video)
 
     def navigation(self):
-        self.tap("nav_navi")
+        # 내비게이션 = 홈 (분할 화면이면 오른쪽에 오디오 카드가 같이 보인다)
+        self.tap("nav_home")
         return self._screen(Navigation).wait_loaded()
 
+    def open_from_apps(self, app_id):
+        """앱 목록(아래 바 ⊞)에서 앱을 연다."""
+        self.tap("nav_apps")
+        self.tap(f"app_{app_id}")
+
     def radio(self):
-        self.tap("nav_radio")
+        self.open_from_apps("radio")
         return self._screen(Radio).wait_loaded()
 
     def phone(self):
@@ -104,8 +114,35 @@ class IviApp(Screen):
         return self._screen(Phone).wait_loaded()
 
     def settings(self):
-        self.tap("nav_settings")
+        self.open_from_apps("settings")
         return self._screen(Settings).wait_loaded()
+
+    def assistant(self):
+        self.tap("nav_assistant")
+        return self._screen(Assistant).wait_loaded()
+
+    def vehicle_controls(self):
+        self.tap("nav_vehicle")
+        return self._screen(QuickControl).wait_loaded()
+
+    def apps(self):
+        self.tap("nav_apps")
+        self.find("app_navigation")
+        return self
+
+    def bar(self):
+        """아래 바의 좌석 온도 (어느 화면에서나 보인다)."""
+        return self._screen(BottomBar)
+
+    def cluster(self):
+        """왼쪽 주행 정보 (어느 화면에서나 보인다)."""
+        return self._screen(Cluster)
+
+    def notifications(self):
+        """알림 패널을 연다."""
+        self.tap("top_notifications")
+        self.find("notification_panel")
+        return self._screen(Notifications)
 
     def voice(self):
         self.tap("voice_button")
@@ -132,8 +169,17 @@ class Home(Screen):
         return self.text("gear_value")
 
     def summary_temperature(self, seat):
-        """'운전석 25.0°C' → 25.0"""
-        return parse_celsius(self.text(f"home_{seat.tag}_temp").split(" ", 1)[1])
+        """홈에서 보이는 좌석 온도. 7단계부터 온도 요약은 아래 바에 있다 ('25.0°')."""
+        return parse_celsius(self.text(f"bar_{seat.tag}_temp"))
+
+    def split(self):
+        """분할 화면(내비 + 오디오)인가."""
+        return self.visible("home_audio")
+
+    def toggle_split(self):
+        before = self.split()
+        self.tap("split_toggle")
+        wait_until(lambda: self.split() != before, what="분할 화면 전환")
 
 
 class Climate(Screen):
@@ -378,7 +424,7 @@ class Voice(Screen):
         """음성 명령 index 번 (인식된 문장을 누르는 것으로 대신한다)."""
         self.tap(f"voice_cmd_{index}")
         self.wait_visible("voice_panel", expected=False)  # 명령을 처리하면 패널이 닫힌다
-        return self.text("voice_result").removeprefix("🎙").strip()  # 결과는 상태 줄 알림으로
+        return self.text("voice_result").strip()  # 결과는 상단 바에 잠깐 보인다
 
     def close(self):
         """명령을 실행하면 패널은 저절로 닫힌다. 명령 없이 닫을 때만 쓴다."""
@@ -387,5 +433,117 @@ class Voice(Screen):
         self.wait_visible("voice_panel", expected=False)
 
 
+class BottomBar(Screen):
+    """아래 바: ‹ 온도 ›. 온도는 실제 차량 신호(HVAC_TEMPERATURE_SET)를 바꾼다."""
+
+    def temperature(self, seat):
+        return parse_celsius(self.text(f"bar_{seat.tag}_temp"))
+
+    def wait_temperature(self, seat, celsius, timeout=TIMEOUT):
+        wait_until(lambda: self.temperature(seat) == celsius, timeout=timeout, what=f"아래 바 {seat.tag} {celsius}°")
+
+    def increase(self, seat):
+        self.tap(f"bar_{seat.tag}_temp_up")
+
+    def decrease(self, seat):
+        self.tap(f"bar_{seat.tag}_temp_down")
+
+
+class Cluster(Screen):
+    """왼쪽 주행 정보: 속도·기어·운전자 보조 표시·경로·유틸리티 위젯."""
+
+    def adas(self):
+        return self.text("adas_state")
+
+    def route(self):
+        """안내 중이면 '회사까지 8.7 km', 아니면 None."""
+        return self.text("cluster_route") if self.visible("cluster_route") else None
+
+    def trip_km(self):
+        return float(self.text("trip_distance"))
+
+    def widget_title(self):
+        return self.text("utility_title")
+
+    def next_widget(self):
+        before = self.widget_title()
+        self.tap("utility_widget")
+        wait_until(lambda: self.widget_title() != before, what="유틸리티 위젯 넘김")
+        return self.widget_title()
+
+
+class Assistant(Screen):
+    """AI 어시스턴트 대화 화면. 음성 대신 추천 명령(칩)이나 글자 입력으로 말한다."""
+
+    def wait_loaded(self):
+        self.find("assistant_reply")
+        return self
+
+    def zone(self, seat):
+        """말하는 좌석을 고른다 (좌석별 음성 인식 대신)."""
+        self.tap(f"assistant_zone_{seat.tag}")
+        wait_until(lambda: self.text("assistant_listening").startswith("운전석" if seat == Seat.DRIVER else "조수석"),
+                   what=f"{seat.tag} 에서 듣는 중")
+
+    def reply(self):
+        return self.text("assistant_reply")
+
+    def _said(self, action):
+        before = self.reply()
+        action()
+        wait_until(lambda: self.reply() != before, what="비서 대답")
+        return self.reply()
+
+    def chip(self, index):
+        """추천 명령 index 번을 말한다. 대답을 돌려준다."""
+        return self._said(lambda: self.tap(f"assistant_chip_{index}"))
+
+    def say(self, text):
+        """글자로 말한다 (정차 중에만 된다)."""
+        def type_and_send():
+            field = self.find("assistant_input")
+            field.clear()
+            field.send_keys(text)
+            self.tap("assistant_send")
+        return self._said(type_and_send)
+
+    def typing_enabled(self):
+        return self.enabled("assistant_input")
+
+    def choose(self, index):
+        """목적지 후보 카드 index 번을 고른다 (고르면 내비 화면으로 간다)."""
+        self.tap(f"assistant_candidate_{index}")
+
+
+class QuickControl(Screen):
+    """차량 빠른 제어 (도어·사이드 미러·트렁크 등. 화면 상태이며 VHAL 에 연결하지 않았다)."""
+
+    def wait_loaded(self):
+        self.find("qc_door_lock")
+        return self
+
+    def value(self, name):
+        return self.text(f"qc_{name}_value")
+
+    def toggle(self, name):
+        before = self.value(name)
+        self.tap(f"qc_{name}")
+        wait_until(lambda: self.value(name) != before, what=f"{name} 전환")
+        return self.value(name)
+
+    def can_toggle(self, name):
+        return self.enabled(f"qc_{name}")
+
+
+class Notifications(Screen):
+    def titles(self):
+        return [element.text for element in tags_matching(self.driver, "notification_[0-9]+_title")]
+
+    def close(self):
+        self.tap("top_notifications")
+        self.wait_visible("notification_panel", expected=False)
+
+
 __all__ = ["IviApp", "Home", "Climate", "Media", "Video", "Navigation", "Radio", "Phone", "Settings", "Voice",
+           "BottomBar", "Cluster", "Assistant", "QuickControl", "Notifications",
            "Seat", "by_tag", "parse_celsius", "tags_matching"]

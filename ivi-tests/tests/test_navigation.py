@@ -64,15 +64,15 @@ def test_arrival(app, car):
 
 
 @pytest.mark.regression
-def test_stop_guidance_returns_to_search_and_home_widget(app):
+def test_stop_guidance_returns_to_search_and_clears_cluster_route(app):
+    """7단계: 홈 위젯 대신 주행 정보(왼쪽)에 경로를 보여 준다. 다른 앱을 보고 있어도 보이고, 안내를 끝내면 사라진다."""
     nav = app.navigation()
     nav.pick(1)
     nav.start()
-    home = app.home()
-    wait_until(lambda: home.text("home_nav_summary").startswith("회사까지"), what="홈 내비 카드 안내 중")
+    app.media()
+    wait_until(lambda: (app.cluster().route() or "").startswith("회사까지"), what="주행 정보에 경로 표시")
 
     nav = app.navigation()
     nav.stop()
     nav.wait_visible("nav_search")
-    home = app.home()
-    home.wait_text("home_nav_summary", "목적지를 설정하세요")
+    app.wait_visible("cluster_route", expected=False)

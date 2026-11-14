@@ -14,8 +14,8 @@ android {
         applicationId = "dev.opencabin.ivi"
         minSdk = 31          // 태블릿(Android 12)
         targetSdk = 34       // AAOS 에뮬레이터(API 34)
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.3.0"
     }
 
     buildTypes {
@@ -45,4 +45,7 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
+
+    // 비서 규칙(assistant/)의 JVM 단위 테스트
+    testImplementation("junit:junit:4.13.2")
 }

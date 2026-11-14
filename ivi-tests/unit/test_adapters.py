@@ -21,7 +21,7 @@ class FakeAdb:
         return ""
 
 
-@pytest.mark.parametrize("text, expected", [("25.0°C", 25.0), ("16.5°C", 16.5), ("--", None), (" 22.0°C ", 22.0)])
+@pytest.mark.parametrize("text, expected", [("25.0°C", 25.0), ("16.5°C", 16.5), ("--", None), (" 22.0°C ", 22.0), ("23.5°", 23.5)])
 def test_parse_celsius(text, expected):
     assert parse_celsius(text) == expected
 

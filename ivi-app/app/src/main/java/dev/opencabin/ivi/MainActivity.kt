@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             val state = vehicle.state.collectAsStateWithLifecycle().value
             val settings = store.settings.collectAsStateWithLifecycle().value
             // 화면 상태(오디오·안내·통화)는 이 화면과 함께 산다. --activity-clear-task 로 다시 열면 처음부터
-            val cabin = remember { CabinController(store, vehicle) }
+            val cabin = remember { CabinController(store) }
             IviTheme {
                 IviRoot(
                     source = vehicle.kind,

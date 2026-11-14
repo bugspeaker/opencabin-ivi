@@ -57,6 +57,9 @@ jobs:
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
+      # AI 어시스턴트 '말 → 동작' 규칙 (JVM 단위 테스트, 기기 없음)
+      - name: App unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: apk-ci

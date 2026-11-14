@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dev.opencabin.ivi.vehicle.Seat
-import dev.opencabin.ivi.vehicle.VehicleDataSource
+import dev.opencabin.ivi.assistant.Place
+import dev.opencabin.ivi.assistant.Places
 import java.time.LocalTime
 import kotlin.math.max
 
@@ -26,16 +26,10 @@ val Tracks = listOf(
     "Long Way Home" to "Last Exit",
 )
 
-data class Destination(val name: String, val address: String, val km: Double)
+/** 목적지 = 비서와 같이 쓰는 장소 목록 (assistant/Places). 앞 6곳은 6단계 목록 그대로다. */
+typealias Destination = Place
 
-val Destinations = listOf(
-    Destination("집", "경기 성남시 분당구", 12.4),
-    Destination("회사", "경기 성남시 판교역로", 8.7),
-    Destination("판교역", "신분당선 · 경강선", 5.2),
-    Destination("서울역", "서울 용산구", 27.9),
-    Destination("인천국제공항", "인천 중구", 68.3),
-    Destination("편의점", "500m 이내", 0.1),
-)
+val Destinations get() = Places.all
 
 data class Contact(val name: String, val number: String)
 
@@ -56,10 +50,7 @@ data class ActiveCall(val name: String, val number: String, val startedAt: Long)
 
 val VoiceCommands = listOf("운전석 온도 24도로 맞춰줘", "라디오 켜줘", "집으로 안내해줘", "엄마에게 전화해줘")
 
-class CabinController(
-    private val settings: SettingsStore,
-    private val vehicle: VehicleDataSource,
-) {
+class CabinController(private val settings: SettingsStore) {
     // ---------------- 오디오: 한 번에 하나만 재생 ----------------
     var audioSource by mutableStateOf(AudioSource.NONE)
         private set
@@ -126,13 +117,13 @@ class CabinController(
     fun preview(dest: Destination) {
         destination = dest
         guiding = false
-        remainingKm = dest.km
+        remainingKm = dest.distanceKm.toDouble()
     }
 
     fun startGuidance(dest: Destination? = destination) {
         dest ?: return
         destination = dest
-        remainingKm = dest.km
+        remainingKm = dest.distanceKm.toDouble()
         guiding = true
     }
 
@@ -193,42 +184,31 @@ class CabinController(
         call = null
     }
 
-    // ---------------- 음성 명령 (인식된 문장을 고르는 것으로 대신한다) ----------------
+    // ---------------- 음성 명령 결과 (상태 줄에 잠깐 보인다) ----------------
+    // 문장 → 동작은 AI 어시스턴트(assistant/CabinAssistant)가 한다. 여기는 결과 글자만 둔다.
     var voiceResult by mutableStateOf("")
         private set
     var voiceSeq by mutableIntStateOf(0)
         private set
 
+    fun showVoiceResult(text: String) {
+        voiceResult = text
+        voiceSeq++
+    }
+
     fun clearVoiceResult() {
         voiceResult = ""
     }
 
-    /** 실행 후 열어야 할 화면 이름을 돌려준다 (없으면 null). */
-    fun runVoice(index: Int): String? {
-        voiceSeq++
-        return when (index) {
-            0 -> {
-                vehicle.setTemperature(Seat.DRIVER, 24f)
-                voiceResult = "운전석 온도를 24.0°C로 맞출게요"
-                null
-            }
-            1 -> {
-                setRadio(true)
-                voiceResult = "라디오를 켤게요"
-                "radio"
-            }
-            2 -> {
-                startGuidance(Destinations.first { it.name == "집" })
-                voiceResult = "집으로 안내를 시작할게요"
-                "navi"
-            }
-            3 -> {
-                val mom = Contacts.first { it.name == "엄마" }
-                dial(mom.name, mom.number)
-                voiceResult = "엄마에게 전화를 걸게요"
-                null
-            }
-            else -> null
-        }
+    // ---------------- 미디어 이동 (비서 · 홈 카드) ----------------
+    fun nextTrack(): String {
+        playMedia((mediaTrack + 1) % Tracks.size)
+        return Tracks[mediaTrack].first
+    }
+
+    fun previousTrack() = playMedia((mediaTrack - 1 + Tracks.size) % Tracks.size)
+
+    fun pauseMedia() {
+        if (mediaPlaying) audioSource = AudioSource.NONE
     }
 }
