@@ -2,12 +2,14 @@
 
 자체 IVI 앱을 만들기 전에, AAOS 기본 SystemUI 의 하단 HVAC 바로
 '차량 신호 → UI', 'UI 조작 → 차량 신호', '속도·기어 → 주행 상태' 가 실제로 이어지는지 확인한다.
-화면 표시는 화씨(°F)라서 정수로 딱 떨어지는 섭씨 값(25.0 → 77°, 20.0 → 68°)을 쓴다.
+SystemUI 표시 단위는 VHAL 의 HVAC_TEMPERATURE_DISPLAY_UNITS 를 따른다. 에뮬레이터 기본은 화씨(25.0 → 77°)이고,
+7단계에서 태블릿과 같게 섭씨(25.0 → 25.0°)로 바꿔 쓰기도 해서, 기대 글자는 지금 표시 단위로 계산한다.
+화씨에서도 정수로 딱 떨어지는 섭씨 값(25.0, 20.0)을 쓴다.
 """
 import pytest
 from appium.webdriver.common.appiumby import AppiumBy
 
-from ivi.vehicle import Area, DrivingState, Prop
+from ivi.vehicle import Area, DrivingState, Prop, TempUnit
 from ivi.waits import wait_until
 
 pytestmark = pytest.mark.aaos
@@ -30,10 +32,18 @@ def driver_temp_label(driver):
     return temp_label(driver, "driver")
 
 
+def expected_label(vehicle, celsius):
+    """SystemUI 가 보여 줄 글자: 섭씨면 '25.0°', 화씨면 '77°'."""
+    if vehicle.get_property(Prop.HVAC_TEMPERATURE_DISPLAY_UNITS) == TempUnit.CELSIUS:
+        return f"{celsius:.1f}°"
+    return f"{round(celsius * 9 / 5 + 32)}°"
+
+
 @pytest.mark.spike
-@pytest.mark.parametrize("celsius, label", [(25.0, "77°"), (20.0, "68°")])
-def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius, label):
+@pytest.mark.parametrize("celsius", [25.0, 20.0])
+def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius):
     """하위 → 상위: 운전석 설정 온도를 property 로 바꾸면 하단 HVAC 바 표시가 따라 바뀐다."""
+    label = expected_label(vehicle, celsius)
     vehicle.set_property(Prop.HVAC_TEMPERATURE_SET, celsius, Area.DRIVER)
     wait_until(lambda: driver_temp_label(driver) == label, what=f"운전석 온도 표시 {label}")
 
@@ -46,14 +56,15 @@ def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius, label):
 def test_hvac_ui_tap_changes_signal(driver, vehicle, side, button, delta):
     """상위 → 하위: 화면의 온도 ▲/▼ 를 한 번 누르면 실제 property 값이 한 단계(0.5°C) 바뀐다."""
     area = SIDES[side]
+    start = expected_label(vehicle, 20.0)
     vehicle.set_property(Prop.HVAC_TEMPERATURE_SET, 20.0, area)
-    wait_until(lambda: temp_label(driver, side) == "68°", what=f"{side} 시작 온도 표시 68°")
+    wait_until(lambda: temp_label(driver, side) == start, what=f"{side} 시작 온도 표시 {start}")
 
     driver.find_element(*hvac(side, button)).click()
 
     expected = 20.0 + delta
     wait_until(lambda: vehicle.get_property(Prop.HVAC_TEMPERATURE_SET, area) == expected, what=f"{side} 설정 온도 {expected}°C")
-    wait_until(lambda: temp_label(driver, side) != "68°", what=f"{side} 온도 표시 변경")
+    wait_until(lambda: temp_label(driver, side) != start, what=f"{side} 온도 표시 변경")
 
 
 @pytest.mark.spike

@@ -46,6 +46,29 @@
 |---|---|
 | ![voice](images/p7-voice.png) | ![reverse](images/p7-reverse.png) |
 
+### 내 차 그림 (아이오닉 3 참고)
+
+주행 정보의 내 차는 **아이오닉 3** 의 공개 제원·디자인을 참고해 Canvas 로 직접 그렸다 (`ui/CarArt.kt`). 제조사 사진·이미지 파일은 쓰지 않는다.
+
+| 근거 (공개 자료) | 그림에 반영 |
+|---|---|
+| 길이 4,155 · 폭 1,800 · 높이 1,505 · 휠베이스 2,680 mm, 19인치 225/45 R19 | 모든 좌표를 차 길이 비율로 계산 (차축 위치 0.177, 바퀴 지름 0.165) |
+| '에어로 해치': 지붕선이 곧게 가다 리어 스포일러로 떨어짐 (Cd 0.263) | 옆모습 지붕선 · 스포일러 끝 |
+| 픽셀 조명, 엠블럼 대신 모스 부호 'H' 점 4개 | 앞·뒤 픽셀 줄, 앞 가운데 점 4개 |
+
+- P(정차): 옆모습을 크게. D(주행)·R(후진): 위에서 본 모습 (R 이면 뒤 픽셀 조명이 밝아진다). 주변 차는 회색 일반 차.
+- 출처: [Hyundai newsroom — IONIQ 3](https://www.hyundai.com/content/hyundai/worldwide/en/newsroom/detail/hyundai-motor-introduces-ioniq-3-aero-hatch-elevates-ev-technology-for-simple%252C-spacious-and-intuitive-mobility-0000001159.html),
+  [Electrifying — Morse 'H'](https://www.electrifying.com/blog/article/inspect-the-morse-new-hyundai-ioniq-3-sends-coded-message)
+
+### 에뮬레이터 공조 값을 태블릿과 같게
+
+에뮬레이터 VHAL 은 켤 때마다 기본값(SystemUI 화씨 표시 61°, 좌석 16~17°C)으로 시작한다. 태블릿(Mock)은 22.0°C 섭씨다.
+`python tools/emulator_defaults.py` 가 운전석·조수석 22.0°C, 표시 단위 섭씨(`HVAC_TEMPERATURE_DISPLAY_UNITS` = 0x30)로 맞춘다.
+
+- 이렇게 바꾸자 1단계 spike 테스트 4개가 실패했다: SystemUI 표시를 **화씨로 가정**하고 `'77°'`, `'68°'` 를 기다리고 있었다.
+  → 표시 단위를 VHAL 에서 읽어 기대 글자를 계산하게 고쳤다 (섭씨 `'25.0°'`, 화씨 `'77°'`). **두 단위 모두에서 5 passed, 1 xfailed** 확인.
+- 섭씨 글자(`22.0°`)가 더 길어 시스템 바 운전석 온도가 홈 버튼과 더 많이 겹친다 — 1단계에서 찾은 SystemUI 결함(xfail)이 그대로 있다.
+
 ## 3. AI 어시스턴트 (`assistant/CabinAssistant.kt`)
 
 LLM 대신 규칙으로 공개된 동작 방식을 흉내 냈다. 화면(Compose)과 분리한 순수 Kotlin 이라 **JVM 단위 테스트**로 검증한다.

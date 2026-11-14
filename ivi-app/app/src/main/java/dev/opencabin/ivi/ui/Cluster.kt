@@ -212,12 +212,18 @@ private fun DrivingView(state: VehicleState, modifier: Modifier) {
             }
         }
 
-        val egoScale = if (state.gear == Gear.PARK) 0.22f else 0.15f
-        val egoY = if (state.gear == Gear.PARK) h * 0.55f else yAt(0.08f) - w * egoScale
+        // 내 차 (CarArt.kt): 정차(P)면 옆모습을 크게, 주행·후진이면 위에서 본 모습
+        val body = Color(0xFFE9ECF0)
+        val shade = Color(0xFFA9B0B9)
         if (state.gear == Gear.PARK) {
-            drawCircle(Brush.radialGradient(listOf(IviColors.Accent.copy(alpha = 0.18f), Color.Transparent), center = Offset(cx, egoY), radius = w * 0.4f), w * 0.4f, Offset(cx, egoY))
+            val length = minOf(w * 0.88f, h * 1.9f)
+            val ground = h * 0.5f + length * 0.19f
+            drawCircle(Brush.radialGradient(listOf(IviColors.Accent.copy(alpha = 0.16f), Color.Transparent), center = Offset(cx, ground - length * 0.15f), radius = w * 0.45f), w * 0.45f, Offset(cx, ground - length * 0.15f))
+            ioniq3Side(cx, ground, length, body, shade)
+        } else {
+            val length = w * 0.15f * 1.9f
+            ioniq3Top(cx, yAt(0.08f) - length / 2, length, body, shade, braking = state.gear == Gear.REVERSE)
         }
-        car(cx, egoY, w * egoScale, Color(0xFFE6E9EE), Color(0xFFAEB4BC))
     }
 }
 

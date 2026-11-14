@@ -34,6 +34,12 @@ class Prop:
     PERF_VEHICLE_SPEED = 0x11600207   # float m/s, 읽기 전용
     GEAR_SELECTION = 0x11400400       # int32, 읽기 전용
     HVAC_TEMPERATURE_SET = 0x15600503  # float °C, 좌석별 읽기/쓰기
+    HVAC_TEMPERATURE_DISPLAY_UNITS = 0x1140050E  # int32 VehicleUnit: 0x30 섭씨, 0x31 화씨 (SystemUI 표시 단위)
+
+
+class TempUnit:
+    CELSIUS = 0x30
+    FAHRENHEIT = 0x31
 
 
 class Gear:

@@ -25,7 +25,7 @@ ivi-tests/
   ivi/                adb · 대기 · 차량 어댑터(AaosVehicle / MockVehicle) · 기기 · 화면 객체 · 결과 기록 · 격리 목록
   tests/              기기 E2E: smoke / sanity / regression (공조·주행·미디어·내비·라디오·전화·설정·후방 카메라·음성·AI 어시스턴트·화면 틀), spike(1단계), conftest.py
   unit/               프레임워크 단위 테스트 (기기 없이)
-  tools/              run_bench.py (기기 병렬), flaky_report.py (통계), install_app.py (같은 APK 면 건너뜀)
+  tools/              run_bench.py (기기 병렬), flaky_report.py (통계), install_app.py (같은 APK 면 건너뜀), emulator_defaults.py (에뮬레이터 공조 22.0°C · 섭씨)
   quarantine.txt      격리 목록
 .github/workflows/    ivi-ci.yml
 docs/                 단계별 설계·검증 기록
@@ -41,6 +41,7 @@ docs/                 단계별 설계·검증 기록
    C:\android\emulator\emulator.exe -avd OpenCabin_AAOS_34 -writable-system -no-snapshot -no-boot-anim
    ```
    앱 빌드와 priv-app 설치는 [docs/phase2-app.md](docs/phase2-app.md) 참고.
+   공조 값을 태블릿과 같게(22.0°C, 섭씨 표시) 맞추려면 `python ivi-tests/tools/emulator_defaults.py`.
 2. Appium 서버
    ```powershell
    $env:ANDROID_HOME = "C:\android"; appium --address 127.0.0.1 --port 4723
