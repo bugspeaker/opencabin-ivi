@@ -14,8 +14,8 @@ android {
         applicationId = "dev.opencabin.ivi"
         minSdk = 31          // 태블릿(Android 12)
         targetSdk = 34       // AAOS 에뮬레이터(API 34)
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
     }
 
     buildTypes {

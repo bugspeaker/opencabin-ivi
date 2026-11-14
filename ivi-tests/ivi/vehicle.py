@@ -37,6 +37,7 @@ class Prop:
 
 
 class Gear:
+    REVERSE = 2
     PARK = 4
     DRIVE = 8
 
@@ -78,6 +79,10 @@ class VehicleController(ABC):
 
     @abstractmethod
     def park(self): ...
+
+    @abstractmethod
+    def reverse(self):
+        """기어 R, 속도 0 (후진 준비). 후방 카메라가 떠야 한다."""
 
     @abstractmethod
     def set_temperature(self, seat, celsius): ...
@@ -171,6 +176,10 @@ class AaosVehicle(VehicleController):
         self.force(Prop.PERF_VEHICLE_SPEED, 0.0)
         self.force(Prop.GEAR_SELECTION, Gear.PARK)
 
+    def reverse(self):
+        self.force(Prop.PERF_VEHICLE_SPEED, 0.0)
+        self.force(Prop.GEAR_SELECTION, Gear.REVERSE)
+
     def set_temperature(self, seat, celsius):
         self.set_property(Prop.HVAC_TEMPERATURE_SET, float(celsius), seat.area)
 
@@ -214,6 +223,9 @@ class MockVehicle(VehicleController):
 
     def park(self):
         self._set(speed_kmh=0.0, gear="P")
+
+    def reverse(self):
+        self._set(speed_kmh=0.0, gear="R")
 
     def set_temperature(self, seat, celsius):
         self._set(**{f"temp_{seat.tag}": celsius})

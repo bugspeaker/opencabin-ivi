@@ -77,6 +77,14 @@ class Device:
         fresh: 프로세스까지 종료 후 시작 (-S). 화웨이는 짧은 간격으로 반복하면 iAware 가 앱을 죽이므로 세션 시작 때만 쓴다."""
         self.adb.start_activity(component, user=self.user, fresh=fresh, clear_task=reset)
 
+    def reset_app_state(self):
+        """저장 설정(볼륨·단위·라디오 프리셋 등)을 기본값으로. debug 빌드의 TestHookReceiver 를 부른다.
+        AAOS 에뮬레이터는 앱이 꺼져 있어도 받지만(-f 0x20), 화웨이는 꺼진 앱에 전달하지 않는다 → 앱을 띄운 뒤에 부른다."""
+        out = self.adb.shell("am", "broadcast", "--user", str(self.user), "-f", "0x20",
+                             "-n", f"{PACKAGE}/.TestHookReceiver", "-a", f"{PACKAGE}.test.RESET")
+        if 'data="reset"' not in out:
+            raise RuntimeError(f"앱 상태 초기화 실패 (debug 빌드인지 확인): {out.strip()[-200:]}")
+
     def stop_app(self):
         self.adb.shell("am", "force-stop", "--user", str(self.user), PACKAGE, check=False)
 

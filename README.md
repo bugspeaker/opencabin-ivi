@@ -14,14 +14,15 @@
 | 3. 테스트 프레임워크 | 기기 어댑터(AAOS/Mock), 화면 객체, smoke / sanity / regression 31개, 실패 자료 자동 수집 | ✅ [docs/phase3-framework.md](docs/phase3-framework.md) |
 | 4. 운영 | 재시도·flaky 판정·격리·통계, 두 기기 병렬 실행, 프레임워크 단위 테스트, GitHub Actions(호스트 build·unit + self-hosted Bench e2e) | ✅ [docs/phase4-operations.md](docs/phase4-operations.md) (워크플로는 GitHub 에서 아직 미실행) |
 | 5. 재점검·디자인 | 1~4단계 재점검, 양산 IVI 구조(왼쪽 주행 정보 · 오른쪽 앱 · 아래 앱 바) 참고 디자인 개편, 회귀에서 찾은 3건 수정 | ✅ [docs/phase5-design.md](docs/phase5-design.md) |
+| 6. 기능 확장 | 내비게이션 · 라디오 · 전화 · 설정 · 후방 카메라(기어 R) · 음성 명령, 테스트 훅, 테스트 31 → 64개 | ✅ [docs/phase6-features.md](docs/phase6-features.md) |
 
 ## 구조
 
 ```
-ivi-app/              Kotlin + Compose IVI 앱, privileged/ = priv-app 설치 스크립트
+ivi-app/              Kotlin + Compose IVI 앱 (state/ 설정·앱 상태, ui/ 기능별 화면, src/debug/ 테스트 훅), privileged/ = priv-app 설치
 ivi-tests/
   ivi/                adb · 대기 · 차량 어댑터(AaosVehicle / MockVehicle) · 기기 · 화면 객체 · 결과 기록 · 격리 목록
-  tests/              기기 E2E: smoke / sanity / regression (공조·주행·미디어), spike(1단계), conftest.py
+  tests/              기기 E2E: smoke / sanity / regression (공조·주행·미디어·내비·라디오·전화·설정·후방 카메라·음성), spike(1단계), conftest.py
   unit/               프레임워크 단위 테스트 (기기 없이)
   tools/              run_bench.py (기기 병렬), flaky_report.py (통계), install_app.py (같은 APK 면 건너뜀)
   quarantine.txt      격리 목록

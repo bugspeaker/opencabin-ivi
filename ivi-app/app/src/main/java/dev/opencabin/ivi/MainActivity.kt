@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.opencabin.ivi.state.CabinController
 import dev.opencabin.ivi.ui.IviRoot
 import dev.opencabin.ivi.ui.IviTheme
 
@@ -24,13 +26,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestCarPermissions()
-        val vehicle = (application as IviApp).vehicle
+        val app = application as IviApp
+        val vehicle = app.vehicle
+        val store = app.settings
         setContent {
             val state = vehicle.state.collectAsStateWithLifecycle().value
+            val settings = store.settings.collectAsStateWithLifecycle().value
+            // 화면 상태(오디오·안내·통화)는 이 화면과 함께 산다. --activity-clear-task 로 다시 열면 처음부터
+            val cabin = remember { CabinController(store, vehicle) }
             IviTheme {
                 IviRoot(
                     source = vehicle.kind,
                     state = state,
+                    settings = settings,
+                    store = store,
+                    cabin = cabin,
                     onSetTemperature = vehicle::setTemperature,
                     onOpenVideo = { startActivity(Intent(this, VideoActivity::class.java)) },
                 )

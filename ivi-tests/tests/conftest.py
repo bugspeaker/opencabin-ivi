@@ -6,7 +6,7 @@
 픽스처
   device   세션 하나에 기기 하나 (ivi.device.Device). 세션 시작 때 앱을 한 번 종료해 깨끗하게 시작
   driver   Appium 세션 (AAOS 전용 설정, 병렬 실행용 --system-port)
-  app      테스트마다 화면을 초기화(--activity-clear-task)하고 차량을 정차·기본 온도로. 끝나면 정차·값 복원
+  app      테스트마다 저장 설정을 기본값으로(테스트 훅), 화면을 초기화(--activity-clear-task), 차량을 정차·기본 온도로. 끝나면 정차·값 복원
   car      app 과 함께 쓰는 차량 어댑터 (device.vehicle)
   vehicle  앱 없이 차량만 쓰는 테스트(1단계 spike)용
 
@@ -137,6 +137,9 @@ def driver(device, pytestconfig):
 def app(device, driver, request):
     screen = IviApp(driver, tapper=device.tapper())
     _start_app(device, screen, request)
+    # 저장 설정을 기본값으로 (테스트끼리 영향 없게). 앱을 띄운 **뒤에** 부른다:
+    # 화웨이는 꺼져 있는 앱에는 브로드캐스트를 전달하지 않는다 (logcat 'targets O+, restricted', 6단계에서 발견)
+    device.reset_app_state()
     device.vehicle.prepare()
     yield screen
     device.vehicle.cleanup()

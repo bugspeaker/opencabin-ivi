@@ -19,7 +19,7 @@ def test_parked_on_start(app):
     assert not app.restriction_banner()
 
 
-@pytest.mark.parametrize("tab", ["home", "climate", "media"])
+@pytest.mark.parametrize("tab", ["home", "navigation", "radio", "media", "phone", "climate", "settings"])
 def test_each_tab_opens(app, tab):
     """탭마다 화면이 열린다 (화면 객체의 wait_loaded 가 핵심 요소를 기다린다)."""
     getattr(app, tab)()
