@@ -79,22 +79,22 @@ xfailed 1건은 일부러 남긴 SystemUI 결함이고, skipped는 AAOS 전용 �
 ## 2. 테스트 환경 구조
 
 ```mermaid
-flowchart TB
-    T["테스트 코드 (pytest)<br/>무엇을 확인할지만 쓴다"]
-    T --> S["화면 객체 · screens.py<br/>Appium으로 찾고 누른다"]
-    T --> V["차량 어댑터 · vehicle.py<br/>신호를 넣고 읽는다"]
-    S --> A1
-    V -->|"AaosVehicle<br/>dumpsys VHAL --set<br/>cmd car_service"| A3
-    S --> B1
-    V -->|"MockVehicle<br/>am broadcast"| B2
-    subgraph AAOS["AAOS 에뮬레이터 (SIL)"]
-        A1["IVI 앱"] --> A2["CarPropertyManager"] --> A3["CarService / VHAL"]
+flowchart LR
+    T[pytest] --> S[화면 객체]
+    T --> V[차량 어댑터]
+    S -->|Appium| A1
+    S -->|Appium| B1
+    V -->|dumpsys / cmd| A2
+    V -->|broadcast| B2
+    subgraph AAOS[AAOS 에뮬레이터]
+        A1[IVI 앱] --> A2[CarService / VHAL]
     end
-    subgraph TAB["화웨이 태블릿"]
-        B1["IVI 앱"] --> B2["Mock 차량 서비스"]
+    subgraph TAB[태블릿]
+        B1[IVI 앱] --> B2[Mock 차량]
     end
 ```
 
+- **역할 분리** — 테스트 코드는 무엇을 확인할지만 씁니다. 화면을 찾고 누르는 일은 화면 객체(`screens.py`), 신호를 넣고 읽는 일은 차량 어댑터(`vehicle.py`)가 맡습니다.
 - **같은 테스트, 두 기기** — 기기 종류는 `automotive` feature로 자동 판별합니다.
 - **기기 차이는 아래 계층에서 흡수** — 값 넣기와 복원, 주행 제한 판정, 누르는 방법은 어댑터와 `Device`가 맡습니다.
 - **앱도 같은 원칙** — `VehicleDataSource` 아래에 실제 구현(CarPropertyManager)과 Mock 구현을 둡니다.
@@ -291,13 +291,19 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 
 ```mermaid
 flowchart LR
-    E["PR / main push / Nightly"] --> B["build<br/>앱 빌드 + 앱 단위 테스트"]
-    E --> U["unit<br/>프레임워크 단위 테스트"]
-    B --> X{"Bench 켜짐?<br/>IVI_BENCH=online"}
+    E[PR / push / Nightly] --> B[build]
+    E --> U[unit]
+    B --> X{Bench 켜짐?}
     U --> X
-    X -->|예| R["e2e<br/>self-hosted Test Bench<br/>두 기기 병렬 + flaky 리포트"]
-    X -->|아니오| K["건너뜀"]
+    X -->|예| R[e2e]
+    X -->|아니오| K[건너뜀]
 ```
+
+| job | 실행 위치 | 내용 |
+|---|---|---|
+| build | GitHub 호스트 | 앱 빌드 + 앱 단위 테스트, APK 보관 |
+| unit | GitHub 호스트 | 프레임워크 단위 테스트 (기기 없음) |
+| e2e | self-hosted Test Bench | 두 기기 병렬 실행 + flaky 리포트. 저장소 변수 `IVI_BENCH=online`일 때만 |
 
 | 이벤트 | e2e 범위 |
 |---|---|
