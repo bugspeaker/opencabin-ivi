@@ -278,6 +278,21 @@ class Video(Screen):
     def elapsed(self):
         return self.text("video_elapsed")
 
+    def elapsed_seconds(self):
+        minutes, seconds = self.elapsed().split(":")
+        return int(minutes) * 60 + int(seconds)
+
+    def has_clips(self):
+        """기기에 블랙박스 영상이 올라가 있어 실제 재생 중인가 (없으면 가짜 재생 화면, tools/push_drive_videos.py)."""
+        return self.visible("video_index")
+
+    def clip_index(self):
+        """'1 / 2' 형식."""
+        return self.text("video_index")
+
+    def next_clip(self):
+        self.tap("video_next")
+
     def close(self):
         self.tap("video_close")
 

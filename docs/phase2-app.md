@@ -11,7 +11,7 @@ ivi-app/app/src/main/java/dev/opencabin/ivi/
   vehicle/MockVehicleDataSource.kt 일반 Android: adb broadcast 로 값을 넣고 읽는다 (debug 빌드만)
   IviApp.kt                        FEATURE_AUTOMOTIVE 로 둘 중 하나를 고른다
   MainActivity.kt                  홈 · 공조 · 미디어 (distractionOptimized = 주행 중에도 사용)
-  VideoActivity.kt                 영상 (DO 아님 = 주행 중 차단 대상)
+  VideoActivity.kt                 영상 (DO 아님 = 주행 중 차단 대상). Media3 로 기기에 올린 주행 영상 재생, 없으면 가짜 화면
   ui/IviScreens.kt                 Compose 화면, 테스트 태그
 ivi-app/privileged/                priv-app 설치 스크립트와 권한 허용 목록
 ```
@@ -28,7 +28,18 @@ Compose `testTag`를 `testTagsAsResourceId = true`로 노출한다. Appium에서
 | 홈 | `home_media_title`, `home_driver_temp`, `home_passenger_temp` |
 | 공조 | `driver_temp_value` `driver_temp_up` `driver_temp_down`, `passenger_…` 같은 형식, 권한 없으면 `hvac_unavailable` |
 | 미디어 | `track_0`~`track_4` (줄), `track_N_title` (제목, 5단계 추가), `now_playing_title`, `playback_state`, `play_pause`, `open_video`, 주행 중 `video_restricted_notice` |
-| 영상 | `video_player` `video_elapsed` `video_close`, 앱이 막으면 `video_blocked` |
+| 영상 | `video_player` `video_elapsed` `video_close`, 앱이 막으면 `video_blocked`. 실제 영상이면 `video_surface` `video_index`(`1 / 2`) `video_next` |
+
+## 주행 영상 (블랙박스, 2026-11-16 추가)
+
+영상 화면은 원래 그라데이션에 재생 시간만 흐르는 가짜였다. 지금은 앱 전용 폴더 `files/drive/`의 mp4를 Media3(ExoPlayer)로 재생하고, 파일이 없으면 예전 가짜 화면을 보여 준다. 테스트 태그는 두 경우가 같아서 기존 테스트는 영상 유무와 상관없이 돈다.
+
+- **올리기**: `ivi-tests/tools/push_drive_videos.py --src <원본 폴더>`. 원본은 `.drive/`(gitignore, 번호판·위치가 담긴 개인 자료).
+- **다듬기 (ffmpeg)**: 블랙박스(1920x1080)는 화면 아래에 날짜·제품명·GPS 좌표·속도 줄을 보닛 위에 겹쳐 녹화한다. 아래 81px와 오른쪽 거치대 쪽 144px를 잘라 16:9(1776x999)로 맞춘 뒤 1280x720으로 줄인다. 잘린 끝이 보닛 위라 어색하지 않다.
+- **코덱**: 원본은 H.265. 에뮬레이터는 HEVC를 소프트웨어로 풀어 끊기므로 H.264로 바꾼다. 음성(실내 대화)과 메타데이터는 지운다.
+- **화면**: 남는 자리 안에서 16:9를 가장 크게 잡고 둥근 모서리로 자른다 (`PlayerView`를 `texture_view`로 써야 Compose clip이 먹는다).
+- **AAOS 저장 위치**: 현재 사용자가 10이라 `adb push /sdcard/...`(사용자 0)로는 앱이 못 보고, 셸은 `/storage/emulated/10`에 쓸 권한이 없다. root로 `/data/media/10/Android/data/<pkg>/files/drive/`에 넣고, 앱이 만든 폴더의 소유자(`u10_aNNN:ext_data_rw`)로 `chown`, `restorecon`한다.
+- **주행 전환**: 막히면 멈추고 정차하면 그 자리에서 이어서 재생한다. AAOS는 OS 차단으로 `onStop`/`onStart`, 태블릿은 같은 화면 안의 `restricted` 변화로 처리한다. `test_video_resumes_where_it_stopped`가 '처음부터 다시 재생되지 않음'과 '막힌 동안 재생이 흐르지 않음'을 함께 확인한다.
 
 ## AAOS에서 확인한 것 (에뮬레이터, 2026-11-13)
 
