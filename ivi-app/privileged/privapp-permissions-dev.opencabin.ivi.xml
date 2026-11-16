@@ -3,5 +3,6 @@
 <permissions>
     <privapp-permissions package="dev.opencabin.ivi">
         <permission name="android.car.permission.CONTROL_CAR_CLIMATE" />
+        <permission name="android.car.permission.CONTROL_CAR_DOORS" />
     </privapp-permissions>
 </permissions>

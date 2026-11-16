@@ -63,6 +63,7 @@ import dev.opencabin.ivi.state.VoiceCommands
 import dev.opencabin.ivi.vehicle.Gear
 import dev.opencabin.ivi.vehicle.HvacSpec
 import dev.opencabin.ivi.vehicle.Seat
+import dev.opencabin.ivi.vehicle.VehicleDataSource
 import dev.opencabin.ivi.vehicle.VehicleState
 import kotlinx.coroutines.delay
 import java.time.LocalTime
@@ -98,7 +99,7 @@ fun IviRoot(
     settings: Settings,
     store: SettingsStore,
     cabin: CabinController,
-    onSetTemperature: (Seat, Float) -> Unit,
+    vehicle: VehicleDataSource,
     onOpenVideo: () -> Unit,
 ) {
     val cockpit = remember { CockpitState() }
@@ -107,14 +108,14 @@ fun IviRoot(
     /** 동기화(SYNC) 중이면 운전석 값을 조수석에도 쓴다. 조수석을 직접 바꾸면 동기화가 풀린다 (일반적인 차량 동작). */
     fun setTemperature(seat: Seat, celsius: Float, direct: Boolean) {
         val value = HvacSpec.clamp(celsius)
-        onSetTemperature(seat, value)
-        if (cockpit.sync && seat == Seat.DRIVER) onSetTemperature(Seat.PASSENGER, value)
+        vehicle.setTemperature(seat, value)
+        if (cockpit.sync && seat == Seat.DRIVER) vehicle.setTemperature(Seat.PASSENGER, value)
         if (cockpit.sync && seat == Seat.PASSENGER && direct) cockpit.sync = false
     }
 
     fun setSync(on: Boolean) {
         cockpit.sync = on
-        if (on) current.driverTempC?.let { onSetTemperature(Seat.PASSENGER, it) }
+        if (on) current.driverTempC?.let { vehicle.setTemperature(Seat.PASSENGER, it) }
     }
 
     // AI 어시스턴트가 차를 움직이는 길. 오디오·내비·전화는 6단계 CabinController 를 그대로 쓴다
@@ -124,9 +125,9 @@ fun IviRoot(
             override val hvacAvailable get() = current.hvacAvailable
             override fun temperature(seat: Seat) = when (seat) { Seat.DRIVER -> current.driverTempC; Seat.PASSENGER -> current.passengerTempC }
             override fun setTemperature(seat: Seat, celsius: Float) = setTemperature(seat, celsius, direct = false)
-            override fun setAc(on: Boolean) { cockpit.ac = on }
+            override fun setAc(on: Boolean) = vehicle.setAc(on)
             override fun setSync(on: Boolean) = setSync(on)
-            override fun setSeatHeat(seat: Seat, on: Boolean) { cockpit.seatHeat[seat] = on }
+            override fun setSeatHeat(seat: Seat, on: Boolean) = vehicle.setSeatHeat(seat, if (on) HvacSpec.SEAT_HEAT_MAX else 0)
             override fun play() = cabin.playMedia()
             override fun pause() = cabin.pauseMedia()
             override fun next() = cabin.nextTrack()
@@ -168,12 +169,12 @@ fun IviRoot(
                             Tab.RADIO -> RadioScreen(settings, cabin)
                             Tab.MEDIA -> MediaScreen(state, cabin, onOpenVideo)
                             Tab.PHONE -> PhoneScreen(state, cabin)
-                            Tab.CLIMATE -> ClimateScreen(state, cockpit, ::setTemperature, ::setSync)
+                            Tab.CLIMATE -> ClimateScreen(state, cockpit, vehicle, ::setTemperature, ::setSync)
                             Tab.SETTINGS -> SettingsScreen(settings, store)
                             Tab.ASSISTANT -> AssistantScreen(state, cockpit, onAsk = ::ask) { place ->
                                 cockpit.say(false, assistant.choose(place).text, null)
                             }
-                            Tab.VEHICLE -> VehicleScreen(state, cockpit)
+                            Tab.VEHICLE -> VehicleScreen(state, cockpit, vehicle)
                             Tab.APPS -> AppsScreen(state, cockpit, onOpenVideo)
                         }
                         cabin.call?.let { CallOverlay(it.name, it.number, it.startedAt) { cabin.endCall() } }
@@ -191,7 +192,7 @@ fun IviRoot(
                     }
                 }
             }
-            BottomBar(state, cockpit, ::setTemperature)
+            BottomBar(state, cockpit, vehicle, ::setTemperature)
         }
         // 화면 밝기 (설정): 어둡게 덮는다. 터치는 막지 않는다
         val dim = (Settings.BRIGHTNESS_MAX - settings.brightness).coerceAtLeast(0) * 0.025f
@@ -235,6 +236,10 @@ private fun ShellEffects(state: VehicleState, cabin: CabinController, cockpit: C
         val dest = cabin.destination ?: return@LaunchedEffect
         if (cabin.guiding) cockpit.notify("경로 안내 시작", "${dest.name} · ${km(dest.distanceKm.toDouble())}")
         else if (cabin.arrived) cockpit.notify("목적지 도착", "${dest.name}에 도착했어요.")
+    }
+    // 차량 신호 RANGE_REMAINING 이 기준 이하로 내려가면 한 번 알린다 (내비 화면에는 충전소 안내 카드가 뜬다)
+    LaunchedEffect(state.lowRange) {
+        if (state.lowRange) cockpit.notify("주행 가능 거리 부족", "가까운 충전소를 안내할 수 있어요.")
     }
     LaunchedEffect(cabin.call?.startedAt) {
         cabin.call?.let { cockpit.notify("통화 연결", "${it.name} · 핸즈프리") }
@@ -364,17 +369,15 @@ private fun NotificationPanel(cockpit: CockpitState, modifier: Modifier) {
 // ---------------- 하단 바 (컨트롤 영역) ----------------
 
 @Composable
-private fun BottomBar(state: VehicleState, cockpit: CockpitState, setTemperature: (Seat, Float, Boolean) -> Unit) {
+private fun BottomBar(state: VehicleState, cockpit: CockpitState, vehicle: VehicleDataSource, setTemperature: (Seat, Float, Boolean) -> Unit) {
     Row(
         Modifier.fillMaxWidth().height(84.dp).padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
             BarToggle(G.CAR, "nav_vehicle", cockpit.tab == Tab.VEHICLE, IviColors.AccentSoft) { cockpit.open(Tab.VEHICLE) }
-            BarTemperature(Seat.DRIVER, state, cockpit.ac, "A/C", setTemperature)
-            BarToggle(G.SEAT_HEAT, "bar_seat_heat_driver", cockpit.seatHeat[Seat.DRIVER] == true, IviColors.Warm) {
-                cockpit.seatHeat[Seat.DRIVER] = cockpit.seatHeat[Seat.DRIVER] != true
-            }
+            BarTemperature(Seat.DRIVER, state, state.acOn, "A/C", setTemperature)
+            SeatHeatButton(Seat.DRIVER, state, vehicle)
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             AppButton(Tab.CLIMATE, cockpit)
@@ -389,9 +392,7 @@ private fun BottomBar(state: VehicleState, cockpit: CockpitState, setTemperature
             }
         }
         Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.End)) {
-            BarToggle(G.SEAT_HEAT, "bar_seat_heat_passenger", cockpit.seatHeat[Seat.PASSENGER] == true, IviColors.Warm) {
-                cockpit.seatHeat[Seat.PASSENGER] = cockpit.seatHeat[Seat.PASSENGER] != true
-            }
+            SeatHeatButton(Seat.PASSENGER, state, vehicle)
             BarTemperature(Seat.PASSENGER, state, cockpit.sync, "SYNC", setTemperature)
         }
     }
@@ -445,6 +446,31 @@ private fun BarToggle(g: G, tag: String, on: Boolean, onColor: Color, size: Dp =
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { Glyph(g, if (on) onColor else IviColors.TextPrimary, Modifier.size(28.dp)) }
+}
+
+/** 아래 바의 좌석 열선: 누를 때마다 꺼짐 → 2단 → 1단 → 꺼짐. 차량 신호 HVAC_SEAT_TEMPERATURE 를 쓰고, 단계 숫자를 옆에 보여 준다. */
+@Composable
+private fun SeatHeatButton(seat: Seat, state: VehicleState, vehicle: VehicleDataSource) {
+    val level = state.seatHeat(seat)
+    val on = level > 0
+    Box(
+        Modifier
+            .testTag("bar_seat_heat_${seat.tag}")
+            .size(50.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(if (on) IviColors.Warm.copy(alpha = 0.16f) else Color.Transparent)
+            .clickable(enabled = state.hvacAvailable) { vehicle.setSeatHeat(seat, HvacSpec.nextSeatHeat(level)) },
+        contentAlignment = Alignment.Center,
+    ) {
+        Glyph(G.SEAT_HEAT, if (on) IviColors.Warm else IviColors.TextPrimary, Modifier.size(28.dp))
+        Text(
+            if (on) level.toString() else "",
+            Modifier.testTag("bar_seat_heat_${seat.tag}_level").align(Alignment.BottomEnd).padding(end = 5.dp, bottom = 2.dp),
+            color = IviColors.Warm,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+        )
+    }
 }
 
 /** 아래 바의 좌석 온도: ‹ 22.0° › 와 상태 글자(A/C, SYNC). 실제 차량 신호(HVAC_TEMPERATURE_SET)를 바꾼다. */

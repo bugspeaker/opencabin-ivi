@@ -77,6 +77,7 @@ fun Cluster(state: VehicleState, mph: Boolean, cabin: CabinController, cockpit: 
                 )
             }
         }
+        EnergyRow(state, mph)
         AdasRow(state)
         // 경로 안내 중이면 주행 정보에도 목적지와 남은 거리를 보여 준다 (앱 화면이 다른 앱이어도 보이게)
         val dest = cabin.destination
@@ -97,6 +98,11 @@ fun Cluster(state: VehicleState, mph: Boolean, cabin: CabinController, cockpit: 
                 fontSize = 13.sp,
                 modifier = Modifier.weight(1f),
             )
+            // 외기 온도: 차량 신호 ENV_OUTSIDE_TEMPERATURE
+            state.outsideTempC?.let {
+                Text(tempText(it), Modifier.testTag("outside_temp"), color = IviColors.TextSecondary, fontSize = 13.sp)
+                Text("  ·  ", color = IviColors.TextTertiary, fontSize = 13.sp)
+            }
             Text(
                 when {
                     state.restricted -> "주행 중"
@@ -108,6 +114,36 @@ fun Cluster(state: VehicleState, mph: Boolean, cabin: CabinController, cockpit: 
                 fontSize = 13.sp,
             )
         }
+    }
+}
+
+/**
+ * 배터리 잔량 · 주행 가능 거리: 차량 신호 EV_BATTERY_LEVEL / RANGE_REMAINING.
+ * 기준(30 km) 이하면 주황색으로 바뀐다. 값을 읽을 수 없으면(권한 없음) 그 사실을 보여 준다.
+ */
+@Composable
+private fun EnergyRow(state: VehicleState, mph: Boolean) {
+    val range = state.rangeKm
+    val battery = state.batteryPercent
+    val color = if (state.lowRange) IviColors.Warn else IviColors.TextPrimary
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (range == null && battery == null) {
+            Text("주행 가능 거리 정보 없음", Modifier.testTag("range_unavailable"), color = IviColors.TextTertiary, fontSize = 13.sp)
+            return@Row
+        }
+        if (battery != null) {
+            // 배터리 모양: 테두리 + 잔량만큼 채움
+            Box(Modifier.size(width = 30.dp, height = 14.dp).border(1.5.dp, color, RoundedCornerShape(4.dp)).padding(2.dp)) {
+                Box(Modifier.fillMaxWidth((battery / 100f).coerceIn(0.04f, 1f)).height(10.dp).clip(RoundedCornerShape(2.dp))
+                    .background(if (state.lowRange) IviColors.Warn else IviColors.Green))
+            }
+            Text(String.format(Locale.US, "%.0f%%", battery), Modifier.testTag("battery_value"), color = color, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+        }
+        if (range != null) {
+            val text = if (mph) String.format(Locale.US, "%.0f mi", range * 0.621371f) else String.format(Locale.US, "%.0f km", range)
+            Text(text, Modifier.testTag("range_value"), color = color, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+        }
+        if (state.lowRange) Text("충전 필요", Modifier.testTag("range_low"), color = IviColors.Warn, fontSize = 12.sp)
     }
 }
 

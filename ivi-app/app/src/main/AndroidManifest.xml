@@ -7,6 +7,11 @@
     <uses-permission android:name="android.car.permission.CAR_SPEED" />          <!-- dangerous: 실행 중 요청 -->
     <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />     <!-- normal -->
     <uses-permission android:name="android.car.permission.CONTROL_CAR_CLIMATE" /> <!-- signature|privileged: priv-app 설치 필요 -->
+    <!-- 8단계: 도어 잠금 · 주행 가능 거리 · 배터리 · 외기 온도 -->
+    <uses-permission android:name="android.car.permission.CONTROL_CAR_DOORS" />   <!-- signature|privileged: priv-app 설치 필요 -->
+    <uses-permission android:name="android.car.permission.CAR_ENERGY" />          <!-- dangerous: 실행 중 요청 -->
+    <uses-permission android:name="android.car.permission.CAR_INFO" />            <!-- normal -->
+    <uses-permission android:name="android.car.permission.CAR_EXTERIOR_ENVIRONMENT" /> <!-- normal -->
 
     <application
         android:name=".IviApp"

@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.assistant.PlaceCategory
+import dev.opencabin.ivi.assistant.Places
 import dev.opencabin.ivi.state.CabinController
 import dev.opencabin.ivi.state.Destination
 import dev.opencabin.ivi.state.Destinations
@@ -88,7 +89,11 @@ fun NavigationPane(state: VehicleState, cabin: CabinController, cockpit: Cockpit
             cabin.guiding && dest != null -> Guidance(state, cabin, dest)
             cabin.arrived && dest != null -> Arrived(dest, Modifier.align(Alignment.Center)) { cabin.stopGuidance() }
             dest != null -> Preview(dest, Modifier.align(Alignment.BottomStart), onStart = { cabin.startGuidance() }, onCancel = { cabin.stopGuidance() })
-            else -> Search(state.restricted, cockpit.split, Modifier.align(Alignment.BottomStart)) { cabin.preview(it) }
+            else -> Search(state.restricted, cockpit.split, state.lowRange, Modifier.align(Alignment.BottomStart)) { cabin.preview(it) }
+        }
+        // 차량 신호(RANGE_REMAINING)가 기준 이하이고 안내 중이 아니면 가까운 충전소를 권한다
+        if (state.lowRange && dest == null) {
+            LowRangeCard(state.rangeKm ?: 0f, Modifier.align(Alignment.TopStart)) { cabin.startGuidance(it) }
         }
     }
 }
@@ -96,7 +101,7 @@ fun NavigationPane(state: VehicleState, cabin: CabinController, cockpit: Cockpit
 // ---------------- 찾기 ----------------
 
 @Composable
-private fun Search(restricted: Boolean, narrow: Boolean, modifier: Modifier, onPick: (Destination) -> Unit) {
+private fun Search(restricted: Boolean, narrow: Boolean, compact: Boolean, modifier: Modifier, onPick: (Destination) -> Unit) {
     var query by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<PlaceCategory?>(null) }
     Column(
@@ -150,7 +155,7 @@ private fun Search(restricted: Boolean, narrow: Boolean, modifier: Modifier, onP
             (query.isBlank() || d.name.contains(query.trim())) && (category == null || d.category == category)
         }.let { list -> if (category != null) list.sortedBy { it.value.distanceKm } else list }
         // 지도가 보이도록 목록 높이를 줄인다 (분할 화면이면 더 작게)
-        LazyColumn(Modifier.heightIn(max = if (narrow) 170.dp else 230.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        LazyColumn(Modifier.heightIn(max = if (compact) 96.dp else if (narrow) 170.dp else 230.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             items(results, key = { it.index }) { (index, d) ->
                 Row(
                     Modifier
@@ -172,6 +177,34 @@ private fun Search(restricted: Boolean, narrow: Boolean, modifier: Modifier, onP
                 }
             }
         }
+    }
+}
+
+/** 주행 가능 거리 부족 카드: 가장 가까운 충전소로 바로 안내한다 (주행 중에도 한 번 눌러 쓸 수 있다). */
+@Composable
+private fun LowRangeCard(rangeKm: Float, modifier: Modifier, onNavigate: (Destination) -> Unit) {
+    val charger = Places.byCategory(PlaceCategory.CHARGER).firstOrNull() ?: return
+    Row(
+        modifier
+            .testTag("low_range_card")
+            .padding(12.dp)
+            .widthIn(max = 360.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(IviColors.AccentDeep)
+            .border(1.dp, IviColors.Accent, RoundedCornerShape(16.dp))
+            .padding(start = 12.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Column(Modifier.weight(1f, fill = false)) {
+            Text("주행 가능 거리 ${String.format(java.util.Locale.US, "%.0f", rangeKm)} km", Modifier.testTag("low_range_text"), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Text("${charger.name} · ${km(charger.distanceKm.toDouble())}", Modifier.testTag("low_range_charger"), fontSize = 12.sp, color = IviColors.TextSecondary, maxLines = 1,
+                overflow = TextOverflow.Ellipsis)
+        }
+        Box(
+            Modifier.testTag("low_range_navigate").size(52.dp).clip(CircleShape).background(IviColors.TextPrimary).clickable { onNavigate(charger) },
+            contentAlignment = Alignment.Center,
+        ) { Glyph(G.TURN_RIGHT, IviColors.AccentDeep, Modifier.size(26.dp)) }
     }
 }
 

@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import dev.opencabin.ivi.assistant.Place
@@ -47,8 +46,9 @@ data class ChatMessage(
  * 화면 틀(Shell)이 가진 상태. 오디오·내비·전화는 6단계 CabinController 가, 저장 설정은 SettingsStore 가 가진다.
  * 테스트는 매번 액티비티를 새로 띄우므로(--activity-clear-task) 이 상태도 매번 처음 값으로 돌아간다.
  *
- * 공조의 A/C·풍량·열선·김서림, 차량 빠른 제어는 에뮬레이터 VHAL 에 연결하지 않은 '화면 상태' 다.
- * 단, 동기화(SYNC)는 운전석 온도를 조수석에도 실제 VHAL 값으로 쓴다 (Shell.setTemperature).
+ * 8단계부터 공조(A/C·AUTO·풍량·김서림·열선)와 도어 잠금은 차량 신호(VehicleState)다. 여기 남은 것은
+ * 에뮬레이터 VHAL 에 없는 것(사이드 미러 접기 · 트렁크 · 차일드 락 · 실내등 · 전조등)과 화면만의 상태다.
+ * 동기화(SYNC)는 운전석 온도를 조수석에도 차량 신호로 쓴다 (Shell.setTemperature).
  */
 class CockpitState {
     var tab by mutableStateOf(Tab.HOME)
@@ -69,17 +69,10 @@ class CockpitState {
     // 분할 화면 (내비 + 오디오)
     var split by mutableStateOf(true)
 
-    // 공조 (화면 상태)
-    var ac by mutableStateOf(true)
-    var autoMode by mutableStateOf(false)
+    // 공조 동기화 (앱 규칙. 값 자체는 차량 신호)
     var sync by mutableStateOf(false)
-    var fan by mutableIntStateOf(3)
-    var defrostFront by mutableStateOf(false)
-    var defrostRear by mutableStateOf(false)
-    val seatHeat = mutableStateMapOf<Seat, Boolean>()
 
-    // 차량 빠른 제어 (화면 상태)
-    var doorsLocked by mutableStateOf(true)
+    // 차량 빠른 제어 중 VHAL 에 없는 것 (화면 상태)
     var mirrorsFolded by mutableStateOf(false)
     var trunkOpen by mutableStateOf(false)
     var childLock by mutableStateOf(false)

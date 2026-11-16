@@ -89,7 +89,8 @@ def main():
     privileged = "PRIVILEGED" in dump
     climate = "android.car.permission.CONTROL_CAR_CLIMATE: granted=true" in dump
     user = adb(s, "shell", "am", "get-current-user")
-    adb(s, "shell", "pm", "grant", "--user", user, PACKAGE, "android.car.permission.CAR_SPEED", check=False)
+    for permission in ("CAR_SPEED", "CAR_ENERGY"):  # dangerous 권한: 권한 창이 뜨지 않게 미리 준다
+        adb(s, "shell", "pm", "grant", "--user", user, PACKAGE, f"android.car.permission.{permission}", check=False)
     print(f"   priv-app: {privileged}, CONTROL_CAR_CLIMATE: {climate}, 운전자 사용자: {user}")
     if not (privileged and climate):
         sys.exit("priv-app 설치 또는 권한 부여가 확인되지 않았다")

@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.vehicle.HvacSpec
 import dev.opencabin.ivi.vehicle.Seat
+import dev.opencabin.ivi.vehicle.VehicleDataSource
 import dev.opencabin.ivi.vehicle.VehicleState
 
 // ---------------- 공조 (전 좌석 공조 패널) ----------------
@@ -42,6 +45,7 @@ import dev.opencabin.ivi.vehicle.VehicleState
 fun ClimateScreen(
     state: VehicleState,
     cockpit: CockpitState,
+    vehicle: VehicleDataSource,
     setTemperature: (Seat, Float, Boolean) -> Unit,
     setSync: (Boolean) -> Unit,
 ) {
@@ -53,35 +57,41 @@ fun ClimateScreen(
         return
     }
     Row(Modifier.fillMaxSize().padding(bottom = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        SeatPanel("운전석", Seat.DRIVER, state.driverTempC, cockpit, setTemperature, Modifier.weight(1f).fillMaxHeight())
+        SeatPanel("운전석", Seat.DRIVER, state, vehicle, setTemperature, Modifier.weight(1f).fillMaxHeight())
         Panel(Modifier.weight(1.05f).fillMaxHeight(), padding = 16.dp, verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Label("공조")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Toggle("A/C", "climate_ac", cockpit.ac, Modifier.weight(1f)) { cockpit.ac = !cockpit.ac }
-                Toggle("AUTO", "climate_auto", cockpit.autoMode, Modifier.weight(1f)) { cockpit.autoMode = !cockpit.autoMode }
+                // A/C · AUTO · 풍량 · 김서림은 차량 신호다 (HVAC_AC_ON / HVAC_AUTO_ON / HVAC_FAN_SPEED / HVAC_DEFROSTER)
+                Toggle("A/C", "climate_ac", state.acOn, Modifier.weight(1f)) { vehicle.setAc(!state.acOn) }
+                Toggle("AUTO", "climate_auto", state.autoOn, Modifier.weight(1f)) { vehicle.setAuto(!state.autoOn) }
                 Toggle("SYNC", "climate_sync", cockpit.sync, Modifier.weight(1f)) { setSync(!cockpit.sync) }
             }
             Label("풍량")
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                StepButton("−", "climate_fan_down", cockpit.fan > 1) { cockpit.fan-- }
+                // 풍량을 직접 바꾸면 AUTO 는 풀린다 (일반적인 차량 동작)
+                fun setFan(level: Int) {
+                    vehicle.setFanSpeed(level)
+                    if (state.autoOn) vehicle.setAuto(false)
+                }
+                StepButton("−", "climate_fan_down", state.fanSpeed > HvacSpec.FAN_MIN) { setFan(state.fanSpeed - 1) }
                 Row(Modifier.weight(1f).height(28.dp), horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.Bottom) {
-                    (1..8).forEach { level ->
+                    (HvacSpec.FAN_MIN..HvacSpec.FAN_MAX).forEach { level ->
                         Box(
-                            Modifier.weight(1f).fillMaxHeight(0.3f + level * 0.0875f).clip(RoundedCornerShape(3.dp))
-                                .background(if (level <= cockpit.fan) IviColors.AccentSoft else IviColors.Line),
+                            Modifier.weight(1f).fillMaxHeight(0.3f + level * 0.1f).clip(RoundedCornerShape(3.dp))
+                                .background(if (level <= state.fanSpeed) IviColors.AccentSoft else IviColors.Line),
                         )
                     }
                 }
-                Text("${cockpit.fan}", Modifier.testTag("climate_fan_level"), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-                StepButton("+", "climate_fan_up", cockpit.fan < 8) { cockpit.fan++ }
+                Text("${state.fanSpeed}", Modifier.testTag("climate_fan_level"), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                StepButton("+", "climate_fan_up", state.fanSpeed < HvacSpec.FAN_MAX) { setFan(state.fanSpeed + 1) }
             }
             Label("김서림 제거")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                IconToggle(G.DEFROST_FRONT, "앞", "climate_defrost_front", cockpit.defrostFront, IviColors.Warn, Modifier.weight(1f)) { cockpit.defrostFront = !cockpit.defrostFront }
-                IconToggle(G.DEFROST_REAR, "뒤", "climate_defrost_rear", cockpit.defrostRear, IviColors.Warn, Modifier.weight(1f)) { cockpit.defrostRear = !cockpit.defrostRear }
+                IconToggle(G.DEFROST_FRONT, "앞", "climate_defrost_front", state.defrostFront, IviColors.Warn, Modifier.weight(1f)) { vehicle.setDefrost(front = true, on = !state.defrostFront) }
+                IconToggle(G.DEFROST_REAR, "뒤", "climate_defrost_rear", state.defrostRear, IviColors.Warn, Modifier.weight(1f)) { vehicle.setDefrost(front = false, on = !state.defrostRear) }
             }
         }
-        SeatPanel("조수석", Seat.PASSENGER, state.passengerTempC, cockpit, setTemperature, Modifier.weight(1f).fillMaxHeight())
+        SeatPanel("조수석", Seat.PASSENGER, state, vehicle, setTemperature, Modifier.weight(1f).fillMaxHeight())
     }
 }
 
@@ -89,11 +99,12 @@ fun ClimateScreen(
 private fun SeatPanel(
     title: String,
     seat: Seat,
-    celsius: Float?,
-    cockpit: CockpitState,
+    state: VehicleState,
+    vehicle: VehicleDataSource,
     setTemperature: (Seat, Float, Boolean) -> Unit,
     modifier: Modifier,
 ) {
+    val celsius = if (seat == Seat.DRIVER) state.driverTempC else state.passengerTempC
     Panel(modifier, padding = 16.dp, verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally) {
         Label(title)
         Text(tempText(celsius), Modifier.testTag("${seat.tag}_temp_value"), fontSize = 40.sp, fontWeight = FontWeight.Light)
@@ -106,10 +117,15 @@ private fun SeatPanel(
                 setTemperature(seat, celsius!! + HvacSpec.STEP_C, true)
             }
         }
-        val heat = cockpit.seatHeat[seat] == true
-        IconToggle(G.SEAT_HEAT, "열선", "seat_heat_${seat.tag}", heat, IviColors.Warm, Modifier.fillMaxWidth()) { cockpit.seatHeat[seat] = !heat }
+        // 좌석 열선: 차량 신호 HVAC_SEAT_TEMPERATURE. 누를 때마다 꺼짐 → 2단 → 1단 → 꺼짐
+        val heat = state.seatHeat(seat)
+        IconToggle(G.SEAT_HEAT, heatLabel(heat), "seat_heat_${seat.tag}", heat > 0, IviColors.Warm, Modifier.fillMaxWidth()) {
+            vehicle.setSeatHeat(seat, HvacSpec.nextSeatHeat(heat))
+        }
     }
 }
+
+fun heatLabel(level: Int) = if (level > 0) "열선 ${level}단" else "열선 꺼짐"
 
 /** 설정 온도 위치를 16 ~ 28°C 막대로 보여 준다 (파랑 → 빨강). */
 @Composable
@@ -141,7 +157,8 @@ private fun TempButton(text: String, tag: String, enabled: Boolean, tint: Color,
 @Composable
 private fun Toggle(label: String, tag: String, on: Boolean, modifier: Modifier, onClick: () -> Unit) {
     Box(
-        modifier.testTag(tag).height(52.dp).outlined(on).clickable(onClick = onClick),
+        // toggleable: 켜짐/꺼짐을 접근성 정보(checked)로 내보낸다 → Appium 이 색 대신 checked 속성을 읽는다
+        modifier.testTag(tag).height(52.dp).outlined(on).toggleable(value = on, role = Role.Switch, onValueChange = { onClick() }),
         contentAlignment = Alignment.Center,
     ) {
         Text(label, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if (on) IviColors.Green else IviColors.TextSecondary)
@@ -151,12 +168,12 @@ private fun Toggle(label: String, tag: String, on: Boolean, modifier: Modifier, 
 @Composable
 private fun IconToggle(g: G, label: String, tag: String, on: Boolean, onColor: Color, modifier: Modifier, onClick: () -> Unit) {
     Row(
-        modifier.testTag(tag).height(52.dp).outlined(on).clickable(onClick = onClick).padding(horizontal = 12.dp),
+        modifier.testTag(tag).height(52.dp).outlined(on).toggleable(value = on, role = Role.Switch, onValueChange = { onClick() }).padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     ) {
         Glyph(g, if (on) onColor else IviColors.TextSecondary, Modifier.size(24.dp))
-        Text(label, fontSize = 15.sp, color = if (on) onColor else IviColors.TextSecondary)
+        Text(label, Modifier.testTag("${tag}_value"), fontSize = 15.sp, color = if (on) onColor else IviColors.TextSecondary)
     }
 }
 
@@ -171,7 +188,7 @@ private fun StepButton(text: String, tag: String, enabled: Boolean, onClick: () 
 // ---------------- 차량 · 빠른 제어 ----------------
 
 @Composable
-fun VehicleScreen(state: VehicleState, cockpit: CockpitState) {
+fun VehicleScreen(state: VehicleState, cockpit: CockpitState, vehicle: VehicleDataSource) {
     val driving = state.restricted
     Panel(Modifier.fillMaxSize().padding(bottom = 4.dp), padding = 18.dp, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -179,8 +196,11 @@ fun VehicleScreen(state: VehicleState, cockpit: CockpitState) {
             if (driving) Text("주행 중에는 사이드 미러 · 트렁크를 조작할 수 없습니다", Modifier.testTag("qc_restricted_notice"), color = IviColors.Warn, fontSize = 13.sp)
         }
         Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            QuickTile(if (cockpit.doorsLocked) G.LOCK else G.UNLOCK, "도어", if (cockpit.doorsLocked) "잠김" else "열림", "qc_door_lock", cockpit.doorsLocked, true, Modifier.weight(1f)) {
-                cockpit.doorsLocked = !cockpit.doorsLocked
+            // 도어 잠금: 차량 신호 DOOR_LOCK (전 도어). 읽을 수 없으면(AAOS 에서 CONTROL_CAR_DOORS 권한 없음) 누를 수 없다
+            val locked = state.doorsLocked
+            QuickTile(if (locked != false) G.LOCK else G.UNLOCK, "도어", when (locked) { true -> "잠김"; false -> "열림"; null -> "제어 불가" },
+                "qc_door_lock", locked == true, locked != null, Modifier.weight(1f)) {
+                vehicle.setDoorsLocked(locked != true)
             }
             // 사이드 미러: 주행 중에는 접을 수 없다 (펴는 것은 된다)
             QuickTile(G.MIRROR, "사이드 미러", if (cockpit.mirrorsFolded) "접힘" else "펼침", "qc_mirror", cockpit.mirrorsFolded, !driving || cockpit.mirrorsFolded, Modifier.weight(1f)) {
@@ -197,8 +217,8 @@ fun VehicleScreen(state: VehicleState, cockpit: CockpitState) {
             QuickTile(G.LIGHT, "실내등", if (cockpit.interiorLight) "켜짐" else "꺼짐", "qc_interior_light", cockpit.interiorLight, true, Modifier.weight(1f)) {
                 cockpit.interiorLight = !cockpit.interiorLight
             }
-            QuickTile(G.SEAT_HEAT, "운전석 열선", if (cockpit.seatHeat[Seat.DRIVER] == true) "켜짐" else "꺼짐", "qc_seat_heat", cockpit.seatHeat[Seat.DRIVER] == true, true, Modifier.weight(1f)) {
-                cockpit.seatHeat[Seat.DRIVER] = cockpit.seatHeat[Seat.DRIVER] != true
+            QuickTile(G.SEAT_HEAT, "운전석 열선", if (state.driverSeatHeat > 0) "${state.driverSeatHeat}단" else "꺼짐", "qc_seat_heat", state.driverSeatHeat > 0, state.hvacAvailable, Modifier.weight(1f)) {
+                vehicle.setSeatHeat(Seat.DRIVER, HvacSpec.nextSeatHeat(state.driverSeatHeat))
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

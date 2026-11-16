@@ -205,6 +205,34 @@ class Climate(Screen):
     def can_increase(self, seat):
         return self.enabled(f"{seat.tag}_temp_up")
 
+    # ---- 8단계: 차량 신호에 연결된 공조 부가 기능 ----
+    def checked(self, name):
+        """토글 상태. name: ac / auto / sync / defrost_front / defrost_rear (색이 아니라 접근성 checked 를 읽는다)"""
+        return self.find(f"climate_{name}").get_attribute("checked") == "true"
+
+    def wait_checked(self, name, expected, timeout=TIMEOUT):
+        wait_until(lambda: self.checked(name) == expected, timeout=timeout, what=f"공조 {name} {'켜짐' if expected else '꺼짐'}")
+
+    def toggle(self, name):
+        self.tap(f"climate_{name}")
+
+    def fan(self):
+        return int(self.text("climate_fan_level"))
+
+    def fan_up(self):
+        self.tap("climate_fan_up")
+
+    def fan_down(self):
+        self.tap("climate_fan_down")
+
+    def seat_heat(self, seat):
+        """'열선 2단' → 2, '열선 꺼짐' → 0"""
+        text = self.text(f"seat_heat_{seat.tag}_value")
+        return 0 if "꺼짐" in text else int(text.split()[1].removesuffix("단"))
+
+    def tap_seat_heat(self, seat):
+        self.tap(f"seat_heat_{seat.tag}")
+
     def can_decrease(self, seat):
         return self.enabled(f"{seat.tag}_temp_down")
 
@@ -448,12 +476,35 @@ class BottomBar(Screen):
     def decrease(self, seat):
         self.tap(f"bar_{seat.tag}_temp_down")
 
+    def seat_heat(self, seat):
+        """아래 바 열선 단계 (0 = 꺼짐). 단계 숫자는 켜져 있을 때만 보인다."""
+        return int(self.text(f"bar_seat_heat_{seat.tag}_level") or 0)
+
+    def tap_seat_heat(self, seat):
+        self.tap(f"bar_seat_heat_{seat.tag}")
+
 
 class Cluster(Screen):
     """왼쪽 주행 정보: 속도·기어·운전자 보조 표시·경로·유틸리티 위젯."""
 
     def adas(self):
         return self.text("adas_state")
+
+    def range_km(self):
+        """주행 가능 거리 ('320 km' → 320). 속도 단위가 mph 면 mi 로 보인다."""
+        return int(self.text("range_value").split()[0])
+
+    def range_unit(self):
+        return self.text("range_value").split()[1]
+
+    def battery_percent(self):
+        return int(self.text("battery_value").removesuffix("%"))
+
+    def outside_temperature(self):
+        return parse_celsius(self.text("outside_temp"))
+
+    def low_range_warning(self):
+        return self.visible("range_low")
 
     def route(self):
         """안내 중이면 '회사까지 8.7 km', 아니면 None."""

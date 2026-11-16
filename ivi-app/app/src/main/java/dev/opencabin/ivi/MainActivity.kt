@@ -15,8 +15,8 @@ import dev.opencabin.ivi.ui.IviTheme
 class MainActivity : ComponentActivity() {
 
     /** 권한을 받으면 속도 구독을 다시 하도록 CarService 연결을 새로 만든다. */
-    private val carPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) {
+    private val carPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+        if (result.values.any { it }) {
             val vehicle = (application as IviApp).vehicle
             vehicle.stop()
             vehicle.start()
@@ -41,22 +41,24 @@ class MainActivity : ComponentActivity() {
                     settings = settings,
                     store = store,
                     cabin = cabin,
-                    onSetTemperature = vehicle::setTemperature,
+                    vehicle = vehicle,
                     onOpenVideo = { startActivity(Intent(this, VideoActivity::class.java)) },
                 )
             }
         }
     }
 
-    /** CAR_SPEED 는 dangerous 권한이라 실행 중에 요청한다. 자동화에서는 adb 로 미리 준다 (pm grant --user 10). */
+    /**
+     * CAR_SPEED(속도) · CAR_ENERGY(주행 가능 거리·배터리)는 dangerous 권한이라 실행 중에 요청한다.
+     * 자동화에서는 adb 로 미리 준다 (pm grant --user 10). 권한 창이 뜨면 테스트가 앱 화면을 못 본다.
+     */
     private fun requestCarPermissions() {
         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE)) return
-        if (checkSelfPermission(CAR_SPEED) != PackageManager.PERMISSION_GRANTED) {
-            carPermission.launch(CAR_SPEED)
-        }
+        val missing = DANGEROUS.filter { checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }
+        if (missing.isNotEmpty()) carPermission.launch(missing.toTypedArray())
     }
 
     private companion object {
-        const val CAR_SPEED = "android.car.permission.CAR_SPEED"
+        val DANGEROUS = listOf("android.car.permission.CAR_SPEED", "android.car.permission.CAR_ENERGY")
     }
 }

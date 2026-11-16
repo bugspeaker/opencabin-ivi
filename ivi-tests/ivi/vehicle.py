@@ -5,6 +5,11 @@ AaosVehicle (AAOS 에뮬레이터, 실제 CarService·VHAL)
   - force():        VHAL 직접 (`dumpsys <VHAL> --set`, root). 속도·기어 같은 읽기 전용 센서 값을 '차가 보낸 것처럼' 바꾼다.
   - `inject-vhal-event` 는 저장 값이 안 바뀌어 판정에 못 써서 쓰지 않는다 (docs/phase1-spike.md).
 
+8단계 신호 (Signal): 공조 A/C·AUTO·풍량·김서림·좌석 열선, 도어 잠금, 주행 가능 거리·배터리·외기 온도
+  - 테스트는 car.set_signal(Signal.X, 값) / car.signal(Signal.X) 만 쓴다. 단위는 화면과 같다 (km, %, °C, 단계).
+  - AAOS: VHAL 에 직접 넣고(force) CarService 로 읽는다. '전 좌석'·'전 도어' 신호는 모든 area 에 넣는다.
+  - prepare() 가 테스트마다 기준 값(CABIN_DEFAULTS)으로 되돌린다 → 앞 테스트가 문을 열어 둬도 다음 테스트는 잠긴 채 시작한다.
+
 MockVehicle (일반 Android, 앱 안의 가짜 차량)
   - `am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.SET/GET` (debug 빌드만 받는다)
   - 앱 프로세스가 떠 있어야 받는다. 그래서 prepare() 는 앱을 띄운 다음에 부른다.
@@ -35,6 +40,51 @@ class Prop:
     GEAR_SELECTION = 0x11400400       # int32, 읽기 전용
     HVAC_TEMPERATURE_SET = 0x15600503  # float °C, 좌석별 읽기/쓰기
     HVAC_TEMPERATURE_DISPLAY_UNITS = 0x1140050E  # int32 VehicleUnit: 0x30 섭씨, 0x31 화씨 (SystemUI 표시 단위)
+
+
+    # 8단계
+    HVAC_AC_ON = 0x15200505             # bool, 좌석별
+    HVAC_AUTO_ON = 0x1520050A           # bool, 좌석별
+    HVAC_FAN_SPEED = 0x15400500         # int32 1~7, 좌석별
+    HVAC_SEAT_TEMPERATURE = 0x1540050B  # int32 -2~2 (양수 = 열선), 좌석별
+    HVAC_DEFROSTER = 0x13200504         # bool, 창(앞 0x1 / 뒤 0x2)
+    DOOR_LOCK = 0x16200B02              # bool, 문별
+    RANGE_REMAINING = 0x11600308        # float m
+    EV_BATTERY_LEVEL = 0x11600309       # float Wh
+    INFO_EV_BATTERY_CAPACITY = 0x11600106  # float Wh
+    ENV_OUTSIDE_TEMPERATURE = 0x11600703  # float °C
+
+
+class Signal:
+    """8단계 차량 신호 이름. 두 어댑터가 같이 쓴다 (Mock 의 broadcast extra 이름과 같다)."""
+    AC = "ac"
+    AUTO = "auto"
+    FAN = "fan"
+    DEFROST_FRONT = "defrost_front"
+    DEFROST_REAR = "defrost_rear"
+    HEAT_DRIVER = "heat_driver"
+    HEAT_PASSENGER = "heat_passenger"
+    DOORS_LOCKED = "doors_locked"
+    RANGE_KM = "range_km"
+    BATTERY_PCT = "battery_pct"
+    OUTSIDE_C = "outside_c"
+
+    @staticmethod
+    def heat(seat):
+        return f"heat_{seat.tag}"
+
+
+# 테스트 시작 기준 값 (값의 타입이 곧 신호의 타입이다: bool / int / float)
+CABIN_DEFAULTS = {
+    Signal.AC: True, Signal.AUTO: False, Signal.FAN: 3,
+    Signal.DEFROST_FRONT: False, Signal.DEFROST_REAR: False,
+    Signal.HEAT_DRIVER: 0, Signal.HEAT_PASSENGER: 0,
+    Signal.DOORS_LOCKED: True,
+    Signal.RANGE_KM: 320.0, Signal.BATTERY_PCT: 80.0, Signal.OUTSIDE_C: 18.0,
+}
+
+SEAT_AREAS = (0x1, 0x4, 0x10, 0x40, 0x20)  # 에뮬레이터 HVAC area: 1열 좌·우, 2열 좌·우·가운데
+DOOR_AREAS = (0x1, 0x4, 0x10, 0x40)
 
 
 class TempUnit:
@@ -72,10 +122,31 @@ class VehicleController(ABC):
         self.retried = []  # 신호 주입 도구의 일시 오류로 다시 시도한 기록 (conftest 가 테스트 결과에 옮긴다)
 
     def prepare(self):
-        """테스트 시작 전: 정차 + 기본 온도."""
+        """테스트 시작 전: 정차 + 기본 온도 + 8단계 신호 기준 값."""
         self.park()
         for seat in Seat:
             self.set_temperature(seat, DEFAULT_TEMP_C)
+        self.reset_cabin()
+
+    def reset_cabin(self):
+        """8단계 신호를 모두 기준 값(CABIN_DEFAULTS)으로."""
+        self.set_signals(CABIN_DEFAULTS)
+
+    def set_signal(self, name, value):
+        """차량 쪽에서 신호를 바꾼다 (하위 → 상위 테스트의 입력)."""
+        self.set_signals({name: value})
+
+    @abstractmethod
+    def set_signals(self, values):
+        """신호 여러 개를 한 번에 (adb 왕복 한 번)."""
+
+    @abstractmethod
+    def signal(self, name):
+        """지금 차량의 신호 값 (상위 → 하위 테스트의 판정). 타입은 CABIN_DEFAULTS 와 같다."""
+
+    def signal_all(self, name):
+        """'전 좌석'·'전 도어' 신호의 area 별 값. area 가 없는 기기(Mock)는 값 하나."""
+        return [self.signal(name)]
 
     def cleanup(self):
         self.park()
@@ -168,6 +239,70 @@ class AaosVehicle(VehicleController):
     def restore(self, prop, area=Area.GLOBAL):
         self.adb.shell("dumpsys", VHAL, "--restore-prop", str(prop), "-a", str(area))
 
+    # ---- 8단계 신호 ----
+    # 이름 → (property, 읽는 area, 쓰는 area 들)
+    _SIGNALS = {
+        Signal.AC: (Prop.HVAC_AC_ON, 0x1, SEAT_AREAS),
+        Signal.AUTO: (Prop.HVAC_AUTO_ON, 0x1, SEAT_AREAS),
+        Signal.FAN: (Prop.HVAC_FAN_SPEED, 0x1, SEAT_AREAS),
+        Signal.DEFROST_FRONT: (Prop.HVAC_DEFROSTER, 0x1, (0x1,)),
+        Signal.DEFROST_REAR: (Prop.HVAC_DEFROSTER, 0x2, (0x2,)),
+        Signal.HEAT_DRIVER: (Prop.HVAC_SEAT_TEMPERATURE, 0x1, (0x1,)),
+        Signal.HEAT_PASSENGER: (Prop.HVAC_SEAT_TEMPERATURE, 0x4, (0x4,)),
+        Signal.DOORS_LOCKED: (Prop.DOOR_LOCK, 0x1, DOOR_AREAS),
+        Signal.RANGE_KM: (Prop.RANGE_REMAINING, 0x0, (0x0,)),
+        Signal.BATTERY_PCT: (Prop.EV_BATTERY_LEVEL, 0x0, (0x0,)),
+        Signal.OUTSIDE_C: (Prop.ENV_OUTSIDE_TEMPERATURE, 0x0, (0x0,)),
+    }
+    _capacity_wh = None
+
+    def battery_capacity_wh(self):
+        if self._capacity_wh is None:
+            self._capacity_wh = float(self.get_property(Prop.INFO_EV_BATTERY_CAPACITY))
+        return self._capacity_wh
+
+    def _to_vhal(self, name, value):
+        """화면 단위 → VHAL 값: km → m, % → Wh, bool → 0/1."""
+        if name == Signal.RANGE_KM:
+            return float(value) * 1000.0
+        if name == Signal.BATTERY_PCT:
+            return self.battery_capacity_wh() * float(value) / 100.0
+        return float(value) if isinstance(CABIN_DEFAULTS[name], float) else int(value)
+
+    def _from_vhal(self, name, raw):
+        if name == Signal.RANGE_KM:
+            return raw / 1000.0
+        if name == Signal.BATTERY_PCT:
+            return round(raw / self.battery_capacity_wh() * 100.0, 1)
+        return type(CABIN_DEFAULTS[name])(raw)
+
+    def set_signals(self, values, attempts=2):
+        """모든 값을 adb shell 한 번에 넣는다 (기준 값 11개 × area = 26번의 --set 을 왕복 한 번으로).
+        force() 와 같이 VHAL 의 일시 오류는 한 번 더 시도하고 기록한다."""
+        commands = []
+        for name, value in values.items():
+            prop, _, areas = self._SIGNALS[name]
+            raw = self._to_vhal(name, value)
+            kind = "-f" if isinstance(raw, float) else "-i"
+            commands += [f"dumpsys {VHAL} --set {prop} {kind} {raw} -a {area}" for area in areas]
+        out = ""
+        for attempt in range(1, attempts + 1):
+            out = self.adb.shell("; ".join(commands))
+            if out.count("Set property") == len(commands):
+                if attempt > 1:
+                    self.retried.append(f"VHAL --set {', '.join(values)}: {attempt}번째에 성공")
+                return
+            time.sleep(0.3)
+        raise RuntimeError(f"VHAL --set {list(values)} 실패 ({out.count('Set property')}/{len(commands)}): {out.strip()[-200:]}")
+
+    def signal(self, name):
+        prop, area, _ = self._SIGNALS[name]
+        return self._from_vhal(name, self.get_property(prop, area))
+
+    def signal_all(self, name):
+        prop, _, areas = self._SIGNALS[name]
+        return [self._from_vhal(name, self.get_property(prop, area)) for area in areas]
+
     def driving_state(self):
         out = self.adb.shell("dumpsys", "car_service", "--services", "CarDrivingStateService")
         found = re.search(r"Current Driving State: (-?\d+)", out)
@@ -201,6 +336,11 @@ class AaosVehicle(VehicleController):
             f"gear={self.get_property(Prop.GEAR_SELECTION)}",
             f"driving_state={self.driving_state()}",
         ] + [f"temp_{seat.tag}={self.temperature(seat)}" for seat in Seat]
+        for name in CABIN_DEFAULTS:
+            try:
+                rows.append(f"{name}={self.signal_all(name)}")
+            except RuntimeError as error:  # 실패 자료를 모으는 중이라 하나가 안 읽혀도 계속한다
+                rows.append(f"{name}=<{error}>")
         return "\n".join(rows)
 
 
@@ -241,6 +381,24 @@ class MockVehicle(VehicleController):
 
     def is_restricted(self):
         return self.state()["restricted"] == "true"
+
+    def set_signals(self, values):
+        """타입에 맞는 extra 로 보낸다: bool --ez, int --ei, float --ef."""
+        extras = []
+        for name, value in values.items():
+            kind = type(CABIN_DEFAULTS[name])
+            if kind is bool:
+                extras += ["--ez", name, "true" if value else "false"]
+            elif kind is int:
+                extras += ["--ei", name, str(int(value))]
+            else:
+                extras += ["--ef", name, str(float(value))]
+        self._broadcast("SET", *extras)
+
+    def signal(self, name):
+        raw = self.state()[name]
+        kind = type(CABIN_DEFAULTS[name])
+        return raw == "true" if kind is bool else kind(raw)
 
     def dump(self):
         return "\n".join(f"{k}={v}" for k, v in self.state().items())
