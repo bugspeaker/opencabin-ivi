@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8단계 화면 상태를 차량 신호로: 공조 · 도어 · 주행 가능 거리 E2E · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 8. 차량 신호 확장</span>
+  <a class="src" href="../../docs/phase8-signals.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="readme.html">README</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html" aria-current="page">8. 차량 신호 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="8단계-화면-상태를-차량-신호로-공조--도어--주행-가능-거리-e2e"><a class="anchor" href="#8단계-화면-상태를-차량-신호로-공조--도어--주행-가능-거리-e2e" aria-hidden="true">#</a>8단계 화면 상태를 차량 신호로: 공조 · 도어 · 주행 가능 거리 E2E</h1>
+<p>작성 2026-11-16. 7단계를 검토해 보니 새로 넣은 차량 기능 대부분이 화면 안에서만 바뀌고 차량 신호까지 가지 않았다.
+이 프로젝트는 UI 조작부터 차량 신호(CarProperty/VHAL)까지 확인하는 것이 목적이라, 화면 상태였던 것을 신호로 바꾸고 양방향 테스트를 붙였다.</p>
+<p>여기서 &#39;차량 신호&#39;는 AAOS 에뮬레이터의 CarService·VHAL이다. 실제 차량에 연결한 것이 아니다.
+앱은 양산 앱과 같은 API(<code>CarPropertyManager</code>)로 읽고 쓰고, 테스트는 adb로 VHAL에 값을 넣고(Property Injection) CarService로 읽는다.</p>
+<h2 id="1-연결한-신호"><a class="anchor" href="#1-연결한-신호" aria-hidden="true">#</a>1. 연결한 신호</h2>
+<div class="table"><table><thead><tr>
+<th>기능</th>
+<th>VHAL property</th>
+<th>area</th>
+<th>앱</th>
+<th>필요한 권한</th>
+</tr>
+</thead><tbody><tr>
+<td>A/C</td>
+<td><code>HVAC_AC_ON</code></td>
+<td>좌석 5개</td>
+<td>읽기 + 쓰기 (전 좌석)</td>
+<td><code>CONTROL_CAR_CLIMATE</code> (priv-app)</td>
+</tr>
+<tr>
+<td>AUTO</td>
+<td><code>HVAC_AUTO_ON</code></td>
+<td>좌석 5개</td>
+<td>읽기 + 쓰기 (전 좌석)</td>
+<td>〃</td>
+</tr>
+<tr>
+<td>풍량 1~7</td>
+<td><code>HVAC_FAN_SPEED</code></td>
+<td>좌석 5개</td>
+<td>읽기 + 쓰기 (전 좌석)</td>
+<td>〃</td>
+</tr>
+<tr>
+<td>김서림 제거 앞/뒤</td>
+<td><code>HVAC_DEFROSTER</code></td>
+<td>창 2개</td>
+<td>읽기 + 쓰기 (그 유리만)</td>
+<td>〃</td>
+</tr>
+<tr>
+<td>좌석 열선 0~2단</td>
+<td><code>HVAC_SEAT_TEMPERATURE</code></td>
+<td>좌석별</td>
+<td>읽기 + 쓰기 (그 좌석만)</td>
+<td>〃</td>
+</tr>
+<tr>
+<td>도어 잠금</td>
+<td><code>DOOR_LOCK</code></td>
+<td>문 4개</td>
+<td>읽기 + 쓰기 (전 도어)</td>
+<td><code>CONTROL_CAR_DOORS</code> (priv-app), 새로 추가</td>
+</tr>
+<tr>
+<td>주행 가능 거리</td>
+<td><code>RANGE_REMAINING</code> (m)</td>
+<td>전역</td>
+<td>읽기</td>
+<td><code>CAR_ENERGY</code> (dangerous), 새로 추가</td>
+</tr>
+<tr>
+<td>배터리 잔량</td>
+<td><code>EV_BATTERY_LEVEL</code> ÷ <code>INFO_EV_BATTERY_CAPACITY</code> (Wh → %)</td>
+<td>전역</td>
+<td>읽기</td>
+<td><code>CAR_ENERGY</code>, <code>CAR_INFO</code></td>
+</tr>
+<tr>
+<td>외기 온도</td>
+<td><code>ENV_OUTSIDE_TEMPERATURE</code> (°C)</td>
+<td>전역</td>
+<td>읽기</td>
+<td><code>CAR_EXTERIOR_ENVIRONMENT</code></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>7단계까지 연결돼 있던 것: 속도, 기어, 좌석 온도, 주행 중 UX 제한.</li>
+<li>아직 화면 상태로 남은 것: 사이드 미러 접기, 트렁크, 차일드 락, 실내등, 전조등. 에뮬레이터 VHAL에 맞는 property가 없거나(미러 접기·트렁크)
+이번 범위에서 뺐다. 운전자 보조 표시와 주변 차량은 여전히 연출이다.</li>
+<li>area 구성은 차마다 다르므로 앱은 하드코딩하지 않고 <code>CarPropertyConfig.areaIds</code>에서 읽어 쓴다.</li>
+<li>권한이 없는 신호는 구독이 실패하고 화면에 &#39;값 없음&#39;으로 남는다 (도어 &#39;제어 불가&#39;, &#39;주행 가능 거리 정보 없음&#39;). 앱은 죽지 않는다.</li>
+</ul>
+<h2 id="2-화면에서-달라진-것"><a class="anchor" href="#2-화면에서-달라진-것" aria-hidden="true">#</a>2. 화면에서 달라진 것</h2>
+<div class="table"><table><thead><tr>
+<th>주행 가능 거리 부족 (신호: 22 km · 8 % · -3 °C)</th>
+<th>전 좌석 공조 (화면 → 신호)</th>
+</tr>
+</thead><tbody><tr>
+<td><img data-md src="../../docs/images/p8-lowrange.png" alt="low range" loading="lazy"></td>
+<td><img data-md src="../../docs/images/p8-climate.png" alt="climate" loading="lazy"></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>주행 정보: 배터리 잔량 · 주행 가능 거리 줄, 아래 줄에 외기 온도. 속도 단위가 mph면 거리는 마일로.</li>
+<li>주행 가능 거리 부족 (30 km 이하): 주행 정보가 주황색 + &#39;충전 필요&#39;, 내비 지도 위에 가까운 충전소 안내 카드, 알림 센터에 기록.
+카드를 누르면 바로 안내를 시작한다. 주행 중(글자 검색 잠김)에도 한 번 눌러 쓸 수 있다.</li>
+<li>공조: A/C · AUTO · 풍량(1~7, 에뮬레이터 config 범위) · 김서림이 신호. 풍량을 직접 바꾸면 AUTO가 풀린다(앱 규칙).</li>
+<li>좌석 열선: 누를 때마다 꺼짐 → 2단 → 1단 → 꺼짐. 공조 화면 · 아래 바 · 빠른 제어 세 곳이 같은 신호를 본다.</li>
+<li>도어 잠금: 빠른 제어의 도어 버튼이 전 도어 <code>DOOR_LOCK</code>을 쓴다.</li>
+<li>AI 어시스턴트: &quot;에어컨 켜줘&quot;, &quot;열선 켜줘&quot;가 이제 차량 신호까지 간다 (말한 좌석의 열선만).</li>
+</ul>
+<h2 id="3-테스트-설계"><a class="anchor" href="#3-테스트-설계" aria-hidden="true">#</a>3. 테스트 설계</h2>
+<h3 id="3-1-어댑터-carset_signal--carsignal"><a class="anchor" href="#3-1-어댑터-carset_signal--carsignal" aria-hidden="true">#</a>3-1) 어댑터: <code>car.set_signal()</code> / <code>car.signal()</code></h3>
+<p>테스트는 신호 이름과 화면 단위(km, %, °C, 단계)만 쓴다. 기기 차이와 단위 변환은 어댑터(<code>ivi/vehicle.py</code>)가 맡는다.</p>
+<div class="table"><table><thead><tr>
+<th></th>
+<th>AAOS (<code>AaosVehicle</code>)</th>
+<th>태블릿 (<code>MockVehicle</code>)</th>
+</tr>
+</thead><tbody><tr>
+<td>넣기</td>
+<td>VHAL에 직접: <code>dumpsys &lt;VHAL&gt; --set &lt;prop&gt; -i/-f &lt;값&gt; -a &lt;area&gt;</code></td>
+<td><code>am broadcast … mock.SET --ez/--ei/--ef</code></td>
+</tr>
+<tr>
+<td>읽기</td>
+<td>CarService: <code>cmd car_service get-property-value</code></td>
+<td><code>am broadcast … mock.GET</code></td>
+</tr>
+<tr>
+<td>변환</td>
+<td>km → m, % → Wh(용량 대비), bool → 0/1</td>
+<td>없음</td>
+</tr>
+<tr>
+<td>area</td>
+<td>&#39;전 좌석&#39; 신호는 5개, 도어는 4개 area 모두</td>
+<td>값 하나</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><code>car.signal_all(이름)</code>은 area별 값을 돌려준다. 이것으로 &quot;A/C를 끄면 전 좌석이 꺼진다&quot;, &quot;도어 버튼이 4개 문 모두를 잠근다&quot;를 확인한다.
+운전석 area만 쓰는 구현은 화면만 봐서는 통과하지만 이 확인에서 걸린다.</li>
+</ul>
+<h3 id="3-2-테스트마다-기준-값으로-테스트-격리"><a class="anchor" href="#3-2-테스트마다-기준-값으로-테스트-격리" aria-hidden="true">#</a>3-2) 테스트마다 기준 값으로 (테스트 격리)</h3>
+<p>차량 신호는 앱을 다시 띄워도 남는다. 앞 테스트가 문을 열어 두면 다음 테스트의 &quot;누르면 열림&quot;이 거꾸로 된다.
+그래서 <code>app</code> 픽스처의 <code>prepare()</code>가 테스트마다 신호 11개를 기준 값(<code>CABIN_DEFAULTS</code>)으로 되돌린다.</p>
+<ul>
+<li>AAOS에서 이 초기화는 <code>--set</code> 26번(11개 신호 × area)이다. 하나씩 보내면 테스트마다 adb 왕복이 26번이라
+adb shell 한 번에 묶어 보낸다 (<code>set_signals</code>). 26개가 모두 들어갔는지 세고, 모자라면 통째로 한 번 더 시도하고 기록한다(4단계의 VHAL 재시도 규칙과 같다).</li>
+<li>결과: 테스트 수가 84 → 108개로 늘었는데 전체 시간은 5분 47초 → 6분 40초 (테스트당 4.1초 → 3.7초).</li>
+</ul>
+<h3 id="3-3-토글-상태를-색이-아니라-checked로"><a class="anchor" href="#3-3-토글-상태를-색이-아니라-checked로" aria-hidden="true">#</a>3-3) 토글 상태를 색이 아니라 <code>checked</code>로</h3>
+<p>A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 색은 자동화가 읽기 어렵다.
+앱에서 <code>Modifier.toggleable(role = Switch)</code>로 켜짐/꺼짐을 접근성 정보로 내보내고, 화면 객체는 <code>checked</code> 속성을 읽는다 (설정 화면 스위치와 같은 방식).
+접근성(TalkBack)에도 같은 정보가 간다.</p>
+<h3 id="3-4-테스트-목록-teststest_vehicle_signalspy-24개"><a class="anchor" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개" aria-hidden="true">#</a>3-4) 테스트 목록 (<code>tests/test_vehicle_signals.py</code>, 24개)</h3>
+<div class="table"><table><thead><tr>
+<th>분류</th>
+<th>테스트</th>
+<th>방향</th>
+</tr>
+</thead><tbody><tr>
+<td>sanity</td>
+<td>A/C를 끄면 전 좌석 area가 꺼진다</td>
+<td>화면 → 신호</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>차량이 A/C를 끄고 켜면 토글이 따라간다</td>
+<td>신호 → 화면</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>풍량 +/- 한 번에 신호가 한 단계 (2건)</td>
+<td>화면 → 신호</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>풍량 경계 값 1 · 7에서 버튼 비활성, 신호가 범위를 안 벗어남 (2건)</td>
+<td>양방향</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>AUTO 중 풍량을 바꾸면 <code>HVAC_AUTO_ON</code>이 꺼진다</td>
+<td>화면 → 신호 2개</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>앞/뒤 김서림은 그 유리의 신호만 켠다 (2건)</td>
+<td>양방향, area 혼동 방지</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>열선 꺼짐 → 2 → 1 → 꺼짐, 다른 좌석은 그대로 (좌석 2건)</td>
+<td>화면 → 신호</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>열선 신호가 공조 화면 · 아래 바 · 빠른 제어에 같은 값으로</td>
+<td>신호 → 화면 3곳</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>아래 바 열선은 다른 앱을 보고 있어도 신호를 바꾼다</td>
+<td>화면 → 신호</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>조수석에서 &quot;열선 켜줘&quot; → 조수석 신호만</td>
+<td>말 → 신호</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>도어 버튼이 전 도어를 잠그고 푼다</td>
+<td>화면 → 신호 (4개 area)</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>차량에서 문이 열리면 표시가 바뀐다</td>
+<td>신호 → 화면</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>주행 가능 거리 · 배터리 · 외기 온도가 주행 정보에 (단위 변환 포함)</td>
+<td>신호 → 화면</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>경계 값 31 / 30 / 29 km에서 경고와 카드 (3건)</td>
+<td>신호 → 화면</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>주행 중 거리 부족 → 카드 → 가까운 충전소 안내 시작</td>
+<td>신호 → 화면 → 동작</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>거리 부족이 알림 센터에 남는다</td>
+<td>신호 → 화면</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>충전하면 경고와 카드가 사라진다</td>
+<td>신호 → 화면</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>속도 단위 mph면 거리도 마일 (320 km = 199 mi)</td>
+<td>설정 × 신호</td>
+</tr>
+</tbody></table></div>
+<p>프레임워크 단위 테스트 7개 추가 (기기 없이): area 5개에 한 번의 shell 호출, km·% ↔ m·Wh 변환, 묶음 재시도와 실패 메시지, Mock의 타입별 extra, 기준 값 초기화가 11개를 모두 넣는지.</p>
+<h2 id="4-진행-중-잡은-것"><a class="anchor" href="#4-진행-중-잡은-것" aria-hidden="true">#</a>4. 진행 중 잡은 것</h2>
+<h3 id="4-1-도어-잠금은-권한-목록까지-바꿔야-한다"><a class="anchor" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-한다" aria-hidden="true">#</a>4-1) 도어 잠금은 권한 목록까지 바꿔야 한다</h3>
+<ul>
+<li><code>CONTROL_CAR_DOORS</code>는 <code>signature|privileged</code> 권한이다. 매니페스트에 적는 것만으로는 안 되고,
+<code>/system/etc/permissions</code>의 priv-app 허용 목록(<code>privapp-permissions-dev.opencabin.ivi.xml</code>)에 있어야 한다.</li>
+<li>그래서 이번에는 <code>adb install -r</code>이 아니라 <code>privileged/install_priv_app.py</code>로 다시 넣고 재부팅했다. 설치 후 <code>dumpsys package</code>로 확인:
+<code>CONTROL_CAR_DOORS: granted=true</code>, <code>CAR_ENERGY: granted=true</code>(운전자 사용자 10).</li>
+<li><code>CAR_ENERGY</code>는 dangerous 권한이라 권한 창이 뜬다. 창이 뜨면 테스트가 앱 화면을 못 보므로 설치 스크립트가 <code>pm grant</code>로 미리 준다.</li>
+</ul>
+<h3 id="4-2-테스트-쪽-경쟁-조건-1건-내가-만든-것"><a class="anchor" href="#4-2-테스트-쪽-경쟁-조건-1건-내가-만든-것" aria-hidden="true">#</a>4-2) 테스트 쪽 경쟁 조건 1건 (내가 만든 것)</h3>
+<ul>
+<li>증상: 전체 실행에서 <code>test_range_recovers_after_charging</code>이 <code>battery_percent() == 75</code>에서 실패. 혼자 돌리면 통과.</li>
+<li>원인: 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착한다. 거리(카드 사라짐)를 기다린 뒤 배터리를 바로 <code>assert</code> 했다.</li>
+<li>해결: 배터리도 조건 대기(<code>wait_until</code>)로. 같은 모양이던 외기 온도 확인도 고쳤다. 고정 <code>sleep</code>은 쓰지 않았다.</li>
+</ul>
+<h2 id="5-결과"><a class="anchor" href="#5-결과" aria-hidden="true">#</a>5. 결과</h2>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td>앱 빌드</td>
+<td>Kotlin 경고 0</td>
+</tr>
+<tr>
+<td>앱 단위 테스트 (<code>CabinAssistantTest</code>)</td>
+<td>17 passed</td>
+</tr>
+<tr>
+<td>프레임워크 단위 테스트 (<code>pytest unit</code>)</td>
+<td>33 passed (26 → 33)</td>
+</tr>
+<tr>
+<td>AAOS 에뮬레이터 전체 E2E (108개)</td>
+<td>106 passed, 1 skipped, 1 xfailed, gate pass, 앱 재실행 0, VHAL 재시도 0 (6분 40초)</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 (Mock) 전체 E2E (108개)</td>
+<td>102 passed, 6 skipped (AAOS 전용), gate pass, 앱 재실행 0 (7분 6초)</td>
+</tr>
+<tr>
+<td>두 기기 병렬 (<code>run_bench.py --reruns 1</code>)</td>
+<td>두 기기 모두 gate pass, flaky 0, 재실행 0, VHAL 재시도 0. 7분 20초 (차례로 돌리면 약 14분 28초, 2.0배)</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>E2E 84 → 108개. 새 24개는 모두 화면과 신호를 양쪽에서 보고, 같은 테스트가 AAOS(VHAL)와 태블릿(Mock) 양쪽에서 통과한다.</li>
+<li>태블릿은 이 날 처음에 adb <code>unauthorized</code>였다 (adb 서버를 다시 켠 뒤 기기에서 USB 디버깅 승인이 필요). USB 디버깅 승인, 설치 승인, 실행 순서로 진행했다.</li>
+<li>반복 안정성(같은 묶음 여러 번)은 이번에 1회만 봤다. 7단계의 2회 반복에서 한 번 흔들린 <code>test_video_blocked_screen_follows_parking</code>은 이번 에뮬레이터 전체 실행 2회(단독 1 + 병렬 1)에서는 재현되지 않았다 (원인은 아직 확인하지 못했다).</li>
+</ul>
+<h2 id="6-공고-업무와의-대응-42dot-test-automation-engineer-ivi-system"><a class="anchor" href="#6-공고-업무와의-대응-42dot-test-automation-engineer-ivi-system" aria-hidden="true">#</a>6. 공고 업무와의 대응 (42dot Test Automation Engineer, IVI System)</h2>
+<div class="table"><table><thead><tr>
+<th>공고</th>
+<th>이 단계에서 보여 주는 것</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS IVI 주요 서비스(HVAC, 차량 설정, 클러스터 연동, 미디어) 검증</td>
+<td>HVAC 6종 신호, 도어, 클러스터(주행 정보)에 차량 신호 3종</td>
+</tr>
+<tr>
+<td>UI 상호작용과 CarProperty/VHAL을 아우르는 E2E 설계</td>
+<td>24개 모두 양방향. area 단위 판정(전 좌석 · 전 도어 · 그 유리만)</td>
+</tr>
+<tr>
+<td>ADB · shell · CarPropertyManager로 Property Injection</td>
+<td><code>dumpsys VHAL --set</code> 묶음 주입, CarService로 읽기, 앱은 CarPropertyManager</td>
+</tr>
+<tr>
+<td>Flaky 최소화, 피드백 루프 단축</td>
+<td>테스트마다 기준 값 초기화(격리), 주입 26번을 왕복 1번으로, 경쟁 조건은 조건 대기로</td>
+</tr>
+<tr>
+<td>Smoke / Sanity / Regression 범위</td>
+<td>새 테스트 24개를 sanity 16 · regression 8로 나눔 (parametrize 포함)</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-연결한-신호">1. 연결한 신호</a><a class="l2" href="#2-화면에서-달라진-것">2. 화면에서 달라진 것</a><a class="l2" href="#3-테스트-설계">3. 테스트 설계</a><a class="l3" href="#3-1-어댑터-carset_signal--carsignal">3-1) 어댑터: car.set_signal() / car.signal()</a><a class="l3" href="#3-2-테스트마다-기준-값으로-테스트-격리">3-2) 테스트마다 기준 값으로 (테스트 격리)</a><a class="l3" href="#3-3-토글-상태를-색이-아니라-checked로">3-3) 토글 상태를 색이 아니라 checked로</a><a class="l3" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개">3-4) 테스트 목록 (tests/test_vehicle_signals.py, 24개)</a><a class="l2" href="#4-진행-중-잡은-것">4. 진행 중 잡은 것</a><a class="l3" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-한다">4-1) 도어 잠금은 권한 목록까지 바꿔야 한다</a><a class="l3" href="#4-2-테스트-쪽-경쟁-조건-1건-내가-만든-것">4-2) 테스트 쪽 경쟁 조건 1건 (내가 만든 것)</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-공고-업무와의-대응-42dot-test-automation-engineer-ivi-system">6. 공고 업무와의 대응 (42dot Test Automation Engineer, IVI System)</a></nav>
+</div>
+
+</body>
+</html>

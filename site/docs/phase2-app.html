@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2단계 IVI 앱 (OpenCabin) · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 2. 앱</span>
+  <a class="src" href="../../docs/phase2-app.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="readme.html">README</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html" aria-current="page">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="2단계-ivi-앱-opencabin"><a class="anchor" href="#2단계-ivi-앱-opencabin" aria-hidden="true">#</a>2단계 IVI 앱 (OpenCabin)</h1>
+<p>작성 2026-11-13. 자동화 대상이 될 가상 IVI 앱. 화면보다 차량 신호와의 경계와 테스트하기 쉬운 구조에 집중했다.</p>
+<h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
+<pre class="code"><code>ivi-app/app/src/main/java/dev/opencabin/ivi/
+  vehicle/VehicleDataSource.kt     화면이 보는 상태(VehicleState)와 경계 인터페이스
+  vehicle/CarVehicleDataSource.kt  AAOS: CarPropertyManager(속도·기어·공조) + CarUxRestrictionsManager(주행 중 제한)
+  vehicle/MockVehicleDataSource.kt 일반 Android: adb broadcast 로 값을 넣고 읽는다 (debug 빌드만)
+  IviApp.kt                        FEATURE_AUTOMOTIVE 로 둘 중 하나를 고른다
+  MainActivity.kt                  홈 · 공조 · 미디어 (distractionOptimized = 주행 중에도 사용)
+  VideoActivity.kt                 영상 (DO 아님 = 주행 중 차단 대상)
+  ui/IviScreens.kt                 Compose 화면, 테스트 태그
+ivi-app/privileged/                priv-app 설치 스크립트와 권한 허용 목록</code></pre>
+<h2 id="화면과-테스트-태그"><a class="anchor" href="#화면과-테스트-태그" aria-hidden="true">#</a>화면과 테스트 태그</h2>
+<p>Compose <code>testTag</code>를 <code>testTagsAsResourceId = true</code>로 노출한다. Appium에서는 resource-id가 패키지 접두사 없이 태그 그대로다 (<code>nav_climate</code>).
+그래서 <code>By.ID</code> 대신 <code>-android uiautomator</code>의 <code>new UiSelector().resourceId(&quot;nav_climate&quot;)</code>로 찾는다 (<code>By.ID</code>는 <code>dev.opencabin.ivi:id/</code>를 붙여 찾아서 실패).</p>
+<div class="table"><table><thead><tr>
+<th>화면</th>
+<th>태그</th>
+</tr>
+</thead><tbody><tr>
+<td>공통</td>
+<td><code>nav_home</code> <code>nav_climate</code> <code>nav_media</code> (5단계부터 아래 앱 바), <code>source_badge</code>(AAOS/Mock), <code>restriction_banner</code>, <code>vehicle_disconnected</code>, <code>vehicle_error</code></td>
+</tr>
+<tr>
+<td>주행 정보(항상 보임)</td>
+<td><code>speed_value</code>, <code>gear_value</code> (5단계부터 지금 기어 칸 자체)</td>
+</tr>
+<tr>
+<td>홈</td>
+<td><code>home_media_title</code>, <code>home_driver_temp</code>, <code>home_passenger_temp</code></td>
+</tr>
+<tr>
+<td>공조</td>
+<td><code>driver_temp_value</code> <code>driver_temp_up</code> <code>driver_temp_down</code>, <code>passenger_…</code> 같은 형식, 권한 없으면 <code>hvac_unavailable</code></td>
+</tr>
+<tr>
+<td>미디어</td>
+<td><code>track_0</code>~`track_4<code>(줄),</code>track_N_title<code>(제목, 5단계 추가),</code>now_playing_title<code>, </code>playback_state<code>, </code>play_pause<code>, </code>open_video<code>, 주행 중 </code>video_restricted_notice`</td>
+</tr>
+<tr>
+<td>영상</td>
+<td><code>video_player</code> <code>video_elapsed</code> <code>video_close</code>, 앱이 막으면 <code>video_blocked</code></td>
+</tr>
+</tbody></table></div>
+<h2 id="aaos에서-확인한-것-에뮬레이터-2026-11-13"><a class="anchor" href="#aaos에서-확인한-것-에뮬레이터-2026-11-13" aria-hidden="true">#</a>AAOS에서 확인한 것 (에뮬레이터, 2026-11-13)</h2>
+<div class="table"><table><thead><tr>
+<th>확인</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td>속도·기어 신호 → 홈</td>
+<td>VHAL에 D, 13.9 m/s → <code>50 km/h</code>, <code>D</code>, &#39;주행 중 · 일부 기능 제한&#39; 배지</td>
+</tr>
+<tr>
+<td>공조 신호 → 화면</td>
+<td><code>set-property-value</code> 운전석 25.0 → <code>driver_temp_value</code> = <code>25.0°C</code></td>
+</tr>
+<tr>
+<td>화면 → 공조 신호</td>
+<td>조수석 <code>+</code> 1회 → property 17.0 → 17.5</td>
+</tr>
+<tr>
+<td>주행 중 영상</td>
+<td><code>VideoActivity</code>를 열면 AAOS가 <code>ActivityBlockingActivity</code> (&quot;You can&#39;t use this feature while driving&quot;)로 막음</td>
+</tr>
+<tr>
+<td>주행 중 메인 화면</td>
+<td>DO 선언이라 막히지 않음</td>
+</tr>
+</tbody></table></div>
+<h2 id="공조-권한-priv-app-설치"><a class="anchor" href="#공조-권한-priv-app-설치" aria-hidden="true">#</a>공조 권한: priv-app 설치</h2>
+<ul>
+<li><code>CONTROL_CAR_CLIMATE</code>는 <code>signature|privileged</code>. 일반 설치(<code>adb install</code>)로는 공조를 읽지도 쓰지도 못하고, 화면은 <code>hvac_unavailable</code>을 보여 준다. 이 상태도 테스트 케이스로 쓴다.</li>
+<li>실제 IVI 앱처럼 시스템 이미지에 넣는다: <code>privileged/install_priv_app.py</code><ol>
+<li>에뮬레이터를 <code>-writable-system</code>으로 실행</li>
+<li><code>adb root</code> → <code>adb remount</code> (처음 한 번은 재부팅 필요, 스크립트가 처리)</li>
+<li><code>/system/priv-app/OpenCabinIvi/</code>에 APK, <code>/system/etc/permissions/</code>에 권한 허용 목록</li>
+<li>재부팅 후 <code>PRIVILEGED</code> 플래그와 <code>CONTROL_CAR_CLIMATE: granted=true</code> 확인, <code>CAR_SPEED</code>(dangerous)는 <code>pm grant --user 10</code></li>
+</ol>
+</li>
+<li>이후 코드를 고치면 <code>adb install -r</code>로 덮어써도 서명이 같아서 priv-app 권한이 유지된다.</li>
+</ul>
+<h2 id="mock-태블릿-제어-규약"><a class="anchor" href="#mock-태블릿-제어-규약" aria-hidden="true">#</a>Mock (태블릿) 제어 규약</h2>
+<pre class="code"><code>쓰기  adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.SET \
+        --ef speed_kmh 50 --es gear D --ef temp_driver 25 --ef temp_passenger 20
+읽기  adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.GET
+      → Broadcast completed: result=0, data=&quot;speed_kmh=50.0;gear=D;temp_driver=25.0;temp_passenger=22.0;restricted=true&quot;</code></pre>
+<ul>
+<li>주행 중 제한 규칙은 AAOS 기본과 맞춘다: 기어가 P가 아니고 속도 &gt; 0.</li>
+<li>태블릿에는 시스템 차단이 없으므로 <code>VideoActivity</code>가 직접 <code>video_blocked</code>를 보여 준다. 두 기기 모두 &quot;주행 중 영상 차단&quot;을 같은 테스트로 확인할 수 있다 (판정 요소만 다르다: AAOS = <code>ActivityBlockingActivity</code>, 태블릿 = <code>video_blocked</code>).</li>
+</ul>
+<h2 id="태블릿에서-확인한-것-화웨이-dby-w09-android-12-기반-2026-11-13"><a class="anchor" href="#태블릿에서-확인한-것-화웨이-dby-w09-android-12-기반-2026-11-13" aria-hidden="true">#</a>태블릿에서 확인한 것 (화웨이 DBY-W09, Android 12 기반, 2026-11-13)</h2>
+<div class="table"><table><thead><tr>
+<th>확인</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td>데이터 소스</td>
+<td><code>source_badge</code> = <code>Mock</code></td>
+</tr>
+<tr>
+<td>Mock 쓰기·읽기</td>
+<td>SET 후 GET이 <code>speed_kmh=50.0;gear=D;…;restricted=true</code>, 정차로 돌리면 <code>restricted=false</code></td>
+</tr>
+<tr>
+<td>신호 → 화면</td>
+<td><code>temp_driver=25</code> → <code>driver_temp_value</code> = <code>25.0°C</code></td>
+</tr>
+<tr>
+<td>화면 → 신호</td>
+<td>조수석 <code>+</code> 1회 → GET의 <code>temp_passenger</code> 22.0 → 22.5</td>
+</tr>
+<tr>
+<td>주행 표시</td>
+<td><code>50</code>, <code>D</code>, <code>restriction_banner</code> 표시</td>
+</tr>
+<tr>
+<td>주행 중 미디어</td>
+<td><code>open_video</code> 비활성, <code>video_restricted_notice</code> 표시</td>
+</tr>
+<tr>
+<td>주행 중 영상 직접 실행</td>
+<td><code>video_blocked</code> 표시, <code>video_player</code> 없음</td>
+</tr>
+<tr>
+<td>정차로 바꾸면</td>
+<td>같은 화면이 <code>video_player</code>로 바뀜, <code>open_video</code> 다시 활성</td>
+</tr>
+<tr>
+<td>Appium 세션</td>
+<td>약 4.6초 (AAOS 전용 설정 없이 기본 UiAutomator2)</td>
+</tr>
+</tbody></table></div>
+<h3 id="화웨이-기기-주의"><a class="anchor" href="#화웨이-기기-주의" aria-hidden="true">#</a>화웨이 기기 주의</h3>
+<ul>
+<li>adb로 앱을 설치할 때마다 기기 화면에서 승인해야 한다. 아무도 누르지 않으면 <code>INSTALL_FAILED_ABORTED: User rejected permissions</code>.</li>
+<li>Appium 첫 연결 때 보조 앱 3개(<code>io.appium.settings</code>, <code>io.appium.uiautomator2.server</code>, <code>…server.test</code>)를 설치한다. 승인이 늦으면
+<code>uiautomator2ServerInstallTimeout</code>(기본 2분)에 걸려 세션이 실패하고, 마지막 테스트 APK만 빠진 채로 남을 수 있다. 그럴 때는 <code>pm list instrumentation</code>으로 확인하고 직접 설치한다.</li>
+<li>무인 실행(CI)에서는 승인할 사람이 없으므로, 보조 앱과 테스트 대상 앱은 실행 전에 미리 설치해 두고 테스트 단계에서는 재설치하지 않게 한다 (<code>no_reset</code>, 버전이 같으면 Appium이 건너뛴다).</li>
+</ul>
+<h2 id="만들면서-고친-것"><a class="anchor" href="#만들면서-고친-것" aria-hidden="true">#</a>만들면서 고친 것</h2>
+<div class="table"><table><thead><tr>
+<th>문제</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead><tbody><tr>
+<td>Gradle: <code>Your project path contains non-ASCII characters</code></td>
+<td>사용자 폴더에 한글</td>
+<td>프로젝트를 <code>C:\dev\opencabin-ivi</code>, Gradle 캐시를 <code>GRADLE_USER_HOME=C:\dev\.gradle</code>로</td>
+</tr>
+<tr>
+<td>속도 숫자가 안 보임 (검은 글자)</td>
+<td>Surface 없이 그린 Text의 기본 색이 검정</td>
+<td>테마에서 <code>LocalContentColor</code>를 밝은 색으로</td>
+</tr>
+<tr>
+<td><code>screencap</code> 결과가 PNG가 아님</td>
+<td>디스플레이가 2개 (메인 + 클러스터)</td>
+<td><code>screencap -d &lt;display id&gt;</code> (<code>dumpsys SurfaceFlinger --display-id</code>)</td>
+</tr>
+</tbody></table></div>
+<h2 id="빌드"><a class="anchor" href="#빌드" aria-hidden="true">#</a>빌드</h2>
+<pre class="code"><code data-lang="powershell">cd C:\dev\opencabin-ivi\ivi-app
+$env:JAVA_HOME = &quot;C:\Program Files\Android\Android Studio\jbr&quot;
+$env:GRADLE_USER_HOME = &quot;C:\dev\.gradle&quot;
+.\gradlew assembleDebug</code></pre>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#구조">구조</a><a class="l2" href="#화면과-테스트-태그">화면과 테스트 태그</a><a class="l2" href="#aaos에서-확인한-것-에뮬레이터-2026-11-13">AAOS에서 확인한 것 (에뮬레이터, 2026-11-13)</a><a class="l2" href="#공조-권한-priv-app-설치">공조 권한: priv-app 설치</a><a class="l2" href="#mock-태블릿-제어-규약">Mock (태블릿) 제어 규약</a><a class="l2" href="#태블릿에서-확인한-것-화웨이-dby-w09-android-12-기반-2026-11-13">태블릿에서 확인한 것 (화웨이 DBY-W09, Android 12 기반, 2026-11-13)</a><a class="l3" href="#화웨이-기기-주의">화웨이 기기 주의</a><a class="l2" href="#만들면서-고친-것">만들면서 고친 것</a><a class="l2" href="#빌드">빌드</a></nav>
+</div>
+
+</body>
+</html>

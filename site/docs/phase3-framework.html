@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3단계 테스트 프레임워크 · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 3. 테스트 프레임워크</span>
+  <a class="src" href="../../docs/phase3-framework.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="readme.html">README</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html" aria-current="page">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="3단계-테스트-프레임워크"><a class="anchor" href="#3단계-테스트-프레임워크" aria-hidden="true">#</a>3단계 테스트 프레임워크</h1>
+<p>작성 2026-11-13. 같은 테스트 코드로 AAOS 에뮬레이터(실제 CarService·VHAL)와 일반 태블릿(Mock 차량)을 검증한다.</p>
+<h2 id="결과"><a class="anchor" href="#결과" aria-hidden="true">#</a>결과</h2>
+<div class="table"><table><thead><tr>
+<th>기기</th>
+<th>결과</th>
+<th>시간</th>
+<th>반복</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS 에뮬레이터 (API 34)</td>
+<td>30 passed, 1 xfailed</td>
+<td>2분 7초 ~ 2분 32초</td>
+<td>4회 모두 동일</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 DBY-W09 (Mock)</td>
+<td>25 passed, 6 skipped (AAOS 전용)</td>
+<td>1분 31초 ~ 1분 42초</td>
+<td>개선 후 5회 모두 통과</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>xfailed 1건: 1단계에서 찾은 SystemUI 결함 (운전석 온도 ▲ 가 홈 버튼에 가려짐).</li>
+<li>태블릿은 실행마다 21번째 테스트에서 앱 재실행 1회가 기록된다 (아래 &#39;화웨이 iAware&#39;).</li>
+</ul>
+<h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
+<pre class="code"><code>ivi-tests/
+  ivi/adb.py        adb 명령, 맨 위 액티비티, logcat
+  ivi/waits.py      wait_until: 조건 대기 (고정 sleep 금지)
+  ivi/vehicle.py    VehicleController ─┬ AaosVehicle  VHAL --set / car_service set-property-value, save·restore
+                                       └ MockVehicle  am broadcast mock.SET / mock.GET
+  ivi/device.py     Device: 종류 판별(automotive feature), Appium 설정, 앱 실행, 누르는 방법, 기기별 판정
+  ivi/screens.py    화면 객체: IviApp(탭·배지) → Home / Climate / Media / Video
+  conftest.py       --serial, 픽스처(device·driver·app·car·vehicle), aaos 마커 건너뛰기, 실패 자료
+  tests/            smoke / sanity / regression / spike</code></pre>
+<p>테스트는 <code>car.drive(50)</code>, <code>climate.increase(Seat.DRIVER)</code>처럼 할 일만 쓴다. 방법(VHAL인지 broadcast인지, click인지 adb tap인지)는 어댑터가 정한다.</p>
+<h2 id="테스트-구성-31개"><a class="anchor" href="#테스트-구성-31개" aria-hidden="true">#</a>테스트 구성 (31개)</h2>
+<div class="table"><table><thead><tr>
+<th>마커</th>
+<th>파일</th>
+<th>내용</th>
+</tr>
+</thead><tbody><tr>
+<td>smoke</td>
+<td>test_smoke.py</td>
+<td>앱 실행 + 기기에 맞는 데이터 소스(AAOS/Mock), 정차 상태 시작, 탭 3개, 공조 제어 가능(priv-app 확인)</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>test_climate.py</td>
+<td>신호 → 공조 화면·홈 요약 (좌석 2), 버튼 → 신호 0.5°C (좌석 2 × 방향 2)</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>test_driving.py</td>
+<td>속도·기어·제한 배지 표시와 해제, 주행 중 영상 버튼 잠금, 주행 중 영상 직접 실행 차단, 정차 중 재생</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>test_climate.py</td>
+<td>최저·최고 온도에서 버튼 비활성 (좌석 2), 좌석 값 독립성</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>test_driving.py</td>
+<td>차단된 영상이 정차하면 재생 화면으로 돌아옴</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>test_media.py</td>
+<td>곡 선택(3곡), 재생/일시 정지, 주행 중에도 음악 선택 가능</td>
+</tr>
+<tr>
+<td>spike, aaos</td>
+<td>test_spike_aaos.py</td>
+<td>1단계 기본 SystemUI HVAC 바 검증 (AAOS 에서만)</td>
+</tr>
+</tbody></table></div>
+<p>실행 예:</p>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python -m pytest --serial emulator-5554 -m smoke            # 빌드 게이트
+.venv\Scripts\python -m pytest --serial emulator-5554 -m &quot;smoke or sanity&quot; # Nightly
+.venv\Scripts\python -m pytest --serial W3VBB22125209573                  # 태블릿 전체</code></pre>
+<h2 id="기기마다-다른-점을-감춘-곳"><a class="anchor" href="#기기마다-다른-점을-감춘-곳" aria-hidden="true">#</a>기기마다 다른 점을 감춘 곳</h2>
+<div class="table"><table><thead><tr>
+<th>차이</th>
+<th>AAOS 에뮬레이터</th>
+<th>화웨이 태블릿</th>
+<th>어디서</th>
+</tr>
+</thead><tbody><tr>
+<td>차량 값 넣기</td>
+<td><code>dumpsys &lt;VHAL&gt; --set</code>, <code>cmd car_service set-property-value</code></td>
+<td><code>am broadcast … mock.SET</code></td>
+<td><code>ivi/vehicle.py</code></td>
+</tr>
+<tr>
+<td>테스트 사이 값 복원</td>
+<td>VHAL <code>--save-prop</code> / <code>--restore-prop</code></td>
+<td>앱 재시작으로 초기화</td>
+<td><code>prepare()</code> / <code>cleanup()</code></td>
+</tr>
+<tr>
+<td>주행 중 제한 판정</td>
+<td>CarDrivingStateService = MOVING</td>
+<td>mock.GET <code>restricted=true</code></td>
+<td><code>is_restricted()</code></td>
+</tr>
+<tr>
+<td>영상 차단 판정</td>
+<td>맨 위가 <code>ActivityBlockingActivity</code> (OS 차단)</td>
+<td>앱의 <code>video_blocked</code> 화면</td>
+<td><code>Device.video_blocked()</code></td>
+</tr>
+<tr>
+<td>Appium 설정</td>
+<td><code>userProfile=10</code>, <code>skipDeviceInitialization</code>, <code>enableMultiWindows</code></td>
+<td>기본</td>
+<td><code>Device.appium_options()</code></td>
+</tr>
+<tr>
+<td>누르는 방법</td>
+<td>Appium click</td>
+<td>요소 중심 좌표를 <code>adb shell input tap</code></td>
+<td><code>Device.tap_mode</code>, <code>IVI_TAP</code>로 바꿀 수 있음</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>AAOS는 주행 중 막힌 영상을 정차하면 OS가 다시 앞으로 띄운다 (2026-11-13 확인). 그래서 &#39;정차 후 재생 화면 복귀&#39;는 두 기기 모두 같은 판정이다.</li>
+</ul>
+<h2 id="찾아서-고친-것"><a class="anchor" href="#찾아서-고친-것" aria-hidden="true">#</a>찾아서 고친 것</h2>
+<h3 id="1-화웨이에서-탭-한-번에-10초--태블릿-전체-7분-22초에서-1분-32초로"><a class="anchor" href="#1-화웨이에서-탭-한-번에-10초--태블릿-전체-7분-22초에서-1분-32초로" aria-hidden="true">#</a>1) 화웨이에서 탭 한 번에 10초 → 태블릿 전체 7분 22초에서 1분 32초로</h3>
+<div class="table"><table><thead><tr>
+<th>누르는 방법</th>
+<th>화웨이 DBY-W09</th>
+<th>AAOS 에뮬레이터</th>
+</tr>
+</thead><tbody><tr>
+<td><code>element.click()</code></td>
+<td>10,377 ms</td>
+<td>577 ms</td>
+</tr>
+<tr>
+<td><code>mobile: clickGesture</code></td>
+<td>10,099 ms</td>
+<td>501 ms</td>
+</tr>
+<tr>
+<td>W3C actions</td>
+<td>10,430 ms</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>adb shell input tap</code></td>
+<td>117 ms</td>
+<td>-</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>테스트별 시간을 보니 클릭이 많은 테스트일수록 느렸다 (재생/일시 정지 43.6초). adb 왕복은 65ms로 원인이 아니었다.</li>
+<li><code>waitForIdleTimeout</code>, <code>actionAcknowledgmentTimeout</code>을 0으로 해도 그대로였다. 설정 문제가 아니라 화웨이에서 UiAutomator가 넣는 터치 처리 자체가 약 10초 걸린다.</li>
+<li>화웨이·아너는 기본으로 adb tap을 쓰게 했다. 요소는 여전히 Appium으로 찾으므로 화면 객체·테스트 코드는 그대로다.</li>
+</ul>
+<h3 id="2-화웨이-iaware가-테스트-중인-앱을-강제-종료"><a class="anchor" href="#2-화웨이-iaware가-테스트-중인-앱을-강제-종료" aria-hidden="true">#</a>2) 화웨이 iAware가 테스트 중인 앱을 강제 종료</h3>
+<ul>
+<li>증상: 태블릿 반복 실행 중 한 번, 앱 시작 단계에서 <code>source_badge</code>를 못 찾아 error.</li>
+<li>실패 자료의 logcat: <code>Force stopping dev.opencabin.ivi … iAwareF[CrashClean]</code>. 그 뒤 런처로 돌아갔다.</li>
+<li>원인: 테스트마다 앱을 종료·재실행(<code>am start -S</code>)하는데, 짧은 간격으로 20번쯤 반복되면 화웨이가 &#39;반복 크래시&#39;로 보고 앱을 죽인다. 실행마다 21번째 테스트에서 재현된다.</li>
+<li>처리: <code>app</code> 픽스처가 앱이 안 뜨면 한 번 더 띄우고, 그 사실을 JUnit property <code>app_relaunch</code>로 남긴다. 통과로 처리하지만 다시 띄웠다는 기록은 남는다.</li>
+<li>남은 일(4단계): Mock 기기는 프로세스를 죽이지 않고 화면·상태만 초기화해서 재실행 횟수 자체를 줄이기, <code>app_relaunch</code>를 flaky 통계로 모으기.</li>
+</ul>
+<h2 id="실패-자료"><a class="anchor" href="#실패-자료" aria-hidden="true">#</a>실패 자료</h2>
+<p>실패하면 정리(teardown) 전에 <code>reports/artifacts/&lt;테스트&gt;/</code>에 남긴다. 정리가 정차·값 복원을 하므로 그 전에 찍어야 실패 순간이 보인다.</p>
+<div class="table"><table><thead><tr>
+<th>파일</th>
+<th>내용</th>
+</tr>
+</thead><tbody><tr>
+<td><code>screen.png</code></td>
+<td>화면</td>
+</tr>
+<tr>
+<td><code>page_source.xml</code></td>
+<td>UI 계층 (요소를 못 찾을 때 실제로 무엇이 있었는지)</td>
+</tr>
+<tr>
+<td><code>vehicle.txt</code></td>
+<td>차량 상태 (AAOS: 속도 m/s, 기어, 주행 상태, 좌석별 온도 / Mock: mock.GET 결과)</td>
+</tr>
+<tr>
+<td><code>activities.txt</code></td>
+<td>디스플레이별 맨 위 액티비티 (AAOS는 메인 + 클러스터)</td>
+</tr>
+<tr>
+<td><code>logcat.txt</code></td>
+<td>테스트 시작 때 비운 뒤의 로그</td>
+</tr>
+</tbody></table></div>
+<p>일부러 실패시킨 확인 테스트에서 <code>vehicle.txt</code>가 <code>driving_state=2</code>(주행), <code>gear=8</code>(D)로 실패 순간을 담았다. iAware 원인도 이 logcat으로 찾았다.</p>
+<h2 id="결과-파일"><a class="anchor" href="#결과-파일" aria-hidden="true">#</a>결과 파일</h2>
+<ul>
+<li>JUnit: <code>reports/junit-&lt;aaos|mock&gt;-&lt;serial&gt;.xml</code> (기기별, CI가 모은다)</li>
+<li><code>app_relaunch</code> property: 앱을 다시 띄운 테스트</li>
+</ul>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#결과">결과</a><a class="l2" href="#구조">구조</a><a class="l2" href="#테스트-구성-31개">테스트 구성 (31개)</a><a class="l2" href="#기기마다-다른-점을-감춘-곳">기기마다 다른 점을 감춘 곳</a><a class="l2" href="#찾아서-고친-것">찾아서 고친 것</a><a class="l3" href="#1-화웨이에서-탭-한-번에-10초--태블릿-전체-7분-22초에서-1분-32초로">1) 화웨이에서 탭 한 번에 10초 → 태블릿 전체 7분 22초에서 1분 32초로</a><a class="l3" href="#2-화웨이-iaware가-테스트-중인-앱을-강제-종료">2) 화웨이 iAware가 테스트 중인 앱을 강제 종료</a><a class="l2" href="#실패-자료">실패 자료</a><a class="l2" href="#결과-파일">결과 파일</a></nav>
+</div>
+
+</body>
+</html>
