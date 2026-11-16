@@ -5,6 +5,8 @@
 
 ![주행 중 경로 안내 (7단계, Pleos Connect 구조)](docs/images/p7-guidance.png)
 
+> 테스트 자동화 관점의 요약(검증 전략 · 판정 기준 · 결함 분석 · CI 실행 기록 · 한계): [docs/portfolio.md](docs/portfolio.md)
+
 ## 진행 상황
 
 | 단계 | 내용 | 상태 |
@@ -12,7 +14,7 @@
 | 1. 기술 검증 | AAOS 에뮬레이터, VHAL 값 주입·조회, Appium 세션, 신호↔UI E2E | ✅ [docs/phase1-spike.md](docs/phase1-spike.md) |
 | 2. IVI 앱 | Kotlin + Compose. 홈 · 공조 · 미디어 · 영상(주행 중 차단), `VehicleDataSource` (CarPropertyManager / Mock), priv-app 설치 | ✅ AAOS 에뮬레이터 · 태블릿 모두 확인 [docs/phase2-app.md](docs/phase2-app.md) |
 | 3. 테스트 프레임워크 | 기기 어댑터(AAOS/Mock), 화면 객체, smoke / sanity / regression 31개, 실패 자료 자동 수집 | ✅ [docs/phase3-framework.md](docs/phase3-framework.md) |
-| 4. 운영 | 재시도·flaky 판정·격리·통계, 두 기기 병렬 실행, 프레임워크 단위 테스트, GitHub Actions(호스트 build·unit + self-hosted Bench e2e) | ✅ [docs/phase4-operations.md](docs/phase4-operations.md) (워크플로는 GitHub 에서 아직 미실행) |
+| 4. 운영 | 재시도·flaky 판정·격리·통계, 두 기기 병렬 실행, 프레임워크 단위 테스트, GitHub Actions(호스트 build·unit + self-hosted Bench e2e) | ✅ [docs/phase4-operations.md](docs/phase4-operations.md) (GitHub 에서 build·unit 실행 통과, e2e 는 Bench 등록 전) |
 | 5. 재점검·디자인 | 1~4단계 재점검, 양산 IVI 구조(왼쪽 주행 정보 · 오른쪽 앱 · 아래 앱 바) 참고 디자인 개편, 회귀에서 찾은 3건 수정 | ✅ [docs/phase5-design.md](docs/phase5-design.md) |
 | 6. 기능 확장 | 내비게이션 · 라디오 · 전화 · 설정 · 후방 카메라(기어 R) · 음성 명령, 테스트 훅, 테스트 31 → 64개 | ✅ [docs/phase6-features.md](docs/phase6-features.md) |
 | 7. Pleos Connect 구조 | 3영역 화면(주행 정보 · 상단 바 · 앱 / 하단 바), 분할 화면, 하단 공조 바(VHAL), 전 좌석 공조 · SYNC, 주행 뷰 · 유틸리티 위젯, **AI 어시스턴트**(여러 명령 · 좌석 인식 · 목적지 후보 · 주행 제한), 빠른 제어, 알림 센터, 앱 목록. E2E 64 → 84개, 앱 단위 테스트 17개 | ✅ [docs/phase7-pleos.md](docs/phase7-pleos.md) |
