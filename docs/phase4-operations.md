@@ -117,6 +117,7 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 2. 태블릿: USB 연결, USB 디버깅 허용, 앱·Appium 보조 앱 3개 설치 승인 (처음 한 번)
 3. Appium 서버 상시 실행: `ANDROID_HOME=C:\android appium --address 127.0.0.1 --port 4723`
 4. GitHub 저장소 Settings → Actions → Runners 에서 self-hosted runner 등록, 라벨 `ivi-bench`. 서비스 계정이 아니라 **이 PC 사용자 계정**으로 실행
+5. Settings → Secrets and variables → Actions → Variables 에 `IVI_BENCH=online` 추가. 이 변수가 없으면 e2e job 은 건너뛴다(러너가 없을 때 job 이 계속 대기하지 않게). Bench 를 끄면 변수를 지우거나 다른 값으로 바꾼다
 
 ## 프레임워크 단위 테스트 (unit/)
 
