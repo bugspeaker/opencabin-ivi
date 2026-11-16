@@ -110,13 +110,17 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 - **화웨이 설치 승인**: adb 설치마다 기기 화면 승인이 필요해 무인 실행이 멈춘다 → `tools/install_app.py` 가 기기의 APK 해시를 비교해 **같으면 설치하지 않는다**. 앱이 바뀐 날은 사람이 한 번 승인해야 한다 (또는 기기 개발자 옵션의 'ADB 설치 앱 확인' 해제 — 기기 정책 결정이라 이 프로젝트에서는 바꾸지 않았다).
 - **Bench 는 하나**: `concurrency` 로 e2e 가 동시에 둘 돌지 않게 한다 (뒤 실행은 대기).
 - **누적 기록 유지**: checkout `clean: false` 로 `reports/history` 를 남겨 flaky 통계가 실행을 넘어 쌓인다.
-- 이 워크플로는 아직 GitHub 에 올려 돌려 보지 않았다. 각 단계 명령은 이 PC 에서 따로 실행해 확인했고, YAML 구조와 PowerShell 인자 처리(`"smoke or sanity"` 가 한 인자로 넘어가는지)는 확인했다.
+- **GitHub 실행 기록 (2026-11-16, 비공개 저장소)**: GitHub 호스트 job 은 첫 실행부터 통과했다.
+  - PR #1 실행(run 43812382880): unit 통과(15초), build 통과(assembleDebug + 앱 단위 테스트, 약 5분), e2e 는 `IVI_BENCH` 변수가 없어 skipped. 실행 전체 success
+  - main push 실행(run 43812370154): build·unit 통과. 이 실행은 변수 조건을 넣기 전 워크플로라 e2e 가 러너를 기다리며 대기해서 직접 취소했다. 이 문제를 보고 e2e 를 변수로 켜고 끄게 바꿨다
+  - e2e(self-hosted Test Bench)는 아직 GitHub 에서 돌리지 않았다. 각 단계 명령은 이 PC 에서 따로 실행해 확인했고, PowerShell 인자 처리(`"smoke or sanity"` 가 한 인자로 넘어가는지)도 확인했다
 
 ### Bench 준비 순서
 1. 에뮬레이터: `-writable-system` 으로 실행, 처음 한 번 `ivi-app/privileged/install_priv_app.py`
 2. 태블릿: USB 연결, USB 디버깅 허용, 앱·Appium 보조 앱 3개 설치 승인 (처음 한 번)
 3. Appium 서버 상시 실행: `ANDROID_HOME=C:\android appium --address 127.0.0.1 --port 4723`
 4. GitHub 저장소 Settings → Actions → Runners 에서 self-hosted runner 등록, 라벨 `ivi-bench`. 서비스 계정이 아니라 **이 PC 사용자 계정**으로 실행
+5. Settings → Secrets and variables → Actions → Variables 에 `IVI_BENCH=online` 추가. 이 변수가 없으면 e2e job 은 건너뛴다(러너가 없을 때 job 이 계속 대기하지 않게). Bench 를 끄면 변수를 지우거나 다른 값으로 바꾼다
 
 ## 프레임워크 단위 테스트 (unit/)
 

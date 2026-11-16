@@ -10,7 +10,7 @@
 #  schedule(Nightly)  전체 (smoke+sanity+regression+spike)
 #  workflow_dispatch  입력한 마커
 #
-# Test Bench 준비 (Windows PC 한 대):
+# Test Bench 준비 (Windows PC 한 대, 준비되면 저장소 변수 IVI_BENCH=online 으로 e2e 를 켠다):
 #  - self-hosted runner, 라벨 `ivi-bench`. 이 PC 의 사용자 계정으로 실행 (AAOS priv-app 과 같은 debug 서명 키를 쓰려고)
 #  - AAOS 에뮬레이터(-writable-system, priv-app 설치 완료), 태블릿 USB 연결, Appium 서버(127.0.0.1:4723) 상시 실행
 #  - 자세한 내용: docs/phase4-operations.md
@@ -32,11 +32,6 @@ on:
         description: "반복 횟수 (안정성 측정)"
         required: false
         default: "1"
-
-# Test Bench 는 하나뿐이라 E2E 는 한 번에 하나만 돈다 (뒤에 온 실행은 기다린다)
-concurrency:
-  group: ivi-bench-${{ github.workflow }}
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -81,7 +76,15 @@ jobs:
 
   e2e:
     needs: [build, unit]
+    # Test Bench(self-hosted runner)가 켜져 있을 때만 돈다.
+    # 저장소 변수 IVI_BENCH=online 이 없으면 건너뛴다 (러너 없이 job 이 무한 대기하지 않도록)
+    if: vars.IVI_BENCH == 'online'
     runs-on: [self-hosted, windows, ivi-bench]
+    # Test Bench 는 하나뿐이라 E2E 는 한 번에 하나만 돈다 (뒤에 온 실행은 기다린다).
+    # build/unit 은 GitHub 호스트라 막지 않는다
+    concurrency:
+      group: ivi-bench
+      cancel-in-progress: false
     timeout-minutes: 60
     defaults:
       run:
