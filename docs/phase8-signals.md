@@ -123,7 +123,7 @@ A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 
 
 - E2E 84 → 108개. 새 24개는 모두 화면과 신호를 양쪽에서 보고, **같은 테스트가 AAOS(VHAL)와 태블릿(Mock) 양쪽에서 통과**한다.
 - 태블릿은 이 날 처음에 adb `unauthorized` 였다 (adb 서버를 다시 켠 뒤 기기에서 USB 디버깅 승인이 필요). 승인 → 설치 승인 → 실행 순서로 진행했다.
-- 반복 안정성(같은 묶음 여러 번)은 이번에 1회만 봤다. 7단계의 2회 반복에서 한 번 흔들린 `test_video_blocked_screen_follows_parking` 은 이번 3회(에뮬레이터 단독 2 + 병렬 1)에서는 재현되지 않았다.
+- 반복 안정성(같은 묶음 여러 번)은 이번에 1회만 봤다. 7단계의 2회 반복에서 한 번 흔들린 `test_video_blocked_screen_follows_parking` 은 이번 에뮬레이터 전체 실행 2회(단독 1 + 병렬 1)에서는 재현되지 않았다 (원인은 아직 확인하지 못했다).
 
 ## 6. 공고 업무와의 대응 (42dot Test Automation Engineer, IVI System)
 
