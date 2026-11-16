@@ -16,7 +16,7 @@
 | 5. 재점검·디자인 | 1~4단계 재점검, 양산 IVI 구조(왼쪽 주행 정보 · 오른쪽 앱 · 아래 앱 바) 참고 디자인 개편, 회귀에서 찾은 3건 수정 | ✅ [docs/phase5-design.md](docs/phase5-design.md) |
 | 6. 기능 확장 | 내비게이션 · 라디오 · 전화 · 설정 · 후방 카메라(기어 R) · 음성 명령, 테스트 훅, 테스트 31 → 64개 | ✅ [docs/phase6-features.md](docs/phase6-features.md) |
 | 7. Pleos Connect 구조 | 3영역 화면(주행 정보 · 상단 바 · 앱 / 하단 바), 분할 화면, 하단 공조 바(VHAL), 전 좌석 공조 · SYNC, 주행 뷰 · 유틸리티 위젯, **AI 어시스턴트**(여러 명령 · 좌석 인식 · 목적지 후보 · 주행 제한), 빠른 제어, 알림 센터, 앱 목록. E2E 64 → 84개, 앱 단위 테스트 17개 | ✅ [docs/phase7-pleos.md](docs/phase7-pleos.md) |
-| 8. 차량 신호 확장 | 화면 상태였던 공조(A/C · AUTO · 풍량 · 김서림 · 좌석 열선)와 도어 잠금을 **CarProperty/VHAL 신호**로, 주행 가능 거리 · 배터리 · 외기 온도를 주행 정보에. 거리 부족 → 충전소 안내. 양방향 E2E 24개(area 단위 판정), 테스트마다 신호 기준 값 초기화. E2E 84 → 108개 | ✅ 에뮬레이터 확인, 태블릿 미실행 [docs/phase8-signals.md](docs/phase8-signals.md) |
+| 8. 차량 신호 확장 | 화면 상태였던 공조(A/C · AUTO · 풍량 · 김서림 · 좌석 열선)와 도어 잠금을 **CarProperty/VHAL 신호**로, 주행 가능 거리 · 배터리 · 외기 온도를 주행 정보에. 거리 부족 → 충전소 안내. 양방향 E2E 24개(area 단위 판정), 테스트마다 신호 기준 값 초기화. E2E 84 → 108개 | ✅ AAOS 에뮬레이터 · 태블릿 모두 확인 [docs/phase8-signals.md](docs/phase8-signals.md) |
 
 ## 구조
 
@@ -68,7 +68,7 @@ docs/                 단계별 설계·검증 기록
 | `IVI_TAP` | 화웨이·아너 `adb`, 그 외 `appium` | 요소를 누르는 방법 |
 | `APPIUM_URL` | `http://127.0.0.1:4723` | Appium 서버 |
 
-8단계 결과 (2026-11-16): AAOS 에뮬레이터 E2E 108개 중 **106 passed, 1 skipped, 1 xfailed** (6분 40초), 앱 단위 17 passed, 프레임워크 단위 33 passed. 태블릿은 adb 승인 대기로 아직 미실행 ([docs/phase8-signals.md](docs/phase8-signals.md)).
+8단계 결과 (2026-11-16): AAOS 에뮬레이터 E2E 108개 중 **106 passed, 1 skipped, 1 xfailed** (6분 40초), 화웨이 태블릿 **102 passed, 6 skipped** (7분 6초), 두 기기 병렬 gate pass · flaky 0 (7분 20초, 2.0배), 앱 단위 17 passed, 프레임워크 단위 33 passed ([docs/phase8-signals.md](docs/phase8-signals.md)).
 
 7단계 결과 (2026-11-14): AAOS 에뮬레이터 E2E 84개 중 **82 passed, 1 skipped, 1 xfailed** (5분 47초), 화웨이 태블릿 **78 passed, 6 skipped** (AAOS 전용, 5분 46초), 앱 단위 17 passed, 프레임워크 단위 26 passed ([docs/phase7-pleos.md](docs/phase7-pleos.md)).
 

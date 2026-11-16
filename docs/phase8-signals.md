@@ -118,10 +118,12 @@ A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 
 | 앱 단위 테스트 (`CabinAssistantTest`) | 17 passed |
 | 프레임워크 단위 테스트 (`pytest unit`) | 33 passed (26 → 33) |
 | AAOS 에뮬레이터 전체 E2E (108개) | **106 passed, 1 skipped, 1 xfailed**, gate pass, 앱 재실행 0, VHAL 재시도 0 (6분 40초) |
-| 화웨이 태블릿 (Mock) | **아직 실행하지 못함** — 이 날 태블릿이 adb `unauthorized` 상태였다 (기기에서 USB 디버깅 승인 필요). 승인 후 설치·실행한다 |
+| 화웨이 태블릿 (Mock) 전체 E2E (108개) | **102 passed, 6 skipped** (AAOS 전용), gate pass, 앱 재실행 0 (7분 6초) |
+| 두 기기 병렬 (`run_bench.py --reruns 1`) | 두 기기 모두 gate pass, **flaky 0**, 재실행 0, VHAL 재시도 0. 7분 20초 (차례로 돌리면 약 14분 28초, 2.0배) |
 
-- E2E 84 → 108개. 새 24개는 모두 화면과 신호를 양쪽에서 본다.
-- 두 기기 병렬(`run_bench.py`)과 반복 안정성 측정은 태블릿 확인과 함께 한다.
+- E2E 84 → 108개. 새 24개는 모두 화면과 신호를 양쪽에서 보고, **같은 테스트가 AAOS(VHAL)와 태블릿(Mock) 양쪽에서 통과**한다.
+- 태블릿은 이 날 처음에 adb `unauthorized` 였다 (adb 서버를 다시 켠 뒤 기기에서 USB 디버깅 승인이 필요). 승인 → 설치 승인 → 실행 순서로 진행했다.
+- 반복 안정성(같은 묶음 여러 번)은 이번에 1회만 봤다. 7단계의 2회 반복에서 한 번 흔들린 `test_video_blocked_screen_follows_parking` 은 이번 3회(에뮬레이터 단독 2 + 병렬 1)에서는 재현되지 않았다.
 
 ## 6. 공고 업무와의 대응 (42dot Test Automation Engineer, IVI System)
 
