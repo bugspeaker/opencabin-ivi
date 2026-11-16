@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1단계 기술 검증 (AAOS 에뮬레이터 · VHAL · Appium) · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 1. 기술 검증</span>
+  <a class="src" href="../../docs/phase1-spike.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="readme.html">README</a>
+        <a href="phase1-spike.html" aria-current="page">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="1단계-기술-검증-aaos-에뮬레이터--vhal--appium"><a class="anchor" href="#1단계-기술-검증-aaos-에뮬레이터--vhal--appium" aria-hidden="true">#</a>1단계 기술 검증 (AAOS 에뮬레이터 · VHAL · Appium)</h1>
+<p>작성 2026-11-13. 목적: 자체 IVI 앱을 만들기 전에, PC 한 대로 차량 신호 주입 → UI 확인 → UI 조작 → 차량 신호 확인 E2E가 되는지 먼저 확인한다.</p>
+<h2 id="결론"><a class="anchor" href="#결론" aria-hidden="true">#</a>결론</h2>
+<div class="table"><table><thead><tr>
+<th>확인 항목</th>
+<th>결과</th>
+<th>근거</th>
+</tr>
+</thead><tbody><tr>
+<td>Automotive 에뮬레이터 부팅</td>
+<td>됨, 약 30초</td>
+<td>API 34 <code>android-automotive</code> x86_64, 1024x768</td>
+</tr>
+<tr>
+<td>adb root (VHAL 직접 제어용)</td>
+<td>됨</td>
+<td>이미지가 <code>userdebug</code></td>
+</tr>
+<tr>
+<td>읽기 전용 센서 값 주입 (속도·기어)</td>
+<td><code>dumpsys &lt;VHAL&gt; --set</code></td>
+<td><code>cmd car_service inject-vhal-event</code>는 값이 저장되지 않음 (아래 참고)</td>
+</tr>
+<tr>
+<td>쓰기 가능 값 (HVAC 온도)</td>
+<td><code>cmd car_service set-property-value</code></td>
+<td>앱의 CarPropertyManager와 같은 경로</td>
+</tr>
+<tr>
+<td>신호 → UI</td>
+<td>됨</td>
+<td>HVAC 25.0°C 넣으면 하단 바 77°</td>
+</tr>
+<tr>
+<td>UI → 신호</td>
+<td>됨</td>
+<td>▼/▲ 1회 = 0.5°C</td>
+</tr>
+<tr>
+<td>속도·기어 → 주행 상태</td>
+<td>됨</td>
+<td>PARKED(0) ↔ MOVING(2), UX 제한 0x1ff, 비최적화 화면에 &quot;You can&#39;t use this feature while driving&quot;</td>
+</tr>
+<tr>
+<td>Appium(UiAutomator2) 세션</td>
+<td>됨, 3초</td>
+<td>AAOS 전용 설정 3가지 필요 (아래)</td>
+</tr>
+<tr>
+<td>안정성</td>
+<td>됨</td>
+<td><code>pytest</code> 3회 연속 5 passed, 1 xfailed, 회당 약 9초</td>
+</tr>
+</tbody></table></div>
+<h2 id="차량-신호-제어-명령-3가지의-차이"><a class="anchor" href="#차량-신호-제어-명령-3가지의-차이" aria-hidden="true">#</a>차량 신호 제어: 명령 3가지의 차이</h2>
+<div class="table"><table><thead><tr>
+<th>명령</th>
+<th>경로</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td><code>cmd car_service set-property-value &lt;prop&gt; &lt;area&gt; &lt;값&gt;</code></td>
+<td>CarService → VHAL</td>
+<td>쓰기 권한 있는 property만. HVAC 성공, 속도는 읽기 전용이라 불가</td>
+</tr>
+<tr>
+<td><code>cmd car_service inject-vhal-event &lt;prop&gt; &lt;area&gt; &lt;값&gt;</code></td>
+<td>이벤트만 발생</td>
+<td>저장 값은 그대로라 <code>get-property-value</code>로 확인 불가. 테스트 판정에 쓰지 않는다</td>
+</tr>
+<tr>
+<td><code>dumpsys android.hardware.automotive.vehicle.IVehicle/default --set &lt;prop&gt; -f/-i &lt;값&gt; -a &lt;area&gt;</code></td>
+<td>VHAL 직접 (root)</td>
+<td>읽기 전용 센서 값도 바뀌고 변경 이벤트가 CarService로 나가서 주행 상태까지 실제로 바뀜</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>VHAL에는 테스트용 <code>--save-prop</code> / <code>--restore-prop</code>가 있다. 픽스처에서 테스트 전후로 값을 저장·복원해서 테스트끼리 영향을 주지 않게 했다.</li>
+<li><code>--genfakedata</code> (선형 값 생성, JSON 시나리오 재생)도 있다. 주행 시나리오(가속·감속) 테스트에 쓸 수 있어 3단계 후보로 남긴다.</li>
+</ul>
+<h2 id="appium을-aaos에-붙일-때-필요한-것"><a class="anchor" href="#appium을-aaos에-붙일-때-필요한-것" aria-hidden="true">#</a>Appium을 AAOS에 붙일 때 필요한 것</h2>
+<div class="table"><table><thead><tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead><tbody><tr>
+<td><code>Neither ANDROID_HOME nor ANDROID_SDK_ROOT environment variable was exported</code></td>
+<td>Appium 서버 환경 변수</td>
+<td><code>ANDROID_HOME=C:\android</code>로 서버 실행</td>
+</tr>
+<tr>
+<td><code>Appium Settings app is not running after 30000ms</code></td>
+<td>AAOS는 시스템 사용자(0)와 운전자 사용자(10)가 따로 돈다</td>
+<td><code>appium:userProfile</code> = <code>am get-current-user</code> 값, <code>appium:skipDeviceInitialization: true</code></td>
+</tr>
+<tr>
+<td>하단 HVAC 바가 화면 소스에 없음</td>
+<td>SystemUI 바는 앱과 다른 창</td>
+<td>세션 후 <code>update_settings({&quot;enableMultiWindows&quot;: True})</code></td>
+</tr>
+</tbody></table></div>
+<h2 id="발견한-결함-운전석-온도--가-홈-버튼에-가려짐"><a class="anchor" href="#발견한-결함-운전석-온도--가-홈-버튼에-가려짐" aria-hidden="true">#</a>발견한 결함: 운전석 온도 ▲ 가 홈 버튼에 가려짐</h2>
+<ul>
+<li>화면: 하단 시스템 바, 1024x768 (<code>automotive_1024p_landscape</code>)</li>
+<li>현상: 운전석 온도 ▲ 를 눌러도 온도가 바뀌지 않는다. Appium 클릭, <code>adb shell input tap</code> 모두 같다.</li>
+<li>원인: 영역이 겹친다. ▲ <code>[192,682][268,758]</code>, 홈 <code>[188,682][264,758]</code>. 72x76px가 겹치고 홈이 위에 있어 탭을 가져간다.</li>
+<li>비교: 운전석 ▼, 조수석 ▲·▼ 는 정상 (1회 = 0.5°C).</li>
+<li>처리: <code>test_driver_temp_up_is_not_covered_by_home</code>를 <code>xfail(strict=True)</code>로 둔다. 결함이 고쳐지면 XPASS가 되고, strict라서 실패로 바뀌므로 바로 알 수 있다.</li>
+</ul>
+<h2 id="환경에서-막혔던-것"><a class="anchor" href="#환경에서-막혔던-것" aria-hidden="true">#</a>환경에서 막혔던 것</h2>
+<div class="table"><table><thead><tr>
+<th>문제</th>
+<th>해결</th>
+</tr>
+</thead><tbody><tr>
+<td>에뮬레이터 35.4.9로 Automotive 이미지 부팅 중 종료</td>
+<td>에뮬레이터 37.2.13으로 업데이트</td>
+</tr>
+<tr>
+<td>사용자 폴더 경로에 한글 (<code>C:\Users\조예훈\.android\avd</code>)</td>
+<td>AVD를 <code>C:\android\avd</code>로 옮기고 <code>ANDROID_AVD_HOME</code> 지정</td>
+</tr>
+<tr>
+<td><code>avdmanager</code>가 응답 없음 (cmdline-tools가 SDK XML v4를 못 읽음)</td>
+<td>AVD <code>config.ini</code>를 직접 작성 (<code>hw.device.name=automotive_1024p_landscape</code>)</td>
+</tr>
+</tbody></table></div>
+<h2 id="다음-단계로-넘길-것"><a class="anchor" href="#다음-단계로-넘길-것" aria-hidden="true">#</a>다음 단계로 넘길 것</h2>
+<ul>
+<li>주행 중 제한 E2E는 기본 앱으로는 판정이 애매하다(어떤 앱이 Distraction Optimized인지 바깥에서 정하기 어려움). 2단계에서 만드는 자체 앱에 DO 화면과 비DO 화면(영상 재생)을 둬서 <code>drive()</code> → 차단 화면 / <code>park()</code> → 복귀를 확인한다.</li>
+<li>태블릿(화웨이 DBY-W09, Android 12 기반)은 CarService가 없으므로 앱 안의 Mock 차량 서비스를 <code>adb shell am broadcast</code>로 제어한다. <code>vehicle.py</code>의 <code>Vehicle</code>과 같은 인터페이스로 맞춰 테스트 코드를 그대로 쓴다.</li>
+</ul>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#결론">결론</a><a class="l2" href="#차량-신호-제어-명령-3가지의-차이">차량 신호 제어: 명령 3가지의 차이</a><a class="l2" href="#appium을-aaos에-붙일-때-필요한-것">Appium을 AAOS에 붙일 때 필요한 것</a><a class="l2" href="#발견한-결함-운전석-온도--가-홈-버튼에-가려짐">발견한 결함: 운전석 온도 ▲ 가 홈 버튼에 가려짐</a><a class="l2" href="#환경에서-막혔던-것">환경에서 막혔던 것</a><a class="l2" href="#다음-단계로-넘길-것">다음 단계로 넘길 것</a></nav>
+</div>
+
+</body>
+</html>

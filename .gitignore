@@ -9,6 +9,7 @@ build/
 .shot_*.png
 .kotlin/
 .idea/
+node_modules/
 *.iml
 
 # 저장소에 넣지 않는 개인·참고 자료

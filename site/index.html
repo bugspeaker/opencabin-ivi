@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCabin IVI</title>
+<meta name="description" content="AAOS 인포테인먼트 앱과, 그 앱을 UI 조작부터 차량 신호(VHAL)까지 검증하는 E2E 테스트 자동화 환경.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* 모든 값은 프로젝트 루트 DESIGN.md 의 토큰에서만 가져옵니다. */
+:root {
+  /* colors */
+  --primary: #5e6ad2;
+  --on-primary: #ffffff;
+  --primary-hover: #828fff;
+  --primary-focus: #5e69d1;
+  --ink: #f7f8f8;
+  --ink-muted: #d0d6e0;
+  --ink-subtle: #8a8f98;
+  --ink-tertiary: #62666d;
+  --canvas: #010102;
+  --surface-1: #0f1011;
+  --surface-2: #141516;
+  --surface-3: #18191a;
+  --hairline: #23252a;
+  --hairline-strong: #34343a;
+  --semantic-success: #27a644;
+
+  /* type families (DESIGN.md: Linear 전용 서체 + 문서에 적힌 대체 서체) */
+  --font-display: "Linear Display", Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-text: "Linear Text", Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Linear Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* rounded */
+  --r-xs: 4px; --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-pill: 9999px;
+
+  /* spacing */
+  --s-xxs: 4px; --s-xs: 8px; --s-sm: 12px; --s-md: 16px; --s-lg: 24px; --s-xl: 32px; --s-xxl: 48px; --s-section: 96px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: -0.05px;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid rgb(94 105 209 / 0.5); outline-offset: 2px; }
+
+/* typography tokens */
+.display-xl { font-family: var(--font-display); font-size: 80px; font-weight: 600; line-height: 1.05; letter-spacing: -3px; margin: 0; }
+.display-lg { font-family: var(--font-display); font-size: 56px; font-weight: 600; line-height: 1.10; letter-spacing: -1.8px; margin: 0; }
+.display-md { font-family: var(--font-display); font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 0; }
+.headline   { font-family: var(--font-display); font-size: 28px; font-weight: 600; line-height: 1.20; letter-spacing: -0.6px; margin: 0; }
+.card-title { font-family: var(--font-display); font-size: 22px; font-weight: 500; line-height: 1.25; letter-spacing: -0.4px; margin: 0; }
+.subhead    { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.40; letter-spacing: -0.2px; margin: 0; }
+.body-lg    { font-size: 18px; line-height: 1.5; letter-spacing: -0.1px; margin: 0; }
+.body-sm    { font-size: 14px; line-height: 1.5; letter-spacing: 0; margin: 0; }
+.caption    { font-size: 12px; line-height: 1.4; letter-spacing: 0; margin: 0; }
+.eyebrow    { font-size: 13px; font-weight: 500; line-height: 1.3; letter-spacing: 0.4px; margin: 0; color: var(--ink-subtle); }
+.mono       { font-family: var(--font-mono); font-size: 13px; line-height: 1.5; }
+.muted  { color: var(--ink-muted); }
+.subtle { color: var(--ink-subtle); }
+
+/* layout */
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--s-xl); }
+section { padding: var(--s-section) 0 0; }
+.section-head { display: grid; gap: var(--s-sm); max-width: 720px; margin-bottom: var(--s-xxl); }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 40px; padding: 8px 14px; border-radius: var(--r-md);
+  font-family: var(--font-text); font-size: 14px; font-weight: 500; line-height: 1.2;
+  border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+  transition: background-color .15s ease;
+}
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-primary:active { background: var(--primary-focus); }
+.btn-secondary { background: var(--surface-1); color: var(--ink); border-color: var(--hairline); }
+.btn-secondary:hover { background: var(--surface-2); border-color: var(--hairline-strong); }
+.btn-tertiary { background: var(--canvas); color: var(--ink); }
+.btn-tertiary:hover { color: var(--ink-muted); }
+
+/* top-nav */
+.top-nav { position: sticky; top: 0; z-index: 10; background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+.top-nav .wrap { height: 56px; display: flex; align-items: center; gap: var(--s-lg); }
+.brand { display: flex; align-items: center; gap: var(--s-xs); font-family: var(--font-display); font-size: 14px; font-weight: 600; }
+.brand-mark { width: 20px; height: 20px; border-radius: var(--r-sm); background: var(--primary); }
+.nav-links { display: flex; gap: var(--s-xxs); margin: 0 auto; font-size: 14px; }
+.nav-links a { padding: 8px 14px; border-radius: var(--r-md); color: var(--ink-subtle); }
+.nav-links a:hover { color: var(--ink); }
+.nav-cta { display: flex; gap: var(--s-xs); }
+
+/* hero */
+.hero { padding: var(--s-section) 0 0; }
+.hero-copy { display: grid; gap: var(--s-lg); max-width: 960px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+
+/* cards */
+.card { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: var(--s-lg); }
+.shot-card { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-xl); padding: var(--s-lg); }
+.shot-card img { border-radius: var(--r-md); border: 1px solid var(--hairline); width: 100%; }
+.hero .shot-card { margin-top: var(--s-xxl); }
+.shot-caption { display: flex; justify-content: space-between; gap: var(--s-md); margin-top: var(--s-md); }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-md); }
+.stat { display: grid; gap: var(--s-xs); }
+.stat .headline { font-variant-numeric: tabular-nums; }
+
+/* feature grid */
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-lg); }
+.feature { display: grid; gap: var(--s-md); align-content: start; }
+.feature img { border-radius: var(--r-md); border: 1px solid var(--hairline); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.feature-text { display: grid; gap: var(--s-xs); }
+
+/* two devices */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-lg); }
+.device { display: grid; gap: var(--s-md); }
+.device-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-md); padding: var(--s-sm) 0; border-top: 1px solid var(--hairline); }
+.device-row:first-of-type { border-top: 0; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px; justify-self: start;
+  background: var(--surface-2); color: var(--ink-muted);
+  font-size: 12px; line-height: 1.4; padding: 2px 8px; border-radius: var(--r-pill);
+}
+.status-dot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--semantic-success); }
+
+/* changelog */
+.changelog-row {
+  display: grid; grid-template-columns: 96px 1fr auto; gap: var(--s-lg); align-items: baseline;
+  padding: var(--s-lg) 0; border-bottom: 1px solid var(--hairline);
+}
+.changelog-row:first-child { border-top: 1px solid var(--hairline); }
+.changelog-row .card-title { font-size: 22px; }
+
+/* run */
+.code { background: var(--surface-2); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: var(--s-md); overflow-x: auto; margin: 0; color: var(--ink-muted); }
+.code .c { color: var(--ink-tertiary); }
+.run-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-lg); align-items: start; }
+.run-steps { display: grid; gap: var(--s-md); margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.run-steps li { display: grid; grid-template-columns: 32px 1fr; gap: var(--s-sm); counter-increment: step; }
+.run-steps li::before { content: counter(step); font-family: var(--font-mono); font-size: 13px; color: var(--ink-subtle); padding-top: 3px; }
+
+/* cta-banner */
+.cta-banner { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: var(--s-xxl); display: flex; justify-content: space-between; align-items: center; gap: var(--s-lg); }
+.cta-banner .copy { display: grid; gap: var(--s-xs); }
+
+/* footer */
+footer { margin-top: var(--s-section); border-top: 1px solid var(--hairline); padding: 64px 0; color: var(--ink-subtle); }
+footer .wrap { display: flex; justify-content: space-between; gap: var(--s-lg); flex-wrap: wrap; }
+footer nav { display: flex; gap: var(--s-lg); flex-wrap: wrap; }
+footer a:hover { color: var(--ink); }
+
+/* responsive (DESIGN.md breakpoints) */
+@media (max-width: 1024px) {
+  .display-xl { font-size: 56px; letter-spacing: -1.8px; line-height: 1.10; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .run-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.run-grid > *, .run-steps li > span { min-width: 0; }
+.run-steps .mono { overflow-wrap: anywhere; }
+@media (max-width: 768px) {
+  .wrap { padding: 0 var(--s-md); }
+  .nav-links { display: none; }
+  .nav-cta { margin-left: auto; }
+  .nav-cta .btn-secondary { display: none; }
+  .hero, section { padding-top: var(--s-xxl); }
+  .display-xl { font-size: 40px; letter-spacing: -1px; line-height: 1.15; }
+  .display-lg { font-size: 40px; letter-spacing: -1px; line-height: 1.15; }
+  .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .shot-card { padding: var(--s-sm); }
+  .shot-caption { flex-direction: column; gap: var(--s-xxs); }
+  .changelog-row { grid-template-columns: 1fr; gap: var(--s-xs); }
+  .cta-banner { flex-direction: column; align-items: flex-start; padding: var(--s-lg); }
+  .btn { min-height: 44px; }
+}
+@media (max-width: 480px) {
+  .stats { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="top-nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="OpenCabin IVI 홈"><span class="brand-mark" aria-hidden="true"></span>OpenCabin IVI</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="#screens">화면</a>
+      <a href="#devices">기기</a>
+      <a href="#phases">진행 상황</a>
+      <a href="#run">실행</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-secondary" href="docs/phase8-signals.html">결과 기록</a>
+      <a class="btn btn-primary" href="#run">실행 방법</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">AAOS 인포테인먼트 테스트 자동화</p>
+        <h1 class="display-xl">화면을 누르면,<br>차량 신호까지 확인합니다.</h1>
+        <p class="body-lg muted">가상 차량 인포테인먼트 앱과, 그 앱을 UI 조작부터 VHAL 신호까지 E2E로 검증하는 테스트 환경입니다. 같은 테스트를 AAOS 에뮬레이터와 일반 Android 태블릿에서 그대로 돌립니다.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#run">테스트 돌려 보기</a>
+          <a class="btn btn-secondary" href="#screens">화면 둘러보기</a>
+        </div>
+      </div>
+
+      <figure class="shot-card" style="margin-left:0;margin-right:0;margin-bottom:0">
+        <img src="../docs/images/p7-guidance.png" width="1024" height="768" alt="주행 중 경로 안내 화면. 왼쪽에 주행 정보, 오른쪽에 지도와 경로 안내, 아래에 앱 바와 공조 바가 있다.">
+        <figcaption class="shot-caption">
+          <span class="body-sm">주행 중 경로 안내</span>
+          <span class="caption subtle">7단계 · Pleos Connect 구조 · 1024 × 768</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <section aria-label="최근 결과">
+      <div class="stats">
+        <div class="card stat">
+          <p class="eyebrow">E2E 테스트</p>
+          <p class="headline">108개</p>
+          <p class="body-sm subtle">AAOS 에뮬레이터 · 태블릿 공통</p>
+        </div>
+        <div class="card stat">
+          <p class="eyebrow">AAOS 에뮬레이터</p>
+          <p class="headline">106 통과</p>
+          <p class="body-sm subtle">1 skipped · 1 xfailed · 6분 40초</p>
+        </div>
+        <div class="card stat">
+          <p class="eyebrow">두 기기 병렬</p>
+          <p class="headline">7분 20초</p>
+          <p class="body-sm subtle">게이트 통과 · 2.0배 빠름</p>
+        </div>
+        <div class="card stat">
+          <p class="eyebrow">불안정한 테스트</p>
+          <p class="headline">0개</p>
+          <p class="body-sm subtle">재시도 · 격리 · 통계로 관리</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="screens">
+      <div class="section-head">
+        <p class="eyebrow">화면</p>
+        <h2 class="display-lg">실제 차처럼 움직이는 앱</h2>
+        <p class="body-lg muted">Kotlin과 Compose로 만든 IVI 앱입니다. 왼쪽 주행 정보, 위쪽 상태 바, 오른쪽 앱, 아래쪽 공조 바로 나뉘고, 모든 조작이 차량 신호와 연결됩니다.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card feature">
+          <img src="../docs/images/p7-climate.png" width="1024" height="768" alt="전 좌석 공조 화면">
+          <div class="feature-text">
+            <h3 class="card-title">전 좌석 공조</h3>
+            <p class="body-sm muted">온도, A/C, AUTO, 풍량, 김서림, 좌석 열선이 화면 상태가 아니라 CarProperty 신호로 오갑니다.</p>
+          </div>
+        </article>
+        <article class="card feature">
+          <img src="../docs/images/p7-assistant.png" width="1024" height="768" alt="AI 어시스턴트 대화 화면">
+          <div class="feature-text">
+            <h3 class="card-title">AI 어시스턴트</h3>
+            <p class="body-sm muted">한 문장에 여러 명령, 말한 좌석 인식, 목적지 후보 제시. 주행 중에는 할 수 있는 일을 제한합니다.</p>
+          </div>
+        </article>
+        <article class="card feature">
+          <img src="../docs/images/p8-vehicle.png" width="1024" height="768" alt="차량 정보 화면">
+          <div class="feature-text">
+            <h3 class="card-title">차량 신호</h3>
+            <p class="body-sm muted">주행 가능 거리, 배터리, 외기 온도, 도어 잠금. 거리가 부족하면 충전소를 안내합니다.</p>
+          </div>
+        </article>
+        <article class="card feature">
+          <img src="../docs/images/p7-reverse.png" width="1024" height="768" alt="후방 카메라 화면">
+          <div class="feature-text">
+            <h3 class="card-title">후방 카메라</h3>
+            <p class="body-sm muted">기어 신호가 R이 되면 모든 화면 위에 카메라 화면과 주차 가이드 선이 뜹니다.</p>
+          </div>
+        </article>
+        <article class="card feature">
+          <img src="../docs/images/media.png" width="1024" height="768" alt="미디어 재생 화면">
+          <div class="feature-text">
+            <h3 class="card-title">미디어 · 영상</h3>
+            <p class="body-sm muted">음악과 라디오는 그대로, 영상은 주행을 시작하면 자동으로 막힙니다.</p>
+          </div>
+        </article>
+        <article class="card feature">
+          <img src="../docs/images/p7-voice.png" width="1024" height="768" alt="음성 명령 화면">
+          <div class="feature-text">
+            <h3 class="card-title">음성 명령</h3>
+            <p class="body-sm muted">"운전석 온도 24도"라고 말하면 화면이 아니라 차량 공조 신호가 24.0°C로 바뀌는지까지 확인합니다.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="devices">
+      <div class="section-head">
+        <p class="eyebrow">기기</p>
+        <h2 class="display-lg">두 기기, 같은 테스트</h2>
+        <p class="body-lg muted">기기 종류는 자동으로 판별합니다. 진짜 차량 서비스가 있으면 VHAL로, 없으면 Mock으로 같은 시나리오를 돌립니다.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card device">
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>8단계 확인</span>
+          <h3 class="card-title">AAOS 에뮬레이터</h3>
+          <p class="body-sm muted">실제 CarService와 VHAL. 신호를 주입하고 화면을 확인하고, 화면을 누르고 신호를 확인합니다.</p>
+          <div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>106 passed · 1 skipped · 1 xfailed</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>6분 40초</span></div>
+            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">CarPropertyManager</span></div>
+          </div>
+        </article>
+        <article class="card device">
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>8단계 확인</span>
+          <h3 class="card-title">Android 태블릿</h3>
+          <p class="body-sm muted">일반 화웨이 태블릿에 Mock 차량 서비스. AAOS 전용 테스트만 건너뜁니다.</p>
+          <div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>102 passed · 6 skipped</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>7분 6초</span></div>
+            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">MockVehicleDataSource</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="phases">
+      <div class="section-head">
+        <p class="eyebrow">진행 상황</p>
+        <h2 class="display-lg">여덟 단계</h2>
+      </div>
+      <div>
+        <div class="changelog-row">
+          <span class="mono subtle">08</span>
+          <div><h3 class="card-title">차량 신호 확장</h3><p class="body-sm muted">공조와 도어 잠금을 VHAL 신호로. 양방향 E2E 24개, 테스트마다 신호 초기화.</p></div>
+          <span class="caption subtle">E2E 84 → 108</span>
+        </div>
+        <div class="changelog-row">
+          <span class="mono subtle">07</span>
+          <div><h3 class="card-title">Pleos Connect 구조</h3><p class="body-sm muted">3영역 화면, 분할 화면, 하단 공조 바, AI 어시스턴트, 알림 센터.</p></div>
+          <span class="caption subtle">E2E 64 → 84</span>
+        </div>
+        <div class="changelog-row">
+          <span class="mono subtle">06</span>
+          <div><h3 class="card-title">기능 확장</h3><p class="body-sm muted">내비게이션, 라디오, 전화, 설정, 후방 카메라, 음성 명령.</p></div>
+          <span class="caption subtle">E2E 31 → 64</span>
+        </div>
+        <div class="changelog-row">
+          <span class="mono subtle">05</span>
+          <div><h3 class="card-title">재점검 · 디자인</h3><p class="body-sm muted">양산 IVI 구조를 참고한 디자인 개편, 회귀에서 찾은 결함 3건 수정.</p></div>
+          <span class="caption subtle">결함 3건 수정</span>
+        </div>
+        <div class="changelog-row">
+          <span class="mono subtle">04</span>
+          <div><h3 class="card-title">운영</h3><p class="body-sm muted">재시도, flaky 판정, 격리, 통계, 두 기기 병렬 실행, GitHub Actions.</p></div>
+          <span class="caption subtle">병렬 2.0배</span>
+        </div>
+        <div class="changelog-row">
+          <span class="mono subtle">01–03</span>
+          <div><h3 class="card-title">기술 검증 · 앱 · 프레임워크</h3><p class="body-sm muted">VHAL 값 주입과 Appium 세션 검증, Compose 앱, 기기 어댑터와 화면 객체.</p></div>
+          <span class="caption subtle">E2E 31개</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="run">
+      <div class="run-grid">
+        <div class="section-head" style="margin-bottom:0">
+          <p class="eyebrow">실행</p>
+          <h2 class="display-lg">명령 세 줄</h2>
+          <ol class="run-steps body-sm muted">
+            <li><span>Automotive 에뮬레이터를 <span class="mono">-writable-system</span>으로 켭니다. 프로젝트와 AVD는 영문 경로에 둡니다.</span></li>
+            <li><span>Appium 서버를 <span class="mono">127.0.0.1:4723</span>에 띄웁니다.</span></li>
+            <li><span>pytest를 돌립니다. 기기가 1대면 <span class="mono">--serial</span>은 빼도 됩니다.</span></li>
+          </ol>
+        </div>
+        <div class="shot-card">
+<pre class="code mono"><span class="c"># ivi-tests 폴더에서</span>
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+
+<span class="c"># 빌드 게이트</span>
+.venv\Scripts\python -m pytest -m smoke
+
+<span class="c"># 두 기기 병렬 · 재시도 1회</span>
+.venv\Scripts\python tools\run_bench.py -m "smoke or sanity" --reruns 1</pre>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="cta-banner">
+        <div class="copy">
+          <h2 class="headline">단계별 설계와 검증 기록</h2>
+          <p class="body-sm muted">무엇을 왜 바꿨고, 어떤 결함을 찾았는지 단계마다 남겨 두었습니다.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="docs/phase1-spike.html">1단계부터</a>
+          <a class="btn btn-primary" href="docs/phase8-signals.html">최신 기록 보기</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap caption">
+    <span>OpenCabin IVI · AAOS 인포테인먼트 테스트 자동화</span>
+    <nav aria-label="문서">
+      <a href="docs/portfolio.html">포트폴리오</a>
+      <a href="docs/readme.html">README</a>
+      <a href="docs/phase2-app.html">앱 빌드</a>
+      <a href="docs/phase3-framework.html">테스트 프레임워크</a>
+      <a href="docs/phase4-operations.html">운영</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
