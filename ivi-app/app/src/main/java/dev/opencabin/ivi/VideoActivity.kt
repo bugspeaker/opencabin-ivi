@@ -105,6 +105,11 @@ class VideoActivity : ComponentActivity() {
         updatePlayback((application as IviApp).vehicle.state.value.restricted)
     }
 
+    override fun onResume() {
+        super.onResume()
+        hideCarNavigationBar()
+    }
+
     override fun onStop() {
         started = false
         player?.playWhenReady = false

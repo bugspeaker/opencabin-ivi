@@ -18,6 +18,15 @@ SYSTEMUI = "com.android.systemui:id"
 SIDES = {"driver": Area.DRIVER, "passenger": Area.PASSENGER}
 HOME_BUTTON = (AppiumBy.ID, f"{SYSTEMUI}/home")
 STEP_C = 0.5  # HVAC_TEMPERATURE_SET config 의 단계 (config[2] = 5 → 0.5°C)
+KEYCODE_HOME = 3
+
+
+@pytest.fixture(autouse=True)
+def system_bar_shown(driver):
+    """OpenCabin 이 앞에 있으면 아래 시스템 바가 숨겨져 있다 (앱이 자체 하단 줄을 쓰므로, SystemBars.kt).
+    spike 는 기본 SystemUI 바를 대상으로 하므로 홈(런처)으로 나가 바를 다시 띄운다."""
+    driver.press_keycode(KEYCODE_HOME)
+    wait_until(lambda: driver.find_elements(*hvac("driver", "hvac_temperature_text")), what="하단 시스템 바 표시")
 
 
 def hvac(side, name):

@@ -69,6 +69,15 @@
   표시 단위를 VHAL에서 읽어 기대 글자를 계산하게 고쳤다 (섭씨 `'25.0°'`, 화씨 `'77°'`). 두 단위 모두에서 5 passed, 1 xfailed 확인.
 - 섭씨 글자(`22.0°`)가 더 길어 시스템 바 운전석 온도가 홈 버튼과 더 많이 겹친다. 1단계에서 찾은 SystemUI 결함(xfail)은 그대로다.
 
+**재부팅해도 유지 (2026-11-16 추가).** 위 도구는 지금 값만 바꾸기 때문에 에뮬레이터를 다시 켜면 시스템 바에 다시 `63°`(17°C 화씨)가 나왔다.
+`python tools/emulator_defaults.py --persist`를 한 번 실행하면 VHAL 초기값 덮어쓰기(`ivi-app/privileged/vhaloverride/opencabin.json` → `/vendor/etc/automotive/vhaloverride/`)로 처음부터 22.0°C·섭씨로 시작한다.
+
+- 켜는 스위치 `persist.vendor.vhal_init_value_override`를 `setprop`으로 넣었더니 적용되지 않았다. persist 속성은 `/data`가 올라온 뒤에 읽히는데 VHAL은 그보다 먼저 떠서 스위치가 꺼진 것으로 본다(logcat에 `loading properties from .../vhaloverride/` 없음). 부팅 초기에 읽히는 `/vendor/build.prop`에 넣어 해결했다.
+
+**시스템 바 숨김 (2026-11-16 추가).** 앱이 자체 하단 줄(공조 + 앱 아이콘)을 그리므로, AAOS에서는 OpenCabin이 떠 있는 동안 아래 CarSystemUI 내비게이션 바를 숨긴다(`SystemBars.kt`, 위 상태 바는 유지). 그래서 온도가 두 번 나오지 않고, 홈·마이크 아이콘과 겹치는 바도 보이지 않는다. 아래 가장자리에서 밀어 올리면 바가 잠깐 나온다.
+
+- spike 테스트는 기본 SystemUI 바가 대상이라, 시작할 때 홈(런처)으로 나가 바를 다시 띄운다. 겹침 결함(xfail)은 시스템 바 자체의 문제라 그대로 남겨 둔다.
+
 ## 3. AI 어시스턴트 (`assistant/CabinAssistant.kt`)
 
 LLM 대신 규칙으로 공개된 동작 방식을 흉내 냈다. 화면(Compose)과 분리한 순수 Kotlin이라 JVM 단위 테스트로 검증한다.
