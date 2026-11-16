@@ -194,11 +194,11 @@ def test_mock_signal_is_parsed_by_type():
 
 
 def test_reset_cabin_sets_every_signal_on_both_adapters():
-    """기준 값 초기화는 신호 11개를 모두 넣는다 (하나라도 빠지면 테스트끼리 영향을 준다)."""
+    """기준 값 초기화는 신호 12개를 모두 넣는다 (하나라도 빠지면 테스트끼리 영향을 준다)."""
     mock = FakeAdb()
     MockVehicle(mock).reset_cabin()
     assert all(name in mock.calls[0] for name in CABIN_DEFAULTS)
 
-    aaos = FakeAdb({hex(Prop.INFO_EV_BATTERY_CAPACITY): "floatValues: [150000.0], int32Values: []", "--set": "Set property: {}\n" * 26})
+    aaos = FakeAdb({hex(Prop.INFO_EV_BATTERY_CAPACITY): "floatValues: [150000.0], int32Values: []", "--set": "Set property: {}\n" * 31})
     AaosVehicle(aaos).reset_cabin()
-    assert aaos.calls[-1][0].count("--set") == 26  # 좌석 5 × 3 + 김서림 2 + 열선 2 + 문 4 + 센서 3
+    assert aaos.calls[-1][0].count("--set") == 31  # 좌석 5 × 4 + 김서림 2 + 열선 2 + 문 4 + 센서 3

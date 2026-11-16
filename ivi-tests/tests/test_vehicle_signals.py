@@ -64,6 +64,76 @@ def test_fan_buttons_disabled_at_limits(app, car, level, blocked):
     assert car.signal(Signal.FAN) == level
 
 
+@pytest.mark.sanity
+def test_max_ac_sets_signal_and_coldest_settings(app, car):
+    """상위 → 하위: FULL(최대 냉방)을 켜면 전 좌석 HVAC_MAX_AC_ON 이 켜지고, 온도는 최저 · 풍량은 최대 · AUTO 는 꺼진다."""
+    climate = app.climate()
+    climate.toggle("auto")
+    wait_signal(car, Signal.AUTO, True)
+
+    climate.toggle("max_ac")
+    wait_until(lambda: all(car.signal_all(Signal.MAX_AC)), what="전 좌석 최대 냉방 켜짐")
+    wait_signal(car, Signal.FAN, 7)
+    wait_signal(car, Signal.AUTO, False)
+    wait_signal(car, Signal.AC, True)
+    for seat in Seat:
+        wait_until(lambda: car.temperature(seat) == 16.0, what=f"{seat.tag} 온도 최저")
+    climate.wait_checked("max_ac", True)
+    wait_until(lambda: climate.fan() == 7, what="풍량 표시 7")
+
+
+@pytest.mark.sanity
+def test_max_ac_off_restores_previous_settings(app, car):
+    """FULL 을 버튼으로 끄면 켜기 전 값(22.0°C, 풍량 3)으로 돌아간다."""
+    climate = app.climate()
+    climate.toggle("max_ac")
+    wait_signal(car, Signal.FAN, 7)
+
+    climate.toggle("max_ac")
+    wait_until(lambda: not any(car.signal_all(Signal.MAX_AC)), what="전 좌석 최대 냉방 꺼짐")
+    wait_signal(car, Signal.FAN, 3)
+    for seat in Seat:
+        wait_until(lambda: car.temperature(seat) == 22.0, what=f"{seat.tag} 온도 복원")
+    climate.wait_checked("max_ac", False)
+
+
+@pytest.mark.sanity
+def test_max_ac_signal_is_shown_on_toggle(app, car):
+    """하위 → 상위: 차량이 최대 냉방을 켜고 끄면 FULL 토글이 따라간다."""
+    climate = app.climate()
+    car.set_signal(Signal.MAX_AC, True)
+    climate.wait_checked("max_ac", True)
+    car.set_signal(Signal.MAX_AC, False)
+    climate.wait_checked("max_ac", False)
+
+
+@pytest.mark.regression
+def test_manual_fan_releases_max_ac(app, car):
+    """앱 규칙: FULL 중에 풍량을 직접 내리면 최대 냉방이 풀린다. 이때 온도는 되돌리지 않는다 (방금 바꾼 값이 우선)."""
+    climate = app.climate()
+    climate.toggle("max_ac")
+    wait_signal(car, Signal.FAN, 7)
+
+    climate.fan_down()
+    wait_signal(car, Signal.MAX_AC, False)
+    wait_signal(car, Signal.FAN, 6)
+    climate.wait_checked("max_ac", False)
+    assert car.temperature(Seat.DRIVER) == 16.0
+
+
+@pytest.mark.regression
+def test_turning_ac_off_releases_max_ac(app, car):
+    """앱 규칙: FULL 중에 A/C 를 끄면 최대 냉방도 꺼진다 (A/C 없이 최대 냉방일 수 없다)."""
+    climate = app.climate()
+    climate.toggle("max_ac")
+    climate.wait_checked("max_ac", True)
+
+    climate.toggle("ac")
+    wait_signal(car, Signal.AC, False)
+    wait_signal(car, Signal.MAX_AC, False)
+    climate.wait_checked("max_ac", False)
+
+
 @pytest.mark.regression
 def test_manual_fan_releases_auto(app, car):
     """앱 규칙: AUTO 중에 풍량을 직접 바꾸면 AUTO 가 풀린다 (HVAC_AUTO_ON = false)."""

@@ -18,6 +18,8 @@ data class VehicleState(
     // ---- 8단계: 화면 상태였던 것을 차량 신호로 (docs/phase8-signals.md) ----
     /** HVAC_AC_ON */
     val acOn: Boolean = false,
+    /** HVAC_MAX_AC_ON: 최대 냉방. 화면에는 FULL 로 표시한다 */
+    val maxAcOn: Boolean = false,
     /** HVAC_AUTO_ON */
     val autoOn: Boolean = false,
     /** HVAC_FAN_SPEED (1 ~ 7) */
@@ -97,6 +99,7 @@ interface VehicleDataSource {
     // 8단계: 아래 값은 모든 좌석(문) area 에 같은 값을 쓴다 (전 좌석 공조 · 전 도어 잠금)
     fun setAc(on: Boolean)
     fun setAuto(on: Boolean)
+    fun setMaxAc(on: Boolean)
     fun setFanSpeed(level: Int)
     fun setDefrost(front: Boolean, on: Boolean)
     fun setSeatHeat(seat: Seat, level: Int)

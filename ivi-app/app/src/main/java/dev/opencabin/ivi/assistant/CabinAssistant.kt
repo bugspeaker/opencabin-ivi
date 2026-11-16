@@ -29,7 +29,7 @@ data class Place(val id: String, val name: String, val address: String, val dist
 object Places {
     val all = listOf(
         Place("home", "집", "경기 성남시 분당구", 12.4f, PlaceCategory.HOME),
-        Place("work", "회사", "경기 성남시 판교역로", 8.7f, PlaceCategory.WORK),
+        Place("work", "회사", "42dot · 창업로40번길 20", 8.7f, PlaceCategory.WORK),
         Place("pangyo_station", "판교역", "신분당선 · 경강선", 5.2f, PlaceCategory.STATION),
         Place("seoul_station", "서울역", "서울 용산구", 27.9f, PlaceCategory.STATION),
         Place("airport", "인천국제공항", "인천 중구", 68.3f, PlaceCategory.PLACE),
@@ -188,7 +188,7 @@ class CabinAssistant(private val controls: CabinControls) {
     /** 목적지 후보 카드를 눌렀을 때. */
     fun choose(place: Place): Reply {
         controls.navigate(place)
-        return Reply("${place.name}(으)로 안내를 시작할게요. ${fmtKm(place.distanceKm)}예요.")
+        return Reply("${place.name}${josa(place.name, "으로", "로")} 안내를 시작할게요. ${fmtKm(place.distanceKm)}예요.")
     }
 
     private fun run(action: Action): Reply = when (action) {
@@ -226,7 +226,7 @@ class CabinAssistant(private val controls: CabinControls) {
         is Action.Navigate -> {
             val found = Places.search(action.query)
             when {
-                found.isEmpty() -> Reply("'${action.query}'을(를) 찾지 못했어요.", understood = false)
+                found.isEmpty() -> Reply("'${action.query}'${josa(action.query, "을", "를")} 찾지 못했어요.", understood = false)
                 found.size == 1 -> choose(found.first())
                 else -> Reply("${action.query} 검색 결과가 ${found.size}곳이에요. 어디로 안내할까요?", candidates = found)
             }
@@ -240,14 +240,26 @@ class CabinAssistant(private val controls: CabinControls) {
             else { controls.foldMirrors(action.fold); Reply(if (action.fold) "사이드 미러를 접었어요." else "사이드 미러를 폈어요.") }
         is Action.Radio -> { controls.setRadio(action.on); Reply(if (action.on) "라디오를 켤게요." else "라디오를 껐어요.") }
         is Action.Call -> controls.call(action.who)?.let { Reply("${it}에게 전화를 걸게요.") }
-            ?: Reply("연락처에서 '${action.who}'을(를) 찾지 못했어요.", understood = false)
-        is Action.Unknown -> Reply("'${action.text}'은(는) 아직 이해하지 못했어요. $HELP", understood = false)
+            ?: Reply("연락처에서 '${action.who}'${josa(action.who, "을", "를")} 찾지 못했어요.", understood = false)
+        is Action.Unknown -> Reply("'${action.text}'${josa(action.text, "은", "는")} 아직 이해하지 못했어요. $HELP", understood = false)
     }
 
     private inline fun hvac(block: () -> Reply): Reply =
         if (!controls.hvacAvailable) Reply("지금은 공조를 제어할 수 없어요.", understood = false) else block()
 
     companion object {
+        /**
+         * 받침에 맞는 조사를 고른다: josa("판교역", "으로", "로") = "으로", josa("회사", "을", "를") = "를".
+         * '(으)로'는 ㄹ 받침 뒤에서 '로'다 (서울로). 한글로 끝나지 않으면 받침 없는 쪽을 쓴다.
+         */
+        fun josa(word: String, withFinal: String, withoutFinal: String): String {
+            val last = word.trimEnd().lastOrNull() ?: return withoutFinal
+            if (last !in '가'..'힣') return withoutFinal
+            val final = (last - '가') % 28
+            if (final == 0) return withoutFinal
+            return if (final == 8 && withFinal == "으로") withoutFinal else withFinal
+        }
+
         const val HELP = "\"22도로 맞춰줘\", \"더워\", \"라디오 켜줘\", \"판교역 가자\"처럼 말해 보세요."
 
         fun seatName(seat: Seat) = when (seat) { Seat.DRIVER -> "운전석"; Seat.PASSENGER -> "조수석" }

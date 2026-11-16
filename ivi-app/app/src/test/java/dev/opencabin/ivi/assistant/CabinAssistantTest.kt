@@ -169,4 +169,19 @@ class CabinAssistantTest {
         assertFalse(reply.understood)
         assertTrue(reply.text.contains("22도로 맞춰줘"))
     }
+
+    @Test fun `받침에 맞는 조사를 붙인다`() {
+        assertEquals("으로", CabinAssistant.josa("판교역", "으로", "로"))
+        assertEquals("로", CabinAssistant.josa("회사", "으로", "로"))
+        assertEquals("로", CabinAssistant.josa("서울", "으로", "로"))   // ㄹ 받침 뒤는 '로'
+        assertEquals("을", CabinAssistant.josa("집", "을", "를"))
+        assertEquals("를", CabinAssistant.josa("엄마", "을", "를"))
+        assertEquals("는", CabinAssistant.josa("ABC", "은", "는"))      // 한글이 아니면 받침 없는 쪽
+    }
+
+    @Test fun `안내 대답에 조사 괄호 표기가 없다`() {
+        val reply = assistant.handle("판교역 가자", Seat.DRIVER)
+        assertTrue(reply.text, reply.text.startsWith("판교역으로 안내를 시작할게요"))
+        assertFalse(reply.text.contains("(으)"))
+    }
 }

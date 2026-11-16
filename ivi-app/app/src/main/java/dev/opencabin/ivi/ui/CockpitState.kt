@@ -31,6 +31,8 @@ enum class Tab(val label: String, val tag: String) {
 
 enum class LightMode(val label: String, val tag: String) { OFF("끔", "qc_lights_off"), AUTO("자동", "qc_lights_auto"), ON("켬", "qc_lights_on") }
 
+data class ClimateSnapshot(val driverTempC: Float?, val passengerTempC: Float?, val fanSpeed: Int, val acOn: Boolean, val autoOn: Boolean)
+
 data class Notice(val id: Int, val title: String, val body: String, val time: LocalTime)
 
 data class ChatMessage(
@@ -71,6 +73,9 @@ class CockpitState {
 
     // 공조 동기화 (앱 규칙. 값 자체는 차량 신호)
     var sync by mutableStateOf(false)
+
+    /** 최대 냉방(FULL)을 켜기 직전의 공조 값. 버튼으로 끄면 이 값으로 되돌린다. 온도나 풍량을 직접 바꿔서 풀리면 버린다. */
+    var beforeMaxAc: ClimateSnapshot? = null
 
     // 차량 빠른 제어 중 VHAL 에 없는 것 (화면 상태)
     var mirrorsFolded by mutableStateOf(false)

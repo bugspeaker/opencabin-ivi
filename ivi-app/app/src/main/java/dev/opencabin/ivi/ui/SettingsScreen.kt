@@ -41,8 +41,9 @@ fun SettingsScreen(settings: Settings, store: SettingsStore) {
                 onIncrease = { store.update { it.copy(brightness = it.brightness + 1) } })
             ToggleRow("24시간 시계", "settings_clock24", settings.clock24) { on -> store.update { it.copy(clock24 = on) } }
             Label("시스템")
-            Text("블루투스: 내 휴대폰 (연결됨)", fontSize = 15.sp, color = IviColors.TextSecondary)
-            Text("소프트웨어 ${BuildConfig.VERSION_NAME}", Modifier.testTag("settings_version"), fontSize = 15.sp, color = IviColors.TextSecondary)
+            InfoRow("계정", DRIVER_NAME, "settings_account")
+            InfoRow("블루투스", "내 휴대폰 · 연결됨", "settings_bluetooth")
+            InfoRow("소프트웨어", BuildConfig.VERSION_NAME, "settings_version")
         }
         Panel(Modifier.weight(1f).fillMaxHeight()) {
             Label("차량")
@@ -60,6 +61,15 @@ fun SettingsScreen(settings: Settings, store: SettingsStore) {
             Box(Modifier.weight(1f))
             PillButton("설정 초기화", "settings_reset", Modifier.fillMaxWidth()) { store.reset() }
         }
+    }
+}
+
+/** 읽기 전용 한 줄: 이름은 왼쪽, 값은 오른쪽 (무드등 줄과 같은 모양). */
+@Composable
+private fun InfoRow(label: String, value: String, tag: String) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(label, fontSize = 17.sp, modifier = Modifier.weight(1f))
+        Text(value, Modifier.testTag(tag), fontSize = 15.sp, color = IviColors.TextSecondary)
     }
 }
 

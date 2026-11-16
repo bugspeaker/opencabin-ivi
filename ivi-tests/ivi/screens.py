@@ -207,7 +207,7 @@ class Climate(Screen):
 
     # ---- 8단계: 차량 신호에 연결된 공조 부가 기능 ----
     def checked(self, name):
-        """토글 상태. name: ac / auto / sync / defrost_front / defrost_rear (색이 아니라 접근성 checked 를 읽는다)"""
+        """토글 상태. name: ac / max_ac / auto / sync / defrost_front / defrost_rear (색이 아니라 접근성 checked 를 읽는다)"""
         return self.find(f"climate_{name}").get_attribute("checked") == "true"
 
     def wait_checked(self, name, expected, timeout=TIMEOUT):
