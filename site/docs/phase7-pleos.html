@@ -21,6 +21,7 @@
   <aside class="side">
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
         <a href="readme.html">README</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
@@ -290,15 +291,15 @@ SYNC만 실제 신호를 쓴다: 운전석 값을 조수석 HVAC_TEMPERATURE_SET
 <th>내용</th>
 </tr>
 </thead><tbody><tr>
-<td><code>test_assistant.py</code> (6)</td>
+<td><a class="test-link" href="test-results.html#file-test_assistant" title="테스트 결과와 화면 보기"><code>test_assistant.py</code></a> (6)</td>
 <td>좌석 인식 → 차량 신호(조수석만 21.0), 글자 입력 → VHAL 25.5, 한 문장 두 명령, 목적지 후보 고르기, 주행 중 입력 잠금 · 미러 접기 거절, 음성 팝업과 대화 내역 공유</td>
 </tr>
 <tr>
-<td><code>test_cockpit.py</code> (12)</td>
+<td><a class="test-link" href="test-results.html#file-test_cockpit" title="테스트 결과와 화면 보기"><code>test_cockpit.py</code></a> (12)</td>
 <td>아래 바 온도 ↔ VHAL (좌석 2), SYNC → 조수석 VHAL, 조수석 조작 시 동기화 해제, 현 주행 정보가 속도 신호로 증가·정차 시 멈춤, 운전자 보조 표시, 위젯 넘김, 분할 ↔ 단일, 빠른 제어 주행 중 잠금, 알림 센터, 이전 실행 앱</td>
 </tr>
 <tr>
-<td><code>test_smoke.py</code></td>
+<td><a class="test-link" href="test-results.html#file-test_smoke" title="테스트 결과와 화면 보기"><code>test_smoke.py</code></a></td>
 <td>탭 열기에 AI · 빠른 제어 · 앱 목록 추가 (+3)</td>
 </tr>
 <tr>
@@ -310,7 +311,7 @@ SYNC만 실제 신호를 쓴다: 운전석 값을 조수석 HVAC_TEMPERATURE_SET
 <h2 id="6-회귀에서-잡은-것"><a class="anchor" href="#6-회귀에서-잡은-것" aria-hidden="true">#</a>6. 회귀에서 잡은 것</h2>
 <h3 id="6-1-안내-바의-목적지-글자에-앞-공백-내가-만든-결함"><a class="anchor" href="#6-1-안내-바의-목적지-글자에-앞-공백-내가-만든-결함" aria-hidden="true">#</a>6-1) 안내 바의 목적지 글자에 앞 공백 (내가 만든 결함)</h3>
 <ul>
-<li>증상: <code>test_ambiguous_destination_offers_candidates</code>에서 <code>nav_dest_name = &#39;판교역&#39;</code> 대기 실패. 실패 화면에서는 판교역으로 정상 안내 중.</li>
+<li>증상: <a class="test-link" href="test-results.html#test_ambiguous_destination_offers_candidates" title="테스트 결과와 화면 보기"><code>test_ambiguous_destination_offers_candidates</code></a>에서 <code>nav_dest_name = &#39;판교역&#39;</code> 대기 실패. 실패 화면에서는 판교역으로 정상 안내 중.</li>
 <li>원인: 아이콘 옆 간격을 글자 앞 공백(<code>&quot; 판교역&quot;</code>)으로 만들었다. 6단계 계약은 정확히 같은 글자.</li>
 <li>해결: 간격은 <code>padding</code>으로. 같은 태그를 읽는 6단계 음성 테스트(<code>&#39;집&#39;</code>)도 같은 이유로 깨질 뻔했다.</li>
 </ul>

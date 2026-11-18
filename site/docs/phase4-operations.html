@@ -21,6 +21,7 @@
   <aside class="side">
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
         <a href="readme.html">README</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
@@ -167,7 +168,7 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <p>지금 기록 (204건)에서 본 것:</p>
 <ul>
 <li>불안정 테스트 없음, 게이트 통과율 100% (AAOS 5회, Mock 4회).</li>
-<li>관찰 중: AAOS <code>test_video_is_blocked_while_driving</code>이 1회 38.3초 (다른 회차 2.5~2.9초). 통과는 했으므로 flaky는 아니다.
+<li>관찰 중: AAOS <a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_is_blocked_while_driving</code></a>이 1회 38.3초 (다른 회차 2.5~2.9초). 통과는 했으므로 flaky는 아니다.
 주행 중 막힌 화면을 <code>am start -W</code>로 띄울 때 실행 완료 대기가 길어진 것으로 의심. p95로 계속 본다.</li>
 </ul>
 <h2 id="5-병렬-실행-toolsrun_benchpy"><a class="anchor" href="#5-병렬-실행-toolsrun_benchpy" aria-hidden="true">#</a>5. 병렬 실행 (tools/run_bench.py)</h2>

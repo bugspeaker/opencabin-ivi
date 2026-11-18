@@ -1,25 +1,26 @@
 # OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오
 
 지원 직무: 42dot Test Automation Engineer (IVI System)  
-기준일: 2026-11-16 (8단계)
+기준일: 2026-11-18
 
 ![주행 중 경로 안내](images/p7-guidance.png)
 
-가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 108개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿 양쪽에서 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
+가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 113개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿 양쪽에서 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
 
 차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지와 신호가 바뀌면 화면이 따라오는지를 둘 다 보고, 좌석이나 도어처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.
 
 | 항목 | 결과 |
 |---|---|
-| AAOS 에뮬레이터 | 106 passed, 1 skipped, 1 xfailed (6분 40초) |
-| 화웨이 태블릿 (Mock) | 102 passed, 6 skipped (7분 6초) |
-| 두 기기 병렬 | gate pass, flaky 0, 7분 20초 (차례로 돌리면 14분 28초) |
-| 단위 테스트 | 프레임워크 33 passed, 앱 17 passed |
+| AAOS 에뮬레이터 | 111 passed, 1 skipped, 1 xfailed, 재시도 0 (8분 3초) |
+| 화웨이 태블릿 (Mock) | 107 passed, 6 skipped, 재시도 0 (8분 57초) |
+| 두 기기 병렬 | gate pass, flaky 0, 7분 20초 (8단계 108개 기준, 차례로 돌리면 14분 28초) |
+| 단위 테스트 | 프레임워크 36 passed, 앱 19 passed |
+| 테스트별 결과 | 기기마다 판정과 끝 화면 219장: [테스트 결과](test-results.md) |
 | GitHub Actions | 4회 실행, 3회 success. 나머지 1회는 [8-3](#8-3-github-실행-기록-2026-11-16) 참고 |
 
 xfailed 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, skipped는 AAOS에서만 의미가 있는 테스트입니다.
 
-위 수치는 8단계 측정값입니다. 그 뒤 최대 냉방(FULL) 테스트 5개를 더해 지금은 E2E가 113개이고, 에뮬레이터에서 111 passed, 1 skipped, 1 xfailed를 확인했습니다. 태블릿과 병렬 실행은 아직 다시 돌리지 않았습니다.
+두 기기 결과는 2026-11-18에 기기마다 한 번씩 돌린 것입니다. 이때 테스트마다 판정 직후의 화면을 남겼고, [테스트 결과](test-results.md)에서 테스트별로 볼 수 있습니다. 두 기기 병렬 수치는 8단계(테스트 108개) 때 측정한 것이고 이후 다시 재지 않았습니다.
 
 ## 목차
 
@@ -54,7 +55,7 @@ xfailed 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것
 
 | 공고 자격요건 | 근거 |
 |---|---|
-| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실기기 태블릿에서 E2E 108개 실행, 결과 누적 기록 |
+| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실기기 태블릿에서 E2E 113개 실행, 결과 누적 기록, 테스트별 끝 화면 보관 |
 | Python 테스트 프레임워크 (Pytest) | 훅, 픽스처, 마커, 결과 기록용 플러그인 작성 |
 | Appium 등 UI 자동화 도구 | Appium(UiAutomator2). AAOS 다중 사용자(user 10) 설정 포함 |
 | ADB, Logcat, Shell | adb 어댑터, 실패 시 logcat 자동 저장, logcat으로 강제 종료 원인 확인 |

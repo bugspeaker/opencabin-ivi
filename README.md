@@ -70,7 +70,7 @@ docs/                 단계별 설계·검증 기록
 | `IVI_TAP` | 화웨이·아너 `adb`, 그 외 `appium` | 요소를 누르는 방법 |
 | `APPIUM_URL` | `http://127.0.0.1:4723` | Appium 서버 |
 
-8단계 이후 최대 냉방(FULL) 버튼과 테스트 5개를 더했다. AAOS 에뮬레이터 E2E 113개 중 111 passed, 1 skipped, 1 xfailed (7분 27초). 태블릿은 다시 돌리지 않았다 ([docs/phase8-signals.md](docs/phase8-signals.md) 7장).
+최신 결과 (2026-11-18, E2E 113개): AAOS 에뮬레이터 111 passed, 1 skipped, 1 xfailed (8분 3초), 화웨이 태블릿 107 passed, 6 skipped (8분 57초), 재시도 0. 테스트마다 판정 직후 화면을 남겼다 ([docs/test-results.md](docs/test-results.md)). `pytest --shots`로 돌린 뒤 `python tools/publish_results.py`로 사이트에 옮긴다.
 
 8단계 결과 (2026-11-16): AAOS 에뮬레이터 E2E 108개 중 106 passed, 1 skipped, 1 xfailed (6분 40초), 화웨이 태블릿 102 passed, 6 skipped (7분 6초), 두 기기 병렬 gate pass · flaky 0 (7분 20초, 2.0배), 앱 단위 17 passed, 프레임워크 단위 33 passed ([docs/phase8-signals.md](docs/phase8-signals.md)).
 

@@ -73,26 +73,28 @@ A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 
 
 ### 3-4) 테스트 목록 (`tests/test_vehicle_signals.py`, 24개)
 
+테스트 설명을 누르면 기기별 결과와 끝 화면을 볼 수 있다 ([테스트 결과](test-results.md)).
+
 | 분류 | 테스트 | 방향 |
 |---|---|---|
-| sanity | A/C를 끄면 전 좌석 area가 꺼진다 | 화면 → 신호 |
-| sanity | 차량이 A/C를 끄고 켜면 토글이 따라간다 | 신호 → 화면 |
-| sanity | 풍량 +/- 한 번에 신호가 한 단계 (2건) | 화면 → 신호 |
-| regression | 풍량 경계 값 1 · 7에서 버튼 비활성, 신호가 범위를 안 벗어남 (2건) | 양방향 |
-| regression | AUTO 중 풍량을 바꾸면 `HVAC_AUTO_ON`이 꺼진다 | 화면 → 신호 2개 |
-| sanity | 앞/뒤 김서림은 그 유리의 신호만 켠다 (2건) | 양방향, area 혼동 방지 |
-| sanity | 열선 꺼짐 → 2 → 1 → 꺼짐, 다른 좌석은 그대로 (좌석 2건) | 화면 → 신호 |
-| sanity | 열선 신호가 공조 화면 · 아래 바 · 빠른 제어에 같은 값으로 | 신호 → 화면 3곳 |
-| regression | 아래 바 열선은 다른 앱을 보고 있어도 신호를 바꾼다 | 화면 → 신호 |
-| regression | 조수석에서 "열선 켜줘" → 조수석 신호만 | 말 → 신호 |
-| sanity | 도어 버튼이 전 도어를 잠그고 푼다 | 화면 → 신호 (4개 area) |
-| sanity | 차량에서 문이 열리면 표시가 바뀐다 | 신호 → 화면 |
-| sanity | 주행 가능 거리 · 배터리 · 외기 온도가 주행 정보에 (단위 변환 포함) | 신호 → 화면 |
-| sanity | 경계 값 31 / 30 / 29 km에서 경고와 카드 (3건) | 신호 → 화면 |
-| sanity | 주행 중 거리 부족 → 카드 → 가까운 충전소 안내 시작 | 신호 → 화면 → 동작 |
-| regression | 거리 부족이 알림 센터에 남는다 | 신호 → 화면 |
-| regression | 충전하면 경고와 카드가 사라진다 | 신호 → 화면 |
-| regression | 속도 단위 mph면 거리도 마일 (320 km = 199 mi) | 설정 × 신호 |
+| sanity | [A/C를 끄면 전 좌석 area가 꺼진다](test-results.md#test_ac_toggle_reaches_every_seat) | 화면 → 신호 |
+| sanity | [차량이 A/C를 끄고 켜면 토글이 따라간다](test-results.md#test_ac_signal_is_shown_on_climate_and_bottom_bar) | 신호 → 화면 |
+| sanity | [풍량 +/- 한 번에 신호가 한 단계 (2건)](test-results.md#test_fan_button_changes_signal_by_one) | 화면 → 신호 |
+| regression | [풍량 경계 값 1 · 7에서 버튼 비활성, 신호가 범위를 안 벗어남 (2건)](test-results.md#test_fan_buttons_disabled_at_limits) | 양방향 |
+| regression | [AUTO 중 풍량을 바꾸면 `HVAC_AUTO_ON`이 꺼진다](test-results.md#test_manual_fan_releases_auto) | 화면 → 신호 2개 |
+| sanity | [앞/뒤 김서림은 그 유리의 신호만 켠다 (2건)](test-results.md#test_defrost_changes_only_its_window) | 양방향, area 혼동 방지 |
+| sanity | [열선 꺼짐 → 2 → 1 → 꺼짐, 다른 좌석은 그대로 (좌석 2건)](test-results.md#test_seat_heat_cycles_levels_on_vehicle) | 화면 → 신호 |
+| sanity | [열선 신호가 공조 화면 · 아래 바 · 빠른 제어에 같은 값으로](test-results.md#test_seat_heat_signal_is_shown_everywhere) | 신호 → 화면 3곳 |
+| regression | [아래 바 열선은 다른 앱을 보고 있어도 신호를 바꾼다](test-results.md#test_bottom_bar_seat_heat_works_from_any_screen) | 화면 → 신호 |
+| regression | [조수석에서 "열선 켜줘" → 조수석 신호만](test-results.md#test_assistant_seat_heat_follows_speaker_zone) | 말 → 신호 |
+| sanity | [도어 버튼이 전 도어를 잠그고 푼다](test-results.md#test_door_lock_button_drives_every_door) | 화면 → 신호 (4개 area) |
+| sanity | [차량에서 문이 열리면 표시가 바뀐다](test-results.md#test_door_lock_signal_is_shown) | 신호 → 화면 |
+| sanity | [주행 가능 거리 · 배터리 · 외기 온도가 주행 정보에 (단위 변환 포함)](test-results.md#test_energy_signals_are_shown_on_cluster) | 신호 → 화면 |
+| sanity | [경계 값 31 / 30 / 29 km에서 경고와 카드 (3건)](test-results.md#test_low_range_threshold) | 신호 → 화면 |
+| sanity | [주행 중 거리 부족 → 카드 → 가까운 충전소 안내 시작](test-results.md#test_low_range_card_starts_guidance_to_nearest_charger) | 신호 → 화면 → 동작 |
+| regression | [거리 부족이 알림 센터에 남는다](test-results.md#test_low_range_is_recorded_in_notifications) | 신호 → 화면 |
+| regression | [충전하면 경고와 카드가 사라진다](test-results.md#test_range_recovers_after_charging) | 신호 → 화면 |
+| regression | [속도 단위 mph면 거리도 마일 (320 km = 199 mi)](test-results.md#test_range_follows_speed_unit_setting) | 설정 × 신호 |
 
 프레임워크 단위 테스트 7개 추가 (기기 없이): area 5개에 한 번의 shell 호출, km·% ↔ m·Wh 변환, 묶음 재시도와 실패 메시지, Mock의 타입별 extra, 기준 값 초기화가 11개를 모두 넣는지.
 
@@ -125,9 +127,9 @@ A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 
 - 태블릿은 이 날 처음에 adb `unauthorized`였다 (adb 서버를 다시 켠 뒤 기기에서 USB 디버깅 승인이 필요). USB 디버깅 승인, 설치 승인, 실행 순서로 진행했다.
 - 반복 안정성(같은 묶음 여러 번)은 이번에 1회만 봤다. 7단계의 2회 반복에서 한 번 흔들린 `test_video_blocked_screen_follows_parking`은 이번 에뮬레이터 전체 실행 2회(단독 1 + 병렬 1)에서는 재현되지 않았다 (원인은 아직 확인하지 못했다).
 
-## 6. 공고 업무와의 대응 (42dot Test Automation Engineer, IVI System)
+## 6. 42dot Test Automation Engineer, IVI System
 
-| 공고 | 이 단계에서 보여 주는 것 |
+| 요구 역량 | 이 단계에서 보여 주는 것 |
 |---|---|
 | AAOS IVI 주요 서비스(HVAC, 차량 설정, 클러스터 연동, 미디어) 검증 | HVAC 6종 신호, 도어, 클러스터(주행 정보)에 차량 신호 3종 |
 | UI 상호작용과 CarProperty/VHAL을 아우르는 E2E 설계 | 24개 모두 양방향. area 단위 판정(전 좌석 · 전 도어 · 그 유리만) |
@@ -151,7 +153,12 @@ A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 
 | 차량 쪽에서 신호가 바뀜 | FULL 토글이 따라간다 |
 
 - 켜기 전 값은 화면 틀 상태(`CockpitState.beforeMaxAc`)에 둔다. 앱을 다시 띄우면 사라지므로, 그 뒤에 끄면 신호만 꺼지고 값은 그대로다.
-- 테스트 5개 추가 (`test_vehicle_signals.py`): 켜면 전 좌석 신호와 온도·풍량·AUTO, 끄면 복원, 신호가 바뀌면 토글, 풍량을 내리면 해제, A/C를 끄면 해제.
+- 테스트 5개 추가 (`test_vehicle_signals.py`):
+  [켜면 전 좌석 신호와 온도·풍량·AUTO](test-results.md#test_max_ac_sets_signal_and_coldest_settings),
+  [끄면 복원](test-results.md#test_max_ac_off_restores_previous_settings),
+  [신호가 바뀌면 토글](test-results.md#test_max_ac_signal_is_shown_on_toggle),
+  [풍량을 내리면 해제](test-results.md#test_manual_fan_releases_max_ac),
+  [A/C를 끄면 해제](test-results.md#test_turning_ac_off_releases_max_ac).
 - 기준 값 초기화에 `max_ac`를 넣었다. 신호가 11개에서 12개로, AAOS의 `--set`이 26번에서 31번으로 늘었다 (여전히 adb 왕복 한 번).
 
 ### 7-2) 화면과 문구
@@ -170,4 +177,16 @@ A/C · AUTO · 김서림 토글은 글자가 바뀌지 않고 색만 바뀐다. 
 | 앱 단위 테스트 | 컴파일만 확인 (이 PC에서는 Gradle 테스트 실행기가 죽는다. CI에서 돈다) |
 
 - 태블릿과 두 기기 병렬은 이번에 다시 돌리지 않았다. 태블릿은 새 APK 설치에 기기 화면 승인이 필요하다.
+
+### 7-4) 테스트별 결과 화면 (2026-11-18)
+
+`pytest --shots`로 돌리면 테스트마다 판정이 난 직후, 정리 단계 전에 화면을 한 장 남긴다 (재시도가 있으면 마지막 시도). `tools/publish_results.py`가 실행 기록과 화면을 `site/results/`(WebP, 가로 960px)와 [테스트 결과](test-results.md)로 옮긴다. 테스트 설명과 마커는 테스트 코드의 docstring과 `@pytest.mark`에서 읽어서 따로 적지 않는다.
+
+| 기기 | 결과 | 화면 |
+|---|---|---|
+| AAOS 에뮬레이터 | 111 passed, 1 skipped, 1 xfailed, 재시도 0 (8분 3초) | 112장 |
+| 화웨이 태블릿 (Mock) | 107 passed, 6 skipped, 재시도 0 (8분 57초) | 107장 |
+
+- 건너뛴 테스트는 화면이 없다. 주행 중 영상 차단은 AAOS에서는 OS 차단 화면이 스크린샷에 검게 찍히고, 태블릿에서는 앱의 차단 화면이 찍힌다.
+- 두 기기를 동시에 돌리지 않고 차례로 돌렸다 (태블릿 설치 승인을 기다리느라).
 

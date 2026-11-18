@@ -21,6 +21,7 @@
   <aside class="side">
     <nav aria-label="문서 목록">
         <a href="portfolio.html" aria-current="page">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
         <a href="readme.html">README</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
@@ -34,9 +35,9 @@
   </aside>
   <main id="content" class="doc">
 <h1 id="opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오"><a class="anchor" href="#opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오" aria-hidden="true">#</a>OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오</h1>
-<p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>기준일: 2026-11-16 (8단계)</p>
+<p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>기준일: 2026-11-18</p>
 <p><img data-md src="../../docs/images/p7-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
-<p>가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 108개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿 양쪽에서 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.</p>
+<p>가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 113개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿 양쪽에서 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.</p>
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지와 신호가 바뀌면 화면이 따라오는지를 둘 다 보고, 좌석이나 도어처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
 <th>항목</th>
@@ -44,19 +45,23 @@
 </tr>
 </thead><tbody><tr>
 <td>AAOS 에뮬레이터</td>
-<td>106 passed, 1 skipped, 1 xfailed (6분 40초)</td>
+<td>111 passed, 1 skipped, 1 xfailed, 재시도 0 (8분 3초)</td>
 </tr>
 <tr>
 <td>화웨이 태블릿 (Mock)</td>
-<td>102 passed, 6 skipped (7분 6초)</td>
+<td>107 passed, 6 skipped, 재시도 0 (8분 57초)</td>
 </tr>
 <tr>
 <td>두 기기 병렬</td>
-<td>gate pass, flaky 0, 7분 20초 (차례로 돌리면 14분 28초)</td>
+<td>gate pass, flaky 0, 7분 20초 (8단계 108개 기준, 차례로 돌리면 14분 28초)</td>
 </tr>
 <tr>
 <td>단위 테스트</td>
-<td>프레임워크 33 passed, 앱 17 passed</td>
+<td>프레임워크 36 passed, 앱 19 passed</td>
+</tr>
+<tr>
+<td>테스트별 결과</td>
+<td>기기마다 판정과 끝 화면 219장: <a href="test-results.html">테스트 결과</a></td>
 </tr>
 <tr>
 <td>GitHub Actions</td>
@@ -64,7 +69,7 @@
 </tr>
 </tbody></table></div>
 <p>xfailed 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, skipped는 AAOS에서만 의미가 있는 테스트입니다.</p>
-<p>위 수치는 8단계 측정값입니다. 그 뒤 최대 냉방(FULL) 테스트 5개를 더해 지금은 E2E가 113개이고, 에뮬레이터에서 111 passed, 1 skipped, 1 xfailed를 확인했습니다. 태블릿과 병렬 실행은 아직 다시 돌리지 않았습니다.</p>
+<p>두 기기 결과는 2026-11-18에 기기마다 한 번씩 돌린 것입니다. 이때 테스트마다 판정 직후의 화면을 남겼고, <a href="test-results.html">테스트 결과</a>에서 테스트별로 볼 수 있습니다. 두 기기 병렬 수치는 8단계(테스트 108개) 때 측정한 것이고 이후 다시 재지 않았습니다.</p>
 <h2 id="목차"><a class="anchor" href="#목차" aria-hidden="true">#</a>목차</h2>
 <ol>
 <li><a href="#1-공고-요구사항과-근거">공고 요구사항과 근거</a></li>
@@ -129,7 +134,7 @@
 </tr>
 </thead><tbody><tr>
 <td>Android/AAOS 자동화 구축과 운영</td>
-<td>AAOS 에뮬레이터와 실기기 태블릿에서 E2E 108개 실행, 결과 누적 기록</td>
+<td>AAOS 에뮬레이터와 실기기 태블릿에서 E2E 113개 실행, 결과 누적 기록, 테스트별 끝 화면 보관</td>
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
@@ -440,7 +445,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <summary>3번부터 7번까지</summary>
 
 <p><strong>3번. SystemUI 버튼 겹침.</strong> 운전석 온도 ▲ <code>[192,682][268,758]</code>와 홈 버튼 <code>[188,682][264,758]</code>이 겹치고, 홈이 위에 있어서 탭을 가져갑니다. <code>strict=True</code>로 걸어 두었기 때문에 결함이 고쳐지면 XPASS가 실패로 바뀌어 알 수 있습니다.</p>
-<p><strong>4번. 테스트 코드의 경쟁 조건.</strong> <code>test_range_recovers_after_charging</code>이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 <code>wait_until</code>로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 고정 sleep은 쓰지 않습니다.</p>
+<p><strong>4번. 테스트 코드의 경쟁 조건.</strong> <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a>이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 <code>wait_until</code>로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 고정 sleep은 쓰지 않습니다.</p>
 <p><strong>5번. 표시 단위 가정.</strong> 1단계에 쓴 테스트가 SystemUI 온도를 화씨로 가정하고 있었습니다. <code>HVAC_TEMPERATURE_DISPLAY_UNITS</code>를 읽어 기대 글자를 계산하도록 바꿨고, 섭씨와 화씨 양쪽에서 통과하는 것을 확인했습니다.</p>
 <p><strong>6번. 회귀 테스트로 찾은 앱 결함.</strong></p>
 <ul>
@@ -448,7 +453,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <li>낮은 화면(1024×768)에서 후보 카드가 대답을 화면 밖으로 밀어내 요소를 찾지 못했습니다. UiAutomator는 화면 밖 요소를 찾지 못합니다.</li>
 <li>목적지 글자 앞에 간격용으로 넣은 공백 한 칸 때문에 글자가 정확히 일치하지 않았습니다. 간격은 padding으로 바꿨습니다.</li>
 </ul>
-<p><strong>7번. 원인을 모르는 1건.</strong> <code>test_video_blocked_screen_follows_parking</code>이 7단계 반복 실행 중 한 번 흔들렸습니다. 정차한 뒤 차단 해제가 10초 안에 확인되지 않았습니다. 8단계 실행 2회에서는 재현되지 않았고, 실패 자료를 보고 추정만 하고 있는 상태입니다. <code>run_bench.py --repeat 5</code>로 다시 측정하려고 합니다.</p>
+<p><strong>7번. 원인을 모르는 1건.</strong> <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a>이 7단계 반복 실행 중 한 번 흔들렸습니다. 정차한 뒤 차단 해제가 10초 안에 확인되지 않았습니다. 8단계 실행 2회에서는 재현되지 않았고, 실패 자료를 보고 추정만 하고 있는 상태입니다. <code>run_bench.py --repeat 5</code>로 다시 측정하려고 합니다.</p>
 </details>
 
 <hr>

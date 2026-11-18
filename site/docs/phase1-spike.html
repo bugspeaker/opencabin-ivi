@@ -21,6 +21,7 @@
   <aside class="side">
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
         <a href="readme.html">README</a>
         <a href="phase1-spike.html" aria-current="page">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
@@ -141,7 +142,7 @@
 <li>현상: 운전석 온도 ▲ 를 눌러도 온도가 바뀌지 않는다. Appium 클릭, <code>adb shell input tap</code> 모두 같다.</li>
 <li>원인: 영역이 겹친다. ▲ <code>[192,682][268,758]</code>, 홈 <code>[188,682][264,758]</code>. 72x76px가 겹치고 홈이 위에 있어 탭을 가져간다.</li>
 <li>비교: 운전석 ▼, 조수석 ▲·▼ 는 정상 (1회 = 0.5°C).</li>
-<li>처리: <code>test_driver_temp_up_is_not_covered_by_home</code>를 <code>xfail(strict=True)</code>로 둔다. 결함이 고쳐지면 XPASS가 되고, strict라서 실패로 바뀌므로 바로 알 수 있다.</li>
+<li>처리: <a class="test-link" href="test-results.html#test_driver_temp_up_is_not_covered_by_home" title="테스트 결과와 화면 보기"><code>test_driver_temp_up_is_not_covered_by_home</code></a>를 <code>xfail(strict=True)</code>로 둔다. 결함이 고쳐지면 XPASS가 되고, strict라서 실패로 바뀌므로 바로 알 수 있다.</li>
 </ul>
 <h2 id="환경에서-막혔던-것"><a class="anchor" href="#환경에서-막혔던-것" aria-hidden="true">#</a>환경에서 막혔던 것</h2>
 <div class="table"><table><thead><tr>

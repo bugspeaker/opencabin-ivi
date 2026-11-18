@@ -15,6 +15,7 @@
   격리     quarantine.txt 에 있는 테스트는 xfail(strict=False) → 돌리되 게이트를 막지 않음
   기록     reports/history/results.jsonl (누적), reports/runs/<run>-<serial>.json (이번 실행), JUnit
   실패자료 reports/artifacts/<테스트>[__재시도 n]/ 화면·UI 계층·차량 상태·액티비티·logcat (정리 전에 남김)
+  결과화면 --shots 를 주면 통과한 테스트도 끝 화면을 reports/shots/<run>-<serial>/ 에 남긴다 (tools/publish_results.py 가 사이트로 옮긴다)
 """
 import os
 import re
@@ -42,6 +43,8 @@ def pytest_addoption(parser):
     group.addoption("--system-port", type=int, default=None,
                     help="UiAutomator2 systemPort. 같은 Appium 서버로 여러 기기를 동시에 돌릴 때 기기마다 달라야 한다")
     group.addoption("--run-id", default=os.environ.get("IVI_RUN_ID"), help="여러 기기 실행을 한 묶음으로 기록할 때")
+    group.addoption("--shots", action="store_true", default=os.environ.get("IVI_SHOTS") == "1",
+                    help="테스트마다 끝 화면 스크린샷을 남긴다 (결과 페이지용)")
 
 
 def _connected_serials():
@@ -194,6 +197,27 @@ def pytest_runtest_makereport(item, call):
         folder = _save_artifacts(item, suffix="__teardown" if report.when == "teardown" else "")
         if folder:
             report.sections.append(("ivi artifacts", str(folder)))
+    # 결과 페이지용 끝 화면: 판정이 난 직후, 정리 전에 찍는다 (정리가 화면을 처음 상태로 돌리기 전)
+    if report.when == "call" and item.config.getoption("--shots", default=False):
+        shot = _save_result_shot(item)
+        if shot:
+            report.user_properties.append(("shot", str(shot)))
+
+
+def _save_result_shot(item):
+    """끝 화면 한 장. 재시도가 있으면 마지막 시도의 화면으로 덮어쓴다. 실패해도 테스트 결과에는 영향을 주지 않는다."""
+    driver = item.funcargs.get("driver")
+    recorder = getattr(item.config, "ivi_recorder", None)
+    if driver is None or recorder is None:
+        return None
+    folder = REPORT_DIR / "shots" / f"{recorder.run_id}-{recorder.device['serial']}"
+    path = folder / (re.sub(r"[^\w.\-\[\]]+", "_", item.nodeid)[:150] + ".png")
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(driver.get_screenshot_as_png())
+        return path
+    except Exception:  # noqa: BLE001 - 스크린샷 실패가 테스트 판정을 바꾸지 않게
+        return None
 
 
 def _save_artifacts(item, suffix=""):

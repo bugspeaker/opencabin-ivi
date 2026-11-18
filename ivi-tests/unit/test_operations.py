@@ -126,3 +126,39 @@ def test_vhal_retry_is_counted(recorder):
     assert recorder.records["t::v"]["infra_retries"] == 1
     assert recorder.records["t::v"]["outcome"] == "passed"
     assert recorder.summary()["infra_retries"] == 1
+
+
+def test_publish_results_reads_test_docs_and_markers():
+    """결과 페이지용 메타데이터: 테스트 파일에서 설명(docstring)과 마커를 읽는다."""
+    from tools import publish_results
+
+    files = {f["file"]: f for f in publish_results.read_tests()}
+    signals = {t["name"]: t for t in files["test_vehicle_signals.py"]["tests"]}
+    assert "sanity" in signals["test_max_ac_sets_signal_and_coldest_settings"]["markers"]
+    assert signals["test_max_ac_sets_signal_and_coldest_settings"]["doc"].startswith("상위 → 하위")
+    assert files["test_smoke.py"]["title"].startswith("Smoke")
+
+
+def test_publish_results_markdown_has_anchor_per_test():
+    """GitHub 문서(docs/test-results.md)에서 테스트 이름마다 앵커가 있어야 다른 문서의 링크가 닿는다."""
+    from tools import publish_results
+
+    data = {"devices": [{"kind": "aaos", "label": "AAOS 에뮬레이터", "model": "m", "time": "2026-11-18T10:00:00",
+                         "duration": 75.0, "counts": {"passed": 2}}],
+            "files": [{"file": "test_x.py", "title": "제목", "tests": [
+                {"name": "test_a", "doc": "설명", "markers": ["sanity"], "cases": [
+                    {"param": "up", "results": {"aaos": {"label": "통과", "duration": 1.2, "image": "img/aaos/test_a_up.webp"}}},
+                    {"param": "down", "results": {"aaos": {"label": "통과", "duration": 1.1, "image": None}}}]}]}]}
+    md = publish_results.markdown(data)
+    assert md.count('<a id="test_a"></a>') == 1
+    assert "[화면](../site/results/img/aaos/test_a_up.webp)" in md
+    assert "1분 15초" in md
+
+
+def test_recorder_keeps_last_attempt_screenshot():
+    """--shots: 끝 화면 경로를 기록에 남긴다. 재시도가 있으면 마지막 시도의 화면이다."""
+    rec = Recorder("run", {"serial": "s", "kind": "aaos", "model": "m"})
+    rec.add(report("t::a", "call", "rerun", message="boom", props=[("shot", "first.png")]))
+    rec.add(report("t::a", "call", "passed", props=[("shot", "second.png")]))
+    row = rec.rows()[0]
+    assert (row["outcome"], row["shot"]) == ("flaky", "second.png")
