@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import java.util.Locale
 
 /*
- * 7단계 디자인 (docs/phase7-pleos.md): 차세대 양산 IVI(Pleos Connect) 공개 화면의 톤을 따른다.
+ * 7단계 디자인 (docs/phase7-layout.md): 양산 IVI 공개 화면에서 흔한 톤을 따른다.
  *   - 거의 검정 바탕 위에 둥근 회색 카드, 파란 강조색. 공조 화살표는 파랑(내림)·빨강(올림), A/C·SYNC·READY 같은 상태 글자는 초록
  *   - 앱 아이콘은 색 타일 + 단순한 흰 기호 (기호는 직접 그린다: Glyphs.kt)
  * 제조사 로고·제품명·전용 글꼴·아이콘 파일은 쓰지 않는다.

@@ -1,0 +1,17 @@
+speed_mps=0.0
+gear=4
+driving_state=0
+temp_driver=22.8
+temp_passenger=22.0
+ac=[True, True, True, True, True]
+auto=[False, False, False, False, False]
+max_ac=[False, False, False, False, False]
+fan=[3, 3, 3, 3, 3]
+defrost_front=[False]
+defrost_rear=[False]
+heat_driver=[0]
+heat_passenger=[0]
+doors_locked=[True, True, True, True]
+range_km=[320.0]
+battery_pct=[80.0]
+outside_c=[18.0]

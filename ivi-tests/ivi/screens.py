@@ -1,4 +1,4 @@
-"""화면 객체 (Page Object). 태그 이름은 ivi-app 의 ui/IviScreens.kt, VideoActivity.kt 와 맞춘다.
+"""화면 객체 (Page Object). 태그 이름은 ivi-app 의 ui/*.kt (testTag), VideoActivity.kt 와 맞춘다.
 
 Compose testTag 는 testTagsAsResourceId 로 resource-id 가 되는데, 패키지 접두사가 없다 (`nav_climate`).
 UiAutomator2 의 By.ID 는 `dev.opencabin.ivi:id/` 를 붙여 찾아서 못 찾으므로 UiSelector().resourceId() 를 쓴다.
@@ -6,7 +6,7 @@ UiAutomator2 의 By.ID 는 `dev.opencabin.ivi:id/` 를 붙여 찾아서 못 찾�
 from appium.webdriver.common.appiumby import AppiumBy
 
 from ivi.vehicle import Seat
-from ivi.waits import wait_until
+from ivi.waits import polling, wait_until
 
 TIMEOUT = 10.0
 
@@ -33,6 +33,10 @@ class Screen:
         return cls(self.driver, self.tapper)
 
     def find(self, tag, timeout=TIMEOUT):
+        if polling():
+            # 바깥의 wait_until 이 이미 다시 보고 있다. 여기서 또 기다리면 제한 시간이 겹친다 (10초 + 10초).
+            # 한 번만 찾고, 없으면 NoSuchElementException 을 바깥 대기에 넘긴다
+            return self.driver.find_element(*by_tag(tag))
         return wait_until(lambda: self.driver.find_element(*by_tag(tag)), timeout=timeout, what=f"화면 요소 '{tag}'")
 
     def visible(self, tag):
@@ -67,7 +71,7 @@ class Screen:
 class IviApp(Screen):
     """메인 화면의 공통 영역 (아래 바, 상단 바, 주행 정보).
 
-    7단계(Pleos Connect 구조)부터 아래 바에는 차량·공조·미디어·전화·내비·AI·앱 목록만 고정이다.
+    7단계(3영역 화면 개편)부터 아래 바에는 차량·공조·미디어·전화·내비·AI·앱 목록만 고정이다.
     라디오·설정은 앱 목록에서 연다 → 테스트는 그대로 두고, 여는 길만 여기서 바꿨다.
     """
 

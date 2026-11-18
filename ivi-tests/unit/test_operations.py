@@ -134,7 +134,8 @@ def test_publish_results_reads_test_docs_and_markers():
 
     files = {f["file"]: f for f in publish_results.read_tests()}
     signals = {t["name"]: t for t in files["test_vehicle_signals.py"]["tests"]}
-    assert "sanity" in signals["test_max_ac_sets_signal_and_coldest_settings"]["markers"]
+    assert "regression" in signals["test_max_ac_sets_signal_and_coldest_settings"]["markers"]
+    assert "sanity" in signals["test_ac_toggle_reaches_every_seat"]["markers"]
     # 여러 줄 docstring 은 한 줄로 이어 붙인다
     assert signals["test_max_ac_sets_signal_and_coldest_settings"]["doc"].startswith("FULL(최대 냉방)을 켜면")
     assert "\n" not in signals["test_low_range_card_starts_guidance_to_nearest_charger"]["doc"]
@@ -198,3 +199,12 @@ def test_every_requirement_has_a_test_and_every_test_a_requirement():
     assert untested == [], f"테스트가 없는 요구사항: {untested}"
     assert untraced == [], f"요구사항이 없는 테스트: {untraced}"
     assert unknown == [], f"없는 요구사항 ID: {unknown}"
+
+
+def test_recorder_keeps_vhal_values_of_last_attempt(recorder):
+    """판정에 쓴 차량 값(user_properties 'vhal')은 마지막 시도 것만 남는다. 결과 페이지가 화면 옆에 보여 준다."""
+    nodeid = "tests/test_climate.py::test_button_changes_signal_by_one_step[up-driver]"
+    run(recorder, nodeid,
+        ("call", "rerun", {"props": [("vhal", "HVAC_TEMPERATURE_SET[0x1]=22.0")]}),
+        ("call", "passed", {"props": [("vhal", "HVAC_TEMPERATURE_SET[0x1]=22.5")]}))
+    assert recorder.records[nodeid]["signals"] == ["HVAC_TEMPERATURE_SET[0x1]=22.5"]

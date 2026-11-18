@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>반복 실행 통계 · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 반복 실행 통계</span>
+  <a class="src" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/flaky-report.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html" aria-current="page">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
+        <a href="traceability.html">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
+        <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html">9. Test Bench 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="반복-실행-통계"><a class="anchor" href="#반복-실행-통계" aria-hidden="true">#</a>반복 실행 통계</h1>
+<p>2026-11-18 저녁에 E2E 전체(129개)를 두 기기에서 병렬로 5회 돌린 기록입니다. 경계값 테스트를 더하고 앱 결함(0.5°C 단위)을 고친 뒤의 앱으로 돌렸습니다.</p>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\run_bench.py --repeat 5 --reruns 1 --shots
+.venv\Scripts\python tools\flaky_report.py --last 5</code></pre>
+<h2 id="요약"><a class="anchor" href="#요약" aria-hidden="true">#</a>요약</h2>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>값</th>
+</tr>
+</thead><tbody><tr>
+<td>실행한 테스트</td>
+<td>1,250건 (건너뜀 제외, 두 기기 × 5회)</td>
+</tr>
+<tr>
+<td>재시도로 통과 (flaky)</td>
+<td>0건</td>
+</tr>
+<tr>
+<td>재시도까지 실패</td>
+<td>0건</td>
+</tr>
+<tr>
+<td>재시도 횟수</td>
+<td>0번</td>
+</tr>
+<tr>
+<td>전에 한 번 흔들렸던 <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a></td>
+<td>10번 실행해 10번 한 번에 통과</td>
+</tr>
+</tbody></table></div>
+<h2 id="회차별-결과"><a class="anchor" href="#회차별-결과" aria-hidden="true">#</a>회차별 결과</h2>
+<div class="table"><table><thead><tr>
+<th>회차</th>
+<th>실행</th>
+<th>AAOS 에뮬레이터</th>
+<th>화웨이 태블릿 (Mock)</th>
+<th>두 기기 병렬, 끝까지</th>
+</tr>
+</thead><tbody><tr>
+<td>1</td>
+<td><code>20261118-195509-r1</code></td>
+<td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 58초)</td>
+<td>통과 122, 건너뜀 7, 재시도 0 (10분 21초)</td>
+<td>10분 21초</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>20261118-200531-r2</code></td>
+<td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 42초)</td>
+<td>통과 122, 건너뜀 7, 재시도 0 (10분 12초)</td>
+<td>10분 12초</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>20261118-201545-r3</code></td>
+<td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 28초)</td>
+<td>통과 122, 건너뜀 7, 재시도 0 (10분 14초)</td>
+<td>10분 15초</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>20261118-202600-r4</code></td>
+<td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 38초)</td>
+<td>통과 122, 건너뜀 7, 재시도 0 (10분 16초)</td>
+<td>10분 17초</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>20261118-203617-r5</code></td>
+<td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 45초)</td>
+<td>통과 122, 건너뜀 7, 재시도 0 (10분 15초)</td>
+<td>10분 16초</td>
+</tr>
+</tbody></table></div>
+<h2 id="읽는-법과-한계"><a class="anchor" href="#읽는-법과-한계" aria-hidden="true">#</a>읽는 법과 한계</h2>
+<ul>
+<li>flaky는 첫 시도에 실패하고 재시도(<code>--reruns 1</code>)에서 통과한 것입니다. 통과로 치지 않고 따로 셉니다.</li>
+<li>아래 flaky_report.py 출력의 &#39;평균 테스트 시간 합&#39;은 테스트별 시간의 합이라, 세션 전체 시간(Appium 연결, 앱 시작 포함)인 위 표보다 짧습니다.</li>
+<li>같은 PC, 같은 날 저녁의 5회입니다. 기간에 걸친 추세, 다른 PC나 다른 기기 상태에서의 흔들림은 이 표에 없습니다.</li>
+<li>마지막 회차의 판정과 화면은 <a href="test-results.html">테스트 결과</a>에 있습니다. 실패가 나면 저장되는 자료의 예시는 <a href="https://github.com/bugspeaker/opencabin-ivi/tree/main/docs/samples/off-grid-temperature-aaos">실패 자료 한 묶음</a>입니다.</li>
+</ul>
+<h2 id="flaky_reportpy-출력-최근-5회"><a class="anchor" href="#flaky_reportpy-출력-최근-5회" aria-hidden="true">#</a>flaky_report.py 출력 (최근 5회)</h2>
+<h3 id="실행-요약"><a class="anchor" href="#실행-요약" aria-hidden="true">#</a>실행 요약</h3>
+<div class="table"><table><thead><tr>
+<th>기기</th>
+<th>실행</th>
+<th>게이트 통과</th>
+<th>평균 테스트 시간 합</th>
+</tr>
+</thead><tbody><tr>
+<td>aaos</td>
+<td>5</td>
+<td>5/5 (100%)</td>
+<td>458s</td>
+</tr>
+<tr>
+<td>mock</td>
+<td>5</td>
+<td>5/5 (100%)</td>
+<td>432s</td>
+</tr>
+</tbody></table></div>
+<h3 id="불안정-테스트"><a class="anchor" href="#불안정-테스트" aria-hidden="true">#</a>불안정 테스트</h3>
+<p>없음 (모든 테스트가 매번 한 번에 통과)</p>
+<h3 id="격리-후보-불안정-10-이상-5회-이상-실행"><a class="anchor" href="#격리-후보-불안정-10-이상-5회-이상-실행" aria-hidden="true">#</a>격리 후보 (불안정 10% 이상, 5회 이상 실행)</h3>
+<p>없음</p>
+<h3 id="격리-해제-후보-최근-20회-연속-통과"><a class="anchor" href="#격리-해제-후보-최근-20회-연속-통과" aria-hidden="true">#</a>격리 해제 후보 (최근 20회 연속 통과)</h3>
+<p>없음</p>
+<h3 id="느린-테스트-p95-상위-5"><a class="anchor" href="#느린-테스트-p95-상위-5" aria-hidden="true">#</a>느린 테스트 (p95 상위 5)</h3>
+<div class="table"><table><thead><tr>
+<th>기기</th>
+<th>테스트</th>
+<th>평균</th>
+<th>p95</th>
+</tr>
+</thead><tbody><tr>
+<td>aaos</td>
+<td><code>tests/test_power.py::test_power_cycle_brings_back_app_and_cabin_defaults</code></td>
+<td>37.4s</td>
+<td>42.2s</td>
+</tr>
+<tr>
+<td>mock</td>
+<td><code>tests/test_driving.py::test_video_resumes_where_it_stopped</code></td>
+<td>12.8s</td>
+<td>13.2s</td>
+</tr>
+<tr>
+<td>aaos</td>
+<td><code>tests/test_driving.py::test_video_resumes_where_it_stopped</code></td>
+<td>12.8s</td>
+<td>13.0s</td>
+</tr>
+<tr>
+<td>mock</td>
+<td><code>tests/test_settings.py::test_settings_survive_app_restart</code></td>
+<td>10.8s</td>
+<td>10.9s</td>
+</tr>
+<tr>
+<td>aaos</td>
+<td><code>tests/test_settings.py::test_settings_survive_app_restart</code></td>
+<td>10.1s</td>
+<td>10.5s</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#요약">요약</a><a class="l2" href="#회차별-결과">회차별 결과</a><a class="l2" href="#읽는-법과-한계">읽는 법과 한계</a><a class="l2" href="#flaky_reportpy-출력-최근-5회">flaky_report.py 출력 (최근 5회)</a><a class="l3" href="#실행-요약">실행 요약</a><a class="l3" href="#불안정-테스트">불안정 테스트</a><a class="l3" href="#격리-후보-불안정-10-이상-5회-이상-실행">격리 후보 (불안정 10% 이상, 5회 이상 실행)</a><a class="l3" href="#격리-해제-후보-최근-20회-연속-통과">격리 해제 후보 (최근 20회 연속 통과)</a><a class="l3" href="#느린-테스트-p95-상위-5">느린 테스트 (p95 상위 5)</a></nav>
+</div>
+
+</body>
+</html>

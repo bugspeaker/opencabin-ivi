@@ -7,10 +7,10 @@ A-SPICE의 검증 단계에서 요구하는 요구사항과 시험 사이의 양
 |---|---|
 | 요구사항 | 26개 |
 | 테스트가 있는 요구사항 | 26개 |
-| 테스트 함수 | 98개 |
+| 테스트 함수 | 101개 |
 | 요구사항이 없는 테스트 | 0개 |
 
-결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 일부러 남겨 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.
+결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.
 
 ## 요구사항에서 테스트로
 
@@ -22,7 +22,7 @@ A-SPICE의 검증 단계에서 요구하는 요구사항과 시험 사이의 양
 | DRIVE-02 | 주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있다. 음악은 주행 중에도 쓸 수 있다. | 운전자 주의 분산 | `test_media_stays_usable_while_driving`<br>`test_video_blocked_screen_follows_parking`<br>`test_video_button_locked_while_driving`<br>`test_video_is_blocked_while_driving`<br>`test_video_plays_when_parked`<br>`test_video_resumes_where_it_stopped` | 6/6 통과 | 6/6 통과 |
 | DRIVE-03 | 주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막는다. | 운전자 주의 분산 | `test_driving_locks_keypad_and_limits_contacts`<br>`test_driving_locks_typing_and_refuses_mirror_fold`<br>`test_quick_control_mirror_locked_while_driving`<br>`test_search_locked_while_driving_but_favorites_work` | 4/4 통과 | 4/4 통과 |
 | HVAC-01 | 운전석과 조수석 온도는 화면과 차량 신호가 같은 값을 가진다. 한쪽이 바뀌면 다른 쪽이 따라온다. | 기능 | `test_bottom_bar_temperature_drives_vehicle`<br>`test_button_changes_signal_by_one_step`<br>`test_climate_button_goes_out_on_can`<br>`test_hvac_is_controllable`<br>`test_seats_are_independent`<br>`test_signal_is_shown_on_climate_and_home`<br>`test_typed_command_sets_vehicle_temperature`<br>`test_voice_sets_driver_temperature_on_vehicle`<br>`test_zone_applies_command_to_speaking_seat` | 14/14 통과 | 14/14 통과 |
-| HVAC-02 | 온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼진다. | 기능 | `test_button_changes_signal_by_one_step`<br>`test_buttons_disabled_at_limits` | 6/6 통과 | 6/6 통과 |
+| HVAC-02 | 온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼진다. 차량 쪽에서 범위 밖 값이나 0.5°C 단위가 아닌 값이 와도 앱은 멈추지 않고 그 값을 보여 주며, 범위 밖으로 더 가는 버튼은 꺼진다. 버튼을 누르면 범위 안의 0.5°C 단위 값으로 맞춰 차량에 쓴다. | 기능 | `test_button_changes_signal_by_one_step`<br>`test_buttons_disabled_at_limits`<br>`test_off_grid_signal_steps_back_to_grid`<br>`test_out_of_range_signal_is_shown_safely`<br>`test_step_reaches_limit_and_disables` | 12/12 통과 | 12/12 통과 |
 | HVAC-03 | A/C, AUTO, 풍량은 모든 좌석 area에 함께 적용된다. 풍량을 직접 바꾸면 AUTO가 풀린다. | 기능 | `test_ac_signal_is_shown_on_climate_and_bottom_bar`<br>`test_ac_toggle_reaches_every_seat`<br>`test_fan_button_changes_signal_by_one`<br>`test_fan_buttons_disabled_at_limits`<br>`test_manual_fan_releases_auto` | 7/7 통과 | 7/7 통과 |
 | HVAC-04 | 최대 냉방(FULL)을 켜면 최저 온도와 최대 풍량이 되고, 끄면 켜기 전 값으로 돌아간다. 다른 공조 값을 직접 바꾸면 최대 냉방이 풀린다. | 기능 | `test_manual_fan_releases_max_ac`<br>`test_max_ac_off_restores_previous_settings`<br>`test_max_ac_sets_signal_and_coldest_settings`<br>`test_max_ac_signal_is_shown_on_toggle`<br>`test_turning_ac_off_releases_max_ac` | 5/5 통과 | 5/5 통과 |
 | HVAC-05 | 김서림 제거와 좌석 열선은 누른 유리, 그 좌석에만 적용되고, 화면 여러 곳에 같은 값으로 보인다. | 기능 | `test_assistant_seat_heat_follows_speaker_zone`<br>`test_bottom_bar_seat_heat_works_from_any_screen`<br>`test_defrost_changes_only_its_window`<br>`test_seat_heat_cycles_levels_on_vehicle`<br>`test_seat_heat_signal_is_shown_everywhere` | 7/7 통과 | 7/7 통과 |
@@ -31,7 +31,7 @@ A-SPICE의 검증 단계에서 요구하는 요구사항과 시험 사이의 양
 | ENERGY-01 | 주행 가능 거리, 배터리, 외기 온도를 화면 단위(km 또는 마일, %, °C)로 보여 준다. | 기능 | `test_energy_signals_are_shown_on_cluster`<br>`test_range_follows_speed_unit_setting` | 2/2 통과 | 2/2 통과 |
 | ENERGY-02 | 주행 가능 거리가 30 km 이하면 경고와 충전소 안내를 띄우고 알림 센터에 남긴다. 충전해서 거리가 늘면 경고를 거둔다. | 기능 | `test_api_low_range_shows_charger_card`<br>`test_can_battery_and_door_frames_reach_screen`<br>`test_low_range_card_starts_guidance_to_nearest_charger`<br>`test_low_range_is_recorded_in_notifications`<br>`test_low_range_threshold`<br>`test_range_recovers_after_charging` | 8/8 통과 | 8/8 통과 |
 | CAM-01 | 기어가 R이 되면 어느 화면에서든 후방 카메라를 띄우고, R에서 벗어나면 보던 화면으로 돌아간다. | 기능 | `test_camera_returns_to_previous_screen`<br>`test_gear_value_shows_reverse`<br>`test_reverse_gear_shows_camera` | 3/3 통과 | 3/3 통과 |
-| CAM-02 | 후방 카메라 영상은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 한다. | 법규 (FMVSS 111) | `test_rear_camera_appears_within_two_seconds` | 1/1 통과 | 1/1 통과 |
+| CAM-02 | 후방 카메라 화면은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 한다. FMVSS 111의 2초 기준을 빌렸고, 앱의 카메라 화면 요소가 뜰 때까지를 잰다(adb 주입과 Appium 조회 시간 포함). 실제 카메라 영상이나 실차에서 잰 값은 아니다. | 법규 기준을 빌림 (FMVSS 111) | `test_rear_camera_appears_within_two_seconds` | 1/1 통과 | 1/1 통과 |
 | NAV-01 | 목적지를 찾아 안내를 시작하고, 남은 거리는 차량 속도 신호를 따라 줄며, 도착하거나 끝내면 안내를 거둔다. | 기능 | `test_ambiguous_destination_offers_candidates`<br>`test_arrival`<br>`test_guidance_counts_down_with_vehicle_speed`<br>`test_low_range_card_starts_guidance_to_nearest_charger`<br>`test_parked_vehicle_does_not_advance_route`<br>`test_search_filters_destinations`<br>`test_stop_guidance_returns_to_search_and_clears_cluster_route`<br>`test_voice_starts_guidance_home` | 8/8 통과 | 8/8 통과 |
 | MEDIA-01 | 음악, 라디오, 통화는 한 번에 하나만 소리를 낸다. 통화가 끝나면 듣던 것이 다시 나온다. | 기능 | `test_call_pauses_radio_then_resumes`<br>`test_radio_and_media_play_one_at_a_time` | 2/2 통과 | 2/2 통과 |
 | MEDIA-02 | 음악과 영상 재생, 라디오 조정과 프리셋, 전화 걸기가 동작한다. | 기능 | `test_am_band_uses_khz_steps`<br>`test_call_contact_shows_call_screen_and_recent`<br>`test_keypad_dial`<br>`test_media_stays_usable_while_driving`<br>`test_play_pause_toggles`<br>`test_power_on_plays_default_station`<br>`test_preset_save_and_recall`<br>`test_selecting_track_starts_it`<br>`test_tune_and_seek`<br>`test_video_next_clip`<br>`test_video_plays_when_parked` | 13/13 통과 | 13/13 통과 |
@@ -50,7 +50,7 @@ A-SPICE의 검증 단계에서 요구하는 요구사항과 시험 사이의 양
 | `test_assistant.py` | 6개 | DRIVE-03, HVAC-01, NAV-01, VOICE-01 |
 | `test_bench_api.py` | 3개 | BENCH-01, DRIVE-01, ENERGY-02 |
 | `test_can_gateway.py` | 3개 | BODY-01, DRIVE-01, ENERGY-02, HVAC-01, NET-01, NET-02 |
-| `test_climate.py` | 4개 | HVAC-01, HVAC-02 |
+| `test_climate.py` | 7개 | HVAC-01, HVAC-02 |
 | `test_cockpit.py` | 10개 | DRIVE-01, DRIVE-03, HVAC-01, HVAC-06, UI-01 |
 | `test_driving.py` | 7개 | DRIVE-01, DRIVE-02, MEDIA-02 |
 | `test_media.py` | 3개 | DRIVE-02, MEDIA-02 |

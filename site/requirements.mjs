@@ -17,14 +17,15 @@ export const GROUPS = [
 export const REQUIREMENTS = [
   {
     id: "services", group: "duty", title: "IVI 서비스별 검증 전략",
-    done: "HVAC, 차량 설정, 클러스터 연동, 미디어를 서비스별로 나눠 테스트했습니다.",
+    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 깨지면 큰 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다.",
+    note: "서비스별 위험, 확인 방향, 테스트 수는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.",
     select: { files: ["test_climate.py", "test_vehicle_signals.py", "test_settings.py", "test_cockpit.py", "test_driving.py", "test_media.py", "test_radio.py"] },
   },
   {
     id: "gating", group: "duty", title: "Smoke · Sanity · Regression 게이팅",
-    done: (s) => `smoke ${s.smoke}개, sanity ${s.sanity}개, regression ${s.regression}개로 나누고 PR, main, Nightly마다 돌리는 범위를 다르게 했습니다.`,
+    done: (s) => `smoke ${s.smoke}개, sanity ${s.sanity}개, regression ${s.regression}개를 고르는 기준, 시간, 통과 조건을 정하고 PR, main, Nightly, Release마다 돌리는 범위를 나눴습니다.`,
     chip: "smoke",
-    note: "빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다.",
+    note: "빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다. 단계별 기준과 Release 게이트는 <a href=\"portfolio.html#4-1-게이트-단계와-기준\">포트폴리오 4-1</a>에 있습니다.",
   },
   {
     id: "e2e", group: "duty", title: "UI와 CarProperty/VHAL을 잇는 E2E",
@@ -47,8 +48,10 @@ export const REQUIREMENTS = [
   },
   {
     id: "integration", group: "duty", title: "터치부터 하위 연동까지 통합 검증",
-    done: "음성과 터치가 차량 신호까지, 신호 변화가 경고와 충전소 안내까지 이어지는지 확인했습니다.",
+    done: "AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(IVI_HvacStatus)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다.",
+    note: "CAN 쪽은 PC 안의 가상 버스(python-can, DBC)입니다. 태블릿에서는 같은 테스트가 VHAL 대신 앱 안의 Mock 차량을 거칩니다. 음성과 터치가 차량 신호까지, 거리 부족 신호가 경고와 충전소 안내까지 이어지는 흐름도 함께 봅니다.",
     select: {
+      files: ["test_can_gateway.py"],
       tests: [
         "test_zone_applies_command_to_speaking_seat", "test_typed_command_sets_vehicle_temperature",
         "test_voice_sets_driver_temperature_on_vehicle", "test_assistant_seat_heat_follows_speaker_zone",
@@ -60,12 +63,12 @@ export const REQUIREMENTS = [
   },
   {
     id: "maintenance", group: "duty", title: "프레임워크와 스크립트 유지보수",
-    done: "화면 객체로 테스트와 화면을 나눠 둬서, 7단계 화면 개편 때 테스트 64개 중 1개만 고쳤습니다.",
-    link: { href: "docs/phase7-pleos.html#5-테스트", label: "7단계 기록" },
+    done: "7단계에서 아래 바 구성이 바뀌었을 때 화면 객체(screens.py)의 여는 경로만 고쳤고, 화면 개편 때문에 바꾼 테스트는 기존 64개 가운데 1개입니다.",
+    link: { href: "docs/phase7-layout.html#5-테스트", label: "7단계 기록" },
   },
   {
     id: "injection", group: "duty", title: "ADB · shell · CarPropertyManager로 Property Injection",
-    done: "속도, 기어, 주행 가능 거리처럼 읽기 전용인 신호는 dumpsys로 VHAL에 직접 넣었습니다.",
+    done: "앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.",
     select: {
       files: ["test_driving.py", "test_rear_camera.py", "test_spike_aaos.py"],
       tests: [
@@ -81,9 +84,10 @@ export const REQUIREMENTS = [
   },
   {
     id: "flaky", group: "duty", title: "Flaky 최소화 · 병렬 실행",
-    done: (s) => `재시도 기록, 격리 목록, flaky 통계를 만들고 두 기기를 병렬로 돌렸습니다. 이번 실행의 재시도는 ${s.retries}번입니다.`,
-    onlyBad: true,
-    note: (s) => `두 기기에서 ${s.runs}번 실행했고, 실패하거나 재시도한 테스트는 ${s.bad}개였습니다. 재시도를 기록하고 격리하는 방법은 <a href="portfolio.html#8-1-flaky-관리">포트폴리오 8-1</a>에 정리했습니다.`,
+    done: (s) => s.stability
+      ? `두 기기를 병렬로 ${s.stability.rounds}번 반복해 테스트 ${s.stability.executions.toLocaleString("en-US")}건을 돌렸고, 재시도로 통과한 것(flaky)은 ${s.stability.flaky}건입니다. 재시도 기록, 격리 목록, flaky 통계를 직접 만들었습니다.`
+      : "재시도 기록, 격리 목록, flaky 통계를 만들고 두 기기를 병렬로 돌렸습니다.",
+    link: { href: "docs/flaky-report.html", label: "반복 실행 통계" },
   },
   {
     id: "android", group: "must", title: "Android/AAOS 테스트 자동화 구축과 운영",
@@ -92,7 +96,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 61개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 71개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
@@ -103,7 +107,7 @@ export const REQUIREMENTS = [
   {
     id: "adb", group: "must", title: "ADB · Logcat · Shell",
     done: "실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.",
-    link: { href: "docs/portfolio.html#5-결함과-원인-분석", label: "결함 기록" },
+    link: { href: "docs/portfolio.html#3-결함과-원인-분석", label: "결함 기록" },
   },
   {
     id: "ci", group: "must", title: "Git · CI/CD",
@@ -115,7 +119,7 @@ export const REQUIREMENTS = [
     done: "신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.",
     select: { files: ["test_vehicle_signals.py", "test_spike_aaos.py"] },
   },
-  // 아래 셋은 실제 장비나 인증 경험이 아니라 PC 안의 모의 환경, 개념 적용이라 '완료'와 따로 표시한다 (partial)
+  // 아래 셋은 실제 장비나 인증 경험이 아니라 PC 안의 모의 환경, 개념 적용이라 그 사실을 표시한다 (partial)
   {
     id: "network", group: "plus", title: "차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)", partial: "CAN만 모의",
     done: "가상 CAN 버스와 DBC로 VCU, BMS, BCM을 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다.",
@@ -130,7 +134,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "safety", group: "plus", title: "ISO 26262, A-SPICE", partial: "개념 적용",
-    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 후방 카메라가 2초 안에 뜨는지(FMVSS 111) 잽니다. 인증이나 심사 경험은 없습니다.",
+    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없습니다.",
     link: { href: "docs/traceability.html", label: "추적표" },
   },
 ];

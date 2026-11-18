@@ -22,16 +22,19 @@
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
         <a href="traceability.html">요구사항 추적표</a>
         <a href="requirements.html" aria-current="page">요구사항</a>
         <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
         <a href="phase3-framework.html">3. 테스트 프레임워크</a>
         <a href="phase4-operations.html">4. 운영 · CI</a>
         <a href="phase5-design.html">5. 재점검과 디자인</a>
         <a href="phase6-features.html">6. 기능 확장</a>
-        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html">8. 차량 신호 확장</a>
         <a href="phase9-bench.html">9. Test Bench 확장</a>
     </nav>
@@ -77,7 +80,7 @@
 </tr>
 <tr>
 <td>HVAC-02</td>
-<td>온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼진다.</td>
+<td>온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼진다. 차량 쪽에서 범위 밖 값이나 0.5°C 단위가 아닌 값이 와도 앱은 멈추지 않고 그 값을 보여 주며, 범위 밖으로 더 가는 버튼은 꺼진다. 버튼을 누르면 범위 안의 0.5°C 단위 값으로 맞춰 차량에 쓴다.</td>
 <td>기능</td>
 </tr>
 <tr>
@@ -122,8 +125,8 @@
 </tr>
 <tr>
 <td>CAM-02</td>
-<td>후방 카메라 영상은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 한다.</td>
-<td>법규 (FMVSS 111)</td>
+<td>후방 카메라 화면은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 한다. FMVSS 111의 2초 기준을 빌렸고, 앱의 카메라 화면 요소가 뜰 때까지를 잰다(adb 주입과 Appium 조회 시간 포함). 실제 카메라 영상이나 실차에서 잰 값은 아니다.</td>
+<td>법규 기준을 빌림 (FMVSS 111)</td>
 </tr>
 <tr>
 <td>NAV-01</td>

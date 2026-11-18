@@ -13,7 +13,7 @@ from ivi.waits import wait_until
 
 
 @pytest.mark.req("VOICE-01", "HVAC-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_zone_applies_command_to_speaking_seat(app, car):
     """조수석에서 '나 더워'라고 하면 조수석 온도만 1°C 내려가야 합니다.
     차량 신호로 확인합니다.
@@ -62,7 +62,7 @@ def test_ambiguous_destination_offers_candidates(app):
 
 
 @pytest.mark.req("DRIVE-03")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_driving_locks_typing_and_refuses_mirror_fold(app, car):
     """주행 중에는 글자 입력이 막히고 추천 명령만 쓸 수 있습니다.
     사이드 미러를 접어 달라는 명령은 거절합니다.

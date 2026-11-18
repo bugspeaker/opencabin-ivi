@@ -49,7 +49,7 @@ def pytest_addoption(parser):
 
 def _connected_serials():
     out = subprocess.run(["adb", "devices"], capture_output=True, text=True).stdout
-    return [line.split()[0] for line in out.splitlines()[1:] if line.strip().endswith("device")]
+    return [line.split()[0] for line in out.splitlines()[1:] if line.strip().endswith("\tdevice")]  # run_bench 와 같은 기준
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -95,6 +95,13 @@ def pytest_runtest_setup(item):
     device = getattr(item.config, "ivi_device", None)
     if device:
         device.adb.logcat_clear()  # 실패 때 이 테스트의 로그만 남도록
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_call(item):
+    device = getattr(item.config, "ivi_device", None)
+    if device:
+        device.vehicle.observed.clear()  # 준비 단계에서 읽은 값은 판정이 아니다
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -196,6 +203,11 @@ def _record_retries(device, request):
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
+    # 판정에 쓴 차량 값 (AAOS 의 CarService 로 읽은 VHAL 값, 마지막 3개). 결과 페이지에서 화면 옆에 보여 준다
+    if report.when == "call":
+        device = getattr(item.config, "ivi_device", None)
+        if device is not None:
+            report.user_properties.extend(("vhal", value) for value in device.vehicle.take_observed())
     # 정리(teardown) 전에 남겨야 실패 순간의 화면·차량 상태가 보인다. 재시도로 사라질 실패도 남긴다 (flaky 원인 분석용)
     # 정리 단계 실패(예: 정차로 되돌리는 VHAL 쓰기 실패)도 남긴다 — 5단계에서 이 경우 자료가 없어 원인 추적이 늦었다
     if report.failed:
@@ -231,7 +243,10 @@ def _save_artifacts(item, suffix=""):
         return None
     name = re.sub(r"[^\w.\-\[\]]+", "_", item.nodeid)[:150]
     attempt = getattr(item, "execution_count", 1)  # pytest-rerunfailures 가 붙이는 시도 번호
-    folder = REPORT_DIR / "artifacts" / ((name if attempt == 1 else f"{name}__try{attempt}") + suffix)
+    # 실행 · 기기별 폴더: 두 기기를 병렬로 돌리면 같은 테스트의 실패 자료가 서로 덮어쓰던 문제 (2026-11-18 발견)
+    recorder = getattr(item.config, "ivi_recorder", None)
+    run = f"{recorder.run_id}-{device.serial}" if recorder else device.serial
+    folder = REPORT_DIR / "artifacts" / run / ((name if attempt == 1 else f"{name}__try{attempt}") + suffix)
     folder.mkdir(parents=True, exist_ok=True)
     driver = item.funcargs.get("driver")
 

@@ -22,16 +22,19 @@
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
         <a href="traceability.html">요구사항 추적표</a>
         <a href="requirements.html">요구사항</a>
         <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
         <a href="phase3-framework.html">3. 테스트 프레임워크</a>
         <a href="phase4-operations.html" aria-current="page">4. 운영 · CI</a>
         <a href="phase5-design.html">5. 재점검과 디자인</a>
         <a href="phase6-features.html">6. 기능 확장</a>
-        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html">8. 차량 신호 확장</a>
         <a href="phase9-bench.html">9. Test Bench 확장</a>
     </nav>
@@ -188,29 +191,30 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <div class="table"><table><thead><tr>
 <th>이벤트</th>
 <th>범위</th>
-<th>예상 시간</th>
+<th>기기당 시간 (2026-11-18 실측, 129개 기준)</th>
 </tr>
 </thead><tbody><tr>
 <td>pull_request</td>
-<td>smoke</td>
-<td>약 30초</td>
+<td>smoke (13개)</td>
+<td>약 35초</td>
 </tr>
 <tr>
 <td>push (main)</td>
-<td>smoke와 sanity</td>
-<td>약 1~2분</td>
+<td>smoke와 sanity (38개)</td>
+<td>약 2분 15초, 두 기기 병렬</td>
 </tr>
 <tr>
 <td>schedule (매일 03:00 KST)</td>
-<td>전체</td>
-<td>약 2분 30초</td>
+<td>전체 (129개)</td>
+<td>약 8분 45초~9분 15초, 두 기기 병렬</td>
 </tr>
 <tr>
 <td>workflow_dispatch</td>
-<td>입력한 마커와 반복 횟수</td>
+<td>입력한 마커와 반복 횟수. Release 후보는 전체, 반복 3회</td>
 <td>-</td>
 </tr>
 </tbody></table></div>
+<p>4단계(테스트 31개) 때는 전체가 기기당 약 2분 30초였습니다. 시간은 테스트별 시간의 합이고, 단계별 기준은 <a href="portfolio.html#4-1-게이트-단계와-기준">포트폴리오 4-1</a>에 있습니다.</p>
 <p>워크플로를 짜면서 고려한 것들입니다.</p>
 <ul>
 <li><strong>서명 키.</strong> AAOS에는 앱을 priv-app으로 넣어 두었습니다. GitHub 호스트에서 만든 APK는 debug 서명 키가 달라서 덮어쓰기가 거부됩니다. 그래서 e2e에서는 Bench(같은 사용자 계정)에서 다시 빌드합니다.</li>

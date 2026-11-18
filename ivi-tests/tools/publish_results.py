@@ -5,6 +5,7 @@
     python tools/publish_results.py                         # 기기 종류(aaos/mock)마다 가장 최근 --shots 실행을 고른다
     python tools/publish_results.py --runs reports/runs/A.json reports/runs/B.json
     python tools/publish_results.py --blur aaos/test_video_resumes_where_it_stopped:800,455,60,28   # 번호판 가리기
+    python tools/publish_results.py --repeat-runs "reports/runs/20261118-2*-r*.json"   # 반복 실행 통계도 함께 (사이트 지표 카드)
     cd ../site && npm run build-docs                         # 결과 페이지(site/docs/test-results.html) 다시 만들기
 
 만드는 것
@@ -121,7 +122,28 @@ def blur(path, boxes):
         image.save(path, "WEBP", quality=72, method=6)
 
 
-def build(runs, blur_boxes=None):
+def stability(paths):
+    """반복 실행(run_bench.py --repeat) 기록에서 안정성 통계를 낸다. 사이트 첫 화면의 '반복 실행' 카드에 쓴다."""
+    runs = [json.loads(Path(p).read_text(encoding="utf-8")) for p in paths]
+    if not runs:
+        return None
+    tests = [t for run in runs for t in run["tests"] if t["outcome"] != "skipped"]
+    flaky = sorted({t["nodeid"].split("::", 1)[-1] for t in tests if t["outcome"] == "flaky"})
+    failed = sorted({t["nodeid"].split("::", 1)[-1] for t in tests if t["outcome"] in ("failed", "error")})
+    return {
+        "rounds": len({r["summary"]["run_id"] for r in runs}),
+        "devices": len({r["summary"]["serial"] for r in runs}),
+        "run_ids": sorted({r["summary"]["run_id"] for r in runs}),
+        "executions": len(tests),
+        "flaky": sum(1 for t in tests if t["outcome"] == "flaky"),
+        "failed": sum(1 for t in tests if t["outcome"] in ("failed", "error")),
+        "reruns": sum(t.get("reruns", 0) for t in tests),
+        "flaky_tests": flaky,
+        "failed_tests": failed,
+    }
+
+
+def build(runs, blur_boxes=None, repeat=None):
     blur_boxes = blur_boxes or {}
     files = read_tests()
     by_name = {t["name"]: t for f in files for t in f["tests"]}
@@ -158,6 +180,7 @@ def build(runs, blur_boxes=None):
                 "outcome": test["outcome"], "label": OUTCOME_LABEL.get(test["outcome"], test["outcome"]),
                 "duration": round(test["duration"], 1), "message": test.get("message", ""), "image": image,
                 "reruns": test.get("reruns", 0), "measures": test.get("measures", {}),
+                "signals": test.get("signals", []),
             }
 
     for f in files:
@@ -167,6 +190,8 @@ def build(runs, blur_boxes=None):
     files = [f for f in files if f["tests"]]
     missing = sorted(set(cases) - set(by_name))
     data = {"generated": time.strftime("%Y-%m-%d %H:%M"), "devices": devices, "files": files}
+    if repeat:
+        data["stability"] = repeat
     SITE_RESULTS.mkdir(parents=True, exist_ok=True)
     (SITE_RESULTS / "results.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     DOC.write_text(markdown(data), encoding="utf-8", newline="\n")
@@ -177,7 +202,10 @@ def markdown(data):
     lines = [
         "# 테스트 결과",
         "",
-        "기기마다 E2E 전체를 한 번씩 돌린 결과와, 테스트가 끝난 순간의 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다.",
+        "기기마다 E2E 전체를 돌린 결과와, 테스트가 끝난 순간의 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다."
+        + (f" 두 기기에서 {data['stability']['rounds']}회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다."
+           if data.get("stability") else ""),
+        "AAOS 칸 아래의 `PROPERTY[area]=값`은 그 테스트가 판정에 쓴 VHAL 값(CarService로 읽은 마지막 값)입니다.",
         "소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.",
         "",
         "| 기기 | 실행 | 결과 | 시간 |",
@@ -205,6 +233,8 @@ def markdown(data):
                     cell = f"{r['label']}, {r['duration']}초"
                     if r["image"]:
                         cell += f", [화면](../site/results/{r['image']})"
+                    if r.get("signals"):
+                        cell += "<br>" + "<br>".join(f"`{s}`" for s in r["signals"])
                     cells.append(cell)
                 lines.append(f"| {anchor}{name}{desc} | " + " | ".join(cells) + " |")
     return "\n".join(lines) + "\n"
@@ -217,6 +247,7 @@ def fmt_time(seconds):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--runs", nargs="*", help="reports/runs/*.json (기기 종류마다 하나)")
+    parser.add_argument("--repeat-runs", metavar="GLOB", help="반복 실행 기록 (reports/runs/*-r*.json). 안정성 통계를 results.json 에 넣는다")
     parser.add_argument("--blur", action="append", metavar="KIND/TEST:X,Y,W,H",
                         help="흐리게 할 영역 (번호판 등). 올리는 이미지(가로 960px) 기준. 여러 번 줄 수 있다")
     args = parser.parse_args()
@@ -224,7 +255,8 @@ def main():
     if not runs:
         sys.exit("화면이 있는 실행 기록이 없습니다. pytest 를 --shots 로 돌리세요.")
     boxes = parse_blur(args.blur)
-    data, missing = build(runs, boxes)
+    repeat = stability(sorted(ROOT.glob(args.repeat_runs))) if args.repeat_runs else None
+    data, missing = build(runs, boxes, repeat)
     if boxes:
         print(f"주의: 해당하는 화면이 없어 흐리게 하지 못한 항목 {sorted(boxes)}")
     images = sum(1 for _ in (SITE_RESULTS / "img").rglob("*.webp"))
@@ -233,6 +265,8 @@ def main():
         print(f"{d['label']}: {d['run_id']} ({d['time']}) {d['counts']}")
     print(f"화면 {images}장, {size:.1f} MB → {SITE_RESULTS}")
     print(f"문서 → {DOC}")
+    if repeat:
+        print(f"반복 실행: {repeat['rounds']}회 × {repeat['devices']}대, 테스트 {repeat['executions']}건, flaky {repeat['flaky']}, 실패 {repeat['failed']}")
     if missing:
         print(f"주의: 테스트 파일에서 찾지 못한 이름 {missing}")
 

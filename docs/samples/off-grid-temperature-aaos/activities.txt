@@ -1,0 +1,3 @@
+dev.opencabin.ivi/.MainActivity
+com.android.car.cluster.osdouble/.ClusterOsDoubleActivity
+com.android.car.cluster.home/.ClusterHomeActivity
