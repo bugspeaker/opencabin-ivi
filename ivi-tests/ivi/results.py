@@ -64,6 +64,9 @@ class Recorder:
         rec["relaunches"] = max(rec["relaunches"], relaunches)
         retries = sum(1 for key, _ in report.user_properties if key == "vhal_retry")
         rec["infra_retries"] = max(rec["infra_retries"], retries)
+        for key, value in report.user_properties:
+            if key == "shot":  # 끝 화면 (--shots). 재시도면 마지막 시도 것
+                rec["shot"] = value
 
         if report.outcome == "rerun":
             rec["reruns"] += 1
