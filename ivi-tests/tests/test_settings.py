@@ -4,6 +4,7 @@ import pytest
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("SET-01", "DRIVE-01")
 @pytest.mark.sanity
 def test_mph_setting_converts_vehicle_speed(app, car):
     """속도 단위를 mph로 바꾸면 차량 속도 50 km/h가 31 mph로 보입니다."""
@@ -15,6 +16,7 @@ def test_mph_setting_converts_vehicle_speed(app, car):
     wait_until(lambda: app.speed() == ("31", "mph"), what="31 mph")
 
 
+@pytest.mark.req("SET-01")
 @pytest.mark.sanity
 def test_volume_steps(app):
     """볼륨은 한 단계씩 오르내립니다.
@@ -28,6 +30,7 @@ def test_volume_steps(app):
     assert settings.value("volume") == 14
 
 
+@pytest.mark.req("SET-01")
 @pytest.mark.regression
 def test_settings_survive_app_restart(app, device):
     """속도 단위, 무드등 색, 밝기를 바꾸고 앱을 껐다 켜도 바꾼 값이 그대로 남아 있습니다."""
@@ -45,6 +48,7 @@ def test_settings_survive_app_restart(app, device):
     assert settings.value("brightness") == 17
 
 
+@pytest.mark.req("SET-01")
 @pytest.mark.regression
 def test_reset_restores_defaults(app):
     """설정 초기화를 누르면 바꿔 둔 볼륨과 도어 자동 잠금이 기본값으로 돌아옵니다."""
@@ -56,6 +60,7 @@ def test_reset_restores_defaults(app):
     assert settings.checked("autolock")
 
 
+@pytest.mark.req("SET-01")
 @pytest.mark.regression
 def test_12_hour_clock_on_tablet(app, device):
     """태블릿에는 시스템 바가 없어서 앱이 시계를 직접 그립니다.

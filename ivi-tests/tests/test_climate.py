@@ -8,6 +8,7 @@ STEP = 0.5
 MIN_C, MAX_C = 16.0, 28.0
 
 
+@pytest.mark.req("HVAC-01")
 @pytest.mark.sanity
 @pytest.mark.parametrize("seat", list(Seat), ids=lambda s: s.tag)
 def test_signal_is_shown_on_climate_and_home(app, car, seat):
@@ -20,6 +21,7 @@ def test_signal_is_shown_on_climate_and_home(app, car, seat):
     wait_until(lambda: home.summary_temperature(seat) == 25.0, what=f"홈 {seat.tag} 온도 25.0")
 
 
+@pytest.mark.req("HVAC-01", "HVAC-02")
 @pytest.mark.sanity
 @pytest.mark.parametrize("seat", list(Seat), ids=lambda s: s.tag)
 @pytest.mark.parametrize("direction", ["up", "down"])
@@ -35,6 +37,7 @@ def test_button_changes_signal_by_one_step(app, car, seat, direction):
     climate.wait_temperature(seat, expected)
 
 
+@pytest.mark.req("HVAC-02")
 @pytest.mark.regression
 @pytest.mark.parametrize("seat", list(Seat), ids=lambda s: s.tag)
 def test_buttons_disabled_at_limits(app, car, seat):
@@ -52,6 +55,7 @@ def test_buttons_disabled_at_limits(app, car, seat):
     assert climate.can_decrease(seat)
 
 
+@pytest.mark.req("HVAC-01")
 @pytest.mark.regression
 def test_seats_are_independent(app, car):
     """한쪽 좌석 온도를 바꿔도 다른 좌석 값은 그대로여야 합니다.

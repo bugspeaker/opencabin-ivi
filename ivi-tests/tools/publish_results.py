@@ -157,7 +157,7 @@ def build(runs, blur_boxes=None):
             entry["results"][kind] = {
                 "outcome": test["outcome"], "label": OUTCOME_LABEL.get(test["outcome"], test["outcome"]),
                 "duration": round(test["duration"], 1), "message": test.get("message", ""), "image": image,
-                "reruns": test.get("reruns", 0),
+                "reruns": test.get("reruns", 0), "measures": test.get("measures", {}),
             }
 
     for f in files:

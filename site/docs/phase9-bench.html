@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9단계 Test Bench 확장: REST API, 원격 전원, 가상 CAN, 요구사항 추적 · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 9. Test Bench 확장</span>
+  <a class="src" href="../../docs/phase9-bench.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
+        <a href="traceability.html">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
+        <a href="readme.html">README</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html" aria-current="page">9. Test Bench 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="9단계-test-bench-확장-rest-api-원격-전원-가상-can-요구사항-추적"><a class="anchor" href="#9단계-test-bench-확장-rest-api-원격-전원-가상-can-요구사항-추적" aria-hidden="true">#</a>9단계 Test Bench 확장: REST API, 원격 전원, 가상 CAN, 요구사항 추적</h1>
+<p>2026-11-18에 정리했습니다. 공고의 우대사항 가운데 해 보지 않았던 세 가지(차량 네트워크, REST API와 원격 전원 제어, ISO 26262와 A-SPICE)를 이 프로젝트 안에서 할 수 있는 만큼 붙였습니다.</p>
+<p>먼저 밝혀 둘 것이 있습니다. 실제 ECU나 CAN 장비, 전원 공급기, 기능 안전 인증 경험은 여전히 없습니다. 이번 단계는 PC 안에서 흉내 낸 모의 환경과, 개념을 이 프로젝트에 적용해 본 결과입니다. 그래서 첫 화면 목차에서도 &#39;완료&#39;가 아니라 &#39;CAN만 모의&#39;, &#39;모의 장비&#39;, &#39;개념 적용&#39;으로 따로 표시했습니다.</p>
+<h2 id="1-test-bench-rest-api-ivibench_apipy"><a class="anchor" href="#1-test-bench-rest-api-ivibench_apipy" aria-hidden="true">#</a>1. Test Bench REST API (<code>ivi/bench_api.py</code>)</h2>
+<p>벤치에 붙은 기기를 HTTP로 다루는 API입니다. 다른 팀의 도구나 CI가 adb 명령을 몰라도 기기 상태를 보고, 차량 신호를 넣고, 전원을 껐다 켜고, 테스트를 돌리고, 결과를 가져갈 수 있게 하려고 만들었습니다. 의존성을 늘리지 않으려고 표준 라이브러리(<code>http.server</code>)만 썼습니다.</p>
+<div class="table"><table><thead><tr>
+<th>경로</th>
+<th>하는 일</th>
+</tr>
+</thead><tbody><tr>
+<td><code>GET /api/devices</code></td>
+<td>벤치에 붙은 기기 목록</td>
+</tr>
+<tr>
+<td><code>GET /api/devices/{serial}/signals</code></td>
+<td>차량 신호 12종, 좌석 온도, 주행 중 제한 여부</td>
+</tr>
+<tr>
+<td><code>POST /api/devices/{serial}/signals</code></td>
+<td>신호 넣기. 예: <code>{&quot;gear&quot;: &quot;D&quot;, &quot;speed_kmh&quot;: 50, &quot;range_km&quot;: 25}</code></td>
+</tr>
+<tr>
+<td><code>GET</code>, <code>POST /api/devices/{serial}/power</code></td>
+<td>전원 상태 보기, 끄기, 켜기, 껐다 켜기</td>
+</tr>
+<tr>
+<td><code>GET /api/runs</code>, <code>GET /api/runs/{name}</code></td>
+<td>최근 실행 요약과 실행 하나의 전체 결과</td>
+</tr>
+<tr>
+<td><code>POST /api/jobs</code>, <code>GET /api/jobs/{id}</code></td>
+<td>기기와 마커를 골라 테스트 실행을 시작하고 상태를 봅니다.</td>
+</tr>
+</tbody></table></div>
+<p>넣는 값은 먼저 검사합니다. 모르는 신호 이름, 범위를 벗어난 값(풍량 9, 온도 35°C), 0.5 단위가 아닌 온도, D가 아닌 기어에서의 속도는 400으로 거절하고 차량에는 넣지 않습니다. 없는 기기는 404, 전원 제어가 없는 기기는 501, 기기 쪽 오류는 502로 돌려줍니다.</p>
+<p>벤치 PC 안에서만 쓰도록 기본 주소를 127.0.0.1로 두었습니다. 인증이 없어서 밖으로 열면 안 됩니다.</p>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\bench_api.py
+curl http://127.0.0.1:8770/api/devices
+curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\&quot;gear\&quot;: \&quot;D\&quot;, \&quot;speed_kmh\&quot;: 50}&quot;</code></pre>
+<h2 id="2-원격-전원-제어-ivipowerpy"><a class="anchor" href="#2-원격-전원-제어-ivipowerpy" aria-hidden="true">#</a>2. 원격 전원 제어 (<code>ivi/power.py</code>)</h2>
+<p>실제 벤치에서는 헤드 유닛 전원을 프로그래머블 전원 공급기나 스마트 릴레이로 끊고 다시 넣습니다. 그런 장비가 없어서 같은 인터페이스(<code>PowerController</code>) 아래에 구현을 세 가지 두었습니다.</p>
+<div class="table"><table><thead><tr>
+<th>구현</th>
+<th>하는 일</th>
+<th>확인 방법</th>
+</tr>
+</thead><tbody><tr>
+<td><code>EmulatorPower</code></td>
+<td>AAOS 에뮬레이터 프로세스를 끄고(<code>adb emu kill</code>) 같은 AVD, 같은 포트, <code>-writable-system</code>으로 다시 켭니다.</td>
+<td>실제 에뮬레이터로 E2E</td>
+</tr>
+<tr>
+<td><code>AdbRebootPower</code></td>
+<td>실기기를 adb로 재부팅합니다. 끄기만 되고 원격으로 켜지는 못합니다.</td>
+<td>단위 테스트</td>
+</tr>
+<tr>
+<td><code>HttpRelayPower</code></td>
+<td>HTTP로 켜고 끄는 스마트 릴레이(Tasmota 형식)입니다. 실제 벤치에 붙일 자리입니다.</td>
+<td>가짜 릴레이 서버로 단위 테스트</td>
+</tr>
+</tbody></table></div>
+<p><a class="test-link" href="test-results.html#test_power_cycle_brings_back_app_and_cabin_defaults" title="테스트 결과와 화면 보기"><code>test_power_cycle_brings_back_app_and_cabin_defaults</code></a>는 에뮬레이터 전원을 껐다 켠 뒤 세 가지를 봅니다. 3분 안에 부팅이 끝나는지, 앱이 다시 CarService에 붙는지, 공조가 기본값 22.0°C로 시작하는지입니다. 마지막 것은 7단계에서 넣은 VHAL 초기값 덮어쓰기가 재부팅 뒤에도 살아 있는지를 확인하는 것입니다. 부팅에 걸린 시간은 단독으로 돌렸을 때 24.3초, 전체 실행의 마지막에 돌렸을 때 32.2초였습니다.</p>
+<p>전원을 껐다 켜면 Appium 세션이 끊깁니다. 그래서 conftest가 이 테스트를 실행 순서의 맨 끝으로 보내고, 테스트 안에서 새 세션을 만들어 화면을 확인합니다.</p>
+<h2 id="3-가상-can-버스와-게이트웨이-ivican_gatewaypy"><a class="anchor" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy" aria-hidden="true">#</a>3. 가상 CAN 버스와 게이트웨이 (<code>ivi/can_gateway.py</code>)</h2>
+<p>실제 차에서는 VCU, BMS, BCM 같은 ECU가 CAN으로 신호를 보내고, 차량 쪽 서비스가 그 값을 VHAL property로 올려 줍니다. 이 자리를 PC 안에서 흉내 냈습니다.</p>
+<pre class="mermaid">flowchart LR
+    E[시험용 ECU&lt;br&gt;VCU, BMS, BCM] --&gt;|CAN 프레임| B((가상 CAN 버스))
+    B --&gt; G[게이트웨이]
+    G --&gt;|adb, VHAL| V[VHAL / Mock]
+    V --&gt; A[IVI 앱 화면]
+    A --&gt;|공조 조작| V
+    G --&gt;|IVI_HvacStatus| B</pre>
+<ul>
+<li>프레임과 신호는 DBC 파일(<code>ivi-tests/dbc/opencabin.dbc</code>)에 정의했고, cantools로 인코딩하고 풉니다. 속도는 0.01 km/h 단위, 외기 온도는 0.5°C 단위에 -40 오프셋처럼 실제 DBC와 같은 방식으로 적었습니다.</li>
+<li>버스는 python-can의 virtual 인터페이스입니다. 같은 프로세스 안의 여러 노드가 같은 채널을 씁니다.</li>
+<li>받는 쪽: VCU의 속도와 기어, BMS의 배터리와 주행 가능 거리, BCM의 도어와 외기 온도를 풀어서 차량 어댑터에 넣습니다. ECU는 같은 값을 100~500 ms마다 계속 보내기 때문에, 값이 바뀐 프레임만 넣어 adb 왕복을 줄였습니다.</li>
+<li>보내는 쪽: 공조 상태(좌석 온도, A/C, 최대 냉방, AUTO, 풍량)를 읽어 <code>IVI_HvacStatus</code> 프레임을 1초마다 보냅니다.</li>
+</ul>
+<div class="table"><table><thead><tr>
+<th>테스트</th>
+<th>확인하는 것</th>
+</tr>
+</thead><tbody><tr>
+<td><a class="test-link" href="test-results.html#test_can_drive_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_drive_frames_reach_screen</code></a></td>
+<td>VCU 프레임으로 D, 50 km/h를 보내면 화면 속도와 주행 제한 배지가 바뀌고, P로 바꾸면 돌아옵니다. 같은 프레임이 계속 와도 VHAL에는 한 번만 넣습니다.</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#test_can_battery_and_door_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_battery_and_door_frames_reach_screen</code></a></td>
+<td>BMS의 주행 가능 거리 25 km에 &#39;충전 필요&#39;가 뜨고, BCM의 문 열림에 도어 표시가 &#39;열림&#39;이 됩니다.</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#test_climate_button_goes_out_on_can" title="테스트 결과와 화면 보기"><code>test_climate_button_goes_out_on_can</code></a></td>
+<td>화면에서 운전석 온도를 올리면 버스에 나가는 <code>IVI_HvacStatus</code>의 운전석 온도가 22.5°C가 됩니다.</td>
+</tr>
+</tbody></table></div>
+<p>게이트웨이는 차량 어댑터를 거치기 때문에 같은 테스트가 AAOS(VHAL)와 태블릿(Mock)에서 모두 돕니다.</p>
+<p>다루지 못한 것도 분명합니다. 실제 ECU, CAN 트랜시버, 버스 부하와 오류 프레임, 타이밍은 보지 않았습니다. Ethernet, DDS, SOME/IP도 해 보지 않았습니다.</p>
+<h2 id="4-요구사항-추적표와-후방-카메라-2초"><a class="anchor" href="#4-요구사항-추적표와-후방-카메라-2초" aria-hidden="true">#</a>4. 요구사항 추적표와 후방 카메라 2초</h2>
+<h3 id="요구사항과-테스트를-양쪽으로-잇기"><a class="anchor" href="#요구사항과-테스트를-양쪽으로-잇기" aria-hidden="true">#</a>요구사항과 테스트를 양쪽으로 잇기</h3>
+<p><a href="requirements.html">요구사항</a> 26개에 ID를 붙이고, 모든 테스트 함수에 <code>@pytest.mark.req(&quot;ID&quot;)</code>를 달았습니다. <code>tools/trace_report.py</code>가 둘을 이어 <a href="traceability.html">요구사항 추적표</a>를 만듭니다. 요구사항마다 확인하는 테스트와 기기별 최신 결과가 나오고, 반대로 테스트 파일마다 어떤 요구사항을 확인하는지도 나옵니다.</p>
+<p>프레임워크 단위 테스트 <code>test_every_requirement_has_a_test_and_every_test_a_requirement</code>가 CI에서 세 가지를 막습니다. 테스트가 없는 요구사항, 요구사항이 없는 테스트, 없는 ID를 가리키는 테스트입니다. A-SPICE 검증 단계에서 요구하는 양방향 추적을 이 규모에 맞게 흉내 낸 것이고, 표준 심사를 받은 것은 아닙니다.</p>
+<h3 id="후방-카메라가-2초-안에-뜨는지"><a class="anchor" href="#후방-카메라가-2초-안에-뜨는지" aria-hidden="true">#</a>후방 카메라가 2초 안에 뜨는지</h3>
+<p>미국 기준 FMVSS 111은 후진을 시작하고 2.0초 안에 후방 영상을 보여 주라고 정해 두었습니다. <a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_rear_camera_appears_within_two_seconds</code></a>는 기어를 R로 바꾼 순간부터 카메라 화면이 보일 때까지를 다섯 번 재고, 가장 느린 값으로 판정합니다. 신호를 넣는 adb 시간까지 포함한 값이라 실제보다 느리게 잡힙니다.</p>
+<div class="table"><table><thead><tr>
+<th>기기</th>
+<th>다섯 번 잰 값 (초)</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS 에뮬레이터</td>
+<td>0.66, 0.66, 0.66, 0.67, 0.65</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 (Mock)</td>
+<td>0.36, 0.28, 0.29, 0.31, 0.22</td>
+</tr>
+</tbody></table></div>
+<h2 id="5-결과"><a class="anchor" href="#5-결과" aria-hidden="true">#</a>5. 결과</h2>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS 에뮬레이터 전체 E2E (123개)</td>
+<td>121개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (10분 10초)</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 (Mock) 전체 E2E (123개)</td>
+<td>116개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (9분 43초)</td>
+</tr>
+<tr>
+<td>프레임워크 단위 테스트</td>
+<td>61개 통과. API 18개, CAN 게이트웨이 5개, 추적 검사 1개를 더했습니다.</td>
+</tr>
+</tbody></table></div>
+<p>새 E2E는 8개입니다. REST API 3개, CAN 3개, 후방 카메라 2초 1개, 전원 1개이고, 전원 테스트는 에뮬레이터에서만 돕니다. 결과 화면은 239장이고, 영상 화면 중 다른 차 번호판이 읽히는 두 장은 이번에도 흐리게 처리했습니다.</p>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a></nav>
+</div>
+<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
+  darkMode: true, background: "#0f1011", primaryColor: "#18191a", primaryTextColor: "#f7f8f8",
+  primaryBorderColor: "#5e6ad2", lineColor: "#8a8f98", secondaryColor: "#141516", tertiaryColor: "#141516",
+  clusterBkg: "#0f1011", clusterBorder: "#34343a", edgeLabelBackground: "#0f1011",
+  fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px" } });
+</script>
+</body>
+</html>

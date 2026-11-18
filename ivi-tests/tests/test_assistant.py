@@ -12,6 +12,7 @@ from ivi.vehicle import Seat
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("VOICE-01", "HVAC-01")
 @pytest.mark.sanity
 def test_zone_applies_command_to_speaking_seat(app, car):
     """조수석에서 '나 더워'라고 하면 조수석 온도만 1°C 내려가야 합니다.
@@ -26,6 +27,7 @@ def test_zone_applies_command_to_speaking_seat(app, car):
     app.bar().wait_temperature(Seat.PASSENGER, 21.0)
 
 
+@pytest.mark.req("VOICE-01", "HVAC-01")
 @pytest.mark.sanity
 def test_typed_command_sets_vehicle_temperature(app, car):
     """'운전석 25.5도로 맞춰줘'를 글자로 입력하면 차량의 운전석 온도가 25.5°C가 됩니다."""
@@ -35,6 +37,7 @@ def test_typed_command_sets_vehicle_temperature(app, car):
     wait_until(lambda: car.temperature(Seat.DRIVER) == 25.5, what="차량 운전석 25.5")
 
 
+@pytest.mark.req("VOICE-01")
 @pytest.mark.regression
 def test_multiple_commands_in_one_sentence(app):
     """'에어컨 켜고 음악 틀어줘'처럼 한 문장에 명령이 두 개 들어 있으면 둘 다 실행합니다."""
@@ -44,6 +47,7 @@ def test_multiple_commands_in_one_sentence(app):
     app.media().wait_text("playback_state", "재생 중")
 
 
+@pytest.mark.req("VOICE-01", "NAV-01")
 @pytest.mark.regression
 def test_ambiguous_destination_offers_candidates(app):
     """'판교 가자'처럼 목적지 후보가 여럿이면 세 곳을 보여 주고 고르게 합니다.
@@ -57,6 +61,7 @@ def test_ambiguous_destination_offers_candidates(app):
     app.find("nav_remaining")
 
 
+@pytest.mark.req("DRIVE-03")
 @pytest.mark.sanity
 def test_driving_locks_typing_and_refuses_mirror_fold(app, car):
     """주행 중에는 글자 입력이 막히고 추천 명령만 쓸 수 있습니다.
@@ -79,6 +84,7 @@ def test_driving_locks_typing_and_refuses_mirror_fold(app, car):
     assert app.vehicle_controls().value("mirror") == "접힘"
 
 
+@pytest.mark.req("VOICE-01")
 @pytest.mark.regression
 def test_voice_popup_and_assistant_share_history(app):
     """음성 팝업에서 한 말이 AI 어시스턴트 대화 내역에도 남습니다."""

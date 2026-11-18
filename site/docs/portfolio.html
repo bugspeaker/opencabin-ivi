@@ -22,6 +22,8 @@
     <nav aria-label="문서 목록">
         <a href="portfolio.html" aria-current="page">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="traceability.html">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
         <a href="readme.html">README</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
@@ -31,13 +33,14 @@
         <a href="phase6-features.html">6. 기능 확장</a>
         <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html">9. Test Bench 확장</a>
     </nav>
   </aside>
   <main id="content" class="doc">
 <h1 id="opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오"><a class="anchor" href="#opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오" aria-hidden="true">#</a>OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오</h1>
 <p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>기준일: 2026-11-18</p>
 <p><img data-md src="../../docs/images/p9-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
-<p>가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 115개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿에서 모두 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.</p>
+<p>가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 123개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿에서 모두 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.</p>
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
 <th>항목</th>
@@ -45,11 +48,11 @@
 </tr>
 </thead><tbody><tr>
 <td>AAOS 에뮬레이터</td>
-<td>113개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 35초)</td>
+<td>121개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (10분 10초)</td>
 </tr>
 <tr>
 <td>화웨이 태블릿 (Mock)</td>
-<td>109개 통과, AAOS 전용 6개 건너뜀, 재시도 0 (9분 11초)</td>
+<td>116개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (9분 43초)</td>
 </tr>
 <tr>
 <td>두 기기 병렬</td>
@@ -57,11 +60,15 @@
 </tr>
 <tr>
 <td>단위 테스트</td>
-<td>프레임워크 37개, 앱 19개 모두 통과</td>
+<td>프레임워크 61개, 앱 19개 모두 통과</td>
 </tr>
 <tr>
 <td>테스트별 결과</td>
-<td>기기마다 판정과 테스트가 끝난 화면 224장: <a href="test-results.html">테스트 결과</a></td>
+<td>기기마다 판정과 테스트가 끝난 화면 239장: <a href="test-results.html">테스트 결과</a></td>
+</tr>
+<tr>
+<td>요구사항 추적</td>
+<td>요구사항 26개 모두 테스트가 있고, 모든 테스트가 요구사항을 가리킵니다: <a href="traceability.html">추적표</a></td>
 </tr>
 <tr>
 <td>GitHub Actions</td>
@@ -134,7 +141,7 @@
 </tr>
 </thead><tbody><tr>
 <td>Android/AAOS 자동화 구축과 운영</td>
-<td>AAOS 에뮬레이터와 실제 태블릿에서 E2E 115개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다.</td>
+<td>AAOS 에뮬레이터와 실제 태블릿에서 E2E 123개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다.</td>
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
@@ -164,15 +171,15 @@
 </tr>
 <tr>
 <td>차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)</td>
-<td>경험이 없습니다. VHAL 아래 계층이라 이 프로젝트에서는 다루지 않았습니다.</td>
+<td>CAN만 모의 환경에서 해 봤습니다. PC 안의 가상 CAN 버스와 DBC로 ECU를 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지와 화면의 공조 값이 CAN으로 나가는지 확인합니다(<a href="phase9-bench.html">9단계</a>). 실제 CAN 장비와 Ethernet, DDS, SOME/IP는 경험이 없습니다.</td>
 </tr>
 <tr>
 <td>REST API 자동화, 원격 전원 제어</td>
-<td>아직 해 보지 않았습니다.</td>
+<td>모의 장비로 해 봤습니다. Test Bench REST API로 기기, 신호, 전원, 실행 결과를 다루고 API 테스트를 붙였습니다. 에뮬레이터 전원을 원격으로 껐다 켜서 부팅과 기본값 복귀를 확인합니다. 실제 전원 공급기나 릴레이는 쓰지 않았습니다.</td>
 </tr>
 <tr>
 <td>ISO 26262, A-SPICE</td>
-<td>더 공부해야 합니다.</td>
+<td>개념만 적용해 봤습니다. 요구사항 26개와 테스트를 양방향으로 잇는 <a href="traceability.html">추적표</a>를 만들고 CI에서 빠진 곳을 막습니다. 후방 카메라가 2초 안에 뜨는지(FMVSS 111)도 잽니다. 인증이나 심사 경험은 없고 더 공부해야 합니다.</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -498,6 +505,14 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <td>Kotlin, Jetpack Compose, CarPropertyManager, Media3</td>
 </tr>
 <tr>
+<td>차량 네트워크 (모의)</td>
+<td>python-can (virtual 버스), cantools (DBC)</td>
+</tr>
+<tr>
+<td>Test Bench</td>
+<td>표준 라이브러리 <code>http.server</code>로 만든 REST API, 원격 전원 제어 인터페이스</td>
+</tr>
+<tr>
 <td>실행 환경</td>
 <td>AAOS 에뮬레이터 API 34, 화웨이 태블릿 (Android 12)</td>
 </tr>
@@ -622,7 +637,8 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <h2 id="9-한계와-다음-단계"><a class="anchor" href="#9-한계와-다음-단계" aria-hidden="true">#</a>9. 한계와 다음 단계</h2>
 <h3 id="한계"><a class="anchor" href="#한계" aria-hidden="true">#</a>한계</h3>
 <ul>
-<li>테스트 대상은 AAOS 에뮬레이터의 CarService와 VHAL입니다. 실제 차량이나 HIL, Test Bench에서 해 본 것이 아닙니다.</li>
+<li>테스트 대상은 AAOS 에뮬레이터의 CarService와 VHAL입니다. 실제 차량이나 HIL, 실물 Test Bench에서 해 본 것이 아닙니다.</li>
+<li>CAN 게이트웨이와 원격 전원 제어는 PC 안의 모의 환경입니다. 실제 ECU, CAN 장비, 전원 공급기에서 확인한 것이 아닙니다.</li>
 <li>앱은 가상 IVI입니다. 지도, 라디오, 통화는 가상 데이터이고, AI 어시스턴트는 LLM이 아니라 규칙 기반입니다. 운전자 보조 표시와 주변 차량은 연출입니다. 화면 구조는 공개 자료를 참고했고 타사 로고, 이미지, 코드는 쓰지 않았습니다.</li>
 <li>CI에서 e2e는 아직 GitHub로 돌리지 않았습니다. build와 unit만 GitHub에서 통과했고, e2e는 같은 명령을 작업 PC에서 따로 실행해 확인했습니다.</li>
 <li>8단계의 두 기기 병렬 실행은 1회만 측정했습니다. 4단계 때는 3회 반복해서 flaky 0이었습니다.</li>
@@ -634,7 +650,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <li>self-hosted 러너를 등록해 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.</li>
 <li><code>run_bench.py --repeat 5</code>로 반복 안정성을 재고, 5장 7번 결함의 원인을 찾으려고 합니다.</li>
 <li>신호를 넣으면 화면이 바뀌는 장면, 화면을 누르면 VHAL 값이 바뀌는 장면, 실패 자료, 병렬 실행을 데모 영상으로 남기려고 합니다.</li>
-<li>우대사항 쪽으로는 원격 전원 제어를 흉내 내 보고, 결과를 REST API로 보고하는 기능을 만들고, ISO 26262와 A-SPICE를 공부하려고 합니다.</li>
+<li>차량 네트워크는 SOME/IP와 DDS도 같은 방식으로 흉내 내 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.</li>
 </ol>
 <hr>
 <h2 id="10-저장소-안내"><a class="anchor" href="#10-저장소-안내" aria-hidden="true">#</a>10. 저장소 안내</h2>
@@ -667,15 +683,27 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <td>차량 신호 양방향 E2E</td>
 </tr>
 <tr>
+<td><a href="../../ivi-tests/ivi/bench_api.py">ivi-tests/ivi/bench_api.py</a>, <a href="../../ivi-tests/ivi/power.py">power.py</a></td>
+<td>Test Bench REST API와 원격 전원 제어</td>
+</tr>
+<tr>
+<td><a href="../../ivi-tests/ivi/can_gateway.py">ivi-tests/ivi/can_gateway.py</a>, <a href="../../ivi-tests/dbc/opencabin.dbc">dbc/opencabin.dbc</a></td>
+<td>가상 CAN 버스와 VHAL 게이트웨이, 프레임 정의</td>
+</tr>
+<tr>
+<td><a href="requirements.html">docs/requirements.md</a>, <a href="traceability.html">traceability.md</a></td>
+<td>요구사항과 추적표</td>
+</tr>
+<tr>
 <td><a href="../../ivi-tests/tools">ivi-tests/tools/</a></td>
-<td>병렬 실행, flaky 통계, 설치, 결과 사이트 만들기</td>
+<td>병렬 실행, flaky 통계, 설치, 결과 사이트, 추적표 만들기, API 서버</td>
 </tr>
 <tr>
 <td><a href="../../.github/workflows/ivi-ci.yml">.github/workflows/ivi-ci.yml</a></td>
 <td>CI 워크플로</td>
 </tr>
 <tr>
-<td><a href="phase1-spike.html">docs/phase1 ~ phase8</a></td>
+<td><a href="phase1-spike.html">docs/phase1 ~ phase9</a></td>
 <td>단계별 설계와 검증 기록</td>
 </tr>
 </tbody></table></div>

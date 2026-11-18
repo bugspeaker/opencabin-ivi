@@ -186,3 +186,15 @@ def test_publish_results_blurs_only_given_box(tmp_path):
         inside, outside = out.convert("L").getpixel((60, 60)), out.convert("L").getpixel((10, 10))
     assert 60 < inside < 200, "영역 안이 흐려지지 않았다"
     assert outside < 60 or outside > 200, "영역 밖까지 흐려졌다"
+
+
+def test_every_requirement_has_a_test_and_every_test_a_requirement():
+    """추적표: docs/requirements.md 의 요구사항마다 테스트가 있고, 테스트마다 있는 요구사항 ID 를 가리킨다."""
+    from tools import trace_report
+
+    requirements, tests = trace_report.read_requirements(), trace_report.read_test_reqs()
+    assert len(requirements) >= 20 and len(tests) >= 90
+    untested, untraced, unknown = trace_report.check(requirements, tests)
+    assert untested == [], f"테스트가 없는 요구사항: {untested}"
+    assert untraced == [], f"요구사항이 없는 테스트: {untraced}"
+    assert unknown == [], f"없는 요구사항 ID: {unknown}"

@@ -18,20 +18,22 @@
 | 5. 재점검과 디자인 | 1~4단계를 다시 점검하고, 양산 IVI 화면 구조를 참고해 디자인을 바꿨습니다. 회귀 테스트에서 찾은 결함 3건을 고쳤습니다. | [phase5-design.md](docs/phase5-design.md) |
 | 6. 기능 확장 | 내비게이션, 라디오, 전화, 설정, 후방 카메라, 음성 명령을 더했습니다. 테스트가 64개가 됐습니다. | [phase6-features.md](docs/phase6-features.md) |
 | 7. 화면 구조 개편 | Pleos Connect처럼 화면을 세 영역으로 나누고 분할 화면, 아래 공조 바, AI 어시스턴트, 빠른 제어, 알림 센터를 넣었습니다. 테스트가 84개가 됐습니다. | [phase7-pleos.md](docs/phase7-pleos.md) |
-| 8. 차량 신호 확장 | 화면 안에서만 바뀌던 공조와 도어 잠금을 VHAL 신호에 연결하고, 주행 가능 거리와 배터리, 외기 온도를 주행 정보에 보여 줍니다. 양방향 테스트를 더했고, 영상 화면은 직접 찍은 블랙박스 영상을 재생합니다. 지금 E2E는 115개입니다. | [phase8-signals.md](docs/phase8-signals.md) |
+| 8. 차량 신호 확장 | 화면 안에서만 바뀌던 공조와 도어 잠금을 VHAL 신호에 연결하고, 주행 가능 거리와 배터리, 외기 온도를 주행 정보에 보여 줍니다. 양방향 테스트를 더했고, 영상 화면은 직접 찍은 블랙박스 영상을 재생합니다. | [phase8-signals.md](docs/phase8-signals.md) |
+| 9. Test Bench 확장 | Test Bench REST API와 원격 전원 제어, 가상 CAN 버스와 VHAL 게이트웨이, 요구사항 추적표, 후방 카메라 2초 시험을 더했습니다. 실제 장비가 아닌 모의 환경입니다. E2E는 123개입니다. | [phase9-bench.md](docs/phase9-bench.md) |
 
 ## 구조
 
 ```
 ivi-app/              IVI 앱 (Kotlin, Compose). privileged/ 는 priv-app 설치 스크립트
 ivi-tests/
-  ivi/                adb, 대기, 차량 어댑터, 기기, 화면 객체, 결과 기록, 격리 목록
+  ivi/                adb, 대기, 차량 어댑터, 기기, 화면 객체, 결과 기록, 격리 목록, Test Bench API, 전원 제어, CAN 게이트웨이
+  dbc/                가상 CAN 버스의 프레임 정의 (opencabin.dbc)
   tests/              기기 E2E 테스트와 conftest.py
   unit/               프레임워크 단위 테스트 (기기 없이 돎)
-  tools/              병렬 실행, flaky 통계, 앱 설치, 에뮬레이터 기본값, 주행 영상 올리기, 결과 사이트 만들기
+  tools/              병렬 실행, flaky 통계, 앱 설치, 에뮬레이터 기본값, 주행 영상 올리기, 결과 사이트 만들기, 추적표 만들기, API 서버
   quarantine.txt      격리 목록
 .github/workflows/    ivi-ci.yml
-docs/                 단계별 설계와 검증 기록
+docs/                 단계별 설계와 검증 기록, 요구사항과 추적표
 site/                 소개 사이트 (site/index.html)
 ```
 
@@ -65,10 +67,15 @@ site/                 소개 사이트 (site/index.html)
    .venv\Scripts\python tools\flaky_report.py --last 20
    .venv\Scripts\python -m pytest unit
    ```
-5. 결과 사이트 만들기. `--shots`를 붙이면 테스트마다 끝난 화면을 남기고, 아래 명령이 그 결과를 소개 사이트로 옮깁니다.
+5. Test Bench API를 띄우면 다른 도구가 HTTP로 기기와 신호, 전원, 실행 결과를 다룰 수 있습니다. 벤치 PC 안에서만 씁니다.
+   ```powershell
+   .venv\Scripts\python tools\bench_api.py          # http://127.0.0.1:8770/api
+   ```
+6. 결과 사이트 만들기. `--shots`를 붙이면 테스트마다 끝난 화면을 남기고, 아래 명령이 그 결과를 소개 사이트로 옮깁니다.
    ```powershell
    .venv\Scripts\python -m pytest --serial emulator-5554 --shots
    .venv\Scripts\python tools\publish_results.py
+   .venv\Scripts\python tools\trace_report.py
    cd ..\site; npm install; npm run build-docs
    ```
 
@@ -80,7 +87,7 @@ site/                 소개 사이트 (site/index.html)
 
 ## 결과
 
-최신 결과(2026-11-18, E2E 115개)는 AAOS 에뮬레이터 113개 통과, 1개 건너뜀, 1개 알려진 결함(9분 35초), 화웨이 태블릿 109개 통과, 6개 건너뜀(9분 11초)이고 재시도는 없었습니다. 테스트마다 끝난 화면은 [docs/test-results.md](docs/test-results.md)에서 볼 수 있습니다.
+최신 결과(2026-11-18, E2E 123개)는 AAOS 에뮬레이터 121개 통과, 1개 건너뜀, 1개 알려진 결함(10분 10초), 화웨이 태블릿 116개 통과, AAOS 전용 7개 건너뜀(9분 43초)이고 재시도는 없었습니다. 테스트마다 끝난 화면은 [docs/test-results.md](docs/test-results.md)에서 볼 수 있습니다.
 
 | 시점 | AAOS 에뮬레이터 | 화웨이 태블릿 (Mock) |
 |---|---|---|

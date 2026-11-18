@@ -92,7 +92,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 37개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 61개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
@@ -115,7 +115,22 @@ export const REQUIREMENTS = [
     done: "신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.",
     select: { files: ["test_vehicle_signals.py", "test_spike_aaos.py"] },
   },
-  { id: "network", group: "plus", title: "차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)", gap: "경험 없음" },
-  { id: "rest", group: "plus", title: "REST API 자동화, 원격 전원 제어", gap: "아직 없음" },
-  { id: "safety", group: "plus", title: "ISO 26262, A-SPICE", gap: "공부 필요" },
+  // 아래 셋은 실제 장비나 인증 경험이 아니라 PC 안의 모의 환경, 개념 적용이라 '완료'와 따로 표시한다 (partial)
+  {
+    id: "network", group: "plus", title: "차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)", partial: "CAN만 모의",
+    done: "가상 CAN 버스와 DBC로 VCU, BMS, BCM을 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다.",
+    select: { files: ["test_can_gateway.py"] },
+    note: "PC 안의 가상 CAN 버스에서 돌린 테스트입니다. 실제 ECU와 CAN 장비, 버스 부하와 타이밍은 다루지 않았습니다.",
+  },
+  {
+    id: "rest", group: "plus", title: "REST API 자동화, 원격 전원 제어", partial: "모의 장비",
+    done: "Test Bench REST API로 기기, 차량 신호, 전원, 실행 결과를 다루고, 에뮬레이터 전원을 껐다 켜 부팅 시간을 쟀습니다. 실제 전원 장비는 쓰지 않았습니다.",
+    select: { files: ["test_bench_api.py", "test_power.py"] },
+    note: "API 서버를 띄워 HTTP로 신호를 넣은 테스트와, 에뮬레이터를 원격으로 껐다 켠 테스트입니다. 실제 벤치라면 전원 공급기나 릴레이가 들어갈 자리를 같은 인터페이스로 비워 두었습니다.",
+  },
+  {
+    id: "safety", group: "plus", title: "ISO 26262, A-SPICE", partial: "개념 적용",
+    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 후방 카메라가 2초 안에 뜨는지(FMVSS 111) 잽니다. 인증이나 심사 경험은 없습니다.",
+    link: { href: "docs/traceability.html", label: "추적표" },
+  },
 ];

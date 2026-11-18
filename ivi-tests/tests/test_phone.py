@@ -4,6 +4,7 @@ import pytest
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.sanity
 def test_call_contact_shows_call_screen_and_recent(app):
     """연락처에서 전화를 걸면 통화 화면에 이름과 통화 시간이 보이고, 끊고 나면 최근 통화 맨 위에 남습니다."""
@@ -19,6 +20,7 @@ def test_call_contact_shows_call_screen_and_recent(app):
     phone.wait_text("phone_recent_0_name", name)
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.sanity
 def test_keypad_dial(app):
     """키패드로 번호를 눌러 전화를 걸면 통화 화면에 그 번호가 보입니다."""
@@ -30,6 +32,7 @@ def test_keypad_dial(app):
     phone.end()
 
 
+@pytest.mark.req("DRIVE-03")
 @pytest.mark.sanity
 def test_driving_locks_keypad_and_limits_contacts(app, car):
     """주행 중에는 키패드가 막히고 연락처는 5개까지만 보입니다."""
@@ -46,6 +49,7 @@ def test_driving_locks_keypad_and_limits_contacts(app, car):
     phone.wait_enabled("phone_key_1", False)
 
 
+@pytest.mark.req("MEDIA-01")
 @pytest.mark.regression
 def test_call_pauses_radio_then_resumes(app):
     """라디오를 듣다가 전화를 걸면 라디오가 멈추고, 통화를 끝내면 다시 나옵니다."""
