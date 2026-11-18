@@ -45,6 +45,9 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
+    // 영상 화면: 기기에 올린 블랙박스 주행 영상 재생 (tools/push_drive_videos.py)
+    implementation("androidx.media3:media3-exoplayer:1.5.1")
+    implementation("androidx.media3:media3-ui:1.5.1")
 
     // 비서 규칙(assistant/)의 JVM 단위 테스트
     testImplementation("junit:junit:4.13.2")

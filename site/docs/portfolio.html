@@ -37,42 +37,42 @@
 <h1 id="opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오"><a class="anchor" href="#opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오" aria-hidden="true">#</a>OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오</h1>
 <p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>기준일: 2026-11-18</p>
 <p><img data-md src="../../docs/images/p9-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
-<p>가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 113개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿 양쪽에서 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.</p>
-<p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지와 신호가 바뀌면 화면이 따라오는지를 둘 다 보고, 좌석이나 도어처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
+<p>가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 115개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿에서 모두 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.</p>
+<p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
 <th>항목</th>
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
 <td>AAOS 에뮬레이터</td>
-<td>111 passed, 1 skipped, 1 xfailed, 재시도 0 (8분 4초)</td>
+<td>113개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 35초)</td>
 </tr>
 <tr>
 <td>화웨이 태블릿 (Mock)</td>
-<td>107 passed, 6 skipped, 재시도 0 (8분 57초)</td>
+<td>109개 통과, AAOS 전용 6개 건너뜀, 재시도 0 (9분 11초)</td>
 </tr>
 <tr>
 <td>두 기기 병렬</td>
-<td>gate pass, flaky 0, 7분 20초 (8단계 108개 기준, 차례로 돌리면 14분 28초)</td>
+<td>게이트 통과, flaky 0, 7분 20초 (8단계 108개 기준. 차례로 돌리면 14분 28초)</td>
 </tr>
 <tr>
 <td>단위 테스트</td>
-<td>프레임워크 36 passed, 앱 19 passed</td>
+<td>프레임워크 37개, 앱 19개 모두 통과</td>
 </tr>
 <tr>
 <td>테스트별 결과</td>
-<td>기기마다 판정과 끝 화면 219장: <a href="test-results.html">테스트 결과</a></td>
+<td>기기마다 판정과 테스트가 끝난 화면 224장: <a href="test-results.html">테스트 결과</a></td>
 </tr>
 <tr>
 <td>GitHub Actions</td>
-<td>2026-11-18까지 18회 실행, 17회 success. 1회는 첫 실행에서 취소 (<a href="#8-3-github-실행-기록">8-3</a>)</td>
+<td>2026-11-18까지 18회 실행, 17회 success. 1회는 첫 실행에서 취소했습니다 (<a href="#8-3-github-실행-기록">8-3</a>).</td>
 </tr>
 </tbody></table></div>
-<p>xfailed 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, skipped는 AAOS에서만 의미가 있는 테스트입니다.</p>
-<p>두 기기 결과는 2026-11-18에 기기마다 한 번씩 돌린 것입니다. 이때 테스트마다 판정 직후의 화면을 남겼고, <a href="test-results.html">테스트 결과</a>에서 테스트별로 볼 수 있습니다. 두 기기 병렬 수치는 8단계(테스트 108개) 때 측정한 것이고 이후 다시 재지 않았습니다.</p>
+<p>알려진 결함 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.</p>
+<p>두 기기 결과는 2026-11-18에 기기마다 한 번씩 돌린 것입니다. 테스트가 끝날 때마다 화면을 남겼고, <a href="test-results.html">테스트 결과</a>에서 테스트별로 볼 수 있습니다. 영상 화면에는 직접 찍은 블랙박스 영상이 나오고, 다른 차 번호판이 읽히는 화면은 흐리게 처리했습니다. 두 기기 병렬 수치는 8단계(테스트 108개) 때 잰 것이고 그 뒤로는 다시 재지 않았습니다.</p>
 <h2 id="목차"><a class="anchor" href="#목차" aria-hidden="true">#</a>목차</h2>
 <ol>
-<li><a href="#1-공고-요구사항과-근거">공고 요구사항과 근거</a></li>
+<li><a href="#1-공고-요구사항과-한-일">공고 요구사항과 한 일</a></li>
 <li><a href="#2-테스트-환경-구조">테스트 환경 구조</a></li>
 <li><a href="#3-검증-전략">검증 전략</a></li>
 <li><a href="#4-e2e-테스트-설계">E2E 테스트 설계</a></li>
@@ -84,95 +84,95 @@
 <li><a href="#10-저장소-안내">저장소 안내</a></li>
 </ol>
 <hr>
-<h2 id="1-공고-요구사항과-근거"><a class="anchor" href="#1-공고-요구사항과-근거" aria-hidden="true">#</a>1. 공고 요구사항과 근거</h2>
+<h2 id="1-공고-요구사항과-한-일"><a class="anchor" href="#1-공고-요구사항과-한-일" aria-hidden="true">#</a>1. 공고 요구사항과 한 일</h2>
 <h3 id="주요-업무"><a class="anchor" href="#주요-업무" aria-hidden="true">#</a>주요 업무</h3>
 <div class="table"><table><thead><tr>
-<th>공고 업무</th>
-<th>이 프로젝트에서 한 것</th>
-<th>근거</th>
+<th>공고의 주요 업무</th>
+<th>이 프로젝트에서 한 일</th>
+<th>자세히</th>
 </tr>
 </thead><tbody><tr>
 <td>IVI 서비스별 검증 전략</td>
-<td>HVAC, 차량 설정, 클러스터, 미디어를 단계별로 검증</td>
+<td>HVAC, 차량 설정, 클러스터, 미디어를 단계별로 나눠 검증했습니다.</td>
 <td><a href="phase1-spike.html">phase1</a>, <a href="phase8-signals.html">phase8</a></td>
 </tr>
 <tr>
 <td>Smoke / Sanity / Regression 게이팅</td>
-<td>마커 3종, 이벤트(PR, main, Nightly)별 실행 범위</td>
+<td>마커를 세 가지로 나누고 PR, main, Nightly마다 돌리는 범위를 다르게 했습니다.</td>
 <td><a href="phase4-operations.html">phase4</a></td>
 </tr>
 <tr>
 <td>UI와 CarProperty/VHAL을 잇는 E2E</td>
-<td>양방향 검증, area 단위 판정</td>
+<td>화면과 신호를 양쪽에서 확인하고, 좌석과 문은 area마다 봅니다.</td>
 <td><a href="#4-1-양방향-검증과-area-단위-판정">4-1</a></td>
 </tr>
 <tr>
 <td>터치부터 하위 연동까지 통합</td>
-<td>거리 부족 신호, 경고, 충전소 카드, 경로 안내로 이어지는 흐름</td>
+<td>거리 부족 신호가 경고, 충전소 카드, 경로 안내로 이어지는 흐름을 확인했습니다.</td>
 <td><a href="phase8-signals.html">phase8</a></td>
 </tr>
 <tr>
 <td>프레임워크와 스크립트 유지보수</td>
-<td>화면 객체 패턴. 7단계 화면 개편 때 테스트 64개 중 1개 수정</td>
+<td>화면 객체를 둔 덕분에 7단계 화면 개편 때 테스트 64개 중 1개만 고쳤습니다.</td>
 <td><a href="../../ivi-tests/ivi/screens.py">screens.py</a></td>
 </tr>
 <tr>
 <td>ADB, CarPropertyManager로 Property Injection</td>
-<td>신호 성격에 따라 주입 명령을 골라 씀</td>
+<td>신호가 쓰기 가능한지에 따라 주입 명령을 골라 씁니다.</td>
 <td><a href="#4-4-신호-주입-명령">4-4</a></td>
 </tr>
 <tr>
 <td>Flaky 최소화, 병렬 실행</td>
-<td>재시도 기록, 격리 목록, 통계, 두 기기 병렬</td>
+<td>재시도 기록, 격리 목록, 통계를 만들고 두 기기를 병렬로 돌립니다.</td>
 <td><a href="#8-운영과-ci">8장</a></td>
 </tr>
 </tbody></table></div>
 <h3 id="자격요건"><a class="anchor" href="#자격요건" aria-hidden="true">#</a>자격요건</h3>
 <div class="table"><table><thead><tr>
-<th>공고 자격요건</th>
-<th>근거</th>
+<th>공고의 자격요건</th>
+<th>이 프로젝트에서 한 일</th>
 </tr>
 </thead><tbody><tr>
 <td>Android/AAOS 자동화 구축과 운영</td>
-<td>AAOS 에뮬레이터와 실기기 태블릿에서 E2E 113개 실행, 결과 누적 기록, 테스트별 끝 화면 보관</td>
+<td>AAOS 에뮬레이터와 실제 태블릿에서 E2E 115개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다.</td>
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
-<td>훅, 픽스처, 마커, 결과 기록용 플러그인 작성</td>
+<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 직접 만들었습니다.</td>
 </tr>
 <tr>
 <td>Appium 등 UI 자동화 도구</td>
-<td>Appium(UiAutomator2). AAOS 다중 사용자(user 10) 설정 포함</td>
+<td>Appium(UiAutomator2)을 썼고, AAOS의 다중 사용자 환경(user 10)에 맞춰 설정했습니다.</td>
 </tr>
 <tr>
 <td>ADB, Logcat, Shell</td>
-<td>adb 어댑터, 실패 시 logcat 자동 저장, logcat으로 강제 종료 원인 확인</td>
+<td>adb 어댑터를 만들고, 실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다.</td>
 </tr>
 <tr>
 <td>Git, CI/CD</td>
-<td>PR 단위 작업, GitHub Actions에서 build와 unit 실행 (<a href="#8-3-github-실행-기록">8-3</a>)</td>
+<td>PR 단위로 작업했고, GitHub Actions가 PR마다 빌드와 단위 테스트를 돌립니다 (<a href="#8-3-github-실행-기록">8-3</a>).</td>
 </tr>
 </tbody></table></div>
 <h3 id="우대사항"><a class="anchor" href="#우대사항" aria-hidden="true">#</a>우대사항</h3>
 <div class="table"><table><thead><tr>
-<th>공고 우대사항</th>
-<th>상태</th>
+<th>공고의 우대사항</th>
+<th>지금 상태</th>
 </tr>
 </thead><tbody><tr>
 <td>VHAL, CarService, CarPropertyManager</td>
-<td>해 봄. 신호 12종, area 구성, 권한 등급, priv-app 허용 목록</td>
+<td>신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.</td>
 </tr>
 <tr>
 <td>차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)</td>
-<td>경험 없음. VHAL 아래 계층이라 이 프로젝트 범위 밖</td>
+<td>경험이 없습니다. VHAL 아래 계층이라 이 프로젝트에서는 다루지 않았습니다.</td>
 </tr>
 <tr>
 <td>REST API 자동화, 원격 전원 제어</td>
-<td>아직 없음</td>
+<td>아직 해 보지 않았습니다.</td>
 </tr>
 <tr>
 <td>ISO 26262, A-SPICE</td>
-<td>공부가 필요함</td>
+<td>더 공부해야 합니다.</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -210,20 +210,20 @@
 </tr>
 <tr>
 <td>smoke</td>
-<td>빌드를 받아도 되는지</td>
+<td>이 빌드를 받아도 되는지</td>
 <td>앱 실행, 공조 제어 권한</td>
 <td>PR</td>
 </tr>
 <tr>
 <td>sanity</td>
 <td>핵심 기능이 신호까지 이어지는지</td>
-<td>A/C 전 좌석, 주행 중 영상 차단</td>
+<td>전 좌석 A/C, 주행 중 영상 차단</td>
 <td>main push</td>
 </tr>
 <tr>
 <td>regression</td>
-<td>경계, 조합, 과거 결함</td>
-<td>풍량 1/7, 거리 31/30/29 km</td>
+<td>경계 값, 조합, 예전에 찾은 결함</td>
+<td>풍량 1과 7, 거리 31, 30, 29 km</td>
 <td>Nightly</td>
 </tr>
 <tr>
@@ -246,12 +246,12 @@
 </tr>
 <tr>
 <td>flaky</td>
-<td>실패 후 재시도에서 통과</td>
+<td>실패했다가 재시도에서 통과</td>
 <td>통과, 통계에 남김</td>
 </tr>
 <tr>
 <td>failed / error</td>
-<td>재시도까지 실패, 또는 준비나 정리 단계 실패</td>
+<td>재시도까지 실패했거나 준비, 정리 단계에서 실패</td>
 <td>실패</td>
 </tr>
 <tr>
@@ -261,12 +261,12 @@
 </tr>
 <tr>
 <td>quarantined</td>
-<td>격리 목록에 있음 (사유 필수)</td>
+<td>사유를 적고 격리 목록에 올린 테스트</td>
 <td>통과</td>
 </tr>
 <tr>
 <td>skipped</td>
-<td>AAOS 전용 테스트를 태블릿에서 실행</td>
+<td>AAOS 전용 테스트를 태블릿에서 돌린 경우</td>
 <td>통과</td>
 </tr>
 </tbody></table></div>
@@ -288,27 +288,27 @@ def test_ac_toggle_reaches_every_seat(app, car):
 <h3 id="4-2-설계-기법"><a class="anchor" href="#4-2-설계-기법" aria-hidden="true">#</a>4-2. 설계 기법</h3>
 <div class="table"><table><thead><tr>
 <th>기법</th>
-<th>적용 예</th>
+<th>적용한 곳</th>
 </tr>
 </thead><tbody><tr>
 <td>경계 값</td>
-<td>온도 16/28°C, 풍량 1/7, 주행 가능 거리 31/30/29 km</td>
+<td>온도 16°C와 28°C, 풍량 1과 7, 주행 가능 거리 31, 30, 29 km</td>
 </tr>
 <tr>
 <td>상태 전이</td>
-<td>좌석 열선 꺼짐, 2단, 1단, 다시 꺼짐. 정차와 주행 전환</td>
+<td>좌석 열선이 꺼짐, 2단, 1단, 꺼짐으로 도는 순서. 정차와 주행 사이의 전환</td>
 </tr>
 <tr>
 <td>조합</td>
-<td>좌석 2 × 방향 2, 앞/뒤 유리, km/mph 설정 × 신호</td>
+<td>좌석 두 곳과 올림, 내림 버튼. 앞 유리와 뒤 유리. km/mph 설정과 신호</td>
 </tr>
 <tr>
 <td>규칙 충돌</td>
-<td>AUTO 중 풍량을 직접 바꾸면 AUTO가 꺼짐</td>
+<td>AUTO 중에 풍량을 직접 바꾸면 AUTO가 꺼지는지</td>
 </tr>
 <tr>
 <td>일관성</td>
-<td>같은 열선 신호가 화면 세 곳에 같은 값으로 표시</td>
+<td>같은 열선 신호가 화면 세 곳에 같은 값으로 보이는지</td>
 </tr>
 <tr>
 <td>주행 안전</td>
@@ -336,18 +336,18 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 </thead><tbody><tr>
 <td><code>cmd car_service set-property-value</code></td>
-<td>CarService를 거쳐 VHAL</td>
-<td>쓰기 가능한 값(HVAC). 앱과 같은 경로</td>
+<td>CarService를 거쳐 VHAL로</td>
+<td>HVAC처럼 쓰기 가능한 값. 앱과 같은 경로입니다.</td>
 </tr>
 <tr>
 <td><code>dumpsys &lt;VHAL&gt; --set</code> (root)</td>
-<td>VHAL 직접</td>
-<td>읽기 전용 센서(속도, 기어, 거리). 주행 상태까지 실제로 바뀜</td>
+<td>VHAL에 바로</td>
+<td>속도, 기어, 거리 같은 읽기 전용 센서. 주행 상태까지 실제로 바뀝니다.</td>
 </tr>
 <tr>
 <td><code>cmd car_service inject-vhal-event</code></td>
-<td>이벤트만 발생</td>
-<td>안 씀. 저장 값이 그대로라 <code>get</code>으로 판정할 수 없음</td>
+<td>이벤트만 보냄</td>
+<td>쓰지 않습니다. 저장된 값이 바뀌지 않아 <code>get</code>으로 판정할 수 없습니다.</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -360,45 +360,45 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 </thead><tbody><tr>
 <td>1</td>
-<td>태블릿에서 탭 한 번에 10초</td>
-<td>이 기기에서 UiAutomator 터치가 느림</td>
-<td>누르기만 adb로 바꿈. 전체 7분 22초에서 1분 32초로</td>
+<td>태블릿에서 탭 한 번에 10초가 걸림</td>
+<td>이 기기에서는 UiAutomator 터치 자체가 느림</td>
+<td>누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었음</td>
 </tr>
 <tr>
 <td>2</td>
-<td>매 실행 21번째 테스트에서 앱이 사라짐</td>
-<td>OS(iAware)가 반복 재시작을 크래시로 판단</td>
-<td>프로세스는 두고 화면만 초기화. 재실행 0회 (3회 연속)</td>
+<td>실행할 때마다 21번째 테스트에서 앱이 사라짐</td>
+<td>화웨이 OS(iAware)가 반복 재시작을 크래시로 판단</td>
+<td>프로세스는 그대로 두고 화면만 초기화. 3회 연속 재실행 0회</td>
 </tr>
 <tr>
 <td>3</td>
-<td>SystemUI 온도 ▲ 버튼이 안 눌림</td>
-<td>홈 버튼과 72×76 px 겹침</td>
-<td><code>xfail(strict=True)</code>로 남김</td>
+<td>SystemUI 온도 ▲ 버튼이 눌리지 않음</td>
+<td>홈 버튼과 72×76 px가 겹침</td>
+<td><code>xfail(strict=True)</code>로 남겨 둠</td>
 </tr>
 <tr>
 <td>4</td>
 <td>전체 실행에서만 실패</td>
 <td>테스트 코드의 경쟁 조건 (제 실수)</td>
-<td>조건 대기로 수정</td>
+<td>조건 대기로 고침</td>
 </tr>
 <tr>
 <td>5</td>
 <td>표시 단위를 섭씨로 바꾸자 실패</td>
-<td>테스트가 화씨 표시를 가정</td>
+<td>테스트가 화씨 표시를 가정함</td>
 <td>표시 단위 신호를 읽어 기대 값을 계산</td>
 </tr>
 <tr>
 <td>6</td>
 <td>회귀 테스트에서 앱 결함 3건</td>
 <td>패널 겹침, 낮은 화면, 공백 한 칸</td>
-<td>앱 수정, 회귀 테스트 추가</td>
+<td>앱을 고치고 회귀 테스트를 더함</td>
 </tr>
 <tr>
 <td>7</td>
 <td>영상 차단 테스트가 한 번 흔들림</td>
 <td>아직 모름</td>
-<td>반복 측정 예정</td>
+<td>반복 측정으로 확인할 예정</td>
 </tr>
 </tbody></table></div>
 <details>
@@ -463,20 +463,20 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 <th>바꾼 것</th>
 </tr>
 </thead><tbody><tr>
-<td>토글 상태를 색으로만 표시해서 자동화가 읽지 못함</td>
-<td>접근성 <code>checked</code> 값으로 내보냄 (TalkBack에도 같은 정보가 감)</td>
+<td>토글이 켜졌는지를 색으로만 보여 줘서 자동화가 읽지 못했습니다.</td>
+<td>켜짐 상태를 접근성 <code>checked</code> 값으로 내보냈습니다. TalkBack 사용자도 같은 정보를 듣습니다.</td>
 </tr>
 <tr>
-<td>저장 설정이 테스트 사이에 남음</td>
-<td>debug 빌드에만 있는 테스트 훅으로 초기화</td>
+<td>저장된 설정이 다음 테스트까지 남았습니다.</td>
+<td>debug 빌드에만 있는 테스트 훅으로 설정을 초기화합니다.</td>
 </tr>
 <tr>
-<td>차마다 area 구성이 다름</td>
-<td>area를 하드코딩하지 않고 <code>CarPropertyConfig</code>에서 읽음</td>
+<td>차마다 area 구성이 다릅니다.</td>
+<td>area를 코드에 박아 두지 않고 <code>CarPropertyConfig</code>에서 읽습니다.</td>
 </tr>
 <tr>
-<td>권한이 없는 신호</td>
-<td>앱이 죽지 않고 &#39;값 없음&#39;으로 표시. 권한 누락이 화면에서 보임</td>
+<td>권한이 없으면 신호를 읽을 수 없습니다.</td>
+<td>앱이 죽지 않고 &#39;값 없음&#39;으로 보여 줘서, 권한이 빠진 것을 화면에서 바로 알 수 있습니다.</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -495,7 +495,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 <tr>
 <td>대상 앱</td>
-<td>Kotlin, Jetpack Compose, CarPropertyManager</td>
+<td>Kotlin, Jetpack Compose, CarPropertyManager, Media3</td>
 </tr>
 <tr>
 <td>실행 환경</td>
@@ -515,19 +515,19 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 </thead><tbody><tr>
 <td>실패 자료</td>
-<td>실패하면 정리 단계 전에 화면, UI 계층, 차량 상태, 맨 위 액티비티, logcat을 저장</td>
+<td>테스트가 실패하면 정리 단계 전에 화면, UI 계층, 차량 상태, 맨 위 액티비티, logcat을 저장합니다.</td>
 </tr>
 <tr>
 <td>flaky 통계</td>
-<td>테스트별 불안정률과 p95, 격리 후보와 해제 후보, 느린 테스트 상위 5개</td>
+<td>테스트마다 불안정률과 p95 시간을 내고, 격리 후보와 해제 후보, 느린 테스트 다섯 개를 뽑습니다.</td>
 </tr>
 <tr>
 <td>격리 목록</td>
-<td>사유가 없는 줄은 거부. 격리한 테스트도 계속 돌려서 데이터를 모음</td>
+<td>사유를 적지 않은 줄은 받지 않습니다. 격리한 테스트도 계속 돌려서 데이터를 모읍니다.</td>
 </tr>
 <tr>
 <td>병렬 실행</td>
-<td>기기마다 pytest 프로세스를 따로 띄움. Appium 서버는 하나, UiAutomator2 <code>systemPort</code>만 기기별로 다르게</td>
+<td>기기마다 pytest 프로세스를 따로 띄웁니다. Appium 서버는 하나만 두고 UiAutomator2 <code>systemPort</code>만 기기별로 다르게 줍니다.</td>
 </tr>
 </tbody></table></div>
 <p>격리 후보는 불안정률이 10% 이상이고 5회 이상 실행된 테스트, 해제 후보는 격리 중에 20회 연속 통과한 테스트입니다. 후보가 올라와도 자동으로 격리하지는 않고 원인을 확인한 뒤 정합니다.</p>
@@ -547,17 +547,17 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </thead><tbody><tr>
 <td>build</td>
 <td>GitHub 호스트</td>
-<td>앱 빌드, 앱 단위 테스트, APK 보관</td>
+<td>앱을 빌드하고 앱 단위 테스트를 돌린 뒤 APK를 보관합니다.</td>
 </tr>
 <tr>
 <td>unit</td>
 <td>GitHub 호스트</td>
-<td>프레임워크 단위 테스트 (기기 없음)</td>
+<td>기기 없이 프레임워크 단위 테스트를 돌립니다.</td>
 </tr>
 <tr>
 <td>e2e</td>
 <td>self-hosted Test Bench</td>
-<td>두 기기 병렬 실행, flaky 리포트. 저장소 변수 <code>IVI_BENCH=online</code>일 때만</td>
+<td>두 기기에서 병렬로 돌리고 flaky 리포트를 냅니다. 저장소 변수 <code>IVI_BENCH=online</code>일 때만 돕니다.</td>
 </tr>
 </tbody></table></div>
 <div class="table"><table><thead><tr>
@@ -631,10 +631,10 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </ul>
 <h3 id="다음-단계"><a class="anchor" href="#다음-단계" aria-hidden="true">#</a>다음 단계</h3>
 <ol>
-<li>self-hosted 러너를 등록해서 e2e까지 GitHub에서 돌리고 Nightly 기록 남기기</li>
-<li><code>run_bench.py --repeat 5</code>로 반복 안정성 측정, 5장 7번의 원인 확인</li>
-<li>데모 영상 (신호 주입과 화면 반응, 화면 조작과 VHAL 값, 실패 자료, 병렬 실행)</li>
-<li>우대 항목 보강: 원격 전원 제어 모사, 결과 보고 REST API, ISO 26262와 A-SPICE 학습</li>
+<li>self-hosted 러너를 등록해 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.</li>
+<li><code>run_bench.py --repeat 5</code>로 반복 안정성을 재고, 5장 7번 결함의 원인을 찾으려고 합니다.</li>
+<li>신호를 넣으면 화면이 바뀌는 장면, 화면을 누르면 VHAL 값이 바뀌는 장면, 실패 자료, 병렬 실행을 데모 영상으로 남기려고 합니다.</li>
+<li>우대사항 쪽으로는 원격 전원 제어를 흉내 내 보고, 결과를 REST API로 보고하는 기능을 만들고, ISO 26262와 A-SPICE를 공부하려고 합니다.</li>
 </ol>
 <hr>
 <h2 id="10-저장소-안내"><a class="anchor" href="#10-저장소-안내" aria-hidden="true">#</a>10. 저장소 안내</h2>
@@ -644,11 +644,11 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 </thead><tbody><tr>
 <td><a href="../../ivi-tests/ivi/vehicle.py">ivi-tests/ivi/vehicle.py</a></td>
-<td>차량 어댑터, 신호 정의, 묶음 주입</td>
+<td>차량 어댑터, 신호 정의, 여러 신호를 한 번에 넣는 코드</td>
 </tr>
 <tr>
 <td><a href="../../ivi-tests/ivi/device.py">ivi-tests/ivi/device.py</a></td>
-<td>기기 판별, Appium 설정, 누르는 방법</td>
+<td>기기 판별, Appium 설정, 화면을 누르는 방법</td>
 </tr>
 <tr>
 <td><a href="../../ivi-tests/ivi/screens.py">ivi-tests/ivi/screens.py</a></td>
@@ -656,7 +656,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 <tr>
 <td><a href="../../ivi-tests/ivi/results.py">ivi-tests/ivi/results.py</a></td>
-<td>판정 분류와 기록 (pytest 플러그인)</td>
+<td>판정을 나누고 기록하는 pytest 플러그인</td>
 </tr>
 <tr>
 <td><a href="../../ivi-tests/tests/conftest.py">ivi-tests/tests/conftest.py</a></td>
@@ -664,11 +664,11 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tr>
 <tr>
 <td><a href="../../ivi-tests/tests/test_vehicle_signals.py">ivi-tests/tests/test_vehicle_signals.py</a></td>
-<td>차량 신호 양방향 E2E 24개</td>
+<td>차량 신호 양방향 E2E</td>
 </tr>
 <tr>
 <td><a href="../../ivi-tests/tools">ivi-tests/tools/</a></td>
-<td>병렬 실행, flaky 통계, 설치</td>
+<td>병렬 실행, flaky 통계, 설치, 결과 사이트 만들기</td>
 </tr>
 <tr>
 <td><a href="../../.github/workflows/ivi-ci.yml">.github/workflows/ivi-ci.yml</a></td>
@@ -692,7 +692,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 26개가 모두 들
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-근거">1. 공고 요구사항과 근거</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-검증-전략">3. 검증 전략</a><a class="l3" href="#3-1-계층과-실행-시점">3-1. 계층과 실행 시점</a><a class="l3" href="#3-2-판정-기준">3-2. 판정 기준</a><a class="l2" href="#4-e2e-테스트-설계">4. E2E 테스트 설계</a><a class="l3" href="#4-1-양방향-검증과-area-단위-판정">4-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#4-2-설계-기법">4-2. 설계 기법</a><a class="l3" href="#4-3-테스트-격리">4-3. 테스트 격리</a><a class="l3" href="#4-4-신호-주입-명령">4-4. 신호 주입 명령</a><a class="l2" href="#5-결함과-원인-분석">5. 결함과 원인 분석</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-검증-전략">3. 검증 전략</a><a class="l3" href="#3-1-계층과-실행-시점">3-1. 계층과 실행 시점</a><a class="l3" href="#3-2-판정-기준">3-2. 판정 기준</a><a class="l2" href="#4-e2e-테스트-설계">4. E2E 테스트 설계</a><a class="l3" href="#4-1-양방향-검증과-area-단위-판정">4-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#4-2-설계-기법">4-2. 설계 기법</a><a class="l3" href="#4-3-테스트-격리">4-3. 테스트 격리</a><a class="l3" href="#4-4-신호-주입-명령">4-4. 신호 주입 명령</a><a class="l2" href="#5-결함과-원인-분석">5. 결함과 원인 분석</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

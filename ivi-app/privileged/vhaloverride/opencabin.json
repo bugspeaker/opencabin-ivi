@@ -1,0 +1,85 @@
+{
+    "apiVersion": 1,
+    "properties": [
+        {
+            "property": "VehicleProperty::HVAC_TEMPERATURE_SET",
+            "defaultValue": {
+                "floatValues": [
+                    22.0
+                ]
+            },
+            "areas": [
+                {
+                    "areaId": "Constants::SEAT_1_LEFT",
+                    "minFloatValue": 16.0,
+                    "maxFloatValue": 28.0,
+                    "defaultValue": {
+                        "floatValues": [
+                            22.0
+                        ]
+                    }
+                },
+                {
+                    "areaId": "Constants::SEAT_1_RIGHT",
+                    "minFloatValue": 16.0,
+                    "maxFloatValue": 28.0,
+                    "defaultValue": {
+                        "floatValues": [
+                            22.0
+                        ]
+                    }
+                },
+                {
+                    "areaId": "Constants::SEAT_2_LEFT",
+                    "minFloatValue": 16.0,
+                    "maxFloatValue": 28.0,
+                    "defaultValue": {
+                        "floatValues": [
+                            22.0
+                        ]
+                    }
+                },
+                {
+                    "areaId": "Constants::SEAT_2_RIGHT",
+                    "minFloatValue": 16.0,
+                    "maxFloatValue": 28.0,
+                    "defaultValue": {
+                        "floatValues": [
+                            22.0
+                        ]
+                    }
+                },
+                {
+                    "areaId": "Constants::SEAT_2_CENTER",
+                    "minFloatValue": 16.0,
+                    "maxFloatValue": 28.0,
+                    "defaultValue": {
+                        "floatValues": [
+                            22.0
+                        ]
+                    }
+                }
+            ],
+            "configArray": [
+                160,
+                280,
+                5,
+                608,
+                824,
+                9
+            ]
+        },
+        {
+            "property": "VehicleProperty::HVAC_TEMPERATURE_DISPLAY_UNITS",
+            "defaultValue": {
+                "int32Values": [
+                    "VehicleUnit::CELSIUS"
+                ]
+            },
+            "configArray": [
+                "VehicleUnit::FAHRENHEIT",
+                "VehicleUnit::CELSIUS"
+            ]
+        }
+    ]
+}

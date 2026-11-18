@@ -1,4 +1,4 @@
-"""내비게이션 E2E: 경로 안내가 차량 속도 신호로 진행되고, 주행 중에는 글자 입력(검색)이 막힌다."""
+"""경로 안내가 차량 속도에 맞춰 진행되는지, 주행 중에 검색 입력이 막히는지 확인합니다."""
 import time
 
 import pytest
@@ -8,7 +8,9 @@ from ivi.waits import wait_until
 
 @pytest.mark.sanity
 def test_guidance_counts_down_with_vehicle_speed(app, car):
-    """하위 → 상위: 차량 속도 신호만큼 남은 거리가 줄어든다 (120 km/h ≈ 3초에 0.1 km)."""
+    """경로 안내의 남은 거리가 차량 속도 신호만큼 줄어듭니다.
+    120 km/h로 3초를 달리면 0.1 km쯤 줄어듭니다.
+    """
     nav = app.navigation()
     nav.pick(0)  # 집 12.4 km
     nav.start()
@@ -22,7 +24,9 @@ def test_guidance_counts_down_with_vehicle_speed(app, car):
 
 @pytest.mark.sanity
 def test_parked_vehicle_does_not_advance_route(app, car):
-    """정차 중에는 남은 거리가 그대로다 (시간이 아니라 속도 신호로 진행)."""
+    """차가 서 있으면 남은 거리가 줄지 않습니다.
+    안내가 시간이 아니라 속도 신호를 따라 진행된다는 것을 확인합니다.
+    """
     nav = app.navigation()
     nav.pick(1)  # 회사 8.7 km
     nav.start()
@@ -33,7 +37,7 @@ def test_parked_vehicle_does_not_advance_route(app, car):
 
 @pytest.mark.sanity
 def test_search_locked_while_driving_but_favorites_work(app, car):
-    """주행 중 UX 제한: 검색 입력은 막히고, 즐겨찾기로는 목적지를 고를 수 있다."""
+    """주행 중에는 검색 입력이 막히지만, 즐겨찾기로는 목적지를 고를 수 있습니다."""
     nav = app.navigation()
     assert nav.search_enabled()
 
@@ -47,6 +51,7 @@ def test_search_locked_while_driving_but_favorites_work(app, car):
 
 @pytest.mark.sanity
 def test_search_filters_destinations(app):
+    """'역'으로 검색하면 판교역과 서울역만 남습니다."""
     nav = app.navigation()
     nav.search("역")
     wait_until(lambda: nav.results() == ["판교역", "서울역"], what="'역' 검색 결과")
@@ -54,6 +59,7 @@ def test_search_filters_destinations(app):
 
 @pytest.mark.regression
 def test_arrival(app, car):
+    """0.1 km 떨어진 편의점으로 안내를 시작하고 120 km/h로 달리면 도착 화면이 뜹니다."""
     nav = app.navigation()
     nav.search("편의점")
     wait_until(lambda: nav.results() == ["편의점"], what="'편의점' 검색 결과")
@@ -65,7 +71,9 @@ def test_arrival(app, car):
 
 @pytest.mark.regression
 def test_stop_guidance_returns_to_search_and_clears_cluster_route(app):
-    """7단계: 홈 위젯 대신 주행 정보(왼쪽)에 경로를 보여 준다. 다른 앱을 보고 있어도 보이고, 안내를 끝내면 사라진다."""
+    """안내 중인 경로는 왼쪽 주행 정보에 보이고, 다른 앱을 보고 있어도 남아 있습니다.
+    안내를 끝내면 검색 화면으로 돌아가고 경로 표시도 사라집니다.
+    """
     nav = app.navigation()
     nav.pick(1)
     nav.start()
