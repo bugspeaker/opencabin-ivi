@@ -23,6 +23,8 @@ const INDEX = path.join(SITE, "index.html");
 const PAGES = [
   { src: "docs/portfolio.md", out: "portfolio.html", nav: "포트폴리오" },
   { src: "docs/test-results.md", out: "test-results.html", nav: "테스트 결과", results: true },
+  { src: "docs/traceability.md", out: "traceability.html", nav: "요구사항 추적표", wide: true },
+  { src: "docs/requirements.md", out: "requirements.html", nav: "요구사항" },
   { src: "README.md", out: "readme.html", nav: "README" },
   { src: "docs/phase1-spike.md", out: "phase1-spike.html", nav: "1. 기술 검증" },
   { src: "docs/phase2-app.md", out: "phase2-app.html", nav: "2. 앱" },
@@ -32,6 +34,7 @@ const PAGES = [
   { src: "docs/phase6-features.md", out: "phase6-features.html", nav: "6. 기능 확장" },
   { src: "docs/phase7-pleos.md", out: "phase7-pleos.html", nav: "7. 3영역 화면 개편" },
   { src: "docs/phase8-signals.md", out: "phase8-signals.html", nav: "8. 차량 신호 확장" },
+  { src: "docs/phase9-bench.md", out: "phase9-bench.html", nav: "9. Test Bench 확장" },
 ];
 const OUT_BY_SRC = new Map(PAGES.map((p) => [p.src, p.out]));
 
@@ -107,7 +110,7 @@ function shell(page, { title, body, toc = [], head = "", scripts = "", mainClass
   <span class="crumb">문서 · ${esc(page.nav)}</span>
   <a class="src" href="${esc(path.posix.relative("site/docs", page.src))}">원문 .md</a>
 </header>
-<div class="layout${mainClass.includes("results") ? " wide" : ""}">
+<div class="layout${/results|wide-doc/.test(mainClass) ? " wide" : ""}">
   <aside class="side">
     <nav aria-label="문서 목록">
         ${nav}
@@ -164,12 +167,14 @@ mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
   clusterBkg: "#0f1011", clusterBorder: "#34343a", edgeLabelBackground: "#0f1011",
   fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px" } });
 </script>` : "";
-  return shell(page, { title, body, toc, scripts });
+  // 넓은 표가 있는 문서(추적표)는 오른쪽 목차 없이 본문을 넓게 쓴다
+  return shell(page, { title, body, toc: page.wide ? [] : toc, scripts, mainClass: page.wide ? "doc wide-doc" : "doc" });
 }
 
 // ---------------- 테스트 결과 페이지 ----------------
 
 const BAD = new Set(["failed", "error", "flaky", "xpassed"]);
+const MEASURE_LABEL = { camera_seconds: "카메라가 뜨기까지", boot_seconds: "부팅" };
 const MARKER_LABEL = { smoke: "smoke", sanity: "sanity", regression: "regression", spike: "spike", aaos: "AAOS 전용" };
 const fmtTime = (s) => `${Math.floor(s / 60)}분 ${Math.floor(s % 60)}초`;  // pytest 와 같이 버림
 
@@ -251,9 +256,12 @@ function renderResults(page) {
                 <img src="../results/${esc(r.image)}" alt="${esc(dev.label)}에서 ${esc(t.name)} 이 끝난 화면" loading="lazy" decoding="async">
               </button>`
             : `<div class="shot shot-${k} no-shot"><p>${esc(r.message || "화면 없음")}</p></div>`;
+          const measures = Object.entries(r.measures || {}).map(([k, v]) =>
+            `<p class="cell-measure">${esc(MEASURE_LABEL[k] || k)}: ${esc(v)}초</p>`).join("");
           return `<div class="shot-cell">
               ${media}
               <div class="cell-meta"><span class="cell-device">${esc(dev.label)}</span><span class="pill p-${r.outcome}">${esc(r.label)}</span><span class="cell-time">${r.duration}초</span></div>
+              ${measures}
             </div>`;
         }).join("");
         return `<div class="case">${c.param ? `<p class="case-param"><code>[${esc(c.param)}]</code></p>` : ""}<div class="case-shots">${cells}</div></div>`;
@@ -386,7 +394,9 @@ function renderResults(page) {
 const ARROW = `<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 function renderFit({ reqs }) {
-  const doneCount = reqs.filter((r) => !r.gap).length;
+  const doneCount = reqs.filter((r) => !r.gap && !r.partial).length;
+  const partialCount = reqs.filter((r) => r.partial).length;
+  const pct = (n) => Math.round((n / reqs.length) * 100);
   const row = (r) => {
     if (r.gap) {
       return `<li class="fit-item is-gap"><div class="fit-row">
@@ -400,13 +410,13 @@ function renderFit({ reqs }) {
     return `<li class="fit-item"><a class="fit-row" href="${esc(href)}">
               <span class="fit-num">${r.num}</span>
               <span class="fit-body"><span class="fit-title">${esc(r.title)}</span><span class="fit-done">${esc(r.done)}</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">${esc(dest)}${ARROW}</span></span>
+              <span class="fit-side"><span class="fit-state ${r.partial ? "is-partial" : "is-done"}">${esc(r.partial || "완료")}</span><span class="fit-dest">${esc(dest)}${ARROW}</span></span>
             </a></li>`;
   };
   const group = (g) => {
     const items = reqs.filter((r) => r.group === g.id);
     return `<div class="fit-group">
-          <h3 class="fit-group-title">${esc(g.label)} <span>${items.filter((r) => !r.gap).length} / ${items.length}</span></h3>
+          <h3 class="fit-group-title">${esc(g.label)} <span>${items.filter((r) => !r.gap && !r.partial).length} / ${items.length}${items.some((r) => r.partial) ? `, 일부 ${items.filter((r) => r.partial).length}` : ""}</span></h3>
           <ol class="fit-list">
             ${items.map(row).join("\n            ")}
           </ol>
@@ -422,8 +432,8 @@ function renderFit({ reqs }) {
         </div>
         <div class="fit-score">
           <p class="fit-score-num"><span>${doneCount}</span> / ${reqs.length}</p>
-          <p class="caption subtle">항목 완료</p>
-          <div class="fit-bar" aria-hidden="true"><span style="width:${Math.round((doneCount / reqs.length) * 100)}%"></span></div>
+          <p class="caption subtle">항목 완료${partialCount ? `, ${partialCount}개는 모의 환경과 개념 적용` : ""}</p>
+          <div class="fit-bar" aria-hidden="true"><span style="width:${pct(doneCount)}%"></span>${partialCount ? `<span class="is-partial" style="width:${pct(partialCount)}%"></span>` : ""}</div>
         </div>
       </div>
       <div class="fit-cols">

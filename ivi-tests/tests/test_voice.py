@@ -5,6 +5,7 @@ from ivi.vehicle import Seat
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("VOICE-01", "HVAC-01")
 @pytest.mark.sanity
 def test_voice_sets_driver_temperature_on_vehicle(app, car):
     """'운전석 온도 24도로 맞춰줘'라고 하면 차량의 운전석 온도가 24.0°C가 됩니다."""
@@ -14,6 +15,7 @@ def test_voice_sets_driver_temperature_on_vehicle(app, car):
     wait_until(lambda: car.temperature(Seat.DRIVER) == 24.0, what="차량 운전석 온도 24.0")
 
 
+@pytest.mark.req("VOICE-01")
 @pytest.mark.sanity
 def test_voice_turns_on_radio(app):
     """'라디오 켜줘'라고 하면 라디오가 켜집니다."""
@@ -22,6 +24,7 @@ def test_voice_turns_on_radio(app):
     app.wait_text("radio_state", "재생 중")
 
 
+@pytest.mark.req("VOICE-01", "NAV-01")
 @pytest.mark.regression
 def test_voice_starts_guidance_home(app):
     """'집으로 안내해줘'라고 하면 집까지 경로 안내가 시작됩니다."""
@@ -31,6 +34,7 @@ def test_voice_starts_guidance_home(app):
     app.find("nav_remaining")
 
 
+@pytest.mark.req("VOICE-01")
 @pytest.mark.regression
 def test_voice_panel_closes_after_command(app):
     """명령을 처리하면 음성 패널이 닫혀 안내나 통화 화면을 가리지 않습니다.
@@ -42,6 +46,7 @@ def test_voice_panel_closes_after_command(app):
     app.wait_text("nav_dest_name", "집")
 
 
+@pytest.mark.req("VOICE-01")
 @pytest.mark.regression
 def test_voice_calls_contact(app):
     """'엄마에게 전화해줘'라고 하면 엄마에게 전화를 걸고, 끊으면 통화 화면이 닫힙니다."""

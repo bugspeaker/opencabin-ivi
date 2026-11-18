@@ -12,6 +12,7 @@ from ivi.device import VIDEO
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("DRIVE-01")
 @pytest.mark.sanity
 def test_driving_signals_are_shown(app, car):
     """속도 50 km/h와 D 기어 신호를 넣으면 화면에 그대로 보이고 주행 제한 배지가 뜹니다.
@@ -30,6 +31,7 @@ def test_driving_signals_are_shown(app, car):
     app.wait_visible("restriction_banner", expected=False)
 
 
+@pytest.mark.req("DRIVE-02")
 @pytest.mark.sanity
 def test_video_button_locked_while_driving(app, car):
     """주행 중에는 미디어 화면의 영상 버튼이 꺼지고 안내 문구가 나옵니다.
@@ -47,6 +49,7 @@ def test_video_button_locked_while_driving(app, car):
     assert not media.restricted_notice()
 
 
+@pytest.mark.req("DRIVE-02")
 @pytest.mark.sanity
 def test_video_is_blocked_while_driving(app, car, device, driver):
     """영상 버튼을 거치지 않고 영상 화면을 바로 열어도 주행 중에는 막혀야 합니다.
@@ -61,6 +64,7 @@ def test_video_is_blocked_while_driving(app, car, device, driver):
     assert not video.playing(), "주행 중인데 영상 재생 화면이 보인다"
 
 
+@pytest.mark.req("DRIVE-02", "MEDIA-02")
 @pytest.mark.sanity
 def test_video_plays_when_parked(app, car, device, driver):
     """차가 서 있을 때는 영상 화면이 열리고 재생 시간이 흐릅니다."""
@@ -73,6 +77,7 @@ def test_video_plays_when_parked(app, car, device, driver):
     # 다음 테스트는 app 픽스처가 태스크를 비우고 새로 시작한다.
 
 
+@pytest.mark.req("DRIVE-02")
 @pytest.mark.regression
 def test_video_blocked_screen_follows_parking(app, car, device, driver):
     """주행 중에 막혔던 영상은 차를 세우면 다시 볼 수 있어야 합니다.
@@ -98,6 +103,7 @@ def _real_clips_or_skip(video):
         pytest.skip("기기에 주행 영상이 없다 (tools/push_drive_videos.py 로 올린다)")
 
 
+@pytest.mark.req("DRIVE-02")
 @pytest.mark.regression
 def test_video_resumes_where_it_stopped(app, car, device, driver):
     """주행 때문에 멈춘 영상은 차를 세우면 처음부터가 아니라 멈춘 자리에서 이어집니다.
@@ -127,6 +133,7 @@ def test_video_resumes_where_it_stopped(app, car, device, driver):
     wait_until(lambda: video.elapsed() != first, timeout=5, what="정차 후 재생 재개")
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.regression
 def test_video_next_clip(app, car, device, driver):
     """영상이 여러 개 있으면 다음 버튼으로 두 번째 영상으로 넘어갑니다."""

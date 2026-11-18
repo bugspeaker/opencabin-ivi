@@ -1,0 +1,40 @@
+VERSION "OpenCabin 1.0"
+
+
+NS_ :
+
+BS_:
+
+BU_: VCU BMS BCM IVI
+
+
+BO_ 257 VCU_DriveStatus: 8 VCU
+ SG_ VehicleSpeed : 0|16@1+ (0.01,0) [0|250] "km/h" IVI
+ SG_ GearSelect : 16|2@1+ (1,0) [0|3] "" IVI
+ SG_ DriveCounter : 56|4@1+ (1,0) [0|15] "" IVI
+
+BO_ 513 BMS_Status: 8 BMS
+ SG_ BatterySoc : 0|8@1+ (0.5,0) [0|100] "%" IVI
+ SG_ RangeRemaining : 8|16@1+ (0.1,0) [0|1000] "km" IVI
+
+BO_ 769 BCM_Status: 8 BCM
+ SG_ DoorsLocked : 0|1@1+ (1,0) [0|1] "" IVI
+ SG_ OutsideTemp : 8|8@1+ (0.5,-40) [-40|60] "degC" IVI
+
+BO_ 928 IVI_HvacStatus: 8 IVI
+ SG_ DriverTempSet : 0|8@1+ (0.5,0) [16|28] "degC" VCU
+ SG_ PassengerTempSet : 8|8@1+ (0.5,0) [16|28] "degC" VCU
+ SG_ AcOn : 16|1@1+ (1,0) [0|1] "" VCU
+ SG_ MaxAcOn : 17|1@1+ (1,0) [0|1] "" VCU
+ SG_ AutoOn : 18|1@1+ (1,0) [0|1] "" VCU
+ SG_ FanSpeed : 20|4@1+ (1,0) [0|7] "" VCU
+
+
+CM_ BO_ 257 "Vehicle control unit, 100 ms cycle. Speed and gear for the IVI driving state.";
+CM_ BO_ 513 "Battery management, 500 ms cycle.";
+CM_ BO_ 769 "Body control, 500 ms cycle.";
+CM_ BO_ 928 "Sent by the IVI gateway when the cabin climate changes, and every 1000 ms.";
+CM_ SG_ 257 DriveCounter "Rolling counter. The gateway ignores it when comparing frames.";
+
+VAL_ 257 GearSelect 0 "P" 1 "R" 2 "N" 3 "D" ;
+VAL_ 769 DoorsLocked 0 "Unlocked" 1 "Locked" ;

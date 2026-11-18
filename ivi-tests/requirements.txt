@@ -3,3 +3,5 @@ pytest>=8.0
 pytest-rerunfailures>=14.0
 pytest-timeout>=2.3
 Pillow>=10.0   # tools/publish_results.py: 스크린샷을 사이트용 WebP 로 줄인다
+python-can>=4.4   # 가상 CAN 버스 (ivi/can_gateway.py)
+cantools>=39.0    # DBC 로 CAN 프레임 인코딩, 디코딩

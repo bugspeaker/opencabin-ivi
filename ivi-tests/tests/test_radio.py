@@ -4,6 +4,7 @@ import pytest
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.sanity
 def test_power_on_plays_default_station(app):
     """라디오를 켜면 기본 방송인 89.1 MHz 뉴스 FM이 나옵니다."""
@@ -15,6 +16,7 @@ def test_power_on_plays_default_station(app):
     assert radio.station() == "뉴스 FM"
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.sanity
 def test_tune_and_seek(app):
     """미세 조정은 0.1 MHz씩 움직이고, 방송국 찾기는 방송이 있는 다음 주파수로 바로 넘어갑니다."""
@@ -26,6 +28,7 @@ def test_tune_and_seek(app):
     assert radio.step("seek_down") == "89.1 MHz"
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.sanity
 def test_am_band_uses_khz_steps(app):
     """AM으로 바꾸면 주파수가 kHz 단위로 바뀌고 9 kHz씩 움직입니다."""
@@ -36,6 +39,7 @@ def test_am_band_uses_khz_steps(app):
     assert radio.step("tune_up") == "720 kHz"  # AM 은 9 kHz 단위
 
 
+@pytest.mark.req("MEDIA-02")
 @pytest.mark.regression
 def test_preset_save_and_recall(app):
     """지금 주파수를 프리셋에 저장하고 다른 방송으로 옮긴 뒤 프리셋을 누르면, 저장한 주파수로 돌아옵니다."""
@@ -50,6 +54,7 @@ def test_preset_save_and_recall(app):
     radio.wait_text("radio_freq", "95.9 MHz")
 
 
+@pytest.mark.req("SET-01")
 @pytest.mark.regression
 def test_preset_and_frequency_survive_app_restart(app, device):
     """앱을 완전히 껐다 켜도 프리셋과 마지막으로 듣던 주파수가 남아 있습니다."""
@@ -65,6 +70,7 @@ def test_preset_and_frequency_survive_app_restart(app, device):
     assert radio.freq() == "95.9 MHz"
 
 
+@pytest.mark.req("MEDIA-01")
 @pytest.mark.regression
 def test_radio_and_media_play_one_at_a_time(app):
     """음악을 듣다가 라디오를 켜면 음악이 일시 정지됩니다.

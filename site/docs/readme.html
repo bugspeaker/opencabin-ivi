@@ -22,6 +22,8 @@
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="traceability.html">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
         <a href="readme.html" aria-current="page">README</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
@@ -31,6 +33,7 @@
         <a href="phase6-features.html">6. 기능 확장</a>
         <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html">9. Test Bench 확장</a>
     </nav>
   </aside>
   <main id="content" class="doc">
@@ -82,20 +85,26 @@
 </tr>
 <tr>
 <td>8. 차량 신호 확장</td>
-<td>화면 안에서만 바뀌던 공조와 도어 잠금을 VHAL 신호에 연결하고, 주행 가능 거리와 배터리, 외기 온도를 주행 정보에 보여 줍니다. 양방향 테스트를 더했고, 영상 화면은 직접 찍은 블랙박스 영상을 재생합니다. 지금 E2E는 115개입니다.</td>
+<td>화면 안에서만 바뀌던 공조와 도어 잠금을 VHAL 신호에 연결하고, 주행 가능 거리와 배터리, 외기 온도를 주행 정보에 보여 줍니다. 양방향 테스트를 더했고, 영상 화면은 직접 찍은 블랙박스 영상을 재생합니다.</td>
 <td><a href="phase8-signals.html">phase8-signals.md</a></td>
+</tr>
+<tr>
+<td>9. Test Bench 확장</td>
+<td>Test Bench REST API와 원격 전원 제어, 가상 CAN 버스와 VHAL 게이트웨이, 요구사항 추적표, 후방 카메라 2초 시험을 더했습니다. 실제 장비가 아닌 모의 환경입니다. E2E는 123개입니다.</td>
+<td><a href="phase9-bench.html">phase9-bench.md</a></td>
 </tr>
 </tbody></table></div>
 <h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
 <pre class="code"><code>ivi-app/              IVI 앱 (Kotlin, Compose). privileged/ 는 priv-app 설치 스크립트
 ivi-tests/
-  ivi/                adb, 대기, 차량 어댑터, 기기, 화면 객체, 결과 기록, 격리 목록
+  ivi/                adb, 대기, 차량 어댑터, 기기, 화면 객체, 결과 기록, 격리 목록, Test Bench API, 전원 제어, CAN 게이트웨이
+  dbc/                가상 CAN 버스의 프레임 정의 (opencabin.dbc)
   tests/              기기 E2E 테스트와 conftest.py
   unit/               프레임워크 단위 테스트 (기기 없이 돎)
-  tools/              병렬 실행, flaky 통계, 앱 설치, 에뮬레이터 기본값, 주행 영상 올리기, 결과 사이트 만들기
+  tools/              병렬 실행, flaky 통계, 앱 설치, 에뮬레이터 기본값, 주행 영상 올리기, 결과 사이트 만들기, 추적표 만들기, API 서버
   quarantine.txt      격리 목록
 .github/workflows/    ivi-ci.yml
-docs/                 단계별 설계와 검증 기록
+docs/                 단계별 설계와 검증 기록, 요구사항과 추적표
 site/                 소개 사이트 (site/index.html)</code></pre>
 <h2 id="실행-windows"><a class="anchor" href="#실행-windows" aria-hidden="true">#</a>실행 (Windows)</h2>
 <p>프로젝트는 영문 경로(<code>C:\dev\opencabin-ivi</code>)에 둡니다. Android 빌드 도구가 한글 경로에서 실패합니다.</p>
@@ -116,8 +125,11 @@ python -m venv .venv; .venv\Scripts\python -m pip install -r requirements.txt
 .venv\Scripts\python tools\flaky_report.py --last 20
 .venv\Scripts\python -m pytest unit</code></pre>
 </li>
+<li>Test Bench API를 띄우면 다른 도구가 HTTP로 기기와 신호, 전원, 실행 결과를 다룰 수 있습니다. 벤치 PC 안에서만 씁니다.<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\bench_api.py          # http://127.0.0.1:8770/api</code></pre>
+</li>
 <li>결과 사이트 만들기. <code>--shots</code>를 붙이면 테스트마다 끝난 화면을 남기고, 아래 명령이 그 결과를 소개 사이트로 옮깁니다.<pre class="code"><code data-lang="powershell">.venv\Scripts\python -m pytest --serial emulator-5554 --shots
 .venv\Scripts\python tools\publish_results.py
+.venv\Scripts\python tools\trace_report.py
 cd ..\site; npm install; npm run build-docs</code></pre>
 </li>
 </ol>
@@ -143,7 +155,7 @@ cd ..\site; npm install; npm run build-docs</code></pre>
 </tr>
 </tbody></table></div>
 <h2 id="결과"><a class="anchor" href="#결과" aria-hidden="true">#</a>결과</h2>
-<p>최신 결과(2026-11-18, E2E 115개)는 AAOS 에뮬레이터 113개 통과, 1개 건너뜀, 1개 알려진 결함(9분 35초), 화웨이 태블릿 109개 통과, 6개 건너뜀(9분 11초)이고 재시도는 없었습니다. 테스트마다 끝난 화면은 <a href="test-results.html">docs/test-results.md</a>에서 볼 수 있습니다.</p>
+<p>최신 결과(2026-11-18, E2E 123개)는 AAOS 에뮬레이터 121개 통과, 1개 건너뜀, 1개 알려진 결함(10분 10초), 화웨이 태블릿 116개 통과, AAOS 전용 7개 건너뜀(9분 43초)이고 재시도는 없었습니다. 테스트마다 끝난 화면은 <a href="test-results.html">docs/test-results.md</a>에서 볼 수 있습니다.</p>
 <div class="table"><table><thead><tr>
 <th>시점</th>
 <th>AAOS 에뮬레이터</th>

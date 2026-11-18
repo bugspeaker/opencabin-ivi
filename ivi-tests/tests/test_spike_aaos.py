@@ -48,6 +48,7 @@ def expected_label(vehicle, celsius):
     return f"{round(celsius * 9 / 5 + 32)}°"
 
 
+@pytest.mark.req("SPIKE-01")
 @pytest.mark.spike
 @pytest.mark.parametrize("celsius", [25.0, 20.0])
 def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius):
@@ -57,6 +58,7 @@ def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius):
     wait_until(lambda: driver_temp_label(driver) == label, what=f"운전석 온도 표시 {label}")
 
 
+@pytest.mark.req("SPIKE-01")
 @pytest.mark.spike
 @pytest.mark.parametrize("side, button, delta", [
     ("driver", "hvac_decrease_button", -STEP_C),
@@ -76,6 +78,7 @@ def test_hvac_ui_tap_changes_signal(driver, vehicle, side, button, delta):
     wait_until(lambda: temp_label(driver, side) != start, what=f"{side} 온도 표시 변경")
 
 
+@pytest.mark.req("SPIKE-01")
 @pytest.mark.spike
 @pytest.mark.xfail(strict=True, reason="알려진 결함: 1024x768 에서 운전석 온도 ▲ 가 홈 버튼에 가려 탭이 홈으로 간다 (docs/phase1-spike.md)")
 def test_driver_temp_up_is_not_covered_by_home(driver):
@@ -89,6 +92,7 @@ def test_driver_temp_up_is_not_covered_by_home(driver):
     assert overlap_x <= 0 or overlap_y <= 0, f"운전석 ▲ {up} 와 홈 {home} 이 {overlap_x}x{overlap_y}px 겹친다"
 
 
+@pytest.mark.req("SPIKE-01")
 @pytest.mark.spike
 def test_speed_and_gear_change_driving_state(vehicle):
     """속도와 기어를 VHAL에 넣으면 CarService의 주행 상태가 바뀝니다.

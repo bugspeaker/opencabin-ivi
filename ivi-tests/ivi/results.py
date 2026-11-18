@@ -67,6 +67,8 @@ class Recorder:
         for key, value in report.user_properties:
             if key == "shot":  # 끝 화면 (--shots). 재시도면 마지막 시도 것
                 rec["shot"] = value
+            elif key.endswith("_seconds"):  # 테스트가 잰 시간 (부팅, 카메라 표시 등). 결과 페이지에 보여 준다
+                rec.setdefault("measures", {})[key] = value
 
         if report.outcome == "rerun":
             rec["reruns"] += 1

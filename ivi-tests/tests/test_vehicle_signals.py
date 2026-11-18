@@ -20,6 +20,7 @@ def wait_signal(car, name, expected, what=None):
 
 # ---------------- 공조: A/C · AUTO · 풍량 · 김서림 ----------------
 
+@pytest.mark.req("HVAC-03")
 @pytest.mark.sanity
 def test_ac_toggle_reaches_every_seat(app, car):
     """화면에서 A/C를 끄면 운전석만이 아니라 모든 좌석의 HVAC_AC_ON이 꺼져야 합니다."""
@@ -31,6 +32,7 @@ def test_ac_toggle_reaches_every_seat(app, car):
     climate.wait_checked("ac", False)
 
 
+@pytest.mark.req("HVAC-03")
 @pytest.mark.sanity
 def test_ac_signal_is_shown_on_climate_and_bottom_bar(app, car):
     """차량 쪽에서 A/C를 끄면 공조 화면의 토글도 꺼지고, 다시 켜면 켜집니다."""
@@ -41,6 +43,7 @@ def test_ac_signal_is_shown_on_climate_and_bottom_bar(app, car):
     climate.wait_checked("ac", True)
 
 
+@pytest.mark.req("HVAC-03")
 @pytest.mark.sanity
 @pytest.mark.parametrize("direction, expected", [("up", 4), ("down", 2)])
 def test_fan_button_changes_signal_by_one(app, car, direction, expected):
@@ -52,6 +55,7 @@ def test_fan_button_changes_signal_by_one(app, car, direction, expected):
     wait_until(lambda: climate.fan() == expected, what=f"풍량 표시 {expected}")
 
 
+@pytest.mark.req("HVAC-03")
 @pytest.mark.regression
 @pytest.mark.parametrize("level, blocked", [(1, "climate_fan_down"), (7, "climate_fan_up")])
 def test_fan_buttons_disabled_at_limits(app, car, level, blocked):
@@ -64,6 +68,7 @@ def test_fan_buttons_disabled_at_limits(app, car, level, blocked):
     assert car.signal(Signal.FAN) == level
 
 
+@pytest.mark.req("HVAC-04")
 @pytest.mark.sanity
 def test_max_ac_sets_signal_and_coldest_settings(app, car):
     """FULL(최대 냉방)을 켜면 모든 좌석의 HVAC_MAX_AC_ON이 켜지고, 온도는 최저, 풍량은 최대가 되며 AUTO는 꺼집니다."""
@@ -82,6 +87,7 @@ def test_max_ac_sets_signal_and_coldest_settings(app, car):
     wait_until(lambda: climate.fan() == 7, what="풍량 표시 7")
 
 
+@pytest.mark.req("HVAC-04")
 @pytest.mark.sanity
 def test_max_ac_off_restores_previous_settings(app, car):
     """FULL을 버튼으로 끄면 켜기 전 값인 22.0°C, 풍량 3으로 돌아갑니다."""
@@ -97,6 +103,7 @@ def test_max_ac_off_restores_previous_settings(app, car):
     climate.wait_checked("max_ac", False)
 
 
+@pytest.mark.req("HVAC-04")
 @pytest.mark.sanity
 def test_max_ac_signal_is_shown_on_toggle(app, car):
     """차량 쪽에서 최대 냉방을 켜고 끄면 화면의 FULL 토글도 따라 바뀝니다."""
@@ -107,6 +114,7 @@ def test_max_ac_signal_is_shown_on_toggle(app, car):
     climate.wait_checked("max_ac", False)
 
 
+@pytest.mark.req("HVAC-04")
 @pytest.mark.regression
 def test_manual_fan_releases_max_ac(app, car):
     """FULL 중에 풍량을 직접 내리면 최대 냉방이 풀립니다.
@@ -123,6 +131,7 @@ def test_manual_fan_releases_max_ac(app, car):
     assert car.temperature(Seat.DRIVER) == 16.0
 
 
+@pytest.mark.req("HVAC-04")
 @pytest.mark.regression
 def test_turning_ac_off_releases_max_ac(app, car):
     """FULL 중에 A/C를 끄면 최대 냉방도 같이 꺼집니다.
@@ -138,6 +147,7 @@ def test_turning_ac_off_releases_max_ac(app, car):
     climate.wait_checked("max_ac", False)
 
 
+@pytest.mark.req("HVAC-03")
 @pytest.mark.regression
 def test_manual_fan_releases_auto(app, car):
     """AUTO 중에 풍량을 직접 바꾸면 AUTO가 풀리고 HVAC_AUTO_ON이 꺼집니다."""
@@ -152,6 +162,7 @@ def test_manual_fan_releases_auto(app, car):
     climate.wait_checked("auto", False)
 
 
+@pytest.mark.req("HVAC-05")
 @pytest.mark.sanity
 @pytest.mark.parametrize("where, signal, other", [
     ("defrost_front", Signal.DEFROST_FRONT, Signal.DEFROST_REAR),
@@ -171,6 +182,7 @@ def test_defrost_changes_only_its_window(app, car, where, signal, other):
 
 # ---------------- 좌석 열선 ----------------
 
+@pytest.mark.req("HVAC-05")
 @pytest.mark.sanity
 @pytest.mark.parametrize("seat", list(Seat), ids=lambda s: s.tag)
 def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
@@ -188,6 +200,7 @@ def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
     assert car.signal(Signal.heat(other)) == 0
 
 
+@pytest.mark.req("HVAC-05")
 @pytest.mark.sanity
 def test_seat_heat_signal_is_shown_everywhere(app, car):
     """차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다."""
@@ -199,6 +212,7 @@ def test_seat_heat_signal_is_shown_everywhere(app, car):
     app.vehicle_controls().wait_text("qc_seat_heat_value", "1단")
 
 
+@pytest.mark.req("HVAC-05", "UI-01")
 @pytest.mark.regression
 def test_bottom_bar_seat_heat_works_from_any_screen(app, car):
     """아래 바의 열선 버튼은 다른 앱을 보고 있을 때 눌러도 차량 신호를 바꿉니다."""
@@ -210,6 +224,7 @@ def test_bottom_bar_seat_heat_works_from_any_screen(app, car):
     assert car.signal(Signal.HEAT_DRIVER) == 0
 
 
+@pytest.mark.req("VOICE-01", "HVAC-05")
 @pytest.mark.regression
 def test_assistant_seat_heat_follows_speaker_zone(app, car):
     """조수석에서 AI 어시스턴트에 '열선 켜줘'라고 하면 조수석 열선 신호만 올라갑니다."""
@@ -223,6 +238,7 @@ def test_assistant_seat_heat_follows_speaker_zone(app, car):
 
 # ---------------- 도어 잠금 ----------------
 
+@pytest.mark.req("BODY-01")
 @pytest.mark.sanity
 def test_door_lock_button_drives_every_door(app, car):
     """빠른 제어의 도어 버튼을 누르면 네 문의 DOOR_LOCK이 함께 바뀝니다."""
@@ -236,6 +252,7 @@ def test_door_lock_button_drives_every_door(app, car):
     wait_until(lambda: all(car.signal_all(Signal.DOORS_LOCKED)), what="전 도어 잠김")
 
 
+@pytest.mark.req("BODY-01")
 @pytest.mark.sanity
 def test_door_lock_signal_is_shown(app, car):
     """키나 도어 스위치로 차량 쪽에서 문이 열리면 화면의 도어 표시도 바뀝니다."""
@@ -248,6 +265,7 @@ def test_door_lock_signal_is_shown(app, car):
 
 # ---------------- 주행 가능 거리 · 배터리 · 외기 온도 ----------------
 
+@pytest.mark.req("ENERGY-01")
 @pytest.mark.sanity
 def test_energy_signals_are_shown_on_cluster(app, car):
     """주행 가능 거리, 배터리, 외기 온도 신호가 주행 정보에 보입니다.
@@ -263,6 +281,7 @@ def test_energy_signals_are_shown_on_cluster(app, car):
     wait_until(lambda: cluster.outside_temperature() == -3.5, what="외기 온도 -3.5°C")
 
 
+@pytest.mark.req("ENERGY-02")
 @pytest.mark.sanity
 @pytest.mark.parametrize("range_km, low", [(31.0, False), (30.0, True), (29.0, True)])
 def test_low_range_threshold(app, car, range_km, low):
@@ -276,6 +295,7 @@ def test_low_range_threshold(app, car, range_km, low):
     assert app.visible("low_range_card") == low
 
 
+@pytest.mark.req("ENERGY-02", "NAV-01")
 @pytest.mark.sanity
 def test_low_range_card_starts_guidance_to_nearest_charger(app, car):
     """주행 가능 거리가 부족해지면 충전소 카드가 뜨고, 누르면 가장 가까운 충전소로 안내를 시작합니다.
@@ -294,6 +314,7 @@ def test_low_range_card_starts_guidance_to_nearest_charger(app, car):
     app.wait_visible("low_range_card", expected=False)  # 안내 중에는 다시 권하지 않는다
 
 
+@pytest.mark.req("ENERGY-02")
 @pytest.mark.regression
 def test_low_range_is_recorded_in_notifications(app, car):
     """주행 가능 거리 부족은 알림 센터에도 남습니다.
@@ -306,6 +327,7 @@ def test_low_range_is_recorded_in_notifications(app, car):
     panel.close()
 
 
+@pytest.mark.req("ENERGY-02")
 @pytest.mark.regression
 def test_range_recovers_after_charging(app, car):
     """충전해서 주행 가능 거리가 늘어나면 경고와 카드가 사라져야 합니다."""
@@ -320,6 +342,7 @@ def test_range_recovers_after_charging(app, car):
     wait_until(lambda: cluster.battery_percent() == 75, what="배터리 75 %")
 
 
+@pytest.mark.req("ENERGY-01", "SET-01")
 @pytest.mark.regression
 def test_range_follows_speed_unit_setting(app, car):
     """속도 단위를 mph로 바꾸면 주행 가능 거리도 마일로 보입니다.

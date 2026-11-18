@@ -6,6 +6,7 @@ import pytest
 from ivi.waits import wait_until
 
 
+@pytest.mark.req("NAV-01")
 @pytest.mark.sanity
 def test_guidance_counts_down_with_vehicle_speed(app, car):
     """경로 안내의 남은 거리가 차량 속도 신호만큼 줄어듭니다.
@@ -22,6 +23,7 @@ def test_guidance_counts_down_with_vehicle_speed(app, car):
     wait_until(lambda: nav.remaining_km() <= start - 0.2, timeout=20, what="남은 거리 0.2 km 이상 감소")
 
 
+@pytest.mark.req("NAV-01")
 @pytest.mark.sanity
 def test_parked_vehicle_does_not_advance_route(app, car):
     """차가 서 있으면 남은 거리가 줄지 않습니다.
@@ -35,6 +37,7 @@ def test_parked_vehicle_does_not_advance_route(app, car):
     assert nav.remaining_km() == pytest.approx(8.7)
 
 
+@pytest.mark.req("DRIVE-03")
 @pytest.mark.sanity
 def test_search_locked_while_driving_but_favorites_work(app, car):
     """주행 중에는 검색 입력이 막히지만, 즐겨찾기로는 목적지를 고를 수 있습니다."""
@@ -49,6 +52,7 @@ def test_search_locked_while_driving_but_favorites_work(app, car):
     assert nav.destination() == "집"
 
 
+@pytest.mark.req("NAV-01")
 @pytest.mark.sanity
 def test_search_filters_destinations(app):
     """'역'으로 검색하면 판교역과 서울역만 남습니다."""
@@ -57,6 +61,7 @@ def test_search_filters_destinations(app):
     wait_until(lambda: nav.results() == ["판교역", "서울역"], what="'역' 검색 결과")
 
 
+@pytest.mark.req("NAV-01")
 @pytest.mark.regression
 def test_arrival(app, car):
     """0.1 km 떨어진 편의점으로 안내를 시작하고 120 km/h로 달리면 도착 화면이 뜹니다."""
@@ -69,6 +74,7 @@ def test_arrival(app, car):
     nav.wait_visible("nav_arrived", timeout=20)
 
 
+@pytest.mark.req("NAV-01", "UI-01")
 @pytest.mark.regression
 def test_stop_guidance_returns_to_search_and_clears_cluster_route(app):
     """안내 중인 경로는 왼쪽 주행 정보에 보이고, 다른 앱을 보고 있어도 남아 있습니다.

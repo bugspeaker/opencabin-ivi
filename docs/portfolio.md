@@ -5,17 +5,18 @@
 
 ![주행 중 경로 안내](images/p9-guidance.png)
 
-가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 115개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿에서 모두 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
+가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 123개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿에서 모두 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
 
 차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.
 
 | 항목 | 결과 |
 |---|---|
-| AAOS 에뮬레이터 | 113개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 35초) |
-| 화웨이 태블릿 (Mock) | 109개 통과, AAOS 전용 6개 건너뜀, 재시도 0 (9분 11초) |
+| AAOS 에뮬레이터 | 121개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (10분 10초) |
+| 화웨이 태블릿 (Mock) | 116개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (9분 43초) |
 | 두 기기 병렬 | 게이트 통과, flaky 0, 7분 20초 (8단계 108개 기준. 차례로 돌리면 14분 28초) |
-| 단위 테스트 | 프레임워크 37개, 앱 19개 모두 통과 |
-| 테스트별 결과 | 기기마다 판정과 테스트가 끝난 화면 224장: [테스트 결과](test-results.md) |
+| 단위 테스트 | 프레임워크 61개, 앱 19개 모두 통과 |
+| 테스트별 결과 | 기기마다 판정과 테스트가 끝난 화면 239장: [테스트 결과](test-results.md) |
+| 요구사항 추적 | 요구사항 26개 모두 테스트가 있고, 모든 테스트가 요구사항을 가리킵니다: [추적표](traceability.md) |
 | GitHub Actions | 2026-11-18까지 18회 실행, 17회 success. 1회는 첫 실행에서 취소했습니다 ([8-3](#8-3-github-실행-기록)). |
 
 알려진 결함 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.
@@ -55,7 +56,7 @@
 
 | 공고의 자격요건 | 이 프로젝트에서 한 일 |
 |---|---|
-| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실제 태블릿에서 E2E 115개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다. |
+| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실제 태블릿에서 E2E 123개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다. |
 | Python 테스트 프레임워크 (Pytest) | 훅, 픽스처, 마커와 결과 기록용 플러그인을 직접 만들었습니다. |
 | Appium 등 UI 자동화 도구 | Appium(UiAutomator2)을 썼고, AAOS의 다중 사용자 환경(user 10)에 맞춰 설정했습니다. |
 | ADB, Logcat, Shell | adb 어댑터를 만들고, 실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다. |
@@ -66,9 +67,9 @@
 | 공고의 우대사항 | 지금 상태 |
 |---|---|
 | VHAL, CarService, CarPropertyManager | 신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다. |
-| 차량 네트워크 (Ethernet, DDS, SOME/IP, CAN) | 경험이 없습니다. VHAL 아래 계층이라 이 프로젝트에서는 다루지 않았습니다. |
-| REST API 자동화, 원격 전원 제어 | 아직 해 보지 않았습니다. |
-| ISO 26262, A-SPICE | 더 공부해야 합니다. |
+| 차량 네트워크 (Ethernet, DDS, SOME/IP, CAN) | CAN만 모의 환경에서 해 봤습니다. PC 안의 가상 CAN 버스와 DBC로 ECU를 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지와 화면의 공조 값이 CAN으로 나가는지 확인합니다([9단계](phase9-bench.md)). 실제 CAN 장비와 Ethernet, DDS, SOME/IP는 경험이 없습니다. |
+| REST API 자동화, 원격 전원 제어 | 모의 장비로 해 봤습니다. Test Bench REST API로 기기, 신호, 전원, 실행 결과를 다루고 API 테스트를 붙였습니다. 에뮬레이터 전원을 원격으로 껐다 켜서 부팅과 기본값 복귀를 확인합니다. 실제 전원 공급기나 릴레이는 쓰지 않았습니다. |
+| ISO 26262, A-SPICE | 개념만 적용해 봤습니다. 요구사항 26개와 테스트를 양방향으로 잇는 [추적표](traceability.md)를 만들고 CI에서 빠진 곳을 막습니다. 후방 카메라가 2초 안에 뜨는지(FMVSS 111)도 잽니다. 인증이나 심사 경험은 없고 더 공부해야 합니다. |
 
 ---
 
@@ -261,6 +262,8 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 | 테스트 | Python, pytest, Appium (UiAutomator2) |
 | 기기 제어 | ADB, shell, logcat, `dumpsys`, `cmd car_service` |
 | 대상 앱 | Kotlin, Jetpack Compose, CarPropertyManager, Media3 |
+| 차량 네트워크 (모의) | python-can (virtual 버스), cantools (DBC) |
+| Test Bench | 표준 라이브러리 `http.server`로 만든 REST API, 원격 전원 제어 인터페이스 |
 | 실행 환경 | AAOS 에뮬레이터 API 34, 화웨이 태블릿 (Android 12) |
 | CI | GitHub Actions |
 
@@ -332,7 +335,8 @@ flowchart LR
 
 ### 한계
 
-- 테스트 대상은 AAOS 에뮬레이터의 CarService와 VHAL입니다. 실제 차량이나 HIL, Test Bench에서 해 본 것이 아닙니다.
+- 테스트 대상은 AAOS 에뮬레이터의 CarService와 VHAL입니다. 실제 차량이나 HIL, 실물 Test Bench에서 해 본 것이 아닙니다.
+- CAN 게이트웨이와 원격 전원 제어는 PC 안의 모의 환경입니다. 실제 ECU, CAN 장비, 전원 공급기에서 확인한 것이 아닙니다.
 - 앱은 가상 IVI입니다. 지도, 라디오, 통화는 가상 데이터이고, AI 어시스턴트는 LLM이 아니라 규칙 기반입니다. 운전자 보조 표시와 주변 차량은 연출입니다. 화면 구조는 공개 자료를 참고했고 타사 로고, 이미지, 코드는 쓰지 않았습니다.
 - CI에서 e2e는 아직 GitHub로 돌리지 않았습니다. build와 unit만 GitHub에서 통과했고, e2e는 같은 명령을 작업 PC에서 따로 실행해 확인했습니다.
 - 8단계의 두 기기 병렬 실행은 1회만 측정했습니다. 4단계 때는 3회 반복해서 flaky 0이었습니다.
@@ -344,7 +348,7 @@ flowchart LR
 1. self-hosted 러너를 등록해 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.
 2. `run_bench.py --repeat 5`로 반복 안정성을 재고, 5장 7번 결함의 원인을 찾으려고 합니다.
 3. 신호를 넣으면 화면이 바뀌는 장면, 화면을 누르면 VHAL 값이 바뀌는 장면, 실패 자료, 병렬 실행을 데모 영상으로 남기려고 합니다.
-4. 우대사항 쪽으로는 원격 전원 제어를 흉내 내 보고, 결과를 REST API로 보고하는 기능을 만들고, ISO 26262와 A-SPICE를 공부하려고 합니다.
+4. 차량 네트워크는 SOME/IP와 DDS도 같은 방식으로 흉내 내 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.
 
 ---
 
@@ -358,9 +362,12 @@ flowchart LR
 | [ivi-tests/ivi/results.py](../ivi-tests/ivi/results.py) | 판정을 나누고 기록하는 pytest 플러그인 |
 | [ivi-tests/tests/conftest.py](../ivi-tests/tests/conftest.py) | 픽스처, 마커, 실패 자료 저장 |
 | [ivi-tests/tests/test_vehicle_signals.py](../ivi-tests/tests/test_vehicle_signals.py) | 차량 신호 양방향 E2E |
-| [ivi-tests/tools/](../ivi-tests/tools/) | 병렬 실행, flaky 통계, 설치, 결과 사이트 만들기 |
+| [ivi-tests/ivi/bench_api.py](../ivi-tests/ivi/bench_api.py), [power.py](../ivi-tests/ivi/power.py) | Test Bench REST API와 원격 전원 제어 |
+| [ivi-tests/ivi/can_gateway.py](../ivi-tests/ivi/can_gateway.py), [dbc/opencabin.dbc](../ivi-tests/dbc/opencabin.dbc) | 가상 CAN 버스와 VHAL 게이트웨이, 프레임 정의 |
+| [docs/requirements.md](requirements.md), [traceability.md](traceability.md) | 요구사항과 추적표 |
+| [ivi-tests/tools/](../ivi-tests/tools/) | 병렬 실행, flaky 통계, 설치, 결과 사이트, 추적표 만들기, API 서버 |
 | [.github/workflows/ivi-ci.yml](../.github/workflows/ivi-ci.yml) | CI 워크플로 |
-| [docs/phase1 ~ phase8](phase1-spike.md) | 단계별 설계와 검증 기록 |
+| [docs/phase1 ~ phase9](phase1-spike.md) | 단계별 설계와 검증 기록 |
 
 | 홈 | 공조 (FULL 켬) | 주행 가능 거리 부족 |
 |---|---|---|

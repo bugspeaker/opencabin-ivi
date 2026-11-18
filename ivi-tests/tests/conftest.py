@@ -78,6 +78,8 @@ def pytest_report_header(config):
 
 
 def pytest_collection_modifyitems(config, items):
+    # 전원을 껐다 켜는 테스트는 Appium 세션을 끊으므로 맨 끝에 돌린다
+    items.sort(key=lambda item: "power" in item.keywords)
     entries = quarantine.load(QUARANTINE_FILE)
     device = getattr(config, "ivi_device", None)
     for item in items:
@@ -133,7 +135,10 @@ def driver(device, pytestconfig):
     if device.automotive:
         session.update_settings({"enableMultiWindows": True})  # SystemUI(하단 HVAC 바)도 보이게
     yield session
-    session.quit()
+    try:
+        session.quit()
+    except Exception:  # noqa: BLE001 - 전원 테스트가 기기를 껐다 켜면 이 세션은 이미 끊겨 있다
+        pass
 
 
 @pytest.fixture

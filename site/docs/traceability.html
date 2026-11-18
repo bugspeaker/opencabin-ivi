@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>요구사항 추적표 · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 요구사항 추적표</span>
+  <a class="src" href="../../docs/traceability.md">원문 .md</a>
+</header>
+<div class="layout wide">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
+        <a href="traceability.html" aria-current="page">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
+        <a href="readme.html">README</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html">9. Test Bench 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc wide-doc">
+<h1 id="요구사항-추적표"><a class="anchor" href="#요구사항-추적표" aria-hidden="true">#</a>요구사항 추적표</h1>
+<p><a href="requirements.html">요구사항</a>마다 그것을 확인하는 테스트와 최신 결과를 이었습니다. 테스트 코드의 <code>@pytest.mark.req</code>를 읽어 <code>ivi-tests/tools/trace_report.py</code>가 만듭니다.
+A-SPICE의 검증 단계에서 요구하는 요구사항과 시험 사이의 양방향 추적을 흉내 낸 것이고, 표준 인증이나 심사를 받은 것은 아닙니다.</p>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>개수</th>
+</tr>
+</thead><tbody><tr>
+<td>요구사항</td>
+<td>26개</td>
+</tr>
+<tr>
+<td>테스트가 있는 요구사항</td>
+<td>26개</td>
+</tr>
+<tr>
+<td>테스트 함수</td>
+<td>98개</td>
+</tr>
+<tr>
+<td>요구사항이 없는 테스트</td>
+<td>0개</td>
+</tr>
+</tbody></table></div>
+<p>결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 일부러 남겨 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.</p>
+<h2 id="요구사항에서-테스트로"><a class="anchor" href="#요구사항에서-테스트로" aria-hidden="true">#</a>요구사항에서 테스트로</h2>
+<div class="table"><table><thead><tr>
+<th>ID</th>
+<th>요구사항</th>
+<th>출처</th>
+<th>테스트</th>
+<th>AAOS 에뮬레이터</th>
+<th>태블릿</th>
+</tr>
+</thead><tbody><tr>
+<td>SYS-01</td>
+<td>앱은 기기에 맞는 차량 데이터(AAOS는 CarService, 그 밖의 기기는 Mock)에 연결하고, 권한이 없는 신호는 앱이 멈추지 않고 &#39;값 없음&#39;으로 보여 준다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_app_starts_with_vehicle_source_for_device" title="테스트 결과와 화면 보기"><code>test_app_starts_with_vehicle_source_for_device</code></a><br><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_hvac_is_controllable</code></a><br><a class="test-link" href="test-results.html#test_parked_on_start" title="테스트 결과와 화면 보기"><code>test_parked_on_start</code></a></td>
+<td>3/3 통과</td>
+<td>3/3 통과</td>
+</tr>
+<tr>
+<td>UI-01</td>
+<td>화면 틀(아래 바, 분할 화면, 위젯, 알림 센터, 앱 목록, 이전 실행 앱)이 어느 화면에서든 동작한다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_bottom_bar_seat_heat_works_from_any_screen" title="테스트 결과와 화면 보기"><code>test_bottom_bar_seat_heat_works_from_any_screen</code></a><br><a class="test-link" href="test-results.html#test_bottom_bar_temperature_drives_vehicle" title="테스트 결과와 화면 보기"><code>test_bottom_bar_temperature_drives_vehicle</code></a><br><a class="test-link" href="test-results.html#test_each_tab_opens" title="테스트 결과와 화면 보기"><code>test_each_tab_opens</code></a><br><a class="test-link" href="test-results.html#test_notifications_record_guidance_and_restriction" title="테스트 결과와 화면 보기"><code>test_notifications_record_guidance_and_restriction</code></a><br><a class="test-link" href="test-results.html#test_recent_app_slot" title="테스트 결과와 화면 보기"><code>test_recent_app_slot</code></a><br><a class="test-link" href="test-results.html#test_split_screen_toggle" title="테스트 결과와 화면 보기"><code>test_split_screen_toggle</code></a><br><a class="test-link" href="test-results.html#test_stop_guidance_returns_to_search_and_clears_cluster_route" title="테스트 결과와 화면 보기"><code>test_stop_guidance_returns_to_search_and_clears_cluster_route</code></a><br><a class="test-link" href="test-results.html#test_utility_widget_pages" title="테스트 결과와 화면 보기"><code>test_utility_widget_pages</code></a></td>
+<td>18/18 통과</td>
+<td>18/18 통과</td>
+</tr>
+<tr>
+<td>DRIVE-01</td>
+<td>속도와 기어 신호를 주행 정보에 바로 보여 준다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_api_signals_drive_the_screen" title="테스트 결과와 화면 보기"><code>test_api_signals_drive_the_screen</code></a><br><a class="test-link" href="test-results.html#test_can_drive_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_drive_frames_reach_screen</code></a><br><a class="test-link" href="test-results.html#test_driving_signals_are_shown" title="테스트 결과와 화면 보기"><code>test_driving_signals_are_shown</code></a><br><a class="test-link" href="test-results.html#test_gear_value_shows_reverse" title="테스트 결과와 화면 보기"><code>test_gear_value_shows_reverse</code></a><br><a class="test-link" href="test-results.html#test_lane_assist_indicator_follows_speed" title="테스트 결과와 화면 보기"><code>test_lane_assist_indicator_follows_speed</code></a><br><a class="test-link" href="test-results.html#test_mph_setting_converts_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_mph_setting_converts_vehicle_speed</code></a><br><a class="test-link" href="test-results.html#test_parked_on_start" title="테스트 결과와 화면 보기"><code>test_parked_on_start</code></a><br><a class="test-link" href="test-results.html#test_trip_distance_follows_speed_signal" title="테스트 결과와 화면 보기"><code>test_trip_distance_follows_speed_signal</code></a></td>
+<td>8/8 통과</td>
+<td>8/8 통과</td>
+</tr>
+<tr>
+<td>DRIVE-02</td>
+<td>주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있다. 음악은 주행 중에도 쓸 수 있다.</td>
+<td>운전자 주의 분산</td>
+<td><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_media_stays_usable_while_driving</code></a><br><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a><br><a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_button_locked_while_driving</code></a><br><a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_is_blocked_while_driving</code></a><br><a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_video_plays_when_parked</code></a><br><a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_video_resumes_where_it_stopped</code></a></td>
+<td>6/6 통과</td>
+<td>6/6 통과</td>
+</tr>
+<tr>
+<td>DRIVE-03</td>
+<td>주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막는다.</td>
+<td>운전자 주의 분산</td>
+<td><a class="test-link" href="test-results.html#test_driving_locks_keypad_and_limits_contacts" title="테스트 결과와 화면 보기"><code>test_driving_locks_keypad_and_limits_contacts</code></a><br><a class="test-link" href="test-results.html#test_driving_locks_typing_and_refuses_mirror_fold" title="테스트 결과와 화면 보기"><code>test_driving_locks_typing_and_refuses_mirror_fold</code></a><br><a class="test-link" href="test-results.html#test_quick_control_mirror_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_quick_control_mirror_locked_while_driving</code></a><br><a class="test-link" href="test-results.html#test_search_locked_while_driving_but_favorites_work" title="테스트 결과와 화면 보기"><code>test_search_locked_while_driving_but_favorites_work</code></a></td>
+<td>4/4 통과</td>
+<td>4/4 통과</td>
+</tr>
+<tr>
+<td>HVAC-01</td>
+<td>운전석과 조수석 온도는 화면과 차량 신호가 같은 값을 가진다. 한쪽이 바뀌면 다른 쪽이 따라온다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_bottom_bar_temperature_drives_vehicle" title="테스트 결과와 화면 보기"><code>test_bottom_bar_temperature_drives_vehicle</code></a><br><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_button_changes_signal_by_one_step</code></a><br><a class="test-link" href="test-results.html#test_climate_button_goes_out_on_can" title="테스트 결과와 화면 보기"><code>test_climate_button_goes_out_on_can</code></a><br><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_hvac_is_controllable</code></a><br><a class="test-link" href="test-results.html#test_seats_are_independent" title="테스트 결과와 화면 보기"><code>test_seats_are_independent</code></a><br><a class="test-link" href="test-results.html#test_signal_is_shown_on_climate_and_home" title="테스트 결과와 화면 보기"><code>test_signal_is_shown_on_climate_and_home</code></a><br><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_typed_command_sets_vehicle_temperature</code></a><br><a class="test-link" href="test-results.html#test_voice_sets_driver_temperature_on_vehicle" title="테스트 결과와 화면 보기"><code>test_voice_sets_driver_temperature_on_vehicle</code></a><br><a class="test-link" href="test-results.html#test_zone_applies_command_to_speaking_seat" title="테스트 결과와 화면 보기"><code>test_zone_applies_command_to_speaking_seat</code></a></td>
+<td>14/14 통과</td>
+<td>14/14 통과</td>
+</tr>
+<tr>
+<td>HVAC-02</td>
+<td>온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼진다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_button_changes_signal_by_one_step</code></a><br><a class="test-link" href="test-results.html#test_buttons_disabled_at_limits" title="테스트 결과와 화면 보기"><code>test_buttons_disabled_at_limits</code></a></td>
+<td>6/6 통과</td>
+<td>6/6 통과</td>
+</tr>
+<tr>
+<td>HVAC-03</td>
+<td>A/C, AUTO, 풍량은 모든 좌석 area에 함께 적용된다. 풍량을 직접 바꾸면 AUTO가 풀린다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_ac_signal_is_shown_on_climate_and_bottom_bar" title="테스트 결과와 화면 보기"><code>test_ac_signal_is_shown_on_climate_and_bottom_bar</code></a><br><a class="test-link" href="test-results.html#test_ac_toggle_reaches_every_seat" title="테스트 결과와 화면 보기"><code>test_ac_toggle_reaches_every_seat</code></a><br><a class="test-link" href="test-results.html#test_fan_button_changes_signal_by_one" title="테스트 결과와 화면 보기"><code>test_fan_button_changes_signal_by_one</code></a><br><a class="test-link" href="test-results.html#test_fan_buttons_disabled_at_limits" title="테스트 결과와 화면 보기"><code>test_fan_buttons_disabled_at_limits</code></a><br><a class="test-link" href="test-results.html#test_manual_fan_releases_auto" title="테스트 결과와 화면 보기"><code>test_manual_fan_releases_auto</code></a></td>
+<td>7/7 통과</td>
+<td>7/7 통과</td>
+</tr>
+<tr>
+<td>HVAC-04</td>
+<td>최대 냉방(FULL)을 켜면 최저 온도와 최대 풍량이 되고, 끄면 켜기 전 값으로 돌아간다. 다른 공조 값을 직접 바꾸면 최대 냉방이 풀린다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_manual_fan_releases_max_ac" title="테스트 결과와 화면 보기"><code>test_manual_fan_releases_max_ac</code></a><br><a class="test-link" href="test-results.html#test_max_ac_off_restores_previous_settings" title="테스트 결과와 화면 보기"><code>test_max_ac_off_restores_previous_settings</code></a><br><a class="test-link" href="test-results.html#test_max_ac_sets_signal_and_coldest_settings" title="테스트 결과와 화면 보기"><code>test_max_ac_sets_signal_and_coldest_settings</code></a><br><a class="test-link" href="test-results.html#test_max_ac_signal_is_shown_on_toggle" title="테스트 결과와 화면 보기"><code>test_max_ac_signal_is_shown_on_toggle</code></a><br><a class="test-link" href="test-results.html#test_turning_ac_off_releases_max_ac" title="테스트 결과와 화면 보기"><code>test_turning_ac_off_releases_max_ac</code></a></td>
+<td>5/5 통과</td>
+<td>5/5 통과</td>
+</tr>
+<tr>
+<td>HVAC-05</td>
+<td>김서림 제거와 좌석 열선은 누른 유리, 그 좌석에만 적용되고, 화면 여러 곳에 같은 값으로 보인다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_assistant_seat_heat_follows_speaker_zone" title="테스트 결과와 화면 보기"><code>test_assistant_seat_heat_follows_speaker_zone</code></a><br><a class="test-link" href="test-results.html#test_bottom_bar_seat_heat_works_from_any_screen" title="테스트 결과와 화면 보기"><code>test_bottom_bar_seat_heat_works_from_any_screen</code></a><br><a class="test-link" href="test-results.html#test_defrost_changes_only_its_window" title="테스트 결과와 화면 보기"><code>test_defrost_changes_only_its_window</code></a><br><a class="test-link" href="test-results.html#test_seat_heat_cycles_levels_on_vehicle" title="테스트 결과와 화면 보기"><code>test_seat_heat_cycles_levels_on_vehicle</code></a><br><a class="test-link" href="test-results.html#test_seat_heat_signal_is_shown_everywhere" title="테스트 결과와 화면 보기"><code>test_seat_heat_signal_is_shown_everywhere</code></a></td>
+<td>7/7 통과</td>
+<td>7/7 통과</td>
+</tr>
+<tr>
+<td>HVAC-06</td>
+<td>SYNC를 켜면 조수석 온도가 운전석을 따르고, 조수석을 직접 바꾸면 SYNC가 풀린다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_passenger_change_releases_sync" title="테스트 결과와 화면 보기"><code>test_passenger_change_releases_sync</code></a><br><a class="test-link" href="test-results.html#test_sync_mirrors_driver_temperature_to_passenger" title="테스트 결과와 화면 보기"><code>test_sync_mirrors_driver_temperature_to_passenger</code></a></td>
+<td>2/2 통과</td>
+<td>2/2 통과</td>
+</tr>
+<tr>
+<td>BODY-01</td>
+<td>도어 버튼은 모든 문을 함께 잠그고 풀며, 차량 쪽 문 상태를 화면에 보여 준다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_can_battery_and_door_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_battery_and_door_frames_reach_screen</code></a><br><a class="test-link" href="test-results.html#test_door_lock_button_drives_every_door" title="테스트 결과와 화면 보기"><code>test_door_lock_button_drives_every_door</code></a><br><a class="test-link" href="test-results.html#test_door_lock_signal_is_shown" title="테스트 결과와 화면 보기"><code>test_door_lock_signal_is_shown</code></a></td>
+<td>3/3 통과</td>
+<td>3/3 통과</td>
+</tr>
+<tr>
+<td>ENERGY-01</td>
+<td>주행 가능 거리, 배터리, 외기 온도를 화면 단위(km 또는 마일, %, °C)로 보여 준다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_energy_signals_are_shown_on_cluster" title="테스트 결과와 화면 보기"><code>test_energy_signals_are_shown_on_cluster</code></a><br><a class="test-link" href="test-results.html#test_range_follows_speed_unit_setting" title="테스트 결과와 화면 보기"><code>test_range_follows_speed_unit_setting</code></a></td>
+<td>2/2 통과</td>
+<td>2/2 통과</td>
+</tr>
+<tr>
+<td>ENERGY-02</td>
+<td>주행 가능 거리가 30 km 이하면 경고와 충전소 안내를 띄우고 알림 센터에 남긴다. 충전해서 거리가 늘면 경고를 거둔다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_api_low_range_shows_charger_card" title="테스트 결과와 화면 보기"><code>test_api_low_range_shows_charger_card</code></a><br><a class="test-link" href="test-results.html#test_can_battery_and_door_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_battery_and_door_frames_reach_screen</code></a><br><a class="test-link" href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger" title="테스트 결과와 화면 보기"><code>test_low_range_card_starts_guidance_to_nearest_charger</code></a><br><a class="test-link" href="test-results.html#test_low_range_is_recorded_in_notifications" title="테스트 결과와 화면 보기"><code>test_low_range_is_recorded_in_notifications</code></a><br><a class="test-link" href="test-results.html#test_low_range_threshold" title="테스트 결과와 화면 보기"><code>test_low_range_threshold</code></a><br><a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a></td>
+<td>8/8 통과</td>
+<td>8/8 통과</td>
+</tr>
+<tr>
+<td>CAM-01</td>
+<td>기어가 R이 되면 어느 화면에서든 후방 카메라를 띄우고, R에서 벗어나면 보던 화면으로 돌아간다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_camera_returns_to_previous_screen" title="테스트 결과와 화면 보기"><code>test_camera_returns_to_previous_screen</code></a><br><a class="test-link" href="test-results.html#test_gear_value_shows_reverse" title="테스트 결과와 화면 보기"><code>test_gear_value_shows_reverse</code></a><br><a class="test-link" href="test-results.html#test_reverse_gear_shows_camera" title="테스트 결과와 화면 보기"><code>test_reverse_gear_shows_camera</code></a></td>
+<td>3/3 통과</td>
+<td>3/3 통과</td>
+</tr>
+<tr>
+<td>CAM-02</td>
+<td>후방 카메라 영상은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 한다.</td>
+<td>법규 (FMVSS 111)</td>
+<td><a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_rear_camera_appears_within_two_seconds</code></a></td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+</tr>
+<tr>
+<td>NAV-01</td>
+<td>목적지를 찾아 안내를 시작하고, 남은 거리는 차량 속도 신호를 따라 줄며, 도착하거나 끝내면 안내를 거둔다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_ambiguous_destination_offers_candidates" title="테스트 결과와 화면 보기"><code>test_ambiguous_destination_offers_candidates</code></a><br><a class="test-link" href="test-results.html#test_arrival" title="테스트 결과와 화면 보기"><code>test_arrival</code></a><br><a class="test-link" href="test-results.html#test_guidance_counts_down_with_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_guidance_counts_down_with_vehicle_speed</code></a><br><a class="test-link" href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger" title="테스트 결과와 화면 보기"><code>test_low_range_card_starts_guidance_to_nearest_charger</code></a><br><a class="test-link" href="test-results.html#test_parked_vehicle_does_not_advance_route" title="테스트 결과와 화면 보기"><code>test_parked_vehicle_does_not_advance_route</code></a><br><a class="test-link" href="test-results.html#test_search_filters_destinations" title="테스트 결과와 화면 보기"><code>test_search_filters_destinations</code></a><br><a class="test-link" href="test-results.html#test_stop_guidance_returns_to_search_and_clears_cluster_route" title="테스트 결과와 화면 보기"><code>test_stop_guidance_returns_to_search_and_clears_cluster_route</code></a><br><a class="test-link" href="test-results.html#test_voice_starts_guidance_home" title="테스트 결과와 화면 보기"><code>test_voice_starts_guidance_home</code></a></td>
+<td>8/8 통과</td>
+<td>8/8 통과</td>
+</tr>
+<tr>
+<td>MEDIA-01</td>
+<td>음악, 라디오, 통화는 한 번에 하나만 소리를 낸다. 통화가 끝나면 듣던 것이 다시 나온다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_call_pauses_radio_then_resumes" title="테스트 결과와 화면 보기"><code>test_call_pauses_radio_then_resumes</code></a><br><a class="test-link" href="test-results.html#test_radio_and_media_play_one_at_a_time" title="테스트 결과와 화면 보기"><code>test_radio_and_media_play_one_at_a_time</code></a></td>
+<td>2/2 통과</td>
+<td>2/2 통과</td>
+</tr>
+<tr>
+<td>MEDIA-02</td>
+<td>음악과 영상 재생, 라디오 조정과 프리셋, 전화 걸기가 동작한다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_am_band_uses_khz_steps" title="테스트 결과와 화면 보기"><code>test_am_band_uses_khz_steps</code></a><br><a class="test-link" href="test-results.html#test_call_contact_shows_call_screen_and_recent" title="테스트 결과와 화면 보기"><code>test_call_contact_shows_call_screen_and_recent</code></a><br><a class="test-link" href="test-results.html#test_keypad_dial" title="테스트 결과와 화면 보기"><code>test_keypad_dial</code></a><br><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_media_stays_usable_while_driving</code></a><br><a class="test-link" href="test-results.html#test_play_pause_toggles" title="테스트 결과와 화면 보기"><code>test_play_pause_toggles</code></a><br><a class="test-link" href="test-results.html#test_power_on_plays_default_station" title="테스트 결과와 화면 보기"><code>test_power_on_plays_default_station</code></a><br><a class="test-link" href="test-results.html#test_preset_save_and_recall" title="테스트 결과와 화면 보기"><code>test_preset_save_and_recall</code></a><br><a class="test-link" href="test-results.html#test_selecting_track_starts_it" title="테스트 결과와 화면 보기"><code>test_selecting_track_starts_it</code></a><br><a class="test-link" href="test-results.html#test_tune_and_seek" title="테스트 결과와 화면 보기"><code>test_tune_and_seek</code></a><br><a class="test-link" href="test-results.html#test_video_next_clip" title="테스트 결과와 화면 보기"><code>test_video_next_clip</code></a><br><a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_video_plays_when_parked</code></a></td>
+<td>13/13 통과</td>
+<td>13/13 통과</td>
+</tr>
+<tr>
+<td>VOICE-01</td>
+<td>음성 명령과 AI 어시스턴트는 말한 사람의 좌석에 맞춰 차량 기능과 앱 기능을 실행한다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_ambiguous_destination_offers_candidates" title="테스트 결과와 화면 보기"><code>test_ambiguous_destination_offers_candidates</code></a><br><a class="test-link" href="test-results.html#test_assistant_seat_heat_follows_speaker_zone" title="테스트 결과와 화면 보기"><code>test_assistant_seat_heat_follows_speaker_zone</code></a><br><a class="test-link" href="test-results.html#test_multiple_commands_in_one_sentence" title="테스트 결과와 화면 보기"><code>test_multiple_commands_in_one_sentence</code></a><br><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_typed_command_sets_vehicle_temperature</code></a><br><a class="test-link" href="test-results.html#test_voice_calls_contact" title="테스트 결과와 화면 보기"><code>test_voice_calls_contact</code></a><br><a class="test-link" href="test-results.html#test_voice_panel_closes_after_command" title="테스트 결과와 화면 보기"><code>test_voice_panel_closes_after_command</code></a><br><a class="test-link" href="test-results.html#test_voice_popup_and_assistant_share_history" title="테스트 결과와 화면 보기"><code>test_voice_popup_and_assistant_share_history</code></a><br><a class="test-link" href="test-results.html#test_voice_sets_driver_temperature_on_vehicle" title="테스트 결과와 화면 보기"><code>test_voice_sets_driver_temperature_on_vehicle</code></a><br><a class="test-link" href="test-results.html#test_voice_starts_guidance_home" title="테스트 결과와 화면 보기"><code>test_voice_starts_guidance_home</code></a><br><a class="test-link" href="test-results.html#test_voice_turns_on_radio" title="테스트 결과와 화면 보기"><code>test_voice_turns_on_radio</code></a><br><a class="test-link" href="test-results.html#test_zone_applies_command_to_speaking_seat" title="테스트 결과와 화면 보기"><code>test_zone_applies_command_to_speaking_seat</code></a></td>
+<td>11/11 통과</td>
+<td>11/11 통과</td>
+</tr>
+<tr>
+<td>SET-01</td>
+<td>설정과 라디오 프리셋은 앱을 다시 켜도 남고, 초기화하면 기본값으로 돌아간다. 속도 단위는 차량 정보 표시에 반영된다.</td>
+<td>기능</td>
+<td><a class="test-link" href="test-results.html#test_12_hour_clock_on_tablet" title="테스트 결과와 화면 보기"><code>test_12_hour_clock_on_tablet</code></a><br><a class="test-link" href="test-results.html#test_mph_setting_converts_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_mph_setting_converts_vehicle_speed</code></a><br><a class="test-link" href="test-results.html#test_preset_and_frequency_survive_app_restart" title="테스트 결과와 화면 보기"><code>test_preset_and_frequency_survive_app_restart</code></a><br><a class="test-link" href="test-results.html#test_range_follows_speed_unit_setting" title="테스트 결과와 화면 보기"><code>test_range_follows_speed_unit_setting</code></a><br><a class="test-link" href="test-results.html#test_reset_restores_defaults" title="테스트 결과와 화면 보기"><code>test_reset_restores_defaults</code></a><br><a class="test-link" href="test-results.html#test_settings_survive_app_restart" title="테스트 결과와 화면 보기"><code>test_settings_survive_app_restart</code></a><br><a class="test-link" href="test-results.html#test_volume_steps" title="테스트 결과와 화면 보기"><code>test_volume_steps</code></a></td>
+<td>6/7 통과, 건너뜀 1</td>
+<td>7/7 통과</td>
+</tr>
+<tr>
+<td>NET-01</td>
+<td>차량 네트워크(CAN)로 들어온 주행, 배터리, 도어 신호가 VHAL을 거쳐 화면에 보인다.</td>
+<td>통합 (모의 환경)</td>
+<td><a class="test-link" href="test-results.html#test_can_battery_and_door_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_battery_and_door_frames_reach_screen</code></a><br><a class="test-link" href="test-results.html#test_can_drive_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_drive_frames_reach_screen</code></a></td>
+<td>2/2 통과</td>
+<td>2/2 통과</td>
+</tr>
+<tr>
+<td>NET-02</td>
+<td>화면에서 바꾼 공조 값이 CAN 프레임으로 나간다.</td>
+<td>통합 (모의 환경)</td>
+<td><a class="test-link" href="test-results.html#test_climate_button_goes_out_on_can" title="테스트 결과와 화면 보기"><code>test_climate_button_goes_out_on_can</code></a></td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+</tr>
+<tr>
+<td>BENCH-01</td>
+<td>Test Bench API로 기기, 차량 신호, 실행 결과를 조회하고 신호를 넣을 수 있다. 잘못된 값은 거절하고 차량에 넣지 않는다.</td>
+<td>운영</td>
+<td><a class="test-link" href="test-results.html#test_api_low_range_shows_charger_card" title="테스트 결과와 화면 보기"><code>test_api_low_range_shows_charger_card</code></a><br><a class="test-link" href="test-results.html#test_api_rejects_invalid_value_and_leaves_vehicle_alone" title="테스트 결과와 화면 보기"><code>test_api_rejects_invalid_value_and_leaves_vehicle_alone</code></a><br><a class="test-link" href="test-results.html#test_api_signals_drive_the_screen" title="테스트 결과와 화면 보기"><code>test_api_signals_drive_the_screen</code></a></td>
+<td>3/3 통과</td>
+<td>3/3 통과</td>
+</tr>
+<tr>
+<td>BENCH-02</td>
+<td>전원을 껐다 켜도 기기가 정해진 시간 안에 부팅되고, 앱과 공조 기본값이 돌아온다.</td>
+<td>운영 (모의 환경)</td>
+<td><a class="test-link" href="test-results.html#test_power_cycle_brings_back_app_and_cabin_defaults" title="테스트 결과와 화면 보기"><code>test_power_cycle_brings_back_app_and_cabin_defaults</code></a></td>
+<td>1/1 통과</td>
+<td>0/1 통과, 건너뜀 1</td>
+</tr>
+<tr>
+<td>SPIKE-01</td>
+<td>AAOS 기본 SystemUI의 공조 바가 VHAL 신호와 이어지고, 속도와 기어가 주행 상태를 바꾼다.</td>
+<td>기술 검증 (1단계)</td>
+<td><a class="test-link" href="test-results.html#test_driver_temp_up_is_not_covered_by_home" title="테스트 결과와 화면 보기"><code>test_driver_temp_up_is_not_covered_by_home</code></a><br><a class="test-link" href="test-results.html#test_hvac_signal_is_shown_on_ui" title="테스트 결과와 화면 보기"><code>test_hvac_signal_is_shown_on_ui</code></a><br><a class="test-link" href="test-results.html#test_hvac_ui_tap_changes_signal" title="테스트 결과와 화면 보기"><code>test_hvac_ui_tap_changes_signal</code></a><br><a class="test-link" href="test-results.html#test_speed_and_gear_change_driving_state" title="테스트 결과와 화면 보기"><code>test_speed_and_gear_change_driving_state</code></a></td>
+<td>5/6 통과, 알려진 결함 1</td>
+<td>0/6 통과, 건너뜀 6</td>
+</tr>
+</tbody></table></div>
+<h2 id="테스트에서-요구사항으로"><a class="anchor" href="#테스트에서-요구사항으로" aria-hidden="true">#</a>테스트에서 요구사항으로</h2>
+<div class="table"><table><thead><tr>
+<th>테스트 파일</th>
+<th>테스트 수</th>
+<th>요구사항</th>
+</tr>
+</thead><tbody><tr>
+<td><a class="test-link" href="test-results.html#file-test_assistant" title="테스트 결과와 화면 보기"><code>test_assistant.py</code></a></td>
+<td>6개</td>
+<td>DRIVE-03, HVAC-01, NAV-01, VOICE-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_bench_api" title="테스트 결과와 화면 보기"><code>test_bench_api.py</code></a></td>
+<td>3개</td>
+<td>BENCH-01, DRIVE-01, ENERGY-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_can_gateway" title="테스트 결과와 화면 보기"><code>test_can_gateway.py</code></a></td>
+<td>3개</td>
+<td>BODY-01, DRIVE-01, ENERGY-02, HVAC-01, NET-01, NET-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_climate" title="테스트 결과와 화면 보기"><code>test_climate.py</code></a></td>
+<td>4개</td>
+<td>HVAC-01, HVAC-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_cockpit" title="테스트 결과와 화면 보기"><code>test_cockpit.py</code></a></td>
+<td>10개</td>
+<td>DRIVE-01, DRIVE-03, HVAC-01, HVAC-06, UI-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_driving" title="테스트 결과와 화면 보기"><code>test_driving.py</code></a></td>
+<td>7개</td>
+<td>DRIVE-01, DRIVE-02, MEDIA-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_media" title="테스트 결과와 화면 보기"><code>test_media.py</code></a></td>
+<td>3개</td>
+<td>DRIVE-02, MEDIA-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_navigation" title="테스트 결과와 화면 보기"><code>test_navigation.py</code></a></td>
+<td>6개</td>
+<td>DRIVE-03, NAV-01, UI-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_phone" title="테스트 결과와 화면 보기"><code>test_phone.py</code></a></td>
+<td>4개</td>
+<td>DRIVE-03, MEDIA-01, MEDIA-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_power" title="테스트 결과와 화면 보기"><code>test_power.py</code></a></td>
+<td>1개</td>
+<td>BENCH-02</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_radio" title="테스트 결과와 화면 보기"><code>test_radio.py</code></a></td>
+<td>6개</td>
+<td>MEDIA-01, MEDIA-02, SET-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_rear_camera" title="테스트 결과와 화면 보기"><code>test_rear_camera.py</code></a></td>
+<td>4개</td>
+<td>CAM-01, CAM-02, DRIVE-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_settings" title="테스트 결과와 화면 보기"><code>test_settings.py</code></a></td>
+<td>5개</td>
+<td>DRIVE-01, SET-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_smoke" title="테스트 결과와 화면 보기"><code>test_smoke.py</code></a></td>
+<td>4개</td>
+<td>DRIVE-01, HVAC-01, SYS-01, UI-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_spike_aaos" title="테스트 결과와 화면 보기"><code>test_spike_aaos.py</code></a></td>
+<td>4개</td>
+<td>SPIKE-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_vehicle_signals" title="테스트 결과와 화면 보기"><code>test_vehicle_signals.py</code></a></td>
+<td>23개</td>
+<td>BODY-01, ENERGY-01, ENERGY-02, HVAC-03, HVAC-04, HVAC-05, NAV-01, SET-01, UI-01, VOICE-01</td>
+</tr>
+<tr>
+<td><a class="test-link" href="test-results.html#file-test_voice" title="테스트 결과와 화면 보기"><code>test_voice.py</code></a></td>
+<td>5개</td>
+<td>HVAC-01, NAV-01, VOICE-01</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+  
+</div>
+
+</body>
+</html>

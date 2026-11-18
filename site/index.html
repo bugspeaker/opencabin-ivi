@@ -109,11 +109,13 @@ section { padding: var(--s-section) 0 0; }
 .fit { padding-top: var(--s-xxl); scroll-margin-top: 56px; }
 .fit-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s-xl); margin-bottom: var(--s-lg); }
 .fit-head-copy { display: grid; gap: var(--s-sm); min-width: 0; }
-.fit-score { flex: none; display: grid; gap: var(--s-xs); justify-items: end; width: 180px; }
+.fit-score { flex: none; display: grid; gap: var(--s-xs); justify-items: end; width: 260px; text-align: right; }
 .fit-score-num { margin: 0; font-family: var(--font-display); font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -1px; color: var(--ink-tertiary); font-variant-numeric: tabular-nums; }
 .fit-score-num span { color: var(--ink); }
 .fit-bar { width: 100%; height: 4px; border-radius: var(--r-pill); background: var(--surface-3); overflow: hidden; }
+.fit-bar { display: flex; gap: 2px; }
 .fit-bar span { display: block; height: 100%; border-radius: inherit; background: var(--semantic-success); }
+.fit-bar span.is-partial { background: var(--primary); }
 .fit-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-lg); align-items: start; }
 .fit-col { display: grid; gap: var(--s-lg); }
 .fit-group { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); overflow: hidden; }
@@ -134,6 +136,8 @@ a.fit-row:focus-visible { outline-offset: -2px; }
 .fit-state { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: var(--r-pill); background: var(--surface-2); color: var(--ink-subtle); font-size: 12px; line-height: 1.4; white-space: nowrap; }
 .fit-state.is-done { background: rgb(39 166 68 / 0.12); color: var(--semantic-success); }
 .fit-state.is-done::before { content: ""; width: 6px; height: 6px; border-radius: var(--r-pill); background: currentColor; }
+.fit-state.is-partial { background: rgb(94 106 210 / 0.16); color: var(--primary-hover); }
+.fit-state.is-partial::before { content: ""; width: 6px; height: 6px; border-radius: var(--r-pill); border: 1.5px solid currentColor; }
 .fit-dest { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; line-height: 1.4; color: var(--ink-subtle); white-space: nowrap; }
 .fit-arrow { flex: none; }
 .is-gap .fit-row { padding-top: var(--s-xs); padding-bottom: var(--s-xs); }
@@ -293,8 +297,8 @@ footer a:hover { color: var(--ink); }
         </div>
         <div class="fit-score">
           <p class="fit-score-num"><span>13</span> / 16</p>
-          <p class="caption subtle">항목 완료</p>
-          <div class="fit-bar" aria-hidden="true"><span style="width:81%"></span></div>
+          <p class="caption subtle">항목 완료, 3개는 모의 환경과 개념 적용</p>
+          <div class="fit-bar" aria-hidden="true"><span style="width:81%"></span><span class="is-partial" style="width:19%"></span></div>
         </div>
       </div>
       <div class="fit-cols">
@@ -309,7 +313,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=gating">
               <span class="fit-num">02</span>
-              <span class="fit-body"><span class="fit-title">Smoke · Sanity · Regression 게이팅</span><span class="fit-done">smoke 13개, sanity 52개, regression 44개로 나누고 PR, main, Nightly마다 돌리는 범위를 다르게 했습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Smoke · Sanity · Regression 게이팅</span><span class="fit-done">smoke 13개, sanity 55개, regression 49개로 나누고 PR, main, Nightly마다 돌리는 범위를 다르게 했습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 13개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=e2e">
@@ -330,7 +334,7 @@ footer a:hover { color: var(--ink); }
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=injection">
               <span class="fit-num">06</span>
               <span class="fit-body"><span class="fit-title">ADB · shell · CarPropertyManager로 Property Injection</span><span class="fit-done">속도, 기어, 주행 가능 거리처럼 읽기 전용인 신호는 dumpsys로 VHAL에 직접 넣었습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 33개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 34개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=flaky">
               <span class="fit-num">07</span>
@@ -346,12 +350,12 @@ footer a:hover { color: var(--ink); }
           <ol class="fit-list">
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=android">
               <span class="fit-num">08</span>
-              <span class="fit-body"><span class="fit-title">Android/AAOS 테스트 자동화 구축과 운영</span><span class="fit-done">AAOS 에뮬레이터와 태블릿에서 E2E 115개를 돌리고, 테스트마다 끝난 화면을 남겼습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 115개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">Android/AAOS 테스트 자동화 구축과 운영</span><span class="fit-done">AAOS 에뮬레이터와 태블릿에서 E2E 123개를 돌리고, 테스트마다 끝난 화면을 남겼습니다.</span></span>
+              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 123개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase3-framework.html#구조">
               <span class="fit-num">09</span>
-              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 37개 있습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 61개 있습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase1-spike.html#appium을-aaos에-붙일-때-필요한-것">
@@ -372,28 +376,28 @@ footer a:hover { color: var(--ink); }
           </ol>
         </div>
         <div class="fit-group">
-          <h3 class="fit-group-title">우대사항 <span>1 / 4</span></h3>
+          <h3 class="fit-group-title">우대사항 <span>1 / 4, 일부 3</span></h3>
           <ol class="fit-list">
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=vhal">
               <span class="fit-num">13</span>
               <span class="fit-body"><span class="fit-title">VHAL · CarService · CarPropertyManager</span><span class="fit-done">신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 35개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
-            <li class="fit-item is-gap"><div class="fit-row">
+            <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=network">
               <span class="fit-num">14</span>
-              <span class="fit-body"><span class="fit-title">차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)</span></span>
-              <span class="fit-side"><span class="fit-state">경험 없음</span></span>
-            </div></li>
-            <li class="fit-item is-gap"><div class="fit-row">
+              <span class="fit-body"><span class="fit-title">차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)</span><span class="fit-done">가상 CAN 버스와 DBC로 VCU, BMS, BCM을 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다.</span></span>
+              <span class="fit-side"><span class="fit-state is-partial">CAN만 모의</span><span class="fit-dest">테스트 3개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+            </a></li>
+            <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=rest">
               <span class="fit-num">15</span>
-              <span class="fit-body"><span class="fit-title">REST API 자동화, 원격 전원 제어</span></span>
-              <span class="fit-side"><span class="fit-state">아직 없음</span></span>
-            </div></li>
-            <li class="fit-item is-gap"><div class="fit-row">
+              <span class="fit-body"><span class="fit-title">REST API 자동화, 원격 전원 제어</span><span class="fit-done">Test Bench REST API로 기기, 차량 신호, 전원, 실행 결과를 다루고, 에뮬레이터 전원을 껐다 켜 부팅 시간을 쟀습니다. 실제 전원 장비는 쓰지 않았습니다.</span></span>
+              <span class="fit-side"><span class="fit-state is-partial">모의 장비</span><span class="fit-dest">테스트 4개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+            </a></li>
+            <li class="fit-item"><a class="fit-row" href="docs/traceability.html">
               <span class="fit-num">16</span>
-              <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span></span>
-              <span class="fit-side"><span class="fit-state">공부 필요</span></span>
-            </div></li>
+              <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span><span class="fit-done">요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 후방 카메라가 2초 안에 뜨는지(FMVSS 111) 잽니다. 인증이나 심사 경험은 없습니다.</span></span>
+              <span class="fit-side"><span class="fit-state is-partial">개념 적용</span><span class="fit-dest">추적표<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+            </a></li>
           </ol>
         </div>
         </div>
@@ -406,23 +410,23 @@ footer a:hover { color: var(--ink); }
       <div class="stats">
         <a class="card stat" href="docs/test-results.html">
           <p class="eyebrow">E2E 테스트</p>
-          <p class="headline">115개</p>
+          <p class="headline">123개</p>
           <p class="body-sm subtle">두 기기에서 같은 테스트 코드</p>
         </a>
         <a class="card stat" href="docs/test-results.html">
           <p class="eyebrow">AAOS 에뮬레이터</p>
-          <p class="headline">113개 통과</p>
-          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 9분 35초</p>
+          <p class="headline">121개 통과</p>
+          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 10분 11초</p>
         </a>
         <a class="card stat" href="docs/test-results.html">
           <p class="eyebrow">태블릿 (Mock)</p>
-          <p class="headline">109개 통과</p>
-          <p class="body-sm subtle">AAOS 전용 건너뜀 6, 9분 11초</p>
+          <p class="headline">116개 통과</p>
+          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 9분 44초</p>
         </a>
         <a class="card stat" href="docs/test-results.html?req=flaky">
           <p class="eyebrow">실패와 재시도</p>
           <p class="headline">0건</p>
-          <p class="body-sm subtle">두 기기에서 223번 실행</p>
+          <p class="body-sm subtle">두 기기에서 238번 실행</p>
         </a>
       </div>
     </section>
@@ -505,18 +509,18 @@ footer a:hover { color: var(--ink); }
           <h3 class="card-title">AAOS 에뮬레이터</h3>
           <p class="body-sm muted">에뮬레이터의 CarService와 VHAL을 씁니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.</p>
           <div>
-            <div class="device-row body-sm"><span class="subtle">결과</span><span>113개 통과, 1개 건너뜀, 1개 알려진 결함</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>9분 35초</span></div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>121개 통과, 1개 건너뜀, 1개 알려진 결함</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>10분 10초</span></div>
             <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">CarPropertyManager</span></div>
           </div>
         </article>
         <article class="card device">
           <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
           <h3 class="card-title">Android 태블릿</h3>
-          <p class="body-sm muted">화웨이 태블릿에서는 Mock 차량 서비스를 씁니다. AAOS 전용 테스트 6개는 건너뜁니다.</p>
+          <p class="body-sm muted">화웨이 태블릿에서는 Mock 차량 서비스를 씁니다. AAOS 전용 테스트 7개는 건너뜁니다.</p>
           <div>
-            <div class="device-row body-sm"><span class="subtle">결과</span><span>109개 통과, 6개 건너뜀</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>9분 11초</span></div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>116개 통과, 7개 건너뜀</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>9분 43초</span></div>
             <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">MockVehicleDataSource</span></div>
           </div>
         </article>
@@ -529,6 +533,11 @@ footer a:hover { color: var(--ink); }
         <h2 class="display-lg">단계별 진행</h2>
       </div>
       <div>
+        <div class="changelog-row">
+          <span class="mono subtle">09</span>
+          <div><h3 class="card-title">Test Bench 확장</h3><p class="body-sm muted">Test Bench REST API와 원격 전원 제어, 가상 CAN 버스와 VHAL 게이트웨이, 요구사항 추적표를 붙였습니다. 실제 장비가 아니라 PC 안의 모의 환경입니다.</p></div>
+          <span class="caption subtle">E2E 123개</span>
+        </div>
         <div class="changelog-row">
           <span class="mono subtle">08</span>
           <div><h3 class="card-title">차량 신호 확장</h3><p class="body-sm muted">공조, 최대 냉방(FULL), 도어 잠금을 VHAL 신호에 연결하고 양방향 E2E를 더했습니다. 영상 화면은 직접 찍은 블랙박스 영상을 재생하고, 테스트마다 끝난 화면을 남깁니다.</p></div>
@@ -595,7 +604,7 @@ python -m venv .venv
         </div>
         <div class="hero-actions">
           <a class="btn btn-secondary" href="docs/phase1-spike.html">1단계부터</a>
-          <a class="btn btn-primary" href="docs/phase8-signals.html">최신 기록 보기</a>
+          <a class="btn btn-primary" href="docs/phase9-bench.html">최신 기록 보기</a>
         </div>
       </div>
     </section>
