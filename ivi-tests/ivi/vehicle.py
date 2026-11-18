@@ -45,6 +45,7 @@ class Prop:
     # 8단계
     HVAC_AC_ON = 0x15200505             # bool, 좌석별
     HVAC_AUTO_ON = 0x1520050A           # bool, 좌석별
+    HVAC_MAX_AC_ON = 0x15200506         # bool, 좌석별
     HVAC_FAN_SPEED = 0x15400500         # int32 1~7, 좌석별
     HVAC_SEAT_TEMPERATURE = 0x1540050B  # int32 -2~2 (양수 = 열선), 좌석별
     HVAC_DEFROSTER = 0x13200504         # bool, 창(앞 0x1 / 뒤 0x2)
@@ -59,6 +60,7 @@ class Signal:
     """8단계 차량 신호 이름. 두 어댑터가 같이 쓴다 (Mock 의 broadcast extra 이름과 같다)."""
     AC = "ac"
     AUTO = "auto"
+    MAX_AC = "max_ac"   # 최대 냉방. 화면 버튼 이름은 FULL
     FAN = "fan"
     DEFROST_FRONT = "defrost_front"
     DEFROST_REAR = "defrost_rear"
@@ -76,7 +78,7 @@ class Signal:
 
 # 테스트 시작 기준 값 (값의 타입이 곧 신호의 타입이다: bool / int / float)
 CABIN_DEFAULTS = {
-    Signal.AC: True, Signal.AUTO: False, Signal.FAN: 3,
+    Signal.AC: True, Signal.AUTO: False, Signal.MAX_AC: False, Signal.FAN: 3,
     Signal.DEFROST_FRONT: False, Signal.DEFROST_REAR: False,
     Signal.HEAT_DRIVER: 0, Signal.HEAT_PASSENGER: 0,
     Signal.DOORS_LOCKED: True,
@@ -244,6 +246,7 @@ class AaosVehicle(VehicleController):
     _SIGNALS = {
         Signal.AC: (Prop.HVAC_AC_ON, 0x1, SEAT_AREAS),
         Signal.AUTO: (Prop.HVAC_AUTO_ON, 0x1, SEAT_AREAS),
+        Signal.MAX_AC: (Prop.HVAC_MAX_AC_ON, 0x1, SEAT_AREAS),
         Signal.FAN: (Prop.HVAC_FAN_SPEED, 0x1, SEAT_AREAS),
         Signal.DEFROST_FRONT: (Prop.HVAC_DEFROSTER, 0x1, (0x1,)),
         Signal.DEFROST_REAR: (Prop.HVAC_DEFROSTER, 0x2, (0x2,)),
@@ -277,7 +280,7 @@ class AaosVehicle(VehicleController):
         return type(CABIN_DEFAULTS[name])(raw)
 
     def set_signals(self, values, attempts=2):
-        """모든 값을 adb shell 한 번에 넣는다 (기준 값 11개 × area = 26번의 --set 을 왕복 한 번으로).
+        """모든 값을 adb shell 한 번에 넣는다 (기준 값 12개 × area = 31번의 --set 을 왕복 한 번으로).
         force() 와 같이 VHAL 의 일시 오류는 한 번 더 시도하고 기록한다."""
         commands = []
         for name, value in values.items():

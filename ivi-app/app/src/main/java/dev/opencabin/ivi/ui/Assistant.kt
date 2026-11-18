@@ -70,7 +70,7 @@ val AssistantSuggestions = listOf(
 @Composable
 fun AssistantScreen(state: VehicleState, cockpit: CockpitState, onAsk: (String) -> Unit, onChoose: (Place) -> Unit) {
     LaunchedEffect(Unit) {
-        if (cockpit.chat.isEmpty()) cockpit.say(false, "무엇을 도와드릴까요? ${CabinAssistant.HELP}", null)
+        if (cockpit.chat.isEmpty()) cockpit.say(false, "무엇을 도와드릴까요? 아래 추천 명령을 누르거나 직접 입력해 보세요.", null)
     }
 
     fun send(text: String) {
@@ -165,7 +165,7 @@ fun AssistantScreen(state: VehicleState, cockpit: CockpitState, onAsk: (String) 
                     )
                     if (input.isEmpty()) {
                         Text(
-                            if (typing) "말하듯이 입력해 보세요" else "주행 중에는 글자 입력이 제한됩니다 · 추천 명령을 눌러 말해 보세요",
+                            if (typing) "말하듯이 입력해 보세요" else "주행 중에는 입력할 수 없습니다. 아래 추천 명령을 눌러 주세요",
                             Modifier.testTag(if (typing) "assistant_hint" else "assistant_input_locked"),
                             color = if (typing) IviColors.TextTertiary else IviColors.Warn,
                             fontSize = 14.sp,

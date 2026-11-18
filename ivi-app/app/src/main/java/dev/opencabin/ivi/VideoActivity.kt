@@ -93,7 +93,7 @@ private fun Player(onClose: () -> Unit) {
     val length = 3 * 60 + 24
     Column(Modifier.fillMaxSize().padding(24.dp).testTag("video_player"), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Coastal Road — 주행 영상", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+            Text("Coastal Road · 주행 영상", fontSize = 20.sp, fontWeight = FontWeight.Medium)
             Spacer(Modifier.weight(1f))
             CloseButton(onClose)
         }

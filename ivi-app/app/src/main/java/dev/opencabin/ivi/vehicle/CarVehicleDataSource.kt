@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
  * 속도·기어는 구독만, 공조 온도는 구독 + 쓰기. 주행 중 제한은 CarUxRestrictionsManager 를 그대로 따른다.
  *
  * 8단계에서 더한 신호 (권한):
- *   공조 A/C · AUTO · 풍량 · 김서림 · 좌석 열선   구독 + 쓰기   CONTROL_CAR_CLIMATE (signature|privileged)
+ *   공조 A/C · AUTO · 최대 냉방 · 풍량 · 김서림 · 좌석 열선   구독 + 쓰기   CONTROL_CAR_CLIMATE (signature|privileged)
  *   도어 잠금 DOOR_LOCK                          구독 + 쓰기   CONTROL_CAR_DOORS   (signature|privileged)
  *   주행 가능 거리 · 배터리 잔량                   구독         CAR_ENERGY          (dangerous)
  *   배터리 용량 · 외기 온도                        읽기/구독     CAR_INFO · CAR_EXTERIOR_ENVIRONMENT (normal)
@@ -79,6 +79,8 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
     override fun setAc(on: Boolean) = writeAll(VehiclePropertyIds.HVAC_AC_ON, on)
 
     override fun setAuto(on: Boolean) = writeAll(VehiclePropertyIds.HVAC_AUTO_ON, on)
+
+    override fun setMaxAc(on: Boolean) = writeAll(VehiclePropertyIds.HVAC_MAX_AC_ON, on)
 
     override fun setFanSpeed(level: Int) = writeAll(VehiclePropertyIds.HVAC_FAN_SPEED, level.coerceIn(HvacSpec.FAN_MIN, HvacSpec.FAN_MAX))
 
@@ -201,6 +203,7 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
             // 전 좌석에 같은 값을 쓰는 신호는 운전석 area 의 값을 화면에 쓴다
             VehiclePropertyIds.HVAC_AC_ON -> if (value.isFor(Seat.DRIVER)) _state.update { it.copy(acOn = value.value as Boolean) }
             VehiclePropertyIds.HVAC_AUTO_ON -> if (value.isFor(Seat.DRIVER)) _state.update { it.copy(autoOn = value.value as Boolean) }
+            VehiclePropertyIds.HVAC_MAX_AC_ON -> if (value.isFor(Seat.DRIVER)) _state.update { it.copy(maxAcOn = value.value as Boolean) }
             VehiclePropertyIds.HVAC_FAN_SPEED -> if (value.isFor(Seat.DRIVER)) _state.update { it.copy(fanSpeed = value.value as Int) }
             VehiclePropertyIds.HVAC_SEAT_TEMPERATURE -> {
                 val level = (value.value as Int).coerceAtLeast(0) // 음수(통풍)는 열선 꺼짐으로 본다
@@ -238,7 +241,7 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
         const val DOOR_DRIVER = 0x1
 
         val HVAC_EXTRA = intArrayOf(
-            VehiclePropertyIds.HVAC_AC_ON, VehiclePropertyIds.HVAC_AUTO_ON, VehiclePropertyIds.HVAC_FAN_SPEED,
+            VehiclePropertyIds.HVAC_AC_ON, VehiclePropertyIds.HVAC_AUTO_ON, VehiclePropertyIds.HVAC_MAX_AC_ON, VehiclePropertyIds.HVAC_FAN_SPEED,
             VehiclePropertyIds.HVAC_SEAT_TEMPERATURE, VehiclePropertyIds.HVAC_DEFROSTER,
         )
         val SENSORS = intArrayOf(

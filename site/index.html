@@ -217,7 +217,7 @@ footer a:hover { color: var(--ink); }
     <div class="hero">
       <div class="hero-copy">
         <p class="eyebrow">AAOS 인포테인먼트 테스트 자동화</p>
-        <h1 class="display-xl">화면을 누르면,<br>차량 신호까지 확인합니다.</h1>
+        <h1 class="display-xl">AAOS IVI 앱<br>E2E 테스트 자동화</h1>
         <p class="body-lg muted">가상 차량 인포테인먼트 앱과, 그 앱을 UI 조작부터 VHAL 신호까지 E2E로 검증하는 테스트 환경입니다. 같은 테스트를 AAOS 에뮬레이터와 일반 Android 태블릿에서 그대로 돌립니다.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#run">테스트 돌려 보기</a>
@@ -249,7 +249,7 @@ footer a:hover { color: var(--ink); }
         <div class="card stat">
           <p class="eyebrow">두 기기 병렬</p>
           <p class="headline">7분 20초</p>
-          <p class="body-sm subtle">게이트 통과 · 2.0배 빠름</p>
+          <p class="body-sm subtle">차례로 돌리면 14분 28초</p>
         </div>
         <div class="card stat">
           <p class="eyebrow">불안정한 테스트</p>
@@ -262,29 +262,29 @@ footer a:hover { color: var(--ink); }
     <section id="screens">
       <div class="section-head">
         <p class="eyebrow">화면</p>
-        <h2 class="display-lg">실제 차처럼 움직이는 앱</h2>
-        <p class="body-lg muted">Kotlin과 Compose로 만든 IVI 앱입니다. 왼쪽 주행 정보, 위쪽 상태 바, 오른쪽 앱, 아래쪽 공조 바로 나뉘고, 모든 조작이 차량 신호와 연결됩니다.</p>
+        <h2 class="display-lg">테스트 대상 앱</h2>
+        <p class="body-lg muted">Kotlin과 Compose로 만든 IVI 앱입니다. 왼쪽 주행 정보, 위쪽 상태 바, 오른쪽 앱, 아래쪽 공조 바로 나뉘고, 공조, 도어 잠금, 주행 정보는 차량 신호와 연결돼 있습니다.</p>
       </div>
       <div class="grid-3">
         <article class="card feature">
           <img src="../docs/images/p7-climate.png" width="1024" height="768" alt="전 좌석 공조 화면">
           <div class="feature-text">
             <h3 class="card-title">전 좌석 공조</h3>
-            <p class="body-sm muted">온도, A/C, AUTO, 풍량, 김서림, 좌석 열선이 화면 상태가 아니라 CarProperty 신호로 오갑니다.</p>
+            <p class="body-sm muted">온도, A/C, FULL(최대 냉방), AUTO, 풍량, 김서림, 좌석 열선을 CarProperty 신호로 읽고 씁니다.</p>
           </div>
         </article>
         <article class="card feature">
           <img src="../docs/images/p7-assistant.png" width="1024" height="768" alt="AI 어시스턴트 대화 화면">
           <div class="feature-text">
             <h3 class="card-title">AI 어시스턴트</h3>
-            <p class="body-sm muted">한 문장에 여러 명령, 말한 좌석 인식, 목적지 후보 제시. 주행 중에는 할 수 있는 일을 제한합니다.</p>
+            <p class="body-sm muted">한 문장에 든 여러 명령을 처리하고, 어느 좌석에서 말했는지에 따라 동작합니다. 규칙 기반이고, 주행 중에는 일부 명령을 거절합니다.</p>
           </div>
         </article>
         <article class="card feature">
           <img src="../docs/images/p8-vehicle.png" width="1024" height="768" alt="차량 정보 화면">
           <div class="feature-text">
             <h3 class="card-title">차량 신호</h3>
-            <p class="body-sm muted">주행 가능 거리, 배터리, 외기 온도, 도어 잠금. 거리가 부족하면 충전소를 안내합니다.</p>
+            <p class="body-sm muted">주행 가능 거리, 배터리, 외기 온도, 도어 잠금을 보여 줍니다. 거리가 30 km 이하로 떨어지면 가까운 충전소를 안내합니다.</p>
           </div>
         </article>
         <article class="card feature">
@@ -298,14 +298,14 @@ footer a:hover { color: var(--ink); }
           <img src="../docs/images/media.png" width="1024" height="768" alt="미디어 재생 화면">
           <div class="feature-text">
             <h3 class="card-title">미디어 · 영상</h3>
-            <p class="body-sm muted">음악과 라디오는 그대로, 영상은 주행을 시작하면 자동으로 막힙니다.</p>
+            <p class="body-sm muted">주행 중에도 음악과 라디오는 쓸 수 있고, 영상은 막힙니다.</p>
           </div>
         </article>
         <article class="card feature">
           <img src="../docs/images/p7-voice.png" width="1024" height="768" alt="음성 명령 화면">
           <div class="feature-text">
             <h3 class="card-title">음성 명령</h3>
-            <p class="body-sm muted">"운전석 온도 24도"라고 말하면 화면이 아니라 차량 공조 신호가 24.0°C로 바뀌는지까지 확인합니다.</p>
+            <p class="body-sm muted">"운전석 온도 24도" 명령을 처리한 뒤 차량 공조 신호가 24.0°C인지 확인합니다.</p>
           </div>
         </article>
       </div>
@@ -314,14 +314,14 @@ footer a:hover { color: var(--ink); }
     <section id="devices">
       <div class="section-head">
         <p class="eyebrow">기기</p>
-        <h2 class="display-lg">두 기기, 같은 테스트</h2>
-        <p class="body-lg muted">기기 종류는 자동으로 판별합니다. 진짜 차량 서비스가 있으면 VHAL로, 없으면 Mock으로 같은 시나리오를 돌립니다.</p>
+        <h2 class="display-lg">같은 테스트를 두 기기에서</h2>
+        <p class="body-lg muted">기기 종류는 자동으로 판별합니다. 기기에 CarService가 있으면 VHAL을, 없으면 앱 안의 Mock 차량 서비스를 씁니다.</p>
       </div>
       <div class="grid-2">
         <article class="card device">
           <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>8단계 확인</span>
           <h3 class="card-title">AAOS 에뮬레이터</h3>
-          <p class="body-sm muted">실제 CarService와 VHAL. 신호를 주입하고 화면을 확인하고, 화면을 누르고 신호를 확인합니다.</p>
+          <p class="body-sm muted">에뮬레이터의 CarService와 VHAL을 씁니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.</p>
           <div>
             <div class="device-row body-sm"><span class="subtle">결과</span><span>106 passed · 1 skipped · 1 xfailed</span></div>
             <div class="device-row body-sm"><span class="subtle">시간</span><span>6분 40초</span></div>
@@ -331,7 +331,7 @@ footer a:hover { color: var(--ink); }
         <article class="card device">
           <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>8단계 확인</span>
           <h3 class="card-title">Android 태블릿</h3>
-          <p class="body-sm muted">일반 화웨이 태블릿에 Mock 차량 서비스. AAOS 전용 테스트만 건너뜁니다.</p>
+          <p class="body-sm muted">화웨이 태블릿에서는 Mock 차량 서비스를 씁니다. AAOS 전용 테스트 6개는 건너뜁니다.</p>
           <div>
             <div class="device-row body-sm"><span class="subtle">결과</span><span>102 passed · 6 skipped</span></div>
             <div class="device-row body-sm"><span class="subtle">시간</span><span>7분 6초</span></div>
@@ -344,12 +344,12 @@ footer a:hover { color: var(--ink); }
     <section id="phases">
       <div class="section-head">
         <p class="eyebrow">진행 상황</p>
-        <h2 class="display-lg">여덟 단계</h2>
+        <h2 class="display-lg">단계별 진행</h2>
       </div>
       <div>
         <div class="changelog-row">
           <span class="mono subtle">08</span>
-          <div><h3 class="card-title">차량 신호 확장</h3><p class="body-sm muted">공조와 도어 잠금을 VHAL 신호로. 양방향 E2E 24개, 테스트마다 신호 초기화.</p></div>
+          <div><h3 class="card-title">차량 신호 확장</h3><p class="body-sm muted">공조와 도어 잠금을 VHAL 신호에 연결하고, 양방향 E2E 24개를 추가했습니다.</p></div>
           <span class="caption subtle">E2E 84 → 108</span>
         </div>
         <div class="changelog-row">
@@ -384,7 +384,7 @@ footer a:hover { color: var(--ink); }
       <div class="run-grid">
         <div class="section-head" style="margin-bottom:0">
           <p class="eyebrow">실행</p>
-          <h2 class="display-lg">명령 세 줄</h2>
+          <h2 class="display-lg">실행 방법</h2>
           <ol class="run-steps body-sm muted">
             <li><span>Automotive 에뮬레이터를 <span class="mono">-writable-system</span>으로 켭니다. 프로젝트와 AVD는 영문 경로에 둡니다.</span></li>
             <li><span>Appium 서버를 <span class="mono">127.0.0.1:4723</span>에 띄웁니다.</span></li>
@@ -409,7 +409,7 @@ python -m venv .venv
       <div class="cta-banner">
         <div class="copy">
           <h2 class="headline">단계별 설계와 검증 기록</h2>
-          <p class="body-sm muted">무엇을 왜 바꿨고, 어떤 결함을 찾았는지 단계마다 남겨 두었습니다.</p>
+          <p class="body-sm muted">단계마다 바꾼 내용과 찾은 결함을 문서로 남겼습니다.</p>
         </div>
         <div class="hero-actions">
           <a class="btn btn-secondary" href="docs/phase1-spike.html">1단계부터</a>

@@ -16,7 +16,7 @@ import java.util.Locale
  *
  *   쓰기: adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.SET \
  *           --ef speed_kmh 50 --es gear D --ef temp_driver 25 --ef temp_passenger 20
- *         8단계: --ez ac true --ez auto false --ei fan 3 --ez defrost_front false --ez defrost_rear false
+ *         8단계: --ez ac true --ez auto false --ez max_ac false --ei fan 3 --ez defrost_front false --ez defrost_rear false
  *                --ei heat_driver 0 --ei heat_passenger 0 --ez doors_locked true --ef range_km 320 --ef battery_pct 80 --ef outside_c 18
  *   읽기: adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.GET
  *           → "Broadcast completed: result=0, data="speed_kmh=50.0;gear=D;..."
@@ -73,6 +73,7 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
 
     override fun setAc(on: Boolean) = _state.update { it.copy(acOn = on) }
     override fun setAuto(on: Boolean) = _state.update { it.copy(autoOn = on) }
+    override fun setMaxAc(on: Boolean) = _state.update { it.copy(maxAcOn = on) }
     override fun setFanSpeed(level: Int) = _state.update { it.copy(fanSpeed = level.coerceIn(HvacSpec.FAN_MIN, HvacSpec.FAN_MAX)) }
     override fun setDefrost(front: Boolean, on: Boolean) = _state.update { if (front) it.copy(defrostFront = on) else it.copy(defrostRear = on) }
     override fun setSeatHeat(seat: Seat, level: Int) = _state.update {
@@ -90,6 +91,7 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
             if (intent.hasExtra(EXTRA_TEMP_PASSENGER)) next = next.copy(passengerTempC = HvacSpec.clamp(intent.getFloatExtra(EXTRA_TEMP_PASSENGER, 22f)))
             // 8단계 신호 (adb: --ez 불, --ei 정수, --ef 실수)
             if (intent.hasExtra(EXTRA_AC)) next = next.copy(acOn = intent.getBooleanExtra(EXTRA_AC, false))
+            if (intent.hasExtra(EXTRA_MAX_AC)) next = next.copy(maxAcOn = intent.getBooleanExtra(EXTRA_MAX_AC, false))
             if (intent.hasExtra(EXTRA_AUTO)) next = next.copy(autoOn = intent.getBooleanExtra(EXTRA_AUTO, false))
             if (intent.hasExtra(EXTRA_FAN)) next = next.copy(fanSpeed = intent.getIntExtra(EXTRA_FAN, 3).coerceIn(HvacSpec.FAN_MIN, HvacSpec.FAN_MAX))
             if (intent.hasExtra(EXTRA_DEFROST_FRONT)) next = next.copy(defrostFront = intent.getBooleanExtra(EXTRA_DEFROST_FRONT, false))
@@ -112,6 +114,7 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
         "restricted=${s.restricted}",
         "$EXTRA_AC=${s.acOn}",
         "$EXTRA_AUTO=${s.autoOn}",
+        "$EXTRA_MAX_AC=${s.maxAcOn}",
         "$EXTRA_FAN=${s.fanSpeed}",
         "$EXTRA_DEFROST_FRONT=${s.defrostFront}",
         "$EXTRA_DEFROST_REAR=${s.defrostRear}",
@@ -134,6 +137,7 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
         const val EXTRA_TEMP_PASSENGER = "temp_passenger"
         const val EXTRA_AC = "ac"
         const val EXTRA_AUTO = "auto"
+        const val EXTRA_MAX_AC = "max_ac"
         const val EXTRA_FAN = "fan"
         const val EXTRA_DEFROST_FRONT = "defrost_front"
         const val EXTRA_DEFROST_REAR = "defrost_rear"

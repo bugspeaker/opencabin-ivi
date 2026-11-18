@@ -105,9 +105,41 @@ fun IviRoot(
     val cockpit = remember { CockpitState() }
     val current by rememberUpdatedState(state)
 
+    /** 온도·풍량·A/C·AUTO 를 직접 바꾸면 최대 냉방은 풀린다. 이때는 이전 값으로 되돌리지 않는다 (방금 바꾼 값이 우선). */
+    fun releaseMaxAc() {
+        if (current.maxAcOn) vehicle.setMaxAc(false)
+        cockpit.beforeMaxAc = null
+    }
+
+    /**
+     * 최대 냉방(FULL): 차량 신호 HVAC_MAX_AC_ON 을 켜고, A/C 켬 · 온도 최저 · 풍량 최대 · AUTO 끔으로 맞춘다.
+     * 버튼으로 끄면 켜기 전 값으로 되돌린다.
+     */
+    fun setMaxAc(on: Boolean) {
+        if (on) {
+            cockpit.beforeMaxAc = ClimateSnapshot(current.driverTempC, current.passengerTempC, current.fanSpeed, current.acOn, current.autoOn)
+            vehicle.setMaxAc(true)
+            vehicle.setAc(true)
+            vehicle.setAuto(false)
+            Seat.entries.forEach { vehicle.setTemperature(it, HvacSpec.MIN_C) }
+            vehicle.setFanSpeed(HvacSpec.FAN_MAX)
+        } else {
+            vehicle.setMaxAc(false)
+            cockpit.beforeMaxAc?.let { before ->
+                before.driverTempC?.let { vehicle.setTemperature(Seat.DRIVER, it) }
+                before.passengerTempC?.let { vehicle.setTemperature(Seat.PASSENGER, it) }
+                vehicle.setFanSpeed(before.fanSpeed)
+                vehicle.setAc(before.acOn)
+                vehicle.setAuto(before.autoOn)
+            }
+            cockpit.beforeMaxAc = null
+        }
+    }
+
     /** 동기화(SYNC) 중이면 운전석 값을 조수석에도 쓴다. 조수석을 직접 바꾸면 동기화가 풀린다 (일반적인 차량 동작). */
     fun setTemperature(seat: Seat, celsius: Float, direct: Boolean) {
         val value = HvacSpec.clamp(celsius)
+        releaseMaxAc()
         vehicle.setTemperature(seat, value)
         if (cockpit.sync && seat == Seat.DRIVER) vehicle.setTemperature(Seat.PASSENGER, value)
         if (cockpit.sync && seat == Seat.PASSENGER && direct) cockpit.sync = false
@@ -125,7 +157,7 @@ fun IviRoot(
             override val hvacAvailable get() = current.hvacAvailable
             override fun temperature(seat: Seat) = when (seat) { Seat.DRIVER -> current.driverTempC; Seat.PASSENGER -> current.passengerTempC }
             override fun setTemperature(seat: Seat, celsius: Float) = setTemperature(seat, celsius, direct = false)
-            override fun setAc(on: Boolean) = vehicle.setAc(on)
+            override fun setAc(on: Boolean) { if (!on) releaseMaxAc(); vehicle.setAc(on) }
             override fun setSync(on: Boolean) = setSync(on)
             override fun setSeatHeat(seat: Seat, on: Boolean) = vehicle.setSeatHeat(seat, if (on) HvacSpec.SEAT_HEAT_MAX else 0)
             override fun play() = cabin.playMedia()
@@ -169,7 +201,7 @@ fun IviRoot(
                             Tab.RADIO -> RadioScreen(settings, cabin)
                             Tab.MEDIA -> MediaScreen(state, cabin, onOpenVideo)
                             Tab.PHONE -> PhoneScreen(state, cabin)
-                            Tab.CLIMATE -> ClimateScreen(state, cockpit, vehicle, ::setTemperature, ::setSync)
+                            Tab.CLIMATE -> ClimateScreen(state, cockpit, vehicle, ::setTemperature, ::setSync, ::setMaxAc, ::releaseMaxAc)
                             Tab.SETTINGS -> SettingsScreen(settings, store)
                             Tab.ASSISTANT -> AssistantScreen(state, cockpit, onAsk = ::ask) { place ->
                                 cockpit.say(false, assistant.choose(place).text, null)
@@ -227,19 +259,19 @@ private fun ShellEffects(state: VehicleState, cabin: CabinController, cockpit: C
     LaunchedEffect(state.restricted) {
         val before = previousRestricted
         if (before != null && before != state.restricted) {
-            if (state.restricted) cockpit.notify("주행 중 제한", "영상 · 글자 입력 · 일부 차량 제어가 제한됩니다.")
-            else cockpit.notify("주행 제한 해제", "정차했어요. 모든 기능을 쓸 수 있습니다.")
+            if (state.restricted) cockpit.notify("주행 중 제한", "영상, 글자 입력, 일부 차량 제어를 쓸 수 없습니다.")
+            else cockpit.notify("주행 제한 해제", "정차했습니다. 모든 기능을 쓸 수 있습니다.")
         }
         previousRestricted = state.restricted
     }
     LaunchedEffect(cabin.guiding, cabin.arrived) {
         val dest = cabin.destination ?: return@LaunchedEffect
         if (cabin.guiding) cockpit.notify("경로 안내 시작", "${dest.name} · ${km(dest.distanceKm.toDouble())}")
-        else if (cabin.arrived) cockpit.notify("목적지 도착", "${dest.name}에 도착했어요.")
+        else if (cabin.arrived) cockpit.notify("목적지 도착", "${dest.name}에 도착했습니다.")
     }
     // 차량 신호 RANGE_REMAINING 이 기준 이하로 내려가면 한 번 알린다 (내비 화면에는 충전소 안내 카드가 뜬다)
     LaunchedEffect(state.lowRange) {
-        if (state.lowRange) cockpit.notify("주행 가능 거리 부족", "가까운 충전소를 안내할 수 있어요.")
+        if (state.lowRange) cockpit.notify("주행 가능 거리 부족", "가까운 충전소로 안내할 수 있습니다.")
     }
     LaunchedEffect(cabin.call?.startedAt) {
         cabin.call?.let { cockpit.notify("통화 연결", "${it.name} · 핸즈프리") }
@@ -247,6 +279,9 @@ private fun ShellEffects(state: VehicleState, cabin: CabinController, cockpit: C
 }
 
 // ---------------- 상단 바 (상태 표시 영역) ----------------
+
+/** 로그인한 운전자 이름 (데모용 고정 값). 상단 바와 설정 화면이 같이 쓴다. */
+const val DRIVER_NAME = "조예훈"
 
 @Composable
 private fun TopBar(source: String, state: VehicleState, settings: Settings, cabin: CabinController, cockpit: CockpitState, showClock: Boolean) {
@@ -299,8 +334,16 @@ private fun TopBar(source: String, state: VehicleState, settings: Settings, cabi
             Glyph(G.MIC, Color.White, Modifier.size(18.dp))
             Text("AI", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
-        Box(Modifier.size(34.dp).clip(CircleShape).background(IviColors.SurfaceHigher), contentAlignment = Alignment.Center) {
-            Glyph(G.PROFILE, IviColors.TextSecondary, Modifier.size(22.dp))
+        // 로그인한 운전자 프로필
+        Row(
+            Modifier.testTag("top_profile").height(38.dp).clip(RoundedCornerShape(19.dp)).background(IviColors.SurfaceHigh).padding(start = 4.dp, end = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Box(Modifier.size(30.dp).clip(CircleShape).background(IviColors.SurfaceHigher), contentAlignment = Alignment.Center) {
+                Glyph(G.PROFILE, IviColors.TextSecondary, Modifier.size(20.dp))
+            }
+            Text(DRIVER_NAME, Modifier.testTag("top_profile_name"), fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1)
         }
         // AAOS 는 시스템 바가 시계를 이미 보여 주므로 앱은 태블릿(Mock)에서만 그린다
         if (showClock) Clock(settings.clock24)
@@ -551,7 +594,7 @@ private fun VoicePopup(cockpit: CockpitState, onCommand: (Int) -> Unit, onOpenAs
                 PillButton("대화 열기", "voice_open_assistant", onClick = onOpenAssistant)
                 PillButton("닫기", "voice_close", onClick = onClose)
             }
-            Label("말하는 대신 아래 문장을 누르면 인식된 것으로 처리합니다")
+            Label("아래 문장을 눌러 말해 보세요")
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 VoiceCommands.forEachIndexed { index, text ->
                     Text(
@@ -601,7 +644,7 @@ private fun RearCamera() {
         }
         Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Glyph(G.CAMERA, IviColors.TextPrimary, Modifier.size(24.dp))
-            Text("후방 카메라 · 주변 안전을 직접 확인하세요", fontSize = 17.sp)
+            Text("후방 카메라 · 주변을 직접 확인하세요", fontSize = 17.sp)
         }
     }
 }

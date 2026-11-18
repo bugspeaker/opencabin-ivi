@@ -48,28 +48,44 @@ fun ClimateScreen(
     vehicle: VehicleDataSource,
     setTemperature: (Seat, Float, Boolean) -> Unit,
     setSync: (Boolean) -> Unit,
+    setMaxAc: (Boolean) -> Unit,
+    releaseMaxAc: () -> Unit,
 ) {
     if (!state.hvacAvailable) {
         Panel(Modifier.fillMaxWidth().testTag("hvac_unavailable")) {
             Text("공조를 제어할 수 없습니다", fontSize = 24.sp)
-            Text("AAOS 에서는 CONTROL_CAR_CLIMATE 권한(시스템 앱)이 필요합니다.", color = IviColors.TextSecondary)
+            Text("시스템 앱 권한(CONTROL_CAR_CLIMATE)이 필요합니다.", color = IviColors.TextSecondary)
         }
         return
     }
     Row(Modifier.fillMaxSize().padding(bottom = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         SeatPanel("운전석", Seat.DRIVER, state, vehicle, setTemperature, Modifier.weight(1f).fillMaxHeight())
-        Panel(Modifier.weight(1.05f).fillMaxHeight(), padding = 16.dp, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Panel(Modifier.weight(1.05f).fillMaxHeight(), padding = 16.dp, verticalArrangement = Arrangement.SpaceBetween) {
+          Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Label("공조")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                // A/C · AUTO · 풍량 · 김서림은 차량 신호다 (HVAC_AC_ON / HVAC_AUTO_ON / HVAC_FAN_SPEED / HVAC_DEFROSTER)
-                Toggle("A/C", "climate_ac", state.acOn, Modifier.weight(1f)) { vehicle.setAc(!state.acOn) }
-                Toggle("AUTO", "climate_auto", state.autoOn, Modifier.weight(1f)) { vehicle.setAuto(!state.autoOn) }
+                // A/C · FULL · AUTO · 풍량 · 김서림은 차량 신호다 (HVAC_AC_ON / HVAC_MAX_AC_ON / HVAC_AUTO_ON / HVAC_FAN_SPEED / HVAC_DEFROSTER)
+                Toggle("A/C", "climate_ac", state.acOn, Modifier.weight(1f)) {
+                    if (state.acOn) releaseMaxAc()
+                    vehicle.setAc(!state.acOn)
+                }
+                // FULL = 최대 냉방. 켜면 온도 최저 · 풍량 최대, 끄면 켜기 전 값으로
+                Toggle("FULL", "climate_max_ac", state.maxAcOn, Modifier.weight(1f), IviColors.Cool) { setMaxAc(!state.maxAcOn) }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Toggle("AUTO", "climate_auto", state.autoOn, Modifier.weight(1f)) {
+                    if (!state.autoOn) releaseMaxAc()
+                    vehicle.setAuto(!state.autoOn)
+                }
                 Toggle("SYNC", "climate_sync", cockpit.sync, Modifier.weight(1f)) { setSync(!cockpit.sync) }
             }
+          }
+          Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Label("풍량")
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 // 풍량을 직접 바꾸면 AUTO 는 풀린다 (일반적인 차량 동작)
                 fun setFan(level: Int) {
+                    releaseMaxAc()
                     vehicle.setFanSpeed(level)
                     if (state.autoOn) vehicle.setAuto(false)
                 }
@@ -85,11 +101,14 @@ fun ClimateScreen(
                 Text("${state.fanSpeed}", Modifier.testTag("climate_fan_level"), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 StepButton("+", "climate_fan_up", state.fanSpeed < HvacSpec.FAN_MAX) { setFan(state.fanSpeed + 1) }
             }
+          }
+          Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Label("김서림 제거")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 IconToggle(G.DEFROST_FRONT, "앞", "climate_defrost_front", state.defrostFront, IviColors.Warn, Modifier.weight(1f)) { vehicle.setDefrost(front = true, on = !state.defrostFront) }
                 IconToggle(G.DEFROST_REAR, "뒤", "climate_defrost_rear", state.defrostRear, IviColors.Warn, Modifier.weight(1f)) { vehicle.setDefrost(front = false, on = !state.defrostRear) }
             }
+          }
         }
         SeatPanel("조수석", Seat.PASSENGER, state, vehicle, setTemperature, Modifier.weight(1f).fillMaxHeight())
     }
@@ -155,13 +174,13 @@ private fun TempButton(text: String, tag: String, enabled: Boolean, tint: Color,
 }
 
 @Composable
-private fun Toggle(label: String, tag: String, on: Boolean, modifier: Modifier, onClick: () -> Unit) {
+private fun Toggle(label: String, tag: String, on: Boolean, modifier: Modifier, onColor: Color = IviColors.Green, onClick: () -> Unit) {
     Box(
         // toggleable: 켜짐/꺼짐을 접근성 정보(checked)로 내보낸다 → Appium 이 색 대신 checked 속성을 읽는다
         modifier.testTag(tag).height(52.dp).outlined(on).toggleable(value = on, role = Role.Switch, onValueChange = { onClick() }),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if (on) IviColors.Green else IviColors.TextSecondary)
+        Text(label, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if (on) onColor else IviColors.TextSecondary)
     }
 }
 
@@ -193,7 +212,7 @@ fun VehicleScreen(state: VehicleState, cockpit: CockpitState, vehicle: VehicleDa
     Panel(Modifier.fillMaxSize().padding(bottom = 4.dp), padding = 18.dp, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("빠른 제어", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-            if (driving) Text("주행 중에는 사이드 미러 · 트렁크를 조작할 수 없습니다", Modifier.testTag("qc_restricted_notice"), color = IviColors.Warn, fontSize = 13.sp)
+            if (driving) Text("주행 중에는 사이드 미러와 트렁크를 조작할 수 없습니다", Modifier.testTag("qc_restricted_notice"), color = IviColors.Warn, fontSize = 13.sp)
         }
         Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             // 도어 잠금: 차량 신호 DOOR_LOCK (전 도어). 읽을 수 없으면(AAOS 에서 CONTROL_CAR_DOORS 권한 없음) 누를 수 없다
@@ -279,12 +298,13 @@ fun AppsScreen(state: VehicleState, cockpit: CockpitState, onOpenVideo: () -> Un
     Panel(Modifier.fillMaxSize().padding(bottom = 4.dp), padding = 20.dp, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text("앱", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         apps.chunked(5).forEach { row ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(Modifier.fillMaxWidth()) {
                 row.forEach { app ->
                     // 영상은 주행 중 막고, 앱 마켓은 이 데모에 없다 (준비 중)
                     val enabled = when (app.id) { "video" -> !state.restricted; "market" -> false; else -> true }
                     Column(
                         Modifier
+                            .weight(1f)
                             .testTag("app_${app.id}")
                             .clip(RoundedCornerShape(16.dp))
                             .clickable(enabled = enabled) { if (app.tab != null) cockpit.open(app.tab) else if (app.id == "video") onOpenVideo() }
