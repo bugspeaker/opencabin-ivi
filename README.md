@@ -3,7 +3,7 @@
 가상 차량 인포테인먼트(IVI) 앱과, 그 앱을 UI 조작부터 차량 신호(VHAL)까지 E2E로 검증하는 테스트 자동화 환경입니다.
 같은 테스트를 AAOS 에뮬레이터(실제 CarService·VHAL)와 일반 Android 태블릿(Mock 차량 서비스)에서 돌리는 것이 목표입니다.
 
-![주행 중 경로 안내 (7단계, Pleos Connect 구조)](docs/images/p7-guidance.png)
+![주행 중 경로 안내 (AAOS 에뮬레이터, 2026-11-18)](docs/images/p9-guidance.png)
 
 테스트 자동화 쪽 내용만 추린 문서는 [docs/portfolio.md](docs/portfolio.md)에 있습니다.
 
@@ -70,7 +70,7 @@ docs/                 단계별 설계·검증 기록
 | `IVI_TAP` | 화웨이·아너 `adb`, 그 외 `appium` | 요소를 누르는 방법 |
 | `APPIUM_URL` | `http://127.0.0.1:4723` | Appium 서버 |
 
-최신 결과 (2026-11-18, E2E 113개): AAOS 에뮬레이터 111 passed, 1 skipped, 1 xfailed (8분 3초), 화웨이 태블릿 107 passed, 6 skipped (8분 57초), 재시도 0. 테스트마다 판정 직후 화면을 남겼다 ([docs/test-results.md](docs/test-results.md)). `pytest --shots`로 돌린 뒤 `python tools/publish_results.py`로 사이트에 옮긴다.
+최신 결과 (2026-11-18, E2E 113개): AAOS 에뮬레이터 111 passed, 1 skipped, 1 xfailed (8분 4초), 화웨이 태블릿 107 passed, 6 skipped (8분 57초), 재시도 0. 테스트마다 판정 직후 화면을 남겼다 ([docs/test-results.md](docs/test-results.md)). `pytest --shots`로 돌린 뒤 `python tools/publish_results.py`로 사이트에 옮긴다.
 
 8단계 결과 (2026-11-16): AAOS 에뮬레이터 E2E 108개 중 106 passed, 1 skipped, 1 xfailed (6분 40초), 화웨이 태블릿 102 passed, 6 skipped (7분 6초), 두 기기 병렬 gate pass · flaky 0 (7분 20초, 2.0배), 앱 단위 17 passed, 프레임워크 단위 33 passed ([docs/phase8-signals.md](docs/phase8-signals.md)).
 

@@ -6,15 +6,18 @@
 // 결과: site/docs/*.html (커밋한다. 문서를 고치면 다시 실행)
 // 테스트 결과 페이지(test-results.html)는 site/results/results.json 으로 만든다
 // (ivi-tests/tools/publish_results.py 가 실행 기록과 끝 화면에서 만든다).
+// 소개 페이지(site/index.html)의 요구 역량 목차와 결과 수치도 같은 자료로 다시 쓴다 (<!-- fit:… -->, <!-- stats:… -->).
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
+import { GROUPS, REQUIREMENTS } from "./requirements.mjs";
 
 const SITE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SITE, "..");
 const OUT = path.join(SITE, "docs");
 const RESULTS_JSON = path.join(SITE, "results", "results.json");
+const INDEX = path.join(SITE, "index.html");
 
 // 사이드바 순서. src 는 저장소 루트 기준
 const PAGES = [
@@ -170,6 +173,36 @@ const BAD = new Set(["failed", "error", "flaky", "xpassed"]);
 const MARKER_LABEL = { smoke: "smoke", sanity: "sanity", regression: "regression", spike: "spike", aaos: "AAOS 전용" };
 const fmtTime = (s) => `${Math.floor(s / 60)}분 ${Math.round(s % 60)}초`;
 
+/** requirements.mjs 의 항목마다 근거 테스트와 숫자를 붙인다. */
+function reqIndex(data) {
+  const all = data.files.flatMap((f) => f.tests.map((t) => ({ ...t, file: f.file })));
+  const results = all.flatMap((t) => t.cases.flatMap((c) => Object.values(c.results)));
+  const casesOf = (tests) => tests.reduce((n, t) => n + t.cases.length, 0);
+  const stats = {
+    total: casesOf(all),
+    smoke: casesOf(all.filter((t) => t.markers.includes("smoke"))),
+    sanity: casesOf(all.filter((t) => t.markers.includes("sanity"))),
+    regression: casesOf(all.filter((t) => t.markers.includes("regression"))),
+    runs: results.filter((r) => r.outcome !== "skipped").length,
+    bad: results.filter((r) => BAD.has(r.outcome)).length,
+    retries: results.reduce((n, r) => n + (r.reruns || 0), 0),
+  };
+  const byTest = new Map(); // 테스트 이름 → 이 테스트를 근거로 쓰는 항목 id
+  const text = (v) => (typeof v === "function" ? v(stats) : v);
+  const reqs = REQUIREMENTS.map((r, i) => {
+    let tests = [];
+    if (r.select) {
+      const { files = [], tests: names = [], doc } = r.select;
+      for (const n of names) if (!all.some((t) => t.name === n)) console.warn(`주의: 요구 역량 ${r.id} 의 테스트 ${n} 가 결과에 없다`);
+      tests = all.filter((t) => files.includes(t.file) || names.includes(t.name) || (doc && doc.test(t.doc)));
+      for (const t of tests) byTest.set(t.name, [...(byTest.get(t.name) ?? []), r.id]);
+    }
+    const count = r.select ? casesOf(tests) : r.chip ? stats[r.chip] : r.all ? stats.total : null;
+    return { ...r, num: String(i + 1).padStart(2, "0"), done: text(r.done), note: text(r.note), count };
+  });
+  return { stats, reqs, byTest };
+}
+
 function countsLine(counts) {
   const order = ["passed", "flaky", "failed", "error", "skipped", "xfailed", "xpassed", "quarantined"];
   const label = { passed: "통과", flaky: "재시도 후 통과", failed: "실패", error: "오류", skipped: "건너뜀", xfailed: "알려진 결함", xpassed: "알려진 결함 통과", quarantined: "격리" };
@@ -180,6 +213,13 @@ function countsLine(counts) {
 function renderResults(page) {
   const data = RESULTS;
   const kinds = data.devices.map((d) => d.kind);
+  const { reqs, byTest } = reqIndex(data);
+  const groupLabel = Object.fromEntries(GROUPS.map((g) => [g.id, g.label]));
+  // 첫 화면 목차에서 ?req=<id> 로 들어올 때 쓰는 정보 (근거가 테스트인 항목만)
+  const reqMeta = Object.fromEntries(reqs.filter((r) => !r.gap && !r.link).map((r) => [r.id, {
+    eyebrow: `요구 역량 ${r.num} · ${groupLabel[r.group]}`, title: r.title, note: r.note || r.done,
+    count: r.count, filter: Boolean(r.select), chip: r.chip || "", onlyBad: Boolean(r.onlyBad),
+  }]));
   const devices = data.devices.map((d) => `
       <section class="device-card">
         <p class="eyebrow">${esc(d.label)}</p>
@@ -219,7 +259,7 @@ function renderResults(page) {
         return `<div class="case">${c.param ? `<p class="case-param"><code>[${esc(c.param)}]</code></p>` : ""}<div class="case-shots">${cells}</div></div>`;
       }).join("");
       const marks = t.markers.map((m) => `<span class="mark-chip">${esc(MARKER_LABEL[m] || m)}</span>`).join("");
-      return `<article class="rtest" id="${esc(t.name)}" data-markers="${esc(t.markers.join(" "))}" data-bad="${bad ? 1 : 0}">
+      return `<article class="rtest" id="${esc(t.name)}" data-markers="${esc(t.markers.join(" "))}" data-reqs="${esc((byTest.get(t.name) ?? []).join(" "))}" data-bad="${bad ? 1 : 0}">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#${esc(t.name)}"><code>${esc(t.name)}</code></a>${marks}</header>
             ${t.doc ? `<p class="rtest-doc">${esc(t.doc)}</p>` : ""}
@@ -239,6 +279,17 @@ function renderResults(page) {
     <h1 id="테스트-결과">테스트 결과</h1>
     <p class="lead">E2E ${total}개를 기기마다 한 번씩 돌린 결과입니다. 테스트마다 판정이 난 직후의 화면을 남겼고, 화면을 누르면 크게 볼 수 있습니다.</p>
     <div class="device-cards">${devices}</div>
+    <section class="req-banner" id="req-banner" aria-live="polite" hidden>
+      <div class="req-copy">
+        <p class="req-eyebrow" id="req-eyebrow"></p>
+        <p class="req-title" id="req-title"></p>
+        <p class="req-note" id="req-note"></p>
+      </div>
+      <div class="req-actions">
+        <a class="req-btn" href="../index.html#fit">요구 역량 목차</a>
+        <button type="button" class="req-btn" id="req-clear">전체 테스트 보기</button>
+      </div>
+    </section>
     <div class="filters" role="group" aria-label="테스트 거르기">
       <button type="button" class="chip" aria-pressed="true" data-filter="">전체</button>
       ${markers.map((m) => `<button type="button" class="chip" aria-pressed="false" data-filter="${esc(m)}">${esc(MARKER_LABEL[m] || m)}</button>`).join("")}
@@ -270,31 +321,58 @@ function renderResults(page) {
   const onlyBad = document.getElementById("only-bad");
   const count = document.getElementById("filter-count");
   const empty = document.getElementById("empty-note");
+  const banner = document.getElementById("req-banner");
+  const REQS = ${JSON.stringify(reqMeta)};
   let filter = "";
+  let req = "";
+  // 개수는 케이스 단위로 센다 (parametrize 포함, 첫 화면의 'E2E 113개'와 같은 기준)
   function apply() {
     let shown = 0;
     document.querySelectorAll(".rfile").forEach((file) => {
-      let any = false;
+      let inFile = 0;
       file.querySelectorAll(".rtest").forEach((t) => {
-        const ok = (!filter || t.dataset.markers.split(" ").includes(filter)) && (!onlyBad.checked || t.dataset.bad === "1");
-        t.hidden = !ok; if (ok) { any = true; shown++; }
+        const ok = (!filter || t.dataset.markers.split(" ").includes(filter))
+          && (!onlyBad.checked || t.dataset.bad === "1")
+          && (!req || t.dataset.reqs.split(" ").includes(req));
+        t.hidden = !ok; if (ok) inFile += t.querySelectorAll(".case").length;
       });
-      file.hidden = !any;
+      file.hidden = inFile === 0;
+      file.querySelector(".rfile-count").textContent = inFile;
+      shown += inFile;
     });
     count.textContent = shown + "개 테스트";
+    empty.textContent = onlyBad.checked ? "실패하거나 재시도한 테스트가 없습니다." : "조건에 맞는 테스트가 없습니다.";
     empty.hidden = shown > 0;
   }
-  chips.forEach((c) => c.addEventListener("click", () => {
-    filter = c.dataset.filter;
-    chips.forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
-    apply();
-  }));
+  function pick(value) {
+    filter = value;
+    chips.forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.filter === value)));
+  }
+  chips.forEach((c) => c.addEventListener("click", () => { pick(c.dataset.filter); apply(); }));
   onlyBad.addEventListener("change", apply);
   document.getElementById("jump").addEventListener("change", (e) => {
     if (e.target.value) document.getElementById(e.target.value).scrollIntoView({ behavior: "smooth" });
     e.target.value = "";
   });
+  // 첫 화면 목차에서 ?req=<id> 로 들어오면 그 항목의 근거 테스트만 보여 준다
+  const meta = REQS[new URLSearchParams(location.search).get("req")];
+  if (meta) {
+    const id = new URLSearchParams(location.search).get("req");
+    document.getElementById("req-eyebrow").textContent = meta.eyebrow;
+    document.getElementById("req-title").textContent = meta.title;
+    document.getElementById("req-note").innerHTML = meta.note;
+    if (meta.filter) req = id;
+    if (meta.chip) pick(meta.chip);
+    onlyBad.checked = meta.onlyBad;
+    banner.hidden = false;
+  }
+  document.getElementById("req-clear").addEventListener("click", () => {
+    req = ""; pick(""); onlyBad.checked = false; banner.hidden = true;
+    history.replaceState(null, "", location.pathname + location.hash);
+    apply();
+  });
   apply();
+  if (meta && !location.hash) requestAnimationFrame(() => banner.scrollIntoView({ block: "start" }));
   // 다른 문서에서 #test_이름 으로 들어오면 그 테스트를 잠깐 강조한다
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (target && target.classList.contains("rtest")) target.classList.add("is-target");
@@ -303,7 +381,97 @@ function renderResults(page) {
   return shell(page, { title: "테스트 결과", body, scripts, mainClass: "doc results" });
 }
 
+// ---------------- 소개 페이지: 요구 역량 목차 · 결과 수치 ----------------
+
+const ARROW = `<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function renderFit({ reqs }) {
+  const doneCount = reqs.filter((r) => !r.gap).length;
+  const row = (r) => {
+    if (r.gap) {
+      return `<li class="fit-item is-gap"><div class="fit-row">
+              <span class="fit-num">${r.num}</span>
+              <span class="fit-body"><span class="fit-title">${esc(r.title)}</span></span>
+              <span class="fit-side"><span class="fit-state">${esc(r.gap)}</span></span>
+            </div></li>`;
+    }
+    const href = r.link ? r.link.href : `docs/test-results.html?req=${r.id}`;
+    const dest = r.link ? r.link.label : r.onlyBad ? `재시도 ${r.count ?? 0}` : `테스트 ${r.count}개`;
+    return `<li class="fit-item"><a class="fit-row" href="${esc(href)}">
+              <span class="fit-num">${r.num}</span>
+              <span class="fit-body"><span class="fit-title">${esc(r.title)}</span><span class="fit-done">${esc(r.done)}</span></span>
+              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">${esc(dest)}${ARROW}</span></span>
+            </a></li>`;
+  };
+  const group = (g) => {
+    const items = reqs.filter((r) => r.group === g.id);
+    return `<div class="fit-group">
+          <h3 class="fit-group-title">${esc(g.label)} <span>${items.filter((r) => !r.gap).length} / ${items.length}</span></h3>
+          <ol class="fit-list">
+            ${items.map(row).join("\n            ")}
+          </ol>
+        </div>`;
+  };
+  const [duty, ...rest] = GROUPS;
+  return `<section id="fit" class="fit" aria-labelledby="fit-title">
+      <div class="fit-head">
+        <div class="fit-head-copy">
+          <p class="eyebrow">요구 역량</p>
+          <h2 id="fit-title" class="display-md">42dot Test Automation Engineer, IVI System</h2>
+          <p class="body-sm subtle">공고 항목마다 이 프로젝트에서 한 것입니다. 항목을 누르면 근거가 되는 테스트 결과나 기록으로 갑니다.</p>
+        </div>
+        <div class="fit-score">
+          <p class="fit-score-num"><span>${doneCount}</span> / ${reqs.length}</p>
+          <p class="caption subtle">항목 완료</p>
+          <div class="fit-bar" aria-hidden="true"><span style="width:${Math.round((doneCount / reqs.length) * 100)}%"></span></div>
+        </div>
+      </div>
+      <div class="fit-cols">
+        <div class="fit-col">
+        ${group(duty)}
+        </div>
+        <div class="fit-col">
+        ${rest.map(group).join("\n        ")}
+        </div>
+      </div>
+    </section>`;
+}
+
+function renderStats({ stats }, data) {
+  const dev = (kind) => data.devices.find((d) => d.kind === kind);
+  const other = (d) => Object.entries(d.counts).filter(([k]) => k !== "passed").map(([k, v]) => `${v} ${k}`);
+  const card = (eyebrow, headline, sub, href) => `<a class="card stat" href="${href}">
+          <p class="eyebrow">${eyebrow}</p>
+          <p class="headline">${headline}</p>
+          <p class="body-sm subtle">${sub}</p>
+        </a>`;
+  const cards = [card("E2E 테스트", `${stats.total}개`, "AAOS 에뮬레이터 · 태블릿 공통", "docs/test-results.html")];
+  for (const d of data.devices) {
+    const note = d.kind === "mock" ? other(d).map((s) => s.replace("skipped", "skipped (AAOS 전용)")) : other(d);
+    cards.push(card(esc(d.label), `${d.counts.passed ?? 0} 통과`, [...note, fmtTime(d.duration)].join(" · "), "docs/test-results.html"));
+  }
+  cards.push(card("실패 · 재시도", `${stats.bad}건`, `두 기기에서 ${stats.runs}번 실행`, "docs/test-results.html?req=flaky"));
+  return `<section class="stats-section" aria-label="최근 결과">
+      <div class="stats">
+        ${cards.join("\n        ")}
+      </div>
+    </section>`;
+}
+
+function writeIndex() {
+  const idx = reqIndex(RESULTS);
+  let html = readFileSync(INDEX, "utf8");
+  for (const [name, block] of [["fit", renderFit(idx)], ["stats", renderStats(idx, RESULTS)]]) {
+    const re = new RegExp(`(<!-- ${name}:start[^>]*-->)[\\s\\S]*?(\\s*<!-- ${name}:end -->)`);
+    if (!re.test(html)) { console.warn(`건너뜀: index.html 에 <!-- ${name}:start --> 표시가 없다`); continue; }
+    html = html.replace(re, (m, a, b) => `${a}\n    ${block}${b}`);
+  }
+  writeFileSync(INDEX, html, "utf8");
+  console.log("site/results/results.json + site/requirements.mjs → site/index.html (요구 역량 목차, 결과 수치)");
+}
+
 mkdirSync(OUT, { recursive: true });
+if (RESULTS) writeIndex();
 for (const page of PAGES) {
   if (page.results) {
     if (!RESULTS) { console.warn("건너뜀: site/results/results.json 이 없다 (publish_results.py 를 먼저)"); continue; }
