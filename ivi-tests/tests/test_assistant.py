@@ -1,4 +1,4 @@
-"""AI 어시스턴트 E2E (7단계): 말 → 실제 차량 신호까지 본다.
+"""AI 어시스턴트에 한 말이 실제 차량 신호까지 이어지는지 확인합니다.
 
 음성 인식 대신 추천 명령(칩)을 누르거나 글자로 입력한다. 문장 → 동작 규칙 자체는
 ivi-app 의 JVM 단위 테스트(CabinAssistantTest)가 보고, 여기서는 화면 · 차량 신호 · 주행 제한과 이어지는지를 본다.
@@ -14,7 +14,9 @@ from ivi.waits import wait_until
 
 @pytest.mark.sanity
 def test_zone_applies_command_to_speaking_seat(app, car):
-    """좌석 인식: 조수석에서 '나 더워' → 조수석만 1°C 내려간다 (차량 신호 확인)."""
+    """조수석에서 '나 더워'라고 하면 조수석 온도만 1°C 내려가야 합니다.
+    차량 신호로 확인합니다.
+    """
     assistant = app.assistant()
     assistant.zone(Seat.PASSENGER)
     reply = assistant.chip(1)
@@ -26,7 +28,7 @@ def test_zone_applies_command_to_speaking_seat(app, car):
 
 @pytest.mark.sanity
 def test_typed_command_sets_vehicle_temperature(app, car):
-    """글자로 말하기: '운전석 25.5도로 맞춰줘' → 차량 운전석 25.5 (상위 → 하위)."""
+    """'운전석 25.5도로 맞춰줘'를 글자로 입력하면 차량의 운전석 온도가 25.5°C가 됩니다."""
     assistant = app.assistant()
     reply = assistant.say("운전석 25.5도로 맞춰줘")
     assert "25.5" in reply
@@ -35,7 +37,7 @@ def test_typed_command_sets_vehicle_temperature(app, car):
 
 @pytest.mark.regression
 def test_multiple_commands_in_one_sentence(app):
-    """한 문장에 두 명령: 에어컨 켜고 음악 틀어줘 → 두 동작 모두."""
+    """'에어컨 켜고 음악 틀어줘'처럼 한 문장에 명령이 두 개 들어 있으면 둘 다 실행합니다."""
     assistant = app.assistant()
     reply = assistant.chip(2)
     assert "에어컨" in reply and "음악" in reply
@@ -44,7 +46,9 @@ def test_multiple_commands_in_one_sentence(app):
 
 @pytest.mark.regression
 def test_ambiguous_destination_offers_candidates(app):
-    """후보가 여럿이면 고르게 한다: '판교 가자' → 3곳 → 판교역을 고르면 안내가 시작된다."""
+    """'판교 가자'처럼 목적지 후보가 여럿이면 세 곳을 보여 주고 고르게 합니다.
+    판교역을 고르면 안내가 시작됩니다.
+    """
     assistant = app.assistant()
     reply = assistant.chip(3)
     assert "3곳" in reply
@@ -55,7 +59,9 @@ def test_ambiguous_destination_offers_candidates(app):
 
 @pytest.mark.sanity
 def test_driving_locks_typing_and_refuses_mirror_fold(app, car):
-    """주행 중: 글자 입력은 막히고(칩은 된다), 사이드 미러 접기는 거절한다."""
+    """주행 중에는 글자 입력이 막히고 추천 명령만 쓸 수 있습니다.
+    사이드 미러를 접어 달라는 명령은 거절합니다.
+    """
     assistant = app.assistant()
     assert assistant.typing_enabled()
 
@@ -75,7 +81,7 @@ def test_driving_locks_typing_and_refuses_mirror_fold(app, car):
 
 @pytest.mark.regression
 def test_voice_popup_and_assistant_share_history(app):
-    """음성 팝업에서 한 말이 AI 어시스턴트 대화 내역에도 남는다."""
+    """음성 팝업에서 한 말이 AI 어시스턴트 대화 내역에도 남습니다."""
     voice = app.voice()
     voice.say(1)  # "라디오 켜줘"
     assistant = app.assistant()

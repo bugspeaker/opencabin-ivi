@@ -4,6 +4,7 @@
     python -m pytest --serial W3VBB22125209573 --shots
     python tools/publish_results.py                         # 기기 종류(aaos/mock)마다 가장 최근 --shots 실행을 고른다
     python tools/publish_results.py --runs reports/runs/A.json reports/runs/B.json
+    python tools/publish_results.py --blur aaos/test_video_resumes_where_it_stopped:800,455,60,28   # 번호판 가리기
     cd ../site && npm run build-docs                         # 결과 페이지(site/docs/test-results.html) 다시 만들기
 
 만드는 것
@@ -12,6 +13,9 @@
   docs/test-results.md           GitHub 에서 보는 같은 내용의 표 (테스트 이름마다 앵커)
 
 테스트 설명과 마커는 tests/*.py 의 docstring · @pytest.mark 에서 읽는다 (설명을 따로 적지 않는다).
+
+영상 화면에는 직접 찍은 블랙박스 영상이 나온다. 다른 차 번호판이 읽히는 화면은 --blur 로 그 부분을 흐리게 해서 올린다.
+좌표는 올리는 이미지(가로 960px) 기준 x,y,너비,높이. 실행마다 화면이 다르므로 새로 올릴 때마다 결과 화면을 보고 정한다.
 """
 import argparse
 import ast
@@ -22,7 +26,7 @@ import sys
 import time
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent          # ivi-tests/
 REPO = ROOT.parent
@@ -99,7 +103,26 @@ def convert(src, dest):
         image.save(dest, "WEBP", quality=72, method=6)
 
 
-def build(runs):
+def parse_blur(items):
+    """["aaos/test_x:800,455,60,28", ...] → {"aaos/test_x": [(800, 455, 860, 483)]}"""
+    boxes = {}
+    for item in items or []:
+        key, _, nums = item.rpartition(":")
+        x, y, w, h = (int(n) for n in nums.split(","))
+        boxes.setdefault(key, []).append((x, y, x + w, y + h))
+    return boxes
+
+
+def blur(path, boxes):
+    with Image.open(path) as image:
+        image = image.convert("RGB")
+        for box in boxes:
+            image.paste(image.crop(box).filter(ImageFilter.GaussianBlur(6)), box[:2])
+        image.save(path, "WEBP", quality=72, method=6)
+
+
+def build(runs, blur_boxes=None):
+    blur_boxes = blur_boxes or {}
     files = read_tests()
     by_name = {t["name"]: t for f in files for t in f["tests"]}
     cases = {}  # 함수 이름 → {케이스 id → {"param", "results"}}
@@ -127,6 +150,9 @@ def build(runs):
             if shot and Path(shot).exists():
                 image = f"img/{kind}/{slug(nodeid)}.webp"
                 convert(shot, SITE_RESULTS / image)
+                key = f"{kind}/{slug(nodeid)}"
+                if key in blur_boxes:
+                    blur(SITE_RESULTS / image, blur_boxes.pop(key))
             entry = cases.setdefault(func, {}).setdefault(param, {"param": param, "results": {}})
             entry["results"][kind] = {
                 "outcome": test["outcome"], "label": OUTCOME_LABEL.get(test["outcome"], test["outcome"]),
@@ -151,14 +177,14 @@ def markdown(data):
     lines = [
         "# 테스트 결과",
         "",
-        "기기별 전체 E2E 실행 결과와 테스트마다 끝 화면입니다. `ivi-tests/tools/publish_results.py`가 실행 기록에서 만듭니다.",
-        "소개 사이트에서는 같은 내용을 화면 미리 보기와 함께 볼 수 있습니다 (`site/docs/test-results.html`).",
+        "기기마다 E2E 전체를 한 번씩 돌린 결과와, 테스트가 끝난 순간의 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다.",
+        "소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.",
         "",
         "| 기기 | 실행 | 결과 | 시간 |",
         "|---|---|---|---|",
     ]
     for d in data["devices"]:
-        counts = ", ".join(f"{k} {v}" for k, v in sorted(d["counts"].items()))
+        counts = ", ".join(f"{OUTCOME_LABEL.get(k, k)} {v}" for k, v in sorted(d["counts"].items()))
         lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {counts} | {fmt_time(d['duration'])} |")
     kinds = [d["kind"] for d in data["devices"]]
     for f in data["files"]:
@@ -176,9 +202,9 @@ def markdown(data):
                     if not r:
                         cells.append("-")
                         continue
-                    cell = f"{r['label']} · {r['duration']}초"
+                    cell = f"{r['label']}, {r['duration']}초"
                     if r["image"]:
-                        cell += f" · [화면](../site/results/{r['image']})"
+                        cell += f", [화면](../site/results/{r['image']})"
                     cells.append(cell)
                 lines.append(f"| {anchor}{name}{desc} | " + " | ".join(cells) + " |")
     return "\n".join(lines) + "\n"
@@ -191,11 +217,16 @@ def fmt_time(seconds):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--runs", nargs="*", help="reports/runs/*.json (기기 종류마다 하나)")
+    parser.add_argument("--blur", action="append", metavar="KIND/TEST:X,Y,W,H",
+                        help="흐리게 할 영역 (번호판 등). 올리는 이미지(가로 960px) 기준. 여러 번 줄 수 있다")
     args = parser.parse_args()
     runs = pick_runs(args.runs)
     if not runs:
         sys.exit("화면이 있는 실행 기록이 없습니다. pytest 를 --shots 로 돌리세요.")
-    data, missing = build(runs)
+    boxes = parse_blur(args.blur)
+    data, missing = build(runs, boxes)
+    if boxes:
+        print(f"주의: 해당하는 화면이 없어 흐리게 하지 못한 항목 {sorted(boxes)}")
     images = sum(1 for _ in (SITE_RESULTS / "img").rglob("*.webp"))
     size = sum(p.stat().st_size for p in (SITE_RESULTS / "img").rglob("*.webp")) / 1024 / 1024
     for d in data["devices"]:

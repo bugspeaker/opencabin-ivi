@@ -35,43 +35,43 @@
   </aside>
   <main id="content" class="doc">
 <h1 id="5단계-재점검과-디자인-개편"><a class="anchor" href="#5단계-재점검과-디자인-개편" aria-hidden="true">#</a>5단계 재점검과 디자인 개편</h1>
-<p>작성 2026-11-13. 1~4단계를 차례로 다시 점검하고, 앱 화면을 양산 차량 IVI 구조에 가깝게 바꿨다. 바꾼 뒤 전체 회귀로 확인했다.</p>
-<h2 id="1-재점검-디자인을-바꾸기-전"><a class="anchor" href="#1-재점검-디자인을-바꾸기-전" aria-hidden="true">#</a>1. 재점검 (디자인을 바꾸기 전)</h2>
+<p>2026-11-13에 정리했습니다. 1~4단계를 차례로 다시 점검한 뒤, 앱 화면을 양산 차량의 IVI 구조에 가깝게 바꿨습니다. 바꾼 뒤에는 전체 회귀 테스트로 확인했습니다.</p>
+<h2 id="1-디자인을-바꾸기-전-재점검"><a class="anchor" href="#1-디자인을-바꾸기-전-재점검" aria-hidden="true">#</a>1. 디자인을 바꾸기 전 재점검</h2>
 <div class="table"><table><thead><tr>
 <th>단계</th>
-<th>확인</th>
+<th>확인한 것</th>
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
 <td>환경</td>
-<td>기기 2대 연결, Appium, 에뮬레이터 root·운전자 사용자 10, priv-app·공조 권한</td>
-<td>정상</td>
+<td>기기 두 대 연결, Appium, 에뮬레이터 root와 운전자 사용자 10, priv-app과 공조 권한</td>
+<td>모두 정상</td>
 </tr>
 <tr>
 <td>1단계</td>
 <td>spike 테스트</td>
-<td>5 passed, 1 xfailed (알려진 SystemUI 결함)</td>
+<td>5개 통과, 1개 알려진 결함(SystemUI)</td>
 </tr>
 <tr>
 <td>2단계</td>
-<td>clean build + Android Lint</td>
-<td>빌드 성공, Lint 0 errors / 5 warnings, Kotlin deprecated 경고 5건</td>
+<td>clean build와 Android Lint</td>
+<td>빌드 성공. Lint 오류 0개, 경고 5개, Kotlin deprecated 경고 5개</td>
 </tr>
 <tr>
 <td>2단계</td>
-<td>priv-app 위에 <code>adb install -r</code>로 덮어쓴 뒤 권한</td>
-<td><code>/data</code>에 새 버전, <code>/system/priv-app</code> 원본 유지, <code>CONTROL_CAR_CLIMATE</code> 유지 (문서 내용을 실제로 확인)</td>
+<td>priv-app 위에 <code>adb install -r</code>로 덮어쓴 뒤의 권한</td>
+<td>새 버전은 <code>/data</code>에, 원본은 <code>/system/priv-app</code>에 그대로 있고 <code>CONTROL_CAR_CLIMATE</code>도 유지됐습니다. 문서에 적은 내용을 실제로 확인했습니다.</td>
 </tr>
 <tr>
-<td>3·4단계</td>
-<td>단위 테스트 / 두 기기 병렬 전체</td>
-<td>22 passed / AAOS 30 passed + 1 xfailed, 태블릿 25 passed, flaky 0</td>
+<td>3, 4단계</td>
+<td>단위 테스트와 두 기기 병렬 전체 실행</td>
+<td>단위 22개 통과. AAOS 30개 통과와 1개 알려진 결함, 태블릿 25개 통과, flaky 0</td>
 </tr>
 </tbody></table></div>
-<p>재점검에서 같이 본 것</p>
+<p>점검하면서 함께 본 것이 두 가지 있습니다.</p>
 <ul>
-<li><code>CAR_SPEED: granted=false</code>로 보였던 것은 시스템 사용자 0의 값이었다. 화면을 쓰는 운전자 사용자 10은 <code>granted=true</code>로 정상.</li>
-<li>clean build는 APK 바이트가 달라져 <code>install_app.py</code>가 두 기기에 다시 설치했다. 화웨이는 기기 승인이 필요해서, 설치 전에 미리 알리기로 했다.</li>
+<li><code>CAR_SPEED: granted=false</code>로 보였던 것은 시스템 사용자 0의 값이었습니다. 화면을 쓰는 운전자 사용자 10은 <code>granted=true</code>로 정상이었습니다.</li>
+<li>clean build를 하면 APK 바이트가 달라져서 <code>install_app.py</code>가 두 기기에 다시 설치합니다. 화웨이는 기기에서 승인해야 해서, 설치하기 전에 미리 알리기로 했습니다.</li>
 </ul>
 <h2 id="2-참고한-것"><a class="anchor" href="#2-참고한-것" aria-hidden="true">#</a>2. 참고한 것</h2>
 <div class="table"><table><thead><tr>
@@ -79,29 +79,30 @@
 <th>가져온 구조</th>
 </tr>
 </thead><tbody><tr>
-<td>Pleos Connect 보도자료 (Hyundai, 2026-04-30). 42dot이 AAOS 기반으로 개발한 차세대 인포테인먼트</td>
-<td>넓은 중앙 화면에서 왼쪽은 주행 정보(속도·기어), 오른쪽은 앱 화면. 아래 바에서 최근·고정 앱을 한 번에 연다. 단일/분할 화면, 복잡한 그래픽 대신 단순한 아이콘</td>
+<td>Pleos Connect 보도자료 (Hyundai, 2026-04-30). 42dot이 AAOS를 바탕으로 개발한 차세대 인포테인먼트입니다.</td>
+<td>넓은 중앙 화면에서 왼쪽은 속도와 기어 같은 주행 정보, 오른쪽은 앱 화면입니다. 아래 바에서 최근 앱과 고정 앱을 바로 열고, 단일 화면과 분할 화면을 오갑니다. 복잡한 그래픽 대신 단순한 아이콘을 씁니다.</td>
 </tr>
 <tr>
 <td>현대차그룹 UX 기사 (2020, 이전 세대 AVNT)</td>
-<td>아쿠아 블루 계열 색, 홈은 브랜드 정체성·기능 화면은 가독성 우선, 주행 중에는 터치 영역·글자를 키우고 애니메이션을 줄인다</td>
+<td>아쿠아 블루 계열 색을 쓰고, 홈은 브랜드 느낌을, 기능 화면은 읽기 쉬움을 우선합니다. 주행 중에는 터치 영역과 글자를 키우고 애니메이션을 줄입니다.</td>
 </tr>
 <tr>
 <td>ccNC 사용자 설명서</td>
-<td>위젯(카드)으로 된 홈, 분할 화면</td>
+<td>위젯(카드)으로 된 홈과 분할 화면</td>
 </tr>
 </tbody></table></div>
+<p>화면 구조와 디자인 방향만 참고했고, 제조사 로고나 제품명, 전용 글꼴, 아이콘은 쓰지 않았습니다. 앱 이름(OpenCabin)과 아이콘은 직접 만들었습니다.</p>
+<p>출처는 다음과 같습니다.</p>
 <ul>
-<li>화면 구조와 디자인 방향만 따르고, 제조사 로고·제품명·전용 글꼴·아이콘은 쓰지 않는다. 앱 이름(OpenCabin)과 아이콘은 자체 제작.</li>
-<li>출처: <a href="https://www.hyundai.news/eu/articles/press-releases/pleos-connect-infotainment-system.html" target="_blank" rel="noopener">https://www.hyundai.news/eu/articles/press-releases/pleos-connect-infotainment-system.html</a> ,
-<a href="https://www.motor1.com/news/755270/hyundai-next-generation-infotainment-ploes-connect/" target="_blank" rel="noopener">https://www.motor1.com/news/755270/hyundai-next-generation-infotainment-ploes-connect/</a> ,
-<a href="https://www.hyundaimotorgroup.com/story/CONT0000000000003395" target="_blank" rel="noopener">https://www.hyundaimotorgroup.com/story/CONT0000000000003395</a> ,
-<a href="https://ownersmanual.hyundai.com/ivi/ccNC_Lite/AV/EUR/English/Systemoverview_home.html" target="_blank" rel="noopener">https://ownersmanual.hyundai.com/ivi/ccNC_Lite/AV/EUR/English/Systemoverview_home.html</a></li>
+<li><a href="https://www.hyundai.news/eu/articles/press-releases/pleos-connect-infotainment-system.html" target="_blank" rel="noopener">https://www.hyundai.news/eu/articles/press-releases/pleos-connect-infotainment-system.html</a></li>
+<li><a href="https://www.motor1.com/news/755270/hyundai-next-generation-infotainment-ploes-connect/" target="_blank" rel="noopener">https://www.motor1.com/news/755270/hyundai-next-generation-infotainment-ploes-connect/</a></li>
+<li><a href="https://www.hyundaimotorgroup.com/story/CONT0000000000003395" target="_blank" rel="noopener">https://www.hyundaimotorgroup.com/story/CONT0000000000003395</a></li>
+<li><a href="https://ownersmanual.hyundai.com/ivi/ccNC_Lite/AV/EUR/English/Systemoverview_home.html" target="_blank" rel="noopener">https://ownersmanual.hyundai.com/ivi/ccNC_Lite/AV/EUR/English/Systemoverview_home.html</a></li>
 </ul>
 <h2 id="3-바뀐-화면"><a class="anchor" href="#3-바뀐-화면" aria-hidden="true">#</a>3. 바뀐 화면</h2>
 <div class="table"><table><thead><tr>
-<th>전</th>
-<th>후 (주행 중)</th>
+<th>바꾸기 전</th>
+<th>바꾼 뒤 (주행 중)</th>
 </tr>
 </thead><tbody><tr>
 <td><img data-md src="../../docs/images/before-home.png" alt="before" loading="lazy"></td>
@@ -118,89 +119,80 @@
 </tr>
 </tbody></table></div>
 <div class="table"><table><thead><tr>
-<th>영역</th>
-<th>전</th>
-<th>후</th>
+<th>부분</th>
+<th>바꾸기 전</th>
+<th>바꾼 뒤</th>
 </tr>
 </thead><tbody><tr>
 <td>배치</td>
-<td>왼쪽 세로 탭 + 카드</td>
-<td>왼쪽 주행 정보 패널(항상 보임) + 오른쪽 앱 영역 + 아래 앱 바</td>
+<td>왼쪽 세로 탭과 카드</td>
+<td>왼쪽에 늘 보이는 주행 정보, 오른쪽 앱 영역, 아래 앱 바</td>
 </tr>
 <tr>
 <td>주행 정보</td>
 <td>홈 카드 안의 숫자</td>
-<td>속도 게이지(0~200 km/h 호), 기어 선택 표시(지금 기어만 강조), 차량 신호 수신 상태</td>
+<td>0~200 km/h 속도 게이지, 현재 기어만 강조한 기어 표시, 차량 신호 수신 상태</td>
 </tr>
 <tr>
 <td>앱 바</td>
-<td>-</td>
-<td>홈·공조·미디어 버튼(64dp), 양 끝에 좌석 온도 표시</td>
+<td>없음</td>
+<td>홈, 공조, 미디어 버튼(64dp)과 양 끝의 좌석 온도</td>
 </tr>
 <tr>
 <td>홈</td>
-<td>속도·공조 카드</td>
-<td>미디어(앨범·재생 위치), 공조 요약, 차량 연결 카드</td>
+<td>속도 카드와 공조 카드</td>
+<td>미디어(앨범과 재생 위치), 공조 요약, 차량 연결 카드</td>
 </tr>
 <tr>
 <td>공조</td>
-<td>버튼 + 숫자</td>
-<td>큰 온도, 16~28°C 막대(파랑→주황), 원형 −/+ 76dp</td>
+<td>버튼과 숫자</td>
+<td>큰 온도 숫자, 파랑에서 주황으로 바뀌는 16~28°C 막대, 76dp 둥근 −, + 버튼</td>
 </tr>
 <tr>
 <td>미디어</td>
-<td>텍스트 목록</td>
-<td>곡·가수 목록, 앨범 아트, 원형 재생 버튼, 영상 버튼</td>
+<td>글자 목록</td>
+<td>곡과 가수 목록, 앨범 아트, 둥근 재생 버튼, 영상 버튼</td>
 </tr>
 <tr>
 <td>영상</td>
-<td>글자만</td>
-<td>상단 제목·닫기, 영상 자리, 재생 바. 차단 화면도 같은 톤</td>
+<td>글자만 있음</td>
+<td>위쪽 제목과 닫기, 영상 자리, 재생 바. 차단 화면도 같은 톤으로</td>
 </tr>
 <tr>
 <td>상태 줄</td>
-<td>배지만</td>
-<td>AAOS는 시스템 바와 겹치지 않게 시계·프로필을 빼고, 태블릿에서만 표시</td>
+<td>배지만 있음</td>
+<td>AAOS에서는 시스템 바와 겹치지 않게 시계와 프로필을 빼고, 태블릿에서만 보여 줍니다.</td>
 </tr>
 <tr>
 <td>색</td>
-<td>단색 강조</td>
-<td>거의 검정 바탕 + 아쿠아 블루 강조, 주의는 주황</td>
+<td>한 가지 강조색</td>
+<td>거의 검은 바탕에 아쿠아 블루 강조, 주의는 주황</td>
 </tr>
 <tr>
 <td>앱 아이콘</td>
 <td>없음 (Lint 경고)</td>
-<td>자체 벡터 아이콘 (계기판 호)</td>
+<td>계기판 호 모양의 벡터 아이콘을 직접 만듦</td>
 </tr>
 </tbody></table></div>
-<p>같이 고친 코드</p>
+<p>코드도 함께 고쳤습니다.</p>
 <ul>
-<li>권한 요청: deprecated <code>onRequestPermissionsResult</code> → Activity Result API</li>
-<li>Car API: <code>registerCallback</code> 등은 API 35에서 deprecated지만 대상이 API 34라 대체 API를 쓸 수 없다. 이유를 적고 <code>@Suppress</code> 처리</li>
-<li>영상 화면의 임시 <code>Int.dp()</code> 확장 함수 제거</li>
-<li>결과: Kotlin 경고 5 → 0, Lint 경고 5 → 4 (남은 것: 의도한 targetSdk 34, 라이브러리 새 버전 안내 3)</li>
+<li>권한 요청을 deprecated된 <code>onRequestPermissionsResult</code> 대신 Activity Result API로 바꿨습니다.</li>
+<li><code>registerCallback</code> 같은 Car API는 API 35에서 deprecated됐지만, 대상이 API 34라 대체 API를 쓸 수 없습니다. 이유를 주석으로 적고 <code>@Suppress</code>했습니다.</li>
+<li>영상 화면에 임시로 만들었던 <code>Int.dp()</code> 확장 함수를 지웠습니다.</li>
 </ul>
-<h2 id="4-회귀에서-잡은-것"><a class="anchor" href="#4-회귀에서-잡은-것" aria-hidden="true">#</a>4. 회귀에서 잡은 것</h2>
-<h3 id="4-1-디자인이-바뀌어-미디어-테스트-4건-실패-테스트-계약-수정"><a class="anchor" href="#4-1-디자인이-바뀌어-미디어-테스트-4건-실패-테스트-계약-수정" aria-hidden="true">#</a>4-1) 디자인이 바뀌어 미디어 테스트 4건 실패 (테스트 계약 수정)</h3>
-<ul>
-<li>증상: <code>now_playing_title</code>이 <code>&#39;&#39;</code>가 되기를 기다리다 실패. 실패 자료의 화면에서는 앱이 정상으로 곡을 바꾸고 있었다.</li>
-<li>원인: 목록 한 줄(<code>track_N</code>)이 &#39;제목 + 가수&#39; 두 글자를 담는 줄로 바뀌어 줄 자체의 글자가 빈 값이 됐다. 테스트가 줄의 글자를 곡 제목으로 읽고 있었다.</li>
-<li>해결: 제목 글자에 <code>track_N_title</code> 태그를 따로 붙이고, 화면 객체 <code>Media.select_track()</code>만 고쳤다. 테스트 코드는 손대지 않았다.</li>
-<li>같은 이유로 기어 표시는 따로 있던 작은 글자(<code>gear_value</code>) 대신 지금 기어 칸 자체에 태그를 붙였다.</li>
-</ul>
-<h3 id="4-2-vhal-값-주입이-한-번-실패-도구-쪽-일시-오류"><a class="anchor" href="#4-2-vhal-값-주입이-한-번-실패-도구-쪽-일시-오류" aria-hidden="true">#</a>4-2) VHAL 값 주입이 한 번 실패 (도구 쪽 일시 오류)</h3>
-<ul>
-<li>증상: flaky 1건. 정리 단계에서 정차로 되돌리는 <code>dumpsys VHAL --set</code>(속도 0)이 <code>failed to set property</code>로 한 번 실패. 누적 200여 회 중 1회.</li>
-<li>실패 자료가 없었다. setup/call 실패에만 남기고 있었기 때문이다. 정리(teardown) 실패도 남기도록 고쳤다 (<code>…__teardown</code> 폴더).</li>
-<li>해결: 신호를 넣는 도구 쪽 일시 오류라 <code>AaosVehicle.force()</code>에서 0.3초 뒤 한 번 더 시도한다. 두 번 다 실패하면 그대로 실패.
-다시 시도한 사실은 JUnit property <code>vhal_retry</code> → 결과 기록 <code>infra_retries</code> → flaky 리포트 &#39;신호 재시도&#39; 열에 남는다. 단위 테스트 3건 추가.</li>
-</ul>
-<h3 id="4-3-화웨이에서-맨-위-액티비티를-못-읽음"><a class="anchor" href="#4-3-화웨이에서-맨-위-액티비티를-못-읽음" aria-hidden="true">#</a>4-3) 화웨이에서 &#39;맨 위 액티비티&#39;를 못 읽음</h3>
-<ul>
-<li><code>dumpsys activity activities</code> 형식이 다르다: AAOS(API 34)는 <code>topResumedActivity=…</code>, 화웨이(Android 12 기반)는 <code>mResumedActivity: …</code>만 나온다.</li>
-<li>영향: 태블릿 실패 자료의 <code>activities.txt</code>와 앱 재실행 기록의 &#39;맨 위&#39;가 비어 있었다 (태블릿 영상 차단은 화면 요소로 판정하므로 판정에는 영향 없음).</li>
-<li>해결: <code>Adb.resumed_activities()</code>가 두 형식을 모두 읽는다.</li>
-</ul>
+<p>그 결과 Kotlin 경고는 5개에서 0개로, Lint 경고는 5개에서 4개로 줄었습니다. 남은 경고는 일부러 정한 targetSdk 34와 라이브러리 새 버전 안내 세 개입니다.</p>
+<h2 id="4-회귀-테스트에서-잡은-것"><a class="anchor" href="#4-회귀-테스트에서-잡은-것" aria-hidden="true">#</a>4. 회귀 테스트에서 잡은 것</h2>
+<h3 id="4-1-디자인이-바뀌어-미디어-테스트-4개가-실패함"><a class="anchor" href="#4-1-디자인이-바뀌어-미디어-테스트-4개가-실패함" aria-hidden="true">#</a>4-1) 디자인이 바뀌어 미디어 테스트 4개가 실패함</h3>
+<p>테스트가 <code>now_playing_title</code>이 <code>&#39;&#39;</code>가 되기를 기다리다 실패했습니다. 그런데 실패 자료의 화면을 보면 앱은 곡을 정상으로 바꾸고 있었습니다.</p>
+<p>목록 한 줄(<code>track_N</code>)이 제목과 가수 두 글자를 담는 줄로 바뀌면서, 줄 자체의 글자가 빈 값이 된 것이 원인이었습니다. 테스트는 줄의 글자를 곡 제목으로 읽고 있었습니다.</p>
+<p>제목 글자에 <code>track_N_title</code> 태그를 따로 붙이고 화면 객체의 <code>Media.select_track()</code>만 고쳤습니다. 테스트 코드는 손대지 않았습니다. 같은 이유로 기어 표시도 따로 있던 작은 글자(<code>gear_value</code>) 대신 현재 기어 칸 자체에 태그를 붙였습니다.</p>
+<h3 id="4-2-vhal-값-주입이-한-번-실패함"><a class="anchor" href="#4-2-vhal-값-주입이-한-번-실패함" aria-hidden="true">#</a>4-2) VHAL 값 주입이 한 번 실패함</h3>
+<p>flaky가 1건 나왔습니다. 정리 단계에서 정차로 되돌리려고 <code>dumpsys VHAL --set</code>으로 속도 0을 넣는데, <code>failed to set property</code>로 한 번 실패했습니다. 누적 200여 회 중 1회였습니다.</p>
+<p>이때 실패 자료가 남지 않았습니다. 준비(setup)와 본 실행(call) 실패에만 자료를 남기고 있었기 때문입니다. 정리(teardown) 실패도 <code>…__teardown</code> 폴더에 남기도록 고쳤습니다.</p>
+<p>신호를 넣는 도구 쪽의 일시 오류라서, <code>AaosVehicle.force()</code>가 0.3초 뒤 한 번 더 시도하게 했습니다. 두 번 다 실패하면 그대로 실패입니다. 다시 시도한 사실은 JUnit property <code>vhal_retry</code>로 남고, 결과 기록의 <code>infra_retries</code>를 거쳐 flaky 리포트의 &#39;신호 재시도&#39; 열에 나옵니다. 이 동작을 확인하는 단위 테스트 3개를 더했습니다.</p>
+<h3 id="4-3-화웨이에서-맨-위-액티비티를-읽지-못함"><a class="anchor" href="#4-3-화웨이에서-맨-위-액티비티를-읽지-못함" aria-hidden="true">#</a>4-3) 화웨이에서 &#39;맨 위 액티비티&#39;를 읽지 못함</h3>
+<p><code>dumpsys activity activities</code>의 출력 형식이 기기마다 달랐습니다. AAOS(API 34)는 <code>topResumedActivity=…</code>가 나오고, 화웨이(Android 12 기반)는 <code>mResumedActivity: …</code>만 나옵니다.</p>
+<p>그래서 태블릿 실패 자료의 <code>activities.txt</code>와 앱 재실행 기록의 &#39;맨 위&#39; 항목이 비어 있었습니다. 태블릿의 영상 차단은 화면 요소로 판정하기 때문에 판정에는 영향이 없었습니다. <code>Adb.resumed_activities()</code>가 두 형식을 모두 읽도록 고쳤습니다.</p>
 <h2 id="5-결과"><a class="anchor" href="#5-결과" aria-hidden="true">#</a>5. 결과</h2>
 <div class="table"><table><thead><tr>
 <th>항목</th>
@@ -208,25 +200,22 @@
 </tr>
 </thead><tbody><tr>
 <td>단위 테스트</td>
-<td>25 passed (0.3초)</td>
+<td>25개 통과 (0.3초)</td>
 </tr>
 <tr>
-<td>두 기기 병렬 전체 × 3회 (<code>--reruns 1</code>)</td>
-<td>3회 모두 게이트 통과. AAOS 30 passed + 1 xfailed, 태블릿 25 passed + 6 skipped. flaky 0, 앱 재실행 0, 실패 자료 0</td>
+<td>두 기기 병렬 전체 실행 세 번 (<code>--reruns 1</code>)</td>
+<td>세 번 모두 게이트 통과. AAOS 30개 통과와 1개 알려진 결함, 태블릿 25개 통과와 6개 건너뜀. flaky, 앱 재실행, 실패 자료 모두 0</td>
 </tr>
 <tr>
-<td>병렬 시간</td>
-<td>2분 10초 ~ 2분 22초 (차례로 돌리면 약 3분 40초, 1.6배)</td>
+<td>병렬 실행 시간</td>
+<td>2분 10초 ~ 2분 22초. 차례로 돌리면 약 3분 40초라 1.6배 빠릅니다.</td>
 </tr>
 </tbody></table></div>
-<p>flaky 리포트 읽는 법 (이번 기록 기준)</p>
-<ul>
-<li>&#39;격리 후보&#39;에 5건이 올라왔다 (불안정 11%, 9회 중 1회). 미디어 4건은 4-1의 디자인 개편 중 실패, 1건은 4-2의 VHAL 일시 오류다. 둘 다 원인을 고쳤고 이후 3회 연속 통과라 격리하지 않았다.</li>
-<li>리포트는 &#39;흔들림&#39;과 &#39;한 번 깨졌다가 고친 것&#39;을 구분하지 못한다. 그래서 후보가 올라와도 바로 격리하지 않고, 원인을 확인한 뒤 정한다.</li>
-</ul>
+<p>이번 flaky 리포트에서는 &#39;격리 후보&#39;에 5건이 올라왔습니다(불안정률 11%, 9회 중 1회). 미디어 4건은 4-1의 디자인 개편 중에 실패한 것이고, 1건은 4-2의 VHAL 일시 오류입니다. 둘 다 원인을 고쳤고 이후 세 번 연속 통과해서 격리하지 않았습니다.</p>
+<p>리포트만으로는 계속 흔들리는 테스트와 한 번 깨졌다가 고친 테스트를 구분할 수 없습니다. 그래서 후보가 올라와도 바로 격리하지 않고, 원인을 확인한 뒤에 정합니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-재점검-디자인을-바꾸기-전">1. 재점검 (디자인을 바꾸기 전)</a><a class="l2" href="#2-참고한-것">2. 참고한 것</a><a class="l2" href="#3-바뀐-화면">3. 바뀐 화면</a><a class="l2" href="#4-회귀에서-잡은-것">4. 회귀에서 잡은 것</a><a class="l3" href="#4-1-디자인이-바뀌어-미디어-테스트-4건-실패-테스트-계약-수정">4-1) 디자인이 바뀌어 미디어 테스트 4건 실패 (테스트 계약 수정)</a><a class="l3" href="#4-2-vhal-값-주입이-한-번-실패-도구-쪽-일시-오류">4-2) VHAL 값 주입이 한 번 실패 (도구 쪽 일시 오류)</a><a class="l3" href="#4-3-화웨이에서-맨-위-액티비티를-못-읽음">4-3) 화웨이에서 &amp;#39;맨 위 액티비티&amp;#39;를 못 읽음</a><a class="l2" href="#5-결과">5. 결과</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-디자인을-바꾸기-전-재점검">1. 디자인을 바꾸기 전 재점검</a><a class="l2" href="#2-참고한-것">2. 참고한 것</a><a class="l2" href="#3-바뀐-화면">3. 바뀐 화면</a><a class="l2" href="#4-회귀-테스트에서-잡은-것">4. 회귀 테스트에서 잡은 것</a><a class="l3" href="#4-1-디자인이-바뀌어-미디어-테스트-4개가-실패함">4-1) 디자인이 바뀌어 미디어 테스트 4개가 실패함</a><a class="l3" href="#4-2-vhal-값-주입이-한-번-실패함">4-2) VHAL 값 주입이 한 번 실패함</a><a class="l3" href="#4-3-화웨이에서-맨-위-액티비티를-읽지-못함">4-3) 화웨이에서 &amp;#39;맨 위 액티비티&amp;#39;를 읽지 못함</a><a class="l2" href="#5-결과">5. 결과</a></nav>
 </div>
 
 </body>

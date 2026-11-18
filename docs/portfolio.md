@@ -5,26 +5,26 @@
 
 ![주행 중 경로 안내](images/p9-guidance.png)
 
-가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 113개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿 양쪽에서 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
+가상 IVI 앱을 직접 만들고, 화면 조작이 차량 신호(CarProperty/VHAL)까지 이어지는지 확인하는 E2E 테스트 115개를 붙인 프로젝트입니다. 같은 테스트 코드가 AAOS 에뮬레이터와 화웨이 태블릿에서 모두 돕니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
 
-차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지와 신호가 바뀌면 화면이 따라오는지를 둘 다 보고, 좌석이나 도어처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.
+차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.
 
 | 항목 | 결과 |
 |---|---|
-| AAOS 에뮬레이터 | 111 passed, 1 skipped, 1 xfailed, 재시도 0 (8분 4초) |
-| 화웨이 태블릿 (Mock) | 107 passed, 6 skipped, 재시도 0 (8분 57초) |
-| 두 기기 병렬 | gate pass, flaky 0, 7분 20초 (8단계 108개 기준, 차례로 돌리면 14분 28초) |
-| 단위 테스트 | 프레임워크 36 passed, 앱 19 passed |
-| 테스트별 결과 | 기기마다 판정과 끝 화면 219장: [테스트 결과](test-results.md) |
-| GitHub Actions | 2026-11-18까지 18회 실행, 17회 success. 1회는 첫 실행에서 취소 ([8-3](#8-3-github-실행-기록)) |
+| AAOS 에뮬레이터 | 113개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 35초) |
+| 화웨이 태블릿 (Mock) | 109개 통과, AAOS 전용 6개 건너뜀, 재시도 0 (9분 11초) |
+| 두 기기 병렬 | 게이트 통과, flaky 0, 7분 20초 (8단계 108개 기준. 차례로 돌리면 14분 28초) |
+| 단위 테스트 | 프레임워크 37개, 앱 19개 모두 통과 |
+| 테스트별 결과 | 기기마다 판정과 테스트가 끝난 화면 224장: [테스트 결과](test-results.md) |
+| GitHub Actions | 2026-11-18까지 18회 실행, 17회 success. 1회는 첫 실행에서 취소했습니다 ([8-3](#8-3-github-실행-기록)). |
 
-xfailed 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, skipped는 AAOS에서만 의미가 있는 테스트입니다.
+알려진 결함 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것이고, 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.
 
-두 기기 결과는 2026-11-18에 기기마다 한 번씩 돌린 것입니다. 이때 테스트마다 판정 직후의 화면을 남겼고, [테스트 결과](test-results.md)에서 테스트별로 볼 수 있습니다. 두 기기 병렬 수치는 8단계(테스트 108개) 때 측정한 것이고 이후 다시 재지 않았습니다.
+두 기기 결과는 2026-11-18에 기기마다 한 번씩 돌린 것입니다. 테스트가 끝날 때마다 화면을 남겼고, [테스트 결과](test-results.md)에서 테스트별로 볼 수 있습니다. 영상 화면에는 직접 찍은 블랙박스 영상이 나오고, 다른 차 번호판이 읽히는 화면은 흐리게 처리했습니다. 두 기기 병렬 수치는 8단계(테스트 108개) 때 잰 것이고 그 뒤로는 다시 재지 않았습니다.
 
 ## 목차
 
-1. [공고 요구사항과 근거](#1-공고-요구사항과-근거)
+1. [공고 요구사항과 한 일](#1-공고-요구사항과-한-일)
 2. [테스트 환경 구조](#2-테스트-환경-구조)
 3. [검증 전략](#3-검증-전략)
 4. [E2E 테스트 설계](#4-e2e-테스트-설계)
@@ -37,38 +37,38 @@ xfailed 1건은 1단계에서 찾은 SystemUI 결함을 일부러 남겨 둔 것
 
 ---
 
-## 1. 공고 요구사항과 근거
+## 1. 공고 요구사항과 한 일
 
 ### 주요 업무
 
-| 공고 업무 | 이 프로젝트에서 한 것 | 근거 |
+| 공고의 주요 업무 | 이 프로젝트에서 한 일 | 자세히 |
 |---|---|---|
-| IVI 서비스별 검증 전략 | HVAC, 차량 설정, 클러스터, 미디어를 단계별로 검증 | [phase1](phase1-spike.md), [phase8](phase8-signals.md) |
-| Smoke / Sanity / Regression 게이팅 | 마커 3종, 이벤트(PR, main, Nightly)별 실행 범위 | [phase4](phase4-operations.md) |
-| UI와 CarProperty/VHAL을 잇는 E2E | 양방향 검증, area 단위 판정 | [4-1](#4-1-양방향-검증과-area-단위-판정) |
-| 터치부터 하위 연동까지 통합 | 거리 부족 신호, 경고, 충전소 카드, 경로 안내로 이어지는 흐름 | [phase8](phase8-signals.md) |
-| 프레임워크와 스크립트 유지보수 | 화면 객체 패턴. 7단계 화면 개편 때 테스트 64개 중 1개 수정 | [screens.py](../ivi-tests/ivi/screens.py) |
-| ADB, CarPropertyManager로 Property Injection | 신호 성격에 따라 주입 명령을 골라 씀 | [4-4](#4-4-신호-주입-명령) |
-| Flaky 최소화, 병렬 실행 | 재시도 기록, 격리 목록, 통계, 두 기기 병렬 | [8장](#8-운영과-ci) |
+| IVI 서비스별 검증 전략 | HVAC, 차량 설정, 클러스터, 미디어를 단계별로 나눠 검증했습니다. | [phase1](phase1-spike.md), [phase8](phase8-signals.md) |
+| Smoke / Sanity / Regression 게이팅 | 마커를 세 가지로 나누고 PR, main, Nightly마다 돌리는 범위를 다르게 했습니다. | [phase4](phase4-operations.md) |
+| UI와 CarProperty/VHAL을 잇는 E2E | 화면과 신호를 양쪽에서 확인하고, 좌석과 문은 area마다 봅니다. | [4-1](#4-1-양방향-검증과-area-단위-판정) |
+| 터치부터 하위 연동까지 통합 | 거리 부족 신호가 경고, 충전소 카드, 경로 안내로 이어지는 흐름을 확인했습니다. | [phase8](phase8-signals.md) |
+| 프레임워크와 스크립트 유지보수 | 화면 객체를 둔 덕분에 7단계 화면 개편 때 테스트 64개 중 1개만 고쳤습니다. | [screens.py](../ivi-tests/ivi/screens.py) |
+| ADB, CarPropertyManager로 Property Injection | 신호가 쓰기 가능한지에 따라 주입 명령을 골라 씁니다. | [4-4](#4-4-신호-주입-명령) |
+| Flaky 최소화, 병렬 실행 | 재시도 기록, 격리 목록, 통계를 만들고 두 기기를 병렬로 돌립니다. | [8장](#8-운영과-ci) |
 
 ### 자격요건
 
-| 공고 자격요건 | 근거 |
+| 공고의 자격요건 | 이 프로젝트에서 한 일 |
 |---|---|
-| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실기기 태블릿에서 E2E 113개 실행, 결과 누적 기록, 테스트별 끝 화면 보관 |
-| Python 테스트 프레임워크 (Pytest) | 훅, 픽스처, 마커, 결과 기록용 플러그인 작성 |
-| Appium 등 UI 자동화 도구 | Appium(UiAutomator2). AAOS 다중 사용자(user 10) 설정 포함 |
-| ADB, Logcat, Shell | adb 어댑터, 실패 시 logcat 자동 저장, logcat으로 강제 종료 원인 확인 |
-| Git, CI/CD | PR 단위 작업, GitHub Actions에서 build와 unit 실행 ([8-3](#8-3-github-실행-기록)) |
+| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실제 태블릿에서 E2E 115개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다. |
+| Python 테스트 프레임워크 (Pytest) | 훅, 픽스처, 마커와 결과 기록용 플러그인을 직접 만들었습니다. |
+| Appium 등 UI 자동화 도구 | Appium(UiAutomator2)을 썼고, AAOS의 다중 사용자 환경(user 10)에 맞춰 설정했습니다. |
+| ADB, Logcat, Shell | adb 어댑터를 만들고, 실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다. |
+| Git, CI/CD | PR 단위로 작업했고, GitHub Actions가 PR마다 빌드와 단위 테스트를 돌립니다 ([8-3](#8-3-github-실행-기록)). |
 
 ### 우대사항
 
-| 공고 우대사항 | 상태 |
+| 공고의 우대사항 | 지금 상태 |
 |---|---|
-| VHAL, CarService, CarPropertyManager | 해 봄. 신호 12종, area 구성, 권한 등급, priv-app 허용 목록 |
-| 차량 네트워크 (Ethernet, DDS, SOME/IP, CAN) | 경험 없음. VHAL 아래 계층이라 이 프로젝트 범위 밖 |
-| REST API 자동화, 원격 전원 제어 | 아직 없음 |
-| ISO 26262, A-SPICE | 공부가 필요함 |
+| VHAL, CarService, CarPropertyManager | 신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다. |
+| 차량 네트워크 (Ethernet, DDS, SOME/IP, CAN) | 경험이 없습니다. VHAL 아래 계층이라 이 프로젝트에서는 다루지 않았습니다. |
+| REST API 자동화, 원격 전원 제어 | 아직 해 보지 않았습니다. |
+| ISO 26262, A-SPICE | 더 공부해야 합니다. |
 
 ---
 
@@ -105,9 +105,9 @@ flowchart LR
 | 계층 | 확인하는 것 | 예 | 실행 시점 |
 |---|---|---|---|
 | unit | 테스트 도구 자체가 맞는지 | VHAL 출력 해석, flaky 판정 분류 | 모든 push |
-| smoke | 빌드를 받아도 되는지 | 앱 실행, 공조 제어 권한 | PR |
-| sanity | 핵심 기능이 신호까지 이어지는지 | A/C 전 좌석, 주행 중 영상 차단 | main push |
-| regression | 경계, 조합, 과거 결함 | 풍량 1/7, 거리 31/30/29 km | Nightly |
+| smoke | 이 빌드를 받아도 되는지 | 앱 실행, 공조 제어 권한 | PR |
+| sanity | 핵심 기능이 신호까지 이어지는지 | 전 좌석 A/C, 주행 중 영상 차단 | main push |
+| regression | 경계 값, 조합, 예전에 찾은 결함 | 풍량 1과 7, 거리 31, 30, 29 km | Nightly |
 | spike | AAOS 기본 SystemUI | SystemUI 공조 바 | Nightly |
 
 ### 3-2. 판정 기준
@@ -115,11 +115,11 @@ flowchart LR
 | 판정 | 뜻 | 게이트 |
 |---|---|---|
 | passed | 한 번에 통과 | 통과 |
-| flaky | 실패 후 재시도에서 통과 | 통과, 통계에 남김 |
-| failed / error | 재시도까지 실패, 또는 준비나 정리 단계 실패 | 실패 |
+| flaky | 실패했다가 재시도에서 통과 | 통과, 통계에 남김 |
+| failed / error | 재시도까지 실패했거나 준비, 정리 단계에서 실패 | 실패 |
 | xfailed | 알려진 결함 | 통과 |
-| quarantined | 격리 목록에 있음 (사유 필수) | 통과 |
-| skipped | AAOS 전용 테스트를 태블릿에서 실행 | 통과 |
+| quarantined | 사유를 적고 격리 목록에 올린 테스트 | 통과 |
+| skipped | AAOS 전용 테스트를 태블릿에서 돌린 경우 | 통과 |
 
 재시도해서 통과한 테스트를 passed로 치면 흔들리는 테스트가 통계에서 사라집니다. 그래서 flaky로 따로 기록합니다. 앱을 다시 띄운 횟수와 신호 주입을 다시 시도한 횟수도 JUnit 결과와 누적 기록(`results.jsonl`)에 같이 남깁니다.
 
@@ -147,13 +147,13 @@ A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 �
 
 ### 4-2. 설계 기법
 
-| 기법 | 적용 예 |
+| 기법 | 적용한 곳 |
 |---|---|
-| 경계 값 | 온도 16/28°C, 풍량 1/7, 주행 가능 거리 31/30/29 km |
-| 상태 전이 | 좌석 열선 꺼짐, 2단, 1단, 다시 꺼짐. 정차와 주행 전환 |
-| 조합 | 좌석 2 × 방향 2, 앞/뒤 유리, km/mph 설정 × 신호 |
-| 규칙 충돌 | AUTO 중 풍량을 직접 바꾸면 AUTO가 꺼짐 |
-| 일관성 | 같은 열선 신호가 화면 세 곳에 같은 값으로 표시 |
+| 경계 값 | 온도 16°C와 28°C, 풍량 1과 7, 주행 가능 거리 31, 30, 29 km |
+| 상태 전이 | 좌석 열선이 꺼짐, 2단, 1단, 꺼짐으로 도는 순서. 정차와 주행 사이의 전환 |
+| 조합 | 좌석 두 곳과 올림, 내림 버튼. 앞 유리와 뒤 유리. km/mph 설정과 신호 |
+| 규칙 충돌 | AUTO 중에 풍량을 직접 바꾸면 AUTO가 꺼지는지 |
+| 일관성 | 같은 열선 신호가 화면 세 곳에 같은 값으로 보이는지 |
 | 주행 안전 | 주행 중 영상 차단, 검색과 키패드 잠금 |
 
 ### 4-3. 테스트 격리
@@ -180,9 +180,9 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 
 | 명령 | 경로 | 쓰는 곳 |
 |---|---|---|
-| `cmd car_service set-property-value` | CarService를 거쳐 VHAL | 쓰기 가능한 값(HVAC). 앱과 같은 경로 |
-| `dumpsys <VHAL> --set` (root) | VHAL 직접 | 읽기 전용 센서(속도, 기어, 거리). 주행 상태까지 실제로 바뀜 |
-| `cmd car_service inject-vhal-event` | 이벤트만 발생 | 안 씀. 저장 값이 그대로라 `get`으로 판정할 수 없음 |
+| `cmd car_service set-property-value` | CarService를 거쳐 VHAL로 | HVAC처럼 쓰기 가능한 값. 앱과 같은 경로입니다. |
+| `dumpsys <VHAL> --set` (root) | VHAL에 바로 | 속도, 기어, 거리 같은 읽기 전용 센서. 주행 상태까지 실제로 바뀝니다. |
+| `cmd car_service inject-vhal-event` | 이벤트만 보냄 | 쓰지 않습니다. 저장된 값이 바뀌지 않아 `get`으로 판정할 수 없습니다. |
 
 ---
 
@@ -190,13 +190,13 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 
 | 번호 | 증상 | 원인 | 조치와 결과 |
 |---|---|---|---|
-| 1 | 태블릿에서 탭 한 번에 10초 | 이 기기에서 UiAutomator 터치가 느림 | 누르기만 adb로 바꿈. 전체 7분 22초에서 1분 32초로 |
-| 2 | 매 실행 21번째 테스트에서 앱이 사라짐 | OS(iAware)가 반복 재시작을 크래시로 판단 | 프로세스는 두고 화면만 초기화. 재실행 0회 (3회 연속) |
-| 3 | SystemUI 온도 ▲ 버튼이 안 눌림 | 홈 버튼과 72×76 px 겹침 | `xfail(strict=True)`로 남김 |
-| 4 | 전체 실행에서만 실패 | 테스트 코드의 경쟁 조건 (제 실수) | 조건 대기로 수정 |
-| 5 | 표시 단위를 섭씨로 바꾸자 실패 | 테스트가 화씨 표시를 가정 | 표시 단위 신호를 읽어 기대 값을 계산 |
-| 6 | 회귀 테스트에서 앱 결함 3건 | 패널 겹침, 낮은 화면, 공백 한 칸 | 앱 수정, 회귀 테스트 추가 |
-| 7 | 영상 차단 테스트가 한 번 흔들림 | 아직 모름 | 반복 측정 예정 |
+| 1 | 태블릿에서 탭 한 번에 10초가 걸림 | 이 기기에서는 UiAutomator 터치 자체가 느림 | 누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었음 |
+| 2 | 실행할 때마다 21번째 테스트에서 앱이 사라짐 | 화웨이 OS(iAware)가 반복 재시작을 크래시로 판단 | 프로세스는 그대로 두고 화면만 초기화. 3회 연속 재실행 0회 |
+| 3 | SystemUI 온도 ▲ 버튼이 눌리지 않음 | 홈 버튼과 72×76 px가 겹침 | `xfail(strict=True)`로 남겨 둠 |
+| 4 | 전체 실행에서만 실패 | 테스트 코드의 경쟁 조건 (제 실수) | 조건 대기로 고침 |
+| 5 | 표시 단위를 섭씨로 바꾸자 실패 | 테스트가 화씨 표시를 가정함 | 표시 단위 신호를 읽어 기대 값을 계산 |
+| 6 | 회귀 테스트에서 앱 결함 3건 | 패널 겹침, 낮은 화면, 공백 한 칸 | 앱을 고치고 회귀 테스트를 더함 |
+| 7 | 영상 차단 테스트가 한 번 흔들림 | 아직 모름 | 반복 측정으로 확인할 예정 |
 
 <details>
 <summary>1번. 탭 한 번에 10초</summary>
@@ -247,10 +247,10 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 
 | 문제 | 바꾼 것 |
 |---|---|
-| 토글 상태를 색으로만 표시해서 자동화가 읽지 못함 | 접근성 `checked` 값으로 내보냄 (TalkBack에도 같은 정보가 감) |
-| 저장 설정이 테스트 사이에 남음 | debug 빌드에만 있는 테스트 훅으로 초기화 |
-| 차마다 area 구성이 다름 | area를 하드코딩하지 않고 `CarPropertyConfig`에서 읽음 |
-| 권한이 없는 신호 | 앱이 죽지 않고 '값 없음'으로 표시. 권한 누락이 화면에서 보임 |
+| 토글이 켜졌는지를 색으로만 보여 줘서 자동화가 읽지 못했습니다. | 켜짐 상태를 접근성 `checked` 값으로 내보냈습니다. TalkBack 사용자도 같은 정보를 듣습니다. |
+| 저장된 설정이 다음 테스트까지 남았습니다. | debug 빌드에만 있는 테스트 훅으로 설정을 초기화합니다. |
+| 차마다 area 구성이 다릅니다. | area를 코드에 박아 두지 않고 `CarPropertyConfig`에서 읽습니다. |
+| 권한이 없으면 신호를 읽을 수 없습니다. | 앱이 죽지 않고 '값 없음'으로 보여 줘서, 권한이 빠진 것을 화면에서 바로 알 수 있습니다. |
 
 ---
 
@@ -260,7 +260,7 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 |---|---|
 | 테스트 | Python, pytest, Appium (UiAutomator2) |
 | 기기 제어 | ADB, shell, logcat, `dumpsys`, `cmd car_service` |
-| 대상 앱 | Kotlin, Jetpack Compose, CarPropertyManager |
+| 대상 앱 | Kotlin, Jetpack Compose, CarPropertyManager, Media3 |
 | 실행 환경 | AAOS 에뮬레이터 API 34, 화웨이 태블릿 (Android 12) |
 | CI | GitHub Actions |
 
@@ -272,10 +272,10 @@ if out.count("Set property") == len(commands):   # 26개가 모두 들어갔는�
 
 | 장치 | 하는 일 |
 |---|---|
-| 실패 자료 | 실패하면 정리 단계 전에 화면, UI 계층, 차량 상태, 맨 위 액티비티, logcat을 저장 |
-| flaky 통계 | 테스트별 불안정률과 p95, 격리 후보와 해제 후보, 느린 테스트 상위 5개 |
-| 격리 목록 | 사유가 없는 줄은 거부. 격리한 테스트도 계속 돌려서 데이터를 모음 |
-| 병렬 실행 | 기기마다 pytest 프로세스를 따로 띄움. Appium 서버는 하나, UiAutomator2 `systemPort`만 기기별로 다르게 |
+| 실패 자료 | 테스트가 실패하면 정리 단계 전에 화면, UI 계층, 차량 상태, 맨 위 액티비티, logcat을 저장합니다. |
+| flaky 통계 | 테스트마다 불안정률과 p95 시간을 내고, 격리 후보와 해제 후보, 느린 테스트 다섯 개를 뽑습니다. |
+| 격리 목록 | 사유를 적지 않은 줄은 받지 않습니다. 격리한 테스트도 계속 돌려서 데이터를 모읍니다. |
+| 병렬 실행 | 기기마다 pytest 프로세스를 따로 띄웁니다. Appium 서버는 하나만 두고 UiAutomator2 `systemPort`만 기기별로 다르게 줍니다. |
 
 격리 후보는 불안정률이 10% 이상이고 5회 이상 실행된 테스트, 해제 후보는 격리 중에 20회 연속 통과한 테스트입니다. 후보가 올라와도 자동으로 격리하지는 않고 원인을 확인한 뒤 정합니다.
 
@@ -293,9 +293,9 @@ flowchart LR
 
 | job | 실행 위치 | 내용 |
 |---|---|---|
-| build | GitHub 호스트 | 앱 빌드, 앱 단위 테스트, APK 보관 |
-| unit | GitHub 호스트 | 프레임워크 단위 테스트 (기기 없음) |
-| e2e | self-hosted Test Bench | 두 기기 병렬 실행, flaky 리포트. 저장소 변수 `IVI_BENCH=online`일 때만 |
+| build | GitHub 호스트 | 앱을 빌드하고 앱 단위 테스트를 돌린 뒤 APK를 보관합니다. |
+| unit | GitHub 호스트 | 기기 없이 프레임워크 단위 테스트를 돌립니다. |
+| e2e | self-hosted Test Bench | 두 기기에서 병렬로 돌리고 flaky 리포트를 냅니다. 저장소 변수 `IVI_BENCH=online`일 때만 돕니다. |
 
 | 이벤트 | e2e 범위 |
 |---|---|
@@ -341,10 +341,10 @@ flowchart LR
 
 ### 다음 단계
 
-1. self-hosted 러너를 등록해서 e2e까지 GitHub에서 돌리고 Nightly 기록 남기기
-2. `run_bench.py --repeat 5`로 반복 안정성 측정, 5장 7번의 원인 확인
-3. 데모 영상 (신호 주입과 화면 반응, 화면 조작과 VHAL 값, 실패 자료, 병렬 실행)
-4. 우대 항목 보강: 원격 전원 제어 모사, 결과 보고 REST API, ISO 26262와 A-SPICE 학습
+1. self-hosted 러너를 등록해 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.
+2. `run_bench.py --repeat 5`로 반복 안정성을 재고, 5장 7번 결함의 원인을 찾으려고 합니다.
+3. 신호를 넣으면 화면이 바뀌는 장면, 화면을 누르면 VHAL 값이 바뀌는 장면, 실패 자료, 병렬 실행을 데모 영상으로 남기려고 합니다.
+4. 우대사항 쪽으로는 원격 전원 제어를 흉내 내 보고, 결과를 REST API로 보고하는 기능을 만들고, ISO 26262와 A-SPICE를 공부하려고 합니다.
 
 ---
 
@@ -352,13 +352,13 @@ flowchart LR
 
 | 경로 | 내용 |
 |---|---|
-| [ivi-tests/ivi/vehicle.py](../ivi-tests/ivi/vehicle.py) | 차량 어댑터, 신호 정의, 묶음 주입 |
-| [ivi-tests/ivi/device.py](../ivi-tests/ivi/device.py) | 기기 판별, Appium 설정, 누르는 방법 |
+| [ivi-tests/ivi/vehicle.py](../ivi-tests/ivi/vehicle.py) | 차량 어댑터, 신호 정의, 여러 신호를 한 번에 넣는 코드 |
+| [ivi-tests/ivi/device.py](../ivi-tests/ivi/device.py) | 기기 판별, Appium 설정, 화면을 누르는 방법 |
 | [ivi-tests/ivi/screens.py](../ivi-tests/ivi/screens.py) | 화면 객체 |
-| [ivi-tests/ivi/results.py](../ivi-tests/ivi/results.py) | 판정 분류와 기록 (pytest 플러그인) |
+| [ivi-tests/ivi/results.py](../ivi-tests/ivi/results.py) | 판정을 나누고 기록하는 pytest 플러그인 |
 | [ivi-tests/tests/conftest.py](../ivi-tests/tests/conftest.py) | 픽스처, 마커, 실패 자료 저장 |
-| [ivi-tests/tests/test_vehicle_signals.py](../ivi-tests/tests/test_vehicle_signals.py) | 차량 신호 양방향 E2E 24개 |
-| [ivi-tests/tools/](../ivi-tests/tools/) | 병렬 실행, flaky 통계, 설치 |
+| [ivi-tests/tests/test_vehicle_signals.py](../ivi-tests/tests/test_vehicle_signals.py) | 차량 신호 양방향 E2E |
+| [ivi-tests/tools/](../ivi-tests/tools/) | 병렬 실행, flaky 통계, 설치, 결과 사이트 만들기 |
 | [.github/workflows/ivi-ci.yml](../.github/workflows/ivi-ci.yml) | CI 워크플로 |
 | [docs/phase1 ~ phase8](phase1-spike.md) | 단계별 설계와 검증 기록 |
 

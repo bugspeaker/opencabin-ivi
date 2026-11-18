@@ -1,4 +1,4 @@
-"""1단계 기술 검증 (spike).
+"""1단계 기술 검증입니다. 앱을 만들기 전에 AAOS 기본 SystemUI로 신호와 화면이 이어지는지 먼저 확인했습니다.
 
 자체 IVI 앱을 만들기 전에, AAOS 기본 SystemUI 의 하단 HVAC 바로
 '차량 신호 → UI', 'UI 조작 → 차량 신호', '속도·기어 → 주행 상태' 가 실제로 이어지는지 확인한다.
@@ -51,7 +51,7 @@ def expected_label(vehicle, celsius):
 @pytest.mark.spike
 @pytest.mark.parametrize("celsius", [25.0, 20.0])
 def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius):
-    """하위 → 상위: 운전석 설정 온도를 property 로 바꾸면 하단 HVAC 바 표시가 따라 바뀐다."""
+    """운전석 설정 온도 property를 바꾸면 AAOS 기본 하단 공조 바의 숫자가 따라 바뀝니다."""
     label = expected_label(vehicle, celsius)
     vehicle.set_property(Prop.HVAC_TEMPERATURE_SET, celsius, Area.DRIVER)
     wait_until(lambda: driver_temp_label(driver) == label, what=f"운전석 온도 표시 {label}")
@@ -63,7 +63,7 @@ def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius):
     ("passenger", "hvac_increase_button", +STEP_C),
 ])
 def test_hvac_ui_tap_changes_signal(driver, vehicle, side, button, delta):
-    """상위 → 하위: 화면의 온도 ▲/▼ 를 한 번 누르면 실제 property 값이 한 단계(0.5°C) 바뀐다."""
+    """하단 공조 바의 온도 ▲ 또는 ▼를 한 번 누르면 property 값이 0.5°C 바뀝니다."""
     area = SIDES[side]
     start = expected_label(vehicle, 20.0)
     vehicle.set_property(Prop.HVAC_TEMPERATURE_SET, 20.0, area)
@@ -79,7 +79,9 @@ def test_hvac_ui_tap_changes_signal(driver, vehicle, side, button, delta):
 @pytest.mark.spike
 @pytest.mark.xfail(strict=True, reason="알려진 결함: 1024x768 에서 운전석 온도 ▲ 가 홈 버튼에 가려 탭이 홈으로 간다 (docs/phase1-spike.md)")
 def test_driver_temp_up_is_not_covered_by_home(driver):
-    """버튼 영역이 겹치지 않는지 본다. 겹치면 사용자가 ▲ 를 눌러도 온도가 안 바뀐다 (1단계에서 발견)."""
+    """운전석 온도 ▲ 버튼이 홈 버튼에 가려지지 않는지 봅니다.
+    1단계에서 찾은 SystemUI 결함이라 알려진 결함으로 남겨 두었습니다.
+    """
     up = driver.find_element(*hvac("driver", "hvac_increase_button")).rect
     home = driver.find_element(*HOME_BUTTON).rect
     overlap_x = min(up["x"] + up["width"], home["x"] + home["width"]) - max(up["x"], home["x"])
@@ -89,7 +91,9 @@ def test_driver_temp_up_is_not_covered_by_home(driver):
 
 @pytest.mark.spike
 def test_speed_and_gear_change_driving_state(vehicle):
-    """속도·기어를 VHAL 에 넣으면 CarService 의 주행 상태가 바뀐다 (주행 중 UX 제한의 입력)."""
+    """속도와 기어를 VHAL에 넣으면 CarService의 주행 상태가 바뀝니다.
+    주행 중 화면 제한은 이 값을 보고 동작합니다.
+    """
     assert wait_until(lambda: vehicle.driving_state() == DrivingState.PARKED, what="정차 상태")
 
     vehicle.drive(50.0)  # km/h (VHAL 에는 13.9 m/s 로 들어간다)

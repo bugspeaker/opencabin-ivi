@@ -135,8 +135,10 @@ def test_publish_results_reads_test_docs_and_markers():
     files = {f["file"]: f for f in publish_results.read_tests()}
     signals = {t["name"]: t for t in files["test_vehicle_signals.py"]["tests"]}
     assert "sanity" in signals["test_max_ac_sets_signal_and_coldest_settings"]["markers"]
-    assert signals["test_max_ac_sets_signal_and_coldest_settings"]["doc"].startswith("상위 → 하위")
-    assert files["test_smoke.py"]["title"].startswith("Smoke")
+    # 여러 줄 docstring 은 한 줄로 이어 붙인다
+    assert signals["test_max_ac_sets_signal_and_coldest_settings"]["doc"].startswith("FULL(최대 냉방)을 켜면")
+    assert "\n" not in signals["test_low_range_card_starts_guidance_to_nearest_charger"]["doc"]
+    assert files["test_smoke.py"]["title"].startswith("빌드가 나오면")
 
 
 def test_publish_results_markdown_has_anchor_per_test():
@@ -162,3 +164,25 @@ def test_recorder_keeps_last_attempt_screenshot():
     rec.add(report("t::a", "call", "passed", props=[("shot", "second.png")]))
     row = rec.rows()[0]
     assert (row["outcome"], row["shot"]) == ("flaky", "second.png")
+
+
+def test_publish_results_blurs_only_given_box(tmp_path):
+    """번호판 가리기: --blur 로 준 영역만 흐려지고 나머지 화면은 그대로다."""
+    from PIL import Image
+    from tools import publish_results
+
+    assert publish_results.parse_blur(["aaos/test_x:10,20,30,40", "aaos/test_x:0,0,5,5"]) == {
+        "aaos/test_x": [(10, 20, 40, 60), (0, 0, 5, 5)]}
+
+    path = tmp_path / "shot.webp"
+    image = Image.new("RGB", (100, 100), "white")
+    for x in range(0, 100, 2):  # 세로 줄무늬: 흐리면 회색이 된다
+        for y in range(100):
+            image.putpixel((x, y), (0, 0, 0))
+    image.save(path, "WEBP", lossless=True)
+
+    publish_results.blur(path, [(40, 40, 80, 80)])
+    with Image.open(path) as out:
+        inside, outside = out.convert("L").getpixel((60, 60)), out.convert("L").getpixel((10, 10))
+    assert 60 < inside < 200, "영역 안이 흐려지지 않았다"
+    assert outside < 60 or outside > 200, "영역 밖까지 흐려졌다"

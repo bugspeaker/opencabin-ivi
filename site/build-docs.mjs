@@ -171,7 +171,7 @@ mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
 
 const BAD = new Set(["failed", "error", "flaky", "xpassed"]);
 const MARKER_LABEL = { smoke: "smoke", sanity: "sanity", regression: "regression", spike: "spike", aaos: "AAOS 전용" };
-const fmtTime = (s) => `${Math.floor(s / 60)}분 ${Math.round(s % 60)}초`;
+const fmtTime = (s) => `${Math.floor(s / 60)}분 ${Math.floor(s % 60)}초`;  // pytest 와 같이 버림
 
 /** requirements.mjs 의 항목마다 근거 테스트와 숫자를 붙인다. */
 function reqIndex(data) {
@@ -277,7 +277,7 @@ function renderResults(page) {
   const markers = [...new Set(data.files.flatMap((f) => f.tests.flatMap((t) => t.markers)))];
   const body = `
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E ${total}개를 기기마다 한 번씩 돌린 결과입니다. 테스트마다 판정이 난 직후의 화면을 남겼고, 화면을 누르면 크게 볼 수 있습니다.</p>
+    <p class="lead">E2E ${total}개를 기기마다 한 번씩 돌린 결과입니다. 테스트가 끝난 직후의 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다.</p>
     <div class="device-cards">${devices}</div>
     <section class="req-banner" id="req-banner" aria-live="polite" hidden>
       <div class="req-copy">
@@ -293,7 +293,7 @@ function renderResults(page) {
     <div class="filters" role="group" aria-label="테스트 거르기">
       <button type="button" class="chip" aria-pressed="true" data-filter="">전체</button>
       ${markers.map((m) => `<button type="button" class="chip" aria-pressed="false" data-filter="${esc(m)}">${esc(MARKER_LABEL[m] || m)}</button>`).join("")}
-      <label class="only-bad"><input type="checkbox" id="only-bad"> 실패·재시도만</label>
+      <label class="only-bad"><input type="checkbox" id="only-bad"> 실패나 재시도만</label>
       <span class="filter-count" id="filter-count" aria-live="polite"></span>
       <select class="jump" id="jump" aria-label="파일로 이동"><option value="">파일로 이동</option>${toc.map((t) => `<option value="${esc(t.id)}">${esc(t.text)}</option>`).join("")}</select>
     </div>
@@ -418,7 +418,7 @@ function renderFit({ reqs }) {
         <div class="fit-head-copy">
           <p class="eyebrow">요구 역량</p>
           <h2 id="fit-title" class="display-md">42dot Test Automation Engineer, IVI System</h2>
-          <p class="body-sm subtle">공고 항목마다 이 프로젝트에서 한 것입니다. 항목을 누르면 근거가 되는 테스트 결과나 기록으로 갑니다.</p>
+          <p class="body-sm subtle">채용 공고에 안내된 역량을 이 프로젝트에 적용하고 테스트한 결과입니다. 항목을 누르면 테스트 결과나 기록으로 이동합니다.</p>
         </div>
         <div class="fit-score">
           <p class="fit-score-num"><span>${doneCount}</span> / ${reqs.length}</p>
@@ -439,18 +439,19 @@ function renderFit({ reqs }) {
 
 function renderStats({ stats }, data) {
   const dev = (kind) => data.devices.find((d) => d.kind === kind);
-  const other = (d) => Object.entries(d.counts).filter(([k]) => k !== "passed").map(([k, v]) => `${v} ${k}`);
+  const KO = { skipped: "건너뜀", xfailed: "알려진 결함", flaky: "재시도 후 통과", failed: "실패", error: "오류", xpassed: "알려진 결함 통과", quarantined: "격리" };
+  const other = (d) => Object.entries(d.counts).filter(([k]) => k !== "passed").map(([k, v]) => `${KO[k] ?? k} ${v}`);
   const card = (eyebrow, headline, sub, href) => `<a class="card stat" href="${href}">
           <p class="eyebrow">${eyebrow}</p>
           <p class="headline">${headline}</p>
           <p class="body-sm subtle">${sub}</p>
         </a>`;
-  const cards = [card("E2E 테스트", `${stats.total}개`, "AAOS 에뮬레이터 · 태블릿 공통", "docs/test-results.html")];
+  const cards = [card("E2E 테스트", `${stats.total}개`, "두 기기에서 같은 테스트 코드", "docs/test-results.html")];
   for (const d of data.devices) {
-    const note = d.kind === "mock" ? other(d).map((s) => s.replace("skipped", "skipped (AAOS 전용)")) : other(d);
-    cards.push(card(esc(d.label), `${d.counts.passed ?? 0} 통과`, [...note, fmtTime(d.duration)].join(" · "), "docs/test-results.html"));
+    const note = d.kind === "mock" ? other(d).map((s) => s.replace("건너뜀", "AAOS 전용 건너뜀")) : other(d);
+    cards.push(card(esc(d.label), `${d.counts.passed ?? 0}개 통과`, [...note, fmtTime(d.duration)].join(", "), "docs/test-results.html"));
   }
-  cards.push(card("실패 · 재시도", `${stats.bad}건`, `두 기기에서 ${stats.runs}번 실행`, "docs/test-results.html?req=flaky"));
+  cards.push(card("실패와 재시도", `${stats.bad}건`, `두 기기에서 ${stats.runs}번 실행`, "docs/test-results.html?req=flaky"));
   return `<section class="stats-section" aria-label="최근 결과">
       <div class="stats">
         ${cards.join("\n        ")}
