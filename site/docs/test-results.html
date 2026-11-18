@@ -58,6 +58,17 @@
           <div><dt>게이트</dt><dd class="gate-pass">통과</dd></div>
         </dl>
       </section></div>
+    <section class="req-banner" id="req-banner" aria-live="polite" hidden>
+      <div class="req-copy">
+        <p class="req-eyebrow" id="req-eyebrow"></p>
+        <p class="req-title" id="req-title"></p>
+        <p class="req-note" id="req-note"></p>
+      </div>
+      <div class="req-actions">
+        <a class="req-btn" href="../index.html#fit">요구 역량 목차</a>
+        <button type="button" class="req-btn" id="req-clear">전체 테스트 보기</button>
+      </div>
+    </section>
     <div class="filters" role="group" aria-label="테스트 거르기">
       <button type="button" class="chip" aria-pressed="true" data-filter="">전체</button>
       <button type="button" class="chip" aria-pressed="false" data-filter="sanity">sanity</button><button type="button" class="chip" aria-pressed="false" data-filter="regression">regression</button><button type="button" class="chip" aria-pressed="false" data-filter="smoke">smoke</button><button type="button" class="chip" aria-pressed="false" data-filter="spike">spike</button><button type="button" class="chip" aria-pressed="false" data-filter="aaos">AAOS 전용</button>
@@ -69,7 +80,7 @@
     <section class="rfile" id="file-test_assistant">
         <h2><a class="anchor" href="#file-test_assistant" aria-hidden="true">#</a>test_assistant.py <span class="rfile-count">6</span></h2>
         <p class="rfile-title">AI 어시스턴트 E2E (7단계): 말 → 실제 차량 신호까지 본다.</p>
-        <article class="rtest" id="test_zone_applies_command_to_speaking_seat" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_zone_applies_command_to_speaking_seat" data-markers="sanity" data-reqs="integration" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_zone_applies_command_to_speaking_seat"><code>test_zone_applies_command_to_speaking_seat</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">좌석 인식: 조수석에서 '나 더워' → 조수석만 1°C 내려간다 (차량 신호 확인).</p>
@@ -86,7 +97,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">9.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_typed_command_sets_vehicle_temperature" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_typed_command_sets_vehicle_temperature" data-markers="sanity" data-reqs="e2e integration" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_typed_command_sets_vehicle_temperature"><code>test_typed_command_sets_vehicle_temperature</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">글자로 말하기: '운전석 25.5도로 맞춰줘' → 차량 운전석 25.5 (상위 → 하위).</p>
@@ -103,7 +114,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_multiple_commands_in_one_sentence" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_multiple_commands_in_one_sentence" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_multiple_commands_in_one_sentence"><code>test_multiple_commands_in_one_sentence</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">한 문장에 두 명령: 에어컨 켜고 음악 틀어줘 → 두 동작 모두.</p>
@@ -120,7 +131,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.8초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_ambiguous_destination_offers_candidates" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_ambiguous_destination_offers_candidates" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_ambiguous_destination_offers_candidates"><code>test_ambiguous_destination_offers_candidates</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">후보가 여럿이면 고르게 한다: '판교 가자' → 3곳 → 판교역을 고르면 안내가 시작된다.</p>
@@ -137,7 +148,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_driving_locks_typing_and_refuses_mirror_fold" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_driving_locks_typing_and_refuses_mirror_fold" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_driving_locks_typing_and_refuses_mirror_fold"><code>test_driving_locks_typing_and_refuses_mirror_fold</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">주행 중: 글자 입력은 막히고(칩은 된다), 사이드 미러 접기는 거절한다.</p>
@@ -154,7 +165,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_voice_popup_and_assistant_share_history" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_voice_popup_and_assistant_share_history" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_voice_popup_and_assistant_share_history"><code>test_voice_popup_and_assistant_share_history</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">음성 팝업에서 한 말이 AI 어시스턴트 대화 내역에도 남는다.</p>
@@ -175,7 +186,7 @@
 <section class="rfile" id="file-test_climate">
         <h2><a class="anchor" href="#file-test_climate" aria-hidden="true">#</a>test_climate.py <span class="rfile-count">9</span></h2>
         <p class="rfile-title">공조 E2E: 차량 신호 ↔ 앱 화면을 양방향으로 본다. 같은 테스트가 AAOS(VHAL)와 Mock 기기에서 돈다.</p>
-        <article class="rtest" id="test_signal_is_shown_on_climate_and_home" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_signal_is_shown_on_climate_and_home" data-markers="sanity" data-reqs="services e2e injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_signal_is_shown_on_climate_and_home"><code>test_signal_is_shown_on_climate_and_home</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 차량의 설정 온도가 바뀌면 공조 화면과 홈 요약이 같은 값을 보여 준다.</p>
@@ -202,7 +213,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_button_changes_signal_by_one_step" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_button_changes_signal_by_one_step" data-markers="sanity" data-reqs="services e2e" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_button_changes_signal_by_one_step"><code>test_button_changes_signal_by_one_step</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: 화면의 +/- 를 한 번 누르면 차량 값이 0.5°C 바뀌고 화면도 따라간다.</p>
@@ -249,7 +260,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_buttons_disabled_at_limits" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_buttons_disabled_at_limits" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_buttons_disabled_at_limits"><code>test_buttons_disabled_at_limits</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">경계 값: 최저(16.0)에서 -, 최고(28.0)에서 + 가 비활성이고 반대쪽은 활성이다.</p>
@@ -276,7 +287,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_seats_are_independent" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_seats_are_independent" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_seats_are_independent"><code>test_seats_are_independent</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">한쪽 좌석을 바꿔도 다른 좌석 값은 그대로다 (area 혼동 방지).</p>
@@ -297,7 +308,7 @@
 <section class="rfile" id="file-test_cockpit">
         <h2><a class="anchor" href="#file-test_cockpit" aria-hidden="true">#</a>test_cockpit.py <span class="rfile-count">11</span></h2>
         <p class="rfile-title">화면 틀 E2E (7단계, Pleos Connect 구조): 아래 바 공조 · 동기화 · 주행 정보 · 분할 화면 · 빠른 제어 · 알림.</p>
-        <article class="rtest" id="test_bottom_bar_temperature_drives_vehicle" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_bottom_bar_temperature_drives_vehicle" data-markers="sanity" data-reqs="services e2e injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_bottom_bar_temperature_drives_vehicle"><code>test_bottom_bar_temperature_drives_vehicle</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">아래 바 ‹ › 는 어느 화면에서든 차량 온도를 바꾼다 (상위 → 하위), 차량 값이 바뀌면 아래 바도 따라간다 (하위 → 상위).</p>
@@ -324,7 +335,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_sync_mirrors_driver_temperature_to_passenger" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_sync_mirrors_driver_temperature_to_passenger" data-markers="sanity" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_sync_mirrors_driver_temperature_to_passenger"><code>test_sync_mirrors_driver_temperature_to_passenger</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">SYNC: 켜면 조수석이 운전석 값으로 맞춰지고, 운전석을 바꾸면 조수석 차량 값도 같이 바뀐다.</p>
@@ -341,7 +352,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_passenger_change_releases_sync" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_passenger_change_releases_sync" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_passenger_change_releases_sync"><code>test_passenger_change_releases_sync</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">동기화 중 조수석을 직접 바꾸면 동기화가 풀린다 (이후 운전석만 바뀐다).</p>
@@ -358,7 +369,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_trip_distance_follows_speed_signal" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_trip_distance_follows_speed_signal" data-markers="sanity" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_trip_distance_follows_speed_signal"><code>test_trip_distance_follows_speed_signal</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">현 주행 정보: 거리는 속도 신호로 늘고, 정차하면 멈춘다 (120 km/h ≈ 3초에 0.1 km).</p>
@@ -375,7 +386,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_lane_assist_indicator_follows_speed" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_lane_assist_indicator_follows_speed" data-markers="regression" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_lane_assist_indicator_follows_speed"><code>test_lane_assist_indicator_follows_speed</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">운전자 보조 표시(화면 연출): D 에서 30 km/h 이상이면 작동, 그 아래면 대기.</p>
@@ -392,7 +403,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_utility_widget_pages" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_utility_widget_pages" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_utility_widget_pages"><code>test_utility_widget_pages</code></a><span class="mark-chip">regression</span></header>
             
@@ -409,7 +420,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_split_screen_toggle" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_split_screen_toggle" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_split_screen_toggle"><code>test_split_screen_toggle</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">홈: 분할(내비 + 오디오) ↔ 단일(내비만). 내비는 두 모드 모두에서 쓸 수 있다.</p>
@@ -426,7 +437,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_quick_control_mirror_locked_while_driving" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_quick_control_mirror_locked_while_driving" data-markers="sanity" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_quick_control_mirror_locked_while_driving"><code>test_quick_control_mirror_locked_while_driving</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">빠른 제어: 주행 중에는 사이드 미러 접기 · 트렁크가 막히고, 도어 잠금은 된다.</p>
@@ -443,7 +454,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_notifications_record_guidance_and_restriction" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_notifications_record_guidance_and_restriction" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_notifications_record_guidance_and_restriction"><code>test_notifications_record_guidance_and_restriction</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">알림 센터: 경로 안내 시작 · 주행 제한이 쌓이고, 열면 배지가 사라진다.</p>
@@ -460,7 +471,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_recent_app_slot" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_recent_app_slot" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_recent_app_slot"><code>test_recent_app_slot</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">아래 바 '이전 실행 앱': 앱 목록에서 연 라디오가 다른 앱으로 가면 아래 바에 남아 바로 돌아갈 수 있다.</p>
@@ -481,7 +492,7 @@
 <section class="rfile" id="file-test_driving">
         <h2><a class="anchor" href="#file-test_driving" aria-hidden="true">#</a>test_driving.py <span class="rfile-count">5</span></h2>
         <p class="rfile-title">주행 상태 E2E: 속도·기어 신호 → 화면 표시, 주행 중 UX 제한(영상 차단).</p>
-        <article class="rtest" id="test_driving_signals_are_shown" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_driving_signals_are_shown" data-markers="sanity" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_driving_signals_are_shown"><code>test_driving_signals_are_shown</code></a><span class="mark-chip">sanity</span></header>
             
@@ -498,7 +509,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_video_button_locked_while_driving" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_video_button_locked_while_driving" data-markers="sanity" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_video_button_locked_while_driving"><code>test_video_button_locked_while_driving</code></a><span class="mark-chip">sanity</span></header>
             
@@ -515,7 +526,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_video_is_blocked_while_driving" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_video_is_blocked_while_driving" data-markers="sanity" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_video_is_blocked_while_driving"><code>test_video_is_blocked_while_driving</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">버튼을 거치지 않고 영상 화면을 직접 열어도(다른 앱·알림에서 들어오는 경우) 주행 중에는 막힌다.</p>
@@ -532,7 +543,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.1초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_video_plays_when_parked" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_video_plays_when_parked" data-markers="sanity" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_video_plays_when_parked"><code>test_video_plays_when_parked</code></a><span class="mark-chip">sanity</span></header>
             
@@ -549,7 +560,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_video_blocked_screen_follows_parking" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_video_blocked_screen_follows_parking" data-markers="regression" data-reqs="services injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_video_blocked_screen_follows_parking"><code>test_video_blocked_screen_follows_parking</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">주행 중 차단된 영상은 정차하면 다시 쓸 수 있어야 한다 (차단 화면이 그대로 남으면 결함).</p>
@@ -570,7 +581,7 @@
 <section class="rfile" id="file-test_media">
         <h2><a class="anchor" href="#file-test_media" aria-hidden="true">#</a>test_media.py <span class="rfile-count">5</span></h2>
         <p class="rfile-title">미디어 화면 회귀: 차량 신호와 무관한 기본 기능.</p>
-        <article class="rtest" id="test_selecting_track_starts_it" data-markers="regression" data-bad="0">
+        <article class="rtest" id="test_selecting_track_starts_it" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_selecting_track_starts_it"><code>test_selecting_track_starts_it</code></a><span class="mark-chip">regression</span></header>
             
@@ -607,7 +618,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_play_pause_toggles" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_play_pause_toggles" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_play_pause_toggles"><code>test_play_pause_toggles</code></a><span class="mark-chip">regression</span></header>
             
@@ -624,7 +635,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_media_stays_usable_while_driving" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_media_stays_usable_while_driving" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_media_stays_usable_while_driving"><code>test_media_stays_usable_while_driving</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">주행 중에도 음악 선택은 된다 (메인 화면은 distractionOptimized). 영상만 막혀야 한다.</p>
@@ -645,7 +656,7 @@
 <section class="rfile" id="file-test_navigation">
         <h2><a class="anchor" href="#file-test_navigation" aria-hidden="true">#</a>test_navigation.py <span class="rfile-count">6</span></h2>
         <p class="rfile-title">내비게이션 E2E: 경로 안내가 차량 속도 신호로 진행되고, 주행 중에는 글자 입력(검색)이 막힌다.</p>
-        <article class="rtest" id="test_guidance_counts_down_with_vehicle_speed" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_guidance_counts_down_with_vehicle_speed" data-markers="sanity" data-reqs="e2e integration injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_guidance_counts_down_with_vehicle_speed"><code>test_guidance_counts_down_with_vehicle_speed</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 차량 속도 신호만큼 남은 거리가 줄어든다 (120 km/h ≈ 3초에 0.1 km).</p>
@@ -662,7 +673,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">8.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_parked_vehicle_does_not_advance_route" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_parked_vehicle_does_not_advance_route" data-markers="sanity" data-reqs="injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_parked_vehicle_does_not_advance_route"><code>test_parked_vehicle_does_not_advance_route</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">정차 중에는 남은 거리가 그대로다 (시간이 아니라 속도 신호로 진행).</p>
@@ -679,7 +690,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_search_locked_while_driving_but_favorites_work" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_search_locked_while_driving_but_favorites_work" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_search_locked_while_driving_but_favorites_work"><code>test_search_locked_while_driving_but_favorites_work</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">주행 중 UX 제한: 검색 입력은 막히고, 즐겨찾기로는 목적지를 고를 수 있다.</p>
@@ -696,7 +707,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_search_filters_destinations" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_search_filters_destinations" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_search_filters_destinations"><code>test_search_filters_destinations</code></a><span class="mark-chip">sanity</span></header>
             
@@ -713,7 +724,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_arrival" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_arrival" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_arrival"><code>test_arrival</code></a><span class="mark-chip">regression</span></header>
             
@@ -730,7 +741,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_stop_guidance_returns_to_search_and_clears_cluster_route" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_stop_guidance_returns_to_search_and_clears_cluster_route" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_stop_guidance_returns_to_search_and_clears_cluster_route"><code>test_stop_guidance_returns_to_search_and_clears_cluster_route</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">7단계: 홈 위젯 대신 주행 정보(왼쪽)에 경로를 보여 준다. 다른 앱을 보고 있어도 보이고, 안내를 끝내면 사라진다.</p>
@@ -751,7 +762,7 @@
 <section class="rfile" id="file-test_phone">
         <h2><a class="anchor" href="#file-test_phone" aria-hidden="true">#</a>test_phone.py <span class="rfile-count">4</span></h2>
         <p class="rfile-title">전화 (블루투스 핸즈프리, 가상): 통화 화면 · 최근 통화 · 키패드 · 주행 중 제한 · 통화 중 오디오 일시 정지.</p>
-        <article class="rtest" id="test_call_contact_shows_call_screen_and_recent" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_call_contact_shows_call_screen_and_recent" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_call_contact_shows_call_screen_and_recent"><code>test_call_contact_shows_call_screen_and_recent</code></a><span class="mark-chip">sanity</span></header>
             
@@ -768,7 +779,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.1초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_keypad_dial" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_keypad_dial" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_keypad_dial"><code>test_keypad_dial</code></a><span class="mark-chip">sanity</span></header>
             
@@ -785,7 +796,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.8초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_driving_locks_keypad_and_limits_contacts" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_driving_locks_keypad_and_limits_contacts" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_driving_locks_keypad_and_limits_contacts"><code>test_driving_locks_keypad_and_limits_contacts</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">주행 중 UX 제한: 키패드는 막히고 연락처는 5개까지만 보인다.</p>
@@ -802,7 +813,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.4초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_call_pauses_radio_then_resumes" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_call_pauses_radio_then_resumes" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_call_pauses_radio_then_resumes"><code>test_call_pauses_radio_then_resumes</code></a><span class="mark-chip">regression</span></header>
             
@@ -823,7 +834,7 @@
 <section class="rfile" id="file-test_radio">
         <h2><a class="anchor" href="#file-test_radio" aria-hidden="true">#</a>test_radio.py <span class="rfile-count">6</span></h2>
         <p class="rfile-title">라디오: 켜기 · 미세 조정 · 방송국 찾기 · 대역 · 프리셋(저장 유지) · 오디오 소스 하나만 재생.</p>
-        <article class="rtest" id="test_power_on_plays_default_station" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_power_on_plays_default_station" data-markers="sanity" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_power_on_plays_default_station"><code>test_power_on_plays_default_station</code></a><span class="mark-chip">sanity</span></header>
             
@@ -840,7 +851,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_tune_and_seek" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_tune_and_seek" data-markers="sanity" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_tune_and_seek"><code>test_tune_and_seek</code></a><span class="mark-chip">sanity</span></header>
             
@@ -857,7 +868,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.1초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_am_band_uses_khz_steps" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_am_band_uses_khz_steps" data-markers="sanity" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_am_band_uses_khz_steps"><code>test_am_band_uses_khz_steps</code></a><span class="mark-chip">sanity</span></header>
             
@@ -874,7 +885,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_preset_save_and_recall" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_preset_save_and_recall" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_preset_save_and_recall"><code>test_preset_save_and_recall</code></a><span class="mark-chip">regression</span></header>
             
@@ -891,7 +902,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_preset_and_frequency_survive_app_restart" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_preset_and_frequency_survive_app_restart" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_preset_and_frequency_survive_app_restart"><code>test_preset_and_frequency_survive_app_restart</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">저장 설정: 앱 프로세스를 끝내고 다시 켜도 프리셋과 마지막 주파수가 남는다.</p>
@@ -908,7 +919,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">10.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_radio_and_media_play_one_at_a_time" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_radio_and_media_play_one_at_a_time" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_radio_and_media_play_one_at_a_time"><code>test_radio_and_media_play_one_at_a_time</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">오디오 소스는 하나: 음악 재생 중 라디오를 켜면 음악이 일시 정지된다.</p>
@@ -929,7 +940,7 @@
 <section class="rfile" id="file-test_rear_camera">
         <h2><a class="anchor" href="#file-test_rear_camera" aria-hidden="true">#</a>test_rear_camera.py <span class="rfile-count">3</span></h2>
         <p class="rfile-title">후방 카메라: 기어 신호가 R 이면 어떤 화면에서든 카메라가 뜨고, R 을 벗어나면 원래 화면으로 돌아온다.</p>
-        <article class="rtest" id="test_reverse_gear_shows_camera" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_reverse_gear_shows_camera" data-markers="sanity" data-reqs="injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_reverse_gear_shows_camera"><code>test_reverse_gear_shows_camera</code></a><span class="mark-chip">sanity</span></header>
             
@@ -946,7 +957,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_camera_returns_to_previous_screen" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_camera_returns_to_previous_screen" data-markers="regression" data-reqs="injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_camera_returns_to_previous_screen"><code>test_camera_returns_to_previous_screen</code></a><span class="mark-chip">regression</span></header>
             
@@ -963,7 +974,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_gear_value_shows_reverse" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_gear_value_shows_reverse" data-markers="regression" data-reqs="injection" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_gear_value_shows_reverse"><code>test_gear_value_shows_reverse</code></a><span class="mark-chip">regression</span></header>
             
@@ -984,7 +995,7 @@
 <section class="rfile" id="file-test_settings">
         <h2><a class="anchor" href="#file-test_settings" aria-hidden="true">#</a>test_settings.py <span class="rfile-count">5</span></h2>
         <p class="rfile-title">설정: 속도 단위(차량 신호 표시에 반영) · 볼륨 · 저장 유지 · 초기화 · 시계 형식.</p>
-        <article class="rtest" id="test_mph_setting_converts_vehicle_speed" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_mph_setting_converts_vehicle_speed" data-markers="sanity" data-reqs="services integration" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_mph_setting_converts_vehicle_speed"><code>test_mph_setting_converts_vehicle_speed</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">설정 → 주행 정보: mph 로 바꾸면 차량 속도 50 km/h 가 31 mph 로 보인다.</p>
@@ -1001,7 +1012,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_volume_steps" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_volume_steps" data-markers="sanity" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_volume_steps"><code>test_volume_steps</code></a><span class="mark-chip">sanity</span></header>
             
@@ -1018,7 +1029,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_settings_survive_app_restart" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_settings_survive_app_restart" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_settings_survive_app_restart"><code>test_settings_survive_app_restart</code></a><span class="mark-chip">regression</span></header>
             
@@ -1035,7 +1046,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">10.8초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_reset_restores_defaults" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_reset_restores_defaults" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_reset_restores_defaults"><code>test_reset_restores_defaults</code></a><span class="mark-chip">regression</span></header>
             
@@ -1052,7 +1063,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_12_hour_clock_on_tablet" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_12_hour_clock_on_tablet" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_12_hour_clock_on_tablet"><code>test_12_hour_clock_on_tablet</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">시계는 시스템 바가 없는 태블릿(Mock)에서만 앱이 그린다.</p>
@@ -1073,7 +1084,7 @@
 <section class="rfile" id="file-test_smoke">
         <h2><a class="anchor" href="#file-test_smoke" aria-hidden="true">#</a>test_smoke.py <span class="rfile-count">13</span></h2>
         <p class="rfile-title">Smoke: 빌드가 나오면 가장 먼저 도는 최소 확인. 실패하면 나머지 검증을 돌릴 의미가 없다.</p>
-        <article class="rtest" id="test_app_starts_with_vehicle_source_for_device" data-markers="smoke" data-bad="0">
+        <article class="rtest" id="test_app_starts_with_vehicle_source_for_device" data-markers="smoke" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_app_starts_with_vehicle_source_for_device"><code>test_app_starts_with_vehicle_source_for_device</code></a><span class="mark-chip">smoke</span></header>
             <p class="rtest-doc">앱이 뜨고, 기기에 맞는 차량 데이터 소스에 연결된다 (AAOS → CarService, 그 외 → Mock).</p>
@@ -1090,7 +1101,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.1초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_parked_on_start" data-markers="smoke" data-bad="0">
+<article class="rtest" id="test_parked_on_start" data-markers="smoke" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_parked_on_start"><code>test_parked_on_start</code></a><span class="mark-chip">smoke</span></header>
             <p class="rtest-doc">정차 상태로 시작하면 주행 제한 배지가 없고 속도 0, 기어 P 다.</p>
@@ -1107,7 +1118,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_each_tab_opens" data-markers="smoke" data-bad="0">
+<article class="rtest" id="test_each_tab_opens" data-markers="smoke" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_each_tab_opens"><code>test_each_tab_opens</code></a><span class="mark-chip">smoke</span></header>
             <p class="rtest-doc">탭마다 화면이 열린다 (화면 객체의 wait_loaded 가 핵심 요소를 기다린다).</p>
@@ -1214,7 +1225,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_hvac_is_controllable" data-markers="smoke" data-bad="0">
+<article class="rtest" id="test_hvac_is_controllable" data-markers="smoke" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_hvac_is_controllable"><code>test_hvac_is_controllable</code></a><span class="mark-chip">smoke</span></header>
             <p class="rtest-doc">공조를 제어할 수 있다. AAOS 에서 실패하면 priv-app 설치(CONTROL_CAR_CLIMATE)부터 의심한다.</p>
@@ -1235,7 +1246,7 @@
 <section class="rfile" id="file-test_spike_aaos">
         <h2><a class="anchor" href="#file-test_spike_aaos" aria-hidden="true">#</a>test_spike_aaos.py <span class="rfile-count">6</span></h2>
         <p class="rfile-title">1단계 기술 검증 (spike).</p>
-        <article class="rtest" id="test_hvac_signal_is_shown_on_ui" data-markers="spike aaos" data-bad="0">
+        <article class="rtest" id="test_hvac_signal_is_shown_on_ui" data-markers="spike aaos" data-reqs="e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_hvac_signal_is_shown_on_ui"><code>test_hvac_signal_is_shown_on_ui</code></a><span class="mark-chip">spike</span><span class="mark-chip">AAOS 전용</span></header>
             <p class="rtest-doc">하위 → 상위: 운전석 설정 온도를 property 로 바꾸면 하단 HVAC 바 표시가 따라 바뀐다.</p>
@@ -1258,7 +1269,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_hvac_ui_tap_changes_signal" data-markers="spike aaos" data-bad="0">
+<article class="rtest" id="test_hvac_ui_tap_changes_signal" data-markers="spike aaos" data-reqs="e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_hvac_ui_tap_changes_signal"><code>test_hvac_ui_tap_changes_signal</code></a><span class="mark-chip">spike</span><span class="mark-chip">AAOS 전용</span></header>
             <p class="rtest-doc">상위 → 하위: 화면의 온도 ▲/▼ 를 한 번 누르면 실제 property 값이 한 단계(0.5°C) 바뀐다.</p>
@@ -1281,7 +1292,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_driver_temp_up_is_not_covered_by_home" data-markers="spike aaos" data-bad="0">
+<article class="rtest" id="test_driver_temp_up_is_not_covered_by_home" data-markers="spike aaos" data-reqs="e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_driver_temp_up_is_not_covered_by_home"><code>test_driver_temp_up_is_not_covered_by_home</code></a><span class="mark-chip">spike</span><span class="mark-chip">AAOS 전용</span></header>
             <p class="rtest-doc">버튼 영역이 겹치지 않는지 본다. 겹치면 사용자가 ▲ 를 눌러도 온도가 안 바뀐다 (1단계에서 발견).</p>
@@ -1296,7 +1307,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_speed_and_gear_change_driving_state" data-markers="spike aaos" data-bad="0">
+<article class="rtest" id="test_speed_and_gear_change_driving_state" data-markers="spike aaos" data-reqs="e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_speed_and_gear_change_driving_state"><code>test_speed_and_gear_change_driving_state</code></a><span class="mark-chip">spike</span><span class="mark-chip">AAOS 전용</span></header>
             <p class="rtest-doc">속도·기어를 VHAL 에 넣으면 CarService 의 주행 상태가 바뀐다 (주행 중 UX 제한의 입력).</p>
@@ -1313,7 +1324,7 @@
 <section class="rfile" id="file-test_vehicle_signals">
         <h2><a class="anchor" href="#file-test_vehicle_signals" aria-hidden="true">#</a>test_vehicle_signals.py <span class="rfile-count">29</span></h2>
         <p class="rfile-title">8단계 차량 신호 E2E: 공조 부가 기능 · 좌석 열선 · 도어 잠금 · 주행 가능 거리 · 배터리 · 외기 온도.</p>
-        <article class="rtest" id="test_ac_toggle_reaches_every_seat" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_ac_toggle_reaches_every_seat" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_ac_toggle_reaches_every_seat"><code>test_ac_toggle_reaches_every_seat</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: A/C 를 끄면 전 좌석 area 의 HVAC_AC_ON 이 꺼진다 (운전석만 꺼지면 결함).</p>
@@ -1330,7 +1341,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_ac_signal_is_shown_on_climate_and_bottom_bar" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_ac_signal_is_shown_on_climate_and_bottom_bar" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_ac_signal_is_shown_on_climate_and_bottom_bar"><code>test_ac_signal_is_shown_on_climate_and_bottom_bar</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 차량이 A/C 를 끄면 공조 화면의 토글이 꺼진다. 다시 켜면 켜진다.</p>
@@ -1347,7 +1358,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_fan_button_changes_signal_by_one" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_fan_button_changes_signal_by_one" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_fan_button_changes_signal_by_one"><code>test_fan_button_changes_signal_by_one</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: 풍량 +/- 한 번에 HVAC_FAN_SPEED 가 한 단계 바뀌고 화면 숫자도 따라간다.</p>
@@ -1374,7 +1385,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_fan_buttons_disabled_at_limits" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_fan_buttons_disabled_at_limits" data-markers="regression" data-reqs="services vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_fan_buttons_disabled_at_limits"><code>test_fan_buttons_disabled_at_limits</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">경계 값: 최저(1)에서 -, 최고(7)에서 + 가 눌리지 않고 신호도 범위를 벗어나지 않는다.</p>
@@ -1401,7 +1412,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_max_ac_sets_signal_and_coldest_settings" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_max_ac_sets_signal_and_coldest_settings" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_max_ac_sets_signal_and_coldest_settings"><code>test_max_ac_sets_signal_and_coldest_settings</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: FULL(최대 냉방)을 켜면 전 좌석 HVAC_MAX_AC_ON 이 켜지고, 온도는 최저 · 풍량은 최대 · AUTO 는 꺼진다.</p>
@@ -1418,7 +1429,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_max_ac_off_restores_previous_settings" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_max_ac_off_restores_previous_settings" data-markers="sanity" data-reqs="services vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_max_ac_off_restores_previous_settings"><code>test_max_ac_off_restores_previous_settings</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">FULL 을 버튼으로 끄면 켜기 전 값(22.0°C, 풍량 3)으로 돌아간다.</p>
@@ -1435,7 +1446,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_max_ac_signal_is_shown_on_toggle" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_max_ac_signal_is_shown_on_toggle" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_max_ac_signal_is_shown_on_toggle"><code>test_max_ac_signal_is_shown_on_toggle</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 차량이 최대 냉방을 켜고 끄면 FULL 토글이 따라간다.</p>
@@ -1452,7 +1463,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_manual_fan_releases_max_ac" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_manual_fan_releases_max_ac" data-markers="regression" data-reqs="services vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_manual_fan_releases_max_ac"><code>test_manual_fan_releases_max_ac</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">앱 규칙: FULL 중에 풍량을 직접 내리면 최대 냉방이 풀린다. 이때 온도는 되돌리지 않는다 (방금 바꾼 값이 우선).</p>
@@ -1469,7 +1480,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_turning_ac_off_releases_max_ac" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_turning_ac_off_releases_max_ac" data-markers="regression" data-reqs="services vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_turning_ac_off_releases_max_ac"><code>test_turning_ac_off_releases_max_ac</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">앱 규칙: FULL 중에 A/C 를 끄면 최대 냉방도 꺼진다 (A/C 없이 최대 냉방일 수 없다).</p>
@@ -1486,7 +1497,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_manual_fan_releases_auto" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_manual_fan_releases_auto" data-markers="regression" data-reqs="services vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_manual_fan_releases_auto"><code>test_manual_fan_releases_auto</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">앱 규칙: AUTO 중에 풍량을 직접 바꾸면 AUTO 가 풀린다 (HVAC_AUTO_ON = false).</p>
@@ -1503,7 +1514,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_defrost_changes_only_its_window" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_defrost_changes_only_its_window" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_defrost_changes_only_its_window"><code>test_defrost_changes_only_its_window</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: 앞(뒤) 김서림 제거는 그 유리의 HVAC_DEFROSTER 만 켠다 (area 혼동 방지).</p>
@@ -1530,7 +1541,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_seat_heat_cycles_levels_on_vehicle" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_seat_heat_cycles_levels_on_vehicle" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_seat_heat_cycles_levels_on_vehicle"><code>test_seat_heat_cycles_levels_on_vehicle</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: 열선 버튼을 누를 때마다 꺼짐 → 2단 → 1단 → 꺼짐. 다른 좌석은 그대로다.</p>
@@ -1557,7 +1568,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_seat_heat_signal_is_shown_everywhere" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_seat_heat_signal_is_shown_everywhere" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_seat_heat_signal_is_shown_everywhere"><code>test_seat_heat_signal_is_shown_everywhere</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 차량의 열선 단계가 공조 화면 · 아래 바 · 빠른 제어 세 곳에 같은 값으로 보인다.</p>
@@ -1574,7 +1585,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_bottom_bar_seat_heat_works_from_any_screen" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_bottom_bar_seat_heat_works_from_any_screen" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_bottom_bar_seat_heat_works_from_any_screen"><code>test_bottom_bar_seat_heat_works_from_any_screen</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">아래 바 열선 버튼은 다른 앱을 보고 있어도 차량 신호를 바꾼다.</p>
@@ -1591,7 +1602,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_assistant_seat_heat_follows_speaker_zone" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_assistant_seat_heat_follows_speaker_zone" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_assistant_seat_heat_follows_speaker_zone"><code>test_assistant_seat_heat_follows_speaker_zone</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">AI 어시스턴트 → 차량 신호: 조수석에서 '열선 켜줘' 는 조수석 HVAC_SEAT_TEMPERATURE 만 올린다.</p>
@@ -1608,7 +1619,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_door_lock_button_drives_every_door" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_door_lock_button_drives_every_door" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_door_lock_button_drives_every_door"><code>test_door_lock_button_drives_every_door</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">상위 → 하위: 빠른 제어의 도어 버튼은 전 도어의 DOOR_LOCK 을 같이 바꾼다.</p>
@@ -1625,7 +1636,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_door_lock_signal_is_shown" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_door_lock_signal_is_shown" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_door_lock_signal_is_shown"><code>test_door_lock_signal_is_shown</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 차량에서 문이 열리면(키·도어 스위치) 화면 표시가 따라 바뀐다.</p>
@@ -1642,7 +1653,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.7초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_energy_signals_are_shown_on_cluster" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_energy_signals_are_shown_on_cluster" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_energy_signals_are_shown_on_cluster"><code>test_energy_signals_are_shown_on_cluster</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">하위 → 상위: 주행 가능 거리 · 배터리 · 외기 온도 신호가 주행 정보에 보인다 (단위 변환: m → km, Wh → %).</p>
@@ -1659,7 +1670,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.3초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_low_range_threshold" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_low_range_threshold" data-markers="sanity" data-reqs="services injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_low_range_threshold"><code>test_low_range_threshold</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">경계 값: 30 km 이하면 '충전 필요' 와 충전소 안내 카드가 뜬다. 31 km 는 뜨지 않는다.</p>
@@ -1696,7 +1707,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_low_range_card_starts_guidance_to_nearest_charger" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_low_range_card_starts_guidance_to_nearest_charger" data-markers="sanity" data-reqs="services integration vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_low_range_card_starts_guidance_to_nearest_charger"><code>test_low_range_card_starts_guidance_to_nearest_charger</code></a><span class="mark-chip">sanity</span></header>
             <p class="rtest-doc">신호 → 화면 → 동작: 주행 가능 거리가 부족해지면 카드가 뜨고, 누르면 가장 가까운 충전소로 안내한다. 주행 중(글자 검색이 잠긴 상태)에도 한 번 눌러 쓸 수 있어야 한다.</p>
@@ -1713,7 +1724,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_low_range_is_recorded_in_notifications" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_low_range_is_recorded_in_notifications" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_low_range_is_recorded_in_notifications"><code>test_low_range_is_recorded_in_notifications</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">주행 가능 거리 부족은 알림 센터에도 남는다 (화면을 보지 않았어도 나중에 확인할 수 있게).</p>
@@ -1730,7 +1741,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_range_recovers_after_charging" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_range_recovers_after_charging" data-markers="regression" data-reqs="services injection vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_range_recovers_after_charging"><code>test_range_recovers_after_charging</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">충전해서 거리가 늘면 경고와 카드가 사라진다 (남아 있으면 결함).</p>
@@ -1747,7 +1758,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.4초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_range_follows_speed_unit_setting" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_range_follows_speed_unit_setting" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_range_follows_speed_unit_setting"><code>test_range_follows_speed_unit_setting</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">설정의 속도 단위(mph)를 따르면 주행 가능 거리도 마일로 보인다 (320 km = 199 mi).</p>
@@ -1768,7 +1779,7 @@
 <section class="rfile" id="file-test_voice">
         <h2><a class="anchor" href="#file-test_voice" aria-hidden="true">#</a>test_voice.py <span class="rfile-count">5</span></h2>
         <p class="rfile-title">음성 명령: 인식된 문장이 실제 기능으로 이어지는지 본다. 온도 명령은 차량 신호까지 확인한다 (E2E).</p>
-        <article class="rtest" id="test_voice_sets_driver_temperature_on_vehicle" data-markers="sanity" data-bad="0">
+        <article class="rtest" id="test_voice_sets_driver_temperature_on_vehicle" data-markers="sanity" data-reqs="integration" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_voice_sets_driver_temperature_on_vehicle"><code>test_voice_sets_driver_temperature_on_vehicle</code></a><span class="mark-chip">sanity</span></header>
             
@@ -1785,7 +1796,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_voice_turns_on_radio" data-markers="sanity" data-bad="0">
+<article class="rtest" id="test_voice_turns_on_radio" data-markers="sanity" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_voice_turns_on_radio"><code>test_voice_turns_on_radio</code></a><span class="mark-chip">sanity</span></header>
             
@@ -1802,7 +1813,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_voice_starts_guidance_home" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_voice_starts_guidance_home" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_voice_starts_guidance_home"><code>test_voice_starts_guidance_home</code></a><span class="mark-chip">regression</span></header>
             
@@ -1819,7 +1830,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_voice_panel_closes_after_command" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_voice_panel_closes_after_command" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_voice_panel_closes_after_command"><code>test_voice_panel_closes_after_command</code></a><span class="mark-chip">regression</span></header>
             <p class="rtest-doc">명령을 처리하면 패널이 닫혀 안내·통화 화면을 가리지 않는다 (6단계 회귀에서 찾은 결함의 회귀 테스트).</p>
@@ -1836,7 +1847,7 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_voice_calls_contact" data-markers="regression" data-bad="0">
+<article class="rtest" id="test_voice_calls_contact" data-markers="regression" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_voice_calls_contact"><code>test_voice_calls_contact</code></a><span class="mark-chip">regression</span></header>
             
@@ -1878,31 +1889,58 @@
   const onlyBad = document.getElementById("only-bad");
   const count = document.getElementById("filter-count");
   const empty = document.getElementById("empty-note");
+  const banner = document.getElementById("req-banner");
+  const REQS = {"services":{"eyebrow":"요구 역량 01 · 주요 업무","title":"IVI 서비스별 검증 전략","note":"HVAC, 차량 설정, 클러스터 연동, 미디어를 서비스별 테스트로 나눔","count":70,"filter":true,"chip":"","onlyBad":false},"gating":{"eyebrow":"요구 역량 02 · 주요 업무","title":"Smoke · Sanity · Regression 게이팅","note":"빌드를 받을지 정하는 smoke 테스트입니다. 위의 칩으로 sanity, regression 범위도 볼 수 있습니다.","count":13,"filter":false,"chip":"smoke","onlyBad":false},"e2e":{"eyebrow":"요구 역량 03 · 주요 업무","title":"UI와 CarProperty/VHAL을 잇는 E2E","note":"화면 조작 → 차량 신호, 차량 신호 → 화면을 모두 확인. area 단위로 판정","count":30,"filter":true,"chip":"","onlyBad":false},"integration":{"eyebrow":"요구 역량 04 · 주요 업무","title":"터치부터 하위 연동까지 통합 검증","note":"말과 터치가 차량 신호까지, 신호가 경고와 충전소 안내까지 이어지는지","count":10,"filter":true,"chip":"","onlyBad":false},"injection":{"eyebrow":"요구 역량 06 · 주요 업무","title":"ADB · shell · CarPropertyManager로 Property Injection","note":"속도, 기어, 주행 가능 거리 같은 읽기 전용 신호는 dumpsys VHAL --set으로 넣음","count":31,"filter":true,"chip":"","onlyBad":false},"flaky":{"eyebrow":"요구 역량 07 · 주요 업무","title":"Flaky 최소화 · 병렬 실행","note":"두 기기에서 219번 실행해 실패와 재시도가 0건입니다. 재시도 기록과 격리, 통계 방식은 <a href=\"portfolio.html#8-1-flaky-관리\">포트폴리오 8-1</a>에 있습니다.","count":null,"filter":false,"chip":"","onlyBad":true},"android":{"eyebrow":"요구 역량 08 · 자격요건","title":"Android/AAOS 테스트 자동화 구축과 운영","note":"AAOS 에뮬레이터와 태블릿에서 E2E 113개. 테스트마다 끝 화면 보관","count":113,"filter":false,"chip":"","onlyBad":false},"vhal":{"eyebrow":"요구 역량 13 · 우대사항","title":"VHAL · CarService · CarPropertyManager","note":"신호 12종, area 구성, 권한 등급, priv-app 허용 목록","count":35,"filter":true,"chip":"","onlyBad":false}};
   let filter = "";
+  let req = "";
+  // 개수는 케이스 단위로 센다 (parametrize 포함, 첫 화면의 'E2E 113개'와 같은 기준)
   function apply() {
     let shown = 0;
     document.querySelectorAll(".rfile").forEach((file) => {
-      let any = false;
+      let inFile = 0;
       file.querySelectorAll(".rtest").forEach((t) => {
-        const ok = (!filter || t.dataset.markers.split(" ").includes(filter)) && (!onlyBad.checked || t.dataset.bad === "1");
-        t.hidden = !ok; if (ok) { any = true; shown++; }
+        const ok = (!filter || t.dataset.markers.split(" ").includes(filter))
+          && (!onlyBad.checked || t.dataset.bad === "1")
+          && (!req || t.dataset.reqs.split(" ").includes(req));
+        t.hidden = !ok; if (ok) inFile += t.querySelectorAll(".case").length;
       });
-      file.hidden = !any;
+      file.hidden = inFile === 0;
+      file.querySelector(".rfile-count").textContent = inFile;
+      shown += inFile;
     });
     count.textContent = shown + "개 테스트";
+    empty.textContent = onlyBad.checked ? "실패하거나 재시도한 테스트가 없습니다." : "조건에 맞는 테스트가 없습니다.";
     empty.hidden = shown > 0;
   }
-  chips.forEach((c) => c.addEventListener("click", () => {
-    filter = c.dataset.filter;
-    chips.forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
-    apply();
-  }));
+  function pick(value) {
+    filter = value;
+    chips.forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.filter === value)));
+  }
+  chips.forEach((c) => c.addEventListener("click", () => { pick(c.dataset.filter); apply(); }));
   onlyBad.addEventListener("change", apply);
   document.getElementById("jump").addEventListener("change", (e) => {
     if (e.target.value) document.getElementById(e.target.value).scrollIntoView({ behavior: "smooth" });
     e.target.value = "";
   });
+  // 첫 화면 목차에서 ?req=<id> 로 들어오면 그 항목의 근거 테스트만 보여 준다
+  const meta = REQS[new URLSearchParams(location.search).get("req")];
+  if (meta) {
+    const id = new URLSearchParams(location.search).get("req");
+    document.getElementById("req-eyebrow").textContent = meta.eyebrow;
+    document.getElementById("req-title").textContent = meta.title;
+    document.getElementById("req-note").innerHTML = meta.note;
+    if (meta.filter) req = id;
+    if (meta.chip) pick(meta.chip);
+    onlyBad.checked = meta.onlyBad;
+    banner.hidden = false;
+  }
+  document.getElementById("req-clear").addEventListener("click", () => {
+    req = ""; pick(""); onlyBad.checked = false; banner.hidden = true;
+    history.replaceState(null, "", location.pathname + location.hash);
+    apply();
+  });
   apply();
+  if (meta && !location.hash) requestAnimationFrame(() => banner.scrollIntoView({ block: "start" }));
   // 다른 문서에서 #test_이름 으로 들어오면 그 테스트를 잠깐 강조한다
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (target && target.classList.contains("rtest")) target.classList.add("is-target");

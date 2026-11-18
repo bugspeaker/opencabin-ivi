@@ -55,14 +55,16 @@ UiAutomator는 다른 요소에 가려진 요소를 화면 소스에 내지 않�
 
 ## 6. 화면
 
-| 홈 | 내비게이션 |
+6단계 당시 화면은 저장소에 남기지 못했다. 아래는 7단계 개편 뒤 같은 기능의 화면이다 (2026-11-18 전체 실행에서 각 테스트가 끝난 화면, AAOS 에뮬레이터).
+
+| 홈 | 내비게이션 (검색) |
 |---|---|
-| ![home](images/v6-home.png) | ![navi](images/v6-navi.png) |
+| ![home](images/p9-home.png) | ![navi](images/p9-navi.png) |
 
 | 라디오 | 전화 |
 |---|---|
-| ![radio](images/v6-radio.png) | ![phone](images/v6-phone.png) |
+| ![radio](images/p9-radio.png) | ![phone](images/p9-phone.png) |
 
 | 설정 | 후방 카메라 (기어 R) |
 |---|---|
-| ![settings](images/v6-settings.png) | ![camera](images/v6-reverse.png) |
+| ![settings](images/p9-settings.png) | ![camera](images/p9-reverse.png) |
