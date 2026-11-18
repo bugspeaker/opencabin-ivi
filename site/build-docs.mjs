@@ -166,6 +166,10 @@ function render(page) {
   renderer.table = (header, body) => `<div class="table"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>\n`;
 
   let body = marked.parse(md, { renderer, gfm: true });
+  // GitHub 알림 문법(> [!TIP] 등)을 GitHub 처럼 색 있는 상자로. marked 는 '[!TIP]'을 글자 그대로 남긴다
+  const CALLOUT = { NOTE: "참고", TIP: "안내", IMPORTANT: "중요", WARNING: "주의", CAUTION: "주의" };
+  body = body.replace(/<blockquote>\n<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n?/g,
+    (m, kind) => `<blockquote class="callout callout-${kind.toLowerCase()}"><p class="callout-title">${CALLOUT[kind]}</p>\n<p>`);
   // 원문 HTML(<details> 안의 이미지 등)에 남은 상대 경로도 바꾼다
   // (renderer.image 가 만든 것은 data-md 표시가 있어 건너뛴다. 두 번 바꾸면 경로가 깨진다)
   body = body.replace(/<img(?![^>]*\sdata-md)([^>]*\ssrc=")([^"]+)(")/g, (m, a, src, b) => `<img${a}${rewrite(src, srcDir)}${b}`);
