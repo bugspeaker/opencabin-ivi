@@ -4,6 +4,8 @@
   AAOS  : OS 가 ActivityBlockingActivity 로 막는다 (VideoActivity 는 distractionOptimized 가 아님)
   Mock  : 시스템 차단이 없어 앱이 video_blocked 화면을 보여 준다
 """
+import time
+
 import pytest
 
 from ivi.device import VIDEO
@@ -76,3 +78,49 @@ def test_video_blocked_screen_follows_parking(app, car, device, driver):
     # Mock: 같은 화면이 재생 화면으로 바뀐다
     wait_until(lambda: not device.video_blocked(video), what="정차 후 차단 해제")
     video.wait_visible("video_player")
+
+
+def _real_clips_or_skip(video):
+    video.wait_visible("video_player")
+    if not video.has_clips():
+        pytest.skip("기기에 주행 영상이 없다 (tools/push_drive_videos.py 로 올린다)")
+
+
+@pytest.mark.regression
+def test_video_resumes_where_it_stopped(app, car, device, driver):
+    """주행으로 막혔다가 정차하면 처음부터가 아니라 멈춘 자리에서 이어서 재생한다. 막힌 동안에는 재생이 흐르지 않는다."""
+    device.launch(VIDEO)
+    video = app.video()
+    _real_clips_or_skip(video)
+    wait_until(lambda: video.elapsed_seconds() >= 3, timeout=10, what="3초 이상 재생")
+
+    # 막힌 화면에서는 재생 시간을 읽을 수 없다 → 주행 직전 재생 시간과 실제로 흐른 시간을 비교한다
+    before, t0 = video.elapsed_seconds(), time.monotonic()
+    car.drive(50.0)
+    car.wait_restricted(True)
+    wait_until(lambda: device.video_blocked(video), what="주행 중 영상 차단")
+    time.sleep(5)  # 막힌 채로 둔다
+
+    car.park()
+    car.wait_restricted(False)
+    wait_until(lambda: not device.video_blocked(video), what="정차 후 차단 해제")
+    video.wait_visible("video_player")
+    resumed, wall = video.elapsed_seconds(), time.monotonic() - t0
+    assert resumed >= before, f"정차 후 처음부터 다시 재생된다 (주행 전 {before}초 → {resumed}초)"
+    # 막힌 동안에도 재생이 흘렀다면 resumed - before ≈ wall. 멈췄다면 차단까지 걸린 1~2초만 더해진다
+    assert resumed - before <= wall - 4, f"막힌 동안에도 재생이 흘렀다 ({before}초 → {resumed}초, 실제 {wall:.1f}초)"
+    first = video.elapsed()
+    wait_until(lambda: video.elapsed() != first, timeout=5, what="정차 후 재생 재개")
+
+
+@pytest.mark.regression
+def test_video_next_clip(app, car, device, driver):
+    device.launch(VIDEO)
+    video = app.video()
+    _real_clips_or_skip(video)
+    if video.clip_index().endswith("/ 1"):
+        pytest.skip("영상이 하나뿐이다")
+    assert video.clip_index().startswith("1 /")
+    video.next_clip()
+    video.wait_text("video_index", f"2 / {video.clip_index().split('/')[1].strip()}")
+    video.close()

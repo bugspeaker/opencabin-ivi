@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 영상 면만 쓰는 PlayerView. 조작 UI 는 Compose 가 그린다.
+     texture_view: SurfaceView 는 Compose 의 둥근 모서리 clip 이 먹지 않는다 -->
+<androidx.media3.ui.PlayerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:surface_type="texture_view"
+    app:use_controller="false"
+    app:resize_mode="fit"
+    app:shutter_background_color="#FF0A0B0D" />

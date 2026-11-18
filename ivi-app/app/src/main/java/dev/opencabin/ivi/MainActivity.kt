@@ -48,6 +48,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        hideCarNavigationBar()
+    }
+
     /**
      * CAR_SPEED(속도) · CAR_ENERGY(주행 가능 거리·배터리)는 dangerous 권한이라 실행 중에 요청한다.
      * 자동화에서는 adb 로 미리 준다 (pm grant --user 10). 권한 창이 뜨면 테스트가 앱 화면을 못 본다.

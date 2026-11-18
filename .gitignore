@@ -17,3 +17,6 @@ node_modules/
 Pleosconnect/
 # 지원 준비 메모 (개인 문서)
 docs/42dot-fit.md
+
+# 블랙박스 주행 영상 (번호판 · 위치가 담긴 개인 자료). tools/push_drive_videos.py 로 기기에만 올린다
+.drive/
