@@ -7,7 +7,7 @@
 // 테스트 결과 페이지(test-results.html)는 site/results/results.json 으로 만든다
 // (ivi-tests/tools/publish_results.py 가 실행 기록과 끝 화면에서 만든다).
 // 소개 페이지(site/index.html)의 요구 역량 목차와 결과 수치도 같은 자료로 다시 쓴다 (<!-- fit:… -->, <!-- stats:… -->).
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
@@ -18,6 +18,15 @@ const ROOT = path.resolve(SITE, "..");
 const OUT = path.join(SITE, "docs");
 const RESULTS_JSON = path.join(SITE, "results", "results.json");
 const INDEX = path.join(SITE, "index.html");
+// 사이트(GitHub Pages)에는 site/ 와 docs/images/ 만 올린다. 소스 코드와 원문 .md 는 GitHub 화면으로 잇는다.
+const REPO = "https://github.com/bugspeaker/opencabin-ivi";
+const IMAGE = /\.(png|jpe?g|webp|gif|svg)$/i;
+
+function githubUrl(target) {
+  const full = path.join(ROOT, target);
+  const dir = existsSync(full) && statSync(full).isDirectory();
+  return `${REPO}/${dir ? "tree" : "blob"}/main/${target.replace(/\/$/, "")}`;
+}
 
 // 사이드바 순서. src 는 저장소 루트 기준
 const PAGES = [
@@ -71,6 +80,7 @@ function rewrite(href, srcDir) {
   const target = path.posix.normalize(path.posix.join(srcDir, p));
   const html = OUT_BY_SRC.get(target);
   if (html) return html + (hash ? `#${hash}` : "");
+  if (!target.startsWith("site/") && !IMAGE.test(target)) return githubUrl(target) + (hash ? `#${hash}` : "");
   return path.posix.relative("site/docs", target) + (hash ? `#${hash}` : "");
 }
 
@@ -108,7 +118,7 @@ function shell(page, { title, body, toc = [], head = "", scripts = "", mainClass
 <header class="top">
   <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
   <span class="crumb">문서 · ${esc(page.nav)}</span>
-  <a class="src" href="${esc(path.posix.relative("site/docs", page.src))}">원문 .md</a>
+  <a class="src" href="${esc(githubUrl(page.src))}">원문 .md</a>
 </header>
 <div class="layout${/results|wide-doc/.test(mainClass) ? " wide" : ""}">
   <aside class="side">

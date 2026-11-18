@@ -1,0 +1,63 @@
+# 소개 사이트(site/)를 GitHub Pages로 올린다.
+#
+#  주소: https://bugspeaker.github.io/opencabin-ivi/  (site/ 로 바로 넘어간다)
+#
+# 사이트는 화면 이미지를 ../docs/images 로 가리키므로 저장소와 같은 배치로 site/ 와 docs/images/ 를 묶는다.
+# 소스 코드와 원문 .md 링크는 build-docs.mjs 가 GitHub 화면 주소로 바꿔 두어서 함께 올리지 않는다.
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "docs/images/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 올릴 파일 묶기
+        run: |
+          mkdir -p _site/docs
+          cp -r site _site/site
+          cp -r docs/images _site/docs/images
+          rm -f _site/site/package.json _site/site/package-lock.json _site/site/*.mjs
+          cat > _site/index.html <<'EOF'
+          <!doctype html>
+          <html lang="ko">
+          <head>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=site/">
+          <link rel="canonical" href="site/">
+          <title>OpenCabin IVI</title>
+          </head>
+          <body><a href="site/">OpenCabin IVI 소개 사이트로 이동</a></body>
+          </html>
+          EOF
+          echo "올릴 파일 $(find _site -type f | wc -l)개"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

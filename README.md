@@ -3,6 +3,8 @@
 가상 차량용 인포테인먼트(IVI) 앱을 만들고, 화면 조작이 차량 신호(VHAL)까지 이어지는지 E2E 테스트로 검증하는 프로젝트입니다.
 같은 테스트 코드를 AAOS 에뮬레이터와 일반 Android 태블릿에서 돌립니다. 에뮬레이터에서는 실제 CarService와 VHAL을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다.
 
+채용 공고 항목별로 한 일과 테스트 결과는 [소개 사이트](https://bugspeaker.github.io/opencabin-ivi/)에서 볼 수 있습니다. 항목을 누르면 근거가 되는 테스트 결과와 테스트가 끝난 화면으로 이동합니다.
+
 ![주행 중 경로 안내 (AAOS 에뮬레이터, 2026-11-18)](docs/images/p9-guidance.png)
 
 테스트 자동화 내용만 따로 정리한 문서는 [docs/portfolio.md](docs/portfolio.md)에 있습니다.
