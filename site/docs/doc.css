@@ -1,13 +1,13 @@
-/* 문서 페이지 스타일. 색 · 글꼴 · 간격 · 모서리는 프로젝트 루트 DESIGN.md 토큰 (소개 페이지와 같음) */
+/* 문서 페이지 스타일. 색 · 글꼴 · 간격 · 모서리는 site/design-tokens.md 토큰 (소개 페이지와 같음). 작은 글씨는 --ink-subtle 이상 (대비 4.5:1 이상) */
 :root {
   --primary: #5e6ad2; --primary-hover: #828fff;
   --ink: #f7f8f8; --ink-muted: #d0d6e0; --ink-subtle: #8a8f98; --ink-tertiary: #62666d;
   --canvas: #010102; --surface-1: #0f1011; --surface-2: #141516; --surface-3: #18191a;
   --hairline: #23252a; --hairline-strong: #34343a;
   --success: #27a644; --danger: #e5484d;
-  --font-display: "Linear Display", Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-text: "Linear Text", Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Linear Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-text: Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --r-sm: 6px; --r-md: 8px; --r-lg: 12px;
   --nav-h: 56px;
 }
@@ -45,10 +45,10 @@ a { color: inherit; }
 .side a:hover { color: var(--ink); background: var(--surface-1); }
 .side a[aria-current="page"] { color: var(--ink); background: var(--surface-2); box-shadow: inset 2px 0 0 var(--primary); }
 .side a:first-child { color: var(--ink); font-weight: 500; margin-bottom: 8px; }
-.toc .eyebrow { margin: 0 0 8px; font-size: 12px; font-weight: 500; letter-spacing: 0.4px; color: var(--ink-tertiary); }
+.toc .eyebrow { margin: 0 0 8px; font-size: 12px; font-weight: 500; letter-spacing: 0.4px; color: var(--ink-subtle); }
 .toc a { display: block; padding: 4px 0; font-size: 13px; line-height: 1.4; color: var(--ink-subtle); text-decoration: none; }
 .toc a:hover { color: var(--ink); }
-.toc a.l3 { padding-left: 12px; font-size: 12.5px; color: var(--ink-tertiary); }
+.toc a.l3 { padding-left: 12px; font-size: 12.5px; color: var(--ink-subtle); }
 
 /* 본문 */
 .doc { min-width: 0; max-width: 820px; padding: 40px 0 120px; }
@@ -136,7 +136,7 @@ a { color: inherit; }
 .device-card .eyebrow { margin: 0; font-size: 12px; font-weight: 500; letter-spacing: 0.4px; color: var(--ink-subtle); }
 .device-model { margin: 2px 0 12px !important; font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--ink); }
 .device-card dl { display: flex; gap: 24px; margin: 14px 0 0; }
-.device-card dt { font-size: 12px; color: var(--ink-tertiary); }
+.device-card dt { font-size: 12px; color: var(--ink-subtle); }
 .device-card dd { margin: 0; font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .gate-pass { color: var(--success) !important; }
 .gate-fail { color: var(--danger) !important; }
@@ -157,7 +157,7 @@ a { color: inherit; }
 .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
 .only-bad { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; font-size: 13px; color: var(--ink-muted); cursor: pointer; }
 .only-bad input { accent-color: var(--primary); width: 16px; height: 16px; }
-.filter-count { margin-left: auto; margin-right: 4px; font-size: 13px; color: var(--ink-tertiary); font-variant-numeric: tabular-nums; }
+.filter-count { margin-left: auto; margin-right: 4px; font-size: 13px; color: var(--ink-subtle); font-variant-numeric: tabular-nums; }
 .empty-note { color: var(--ink-subtle); padding: 32px 0; }
 
 /* 첫 화면 요구 역량 목차에서 ?req= 로 들어왔을 때 */
@@ -175,7 +175,7 @@ a { color: inherit; }
 
 .rfile { scroll-margin-top: calc(var(--nav-h) + 64px); }
 .doc .rfile h2 { margin-top: 48px; display: flex; align-items: baseline; gap: 10px; font-family: var(--font-mono); font-size: 20px; letter-spacing: 0; }
-.rfile-count { font-family: var(--font-text); font-size: 13px; font-weight: 500; color: var(--ink-tertiary); }
+.rfile-count { font-family: var(--font-text); font-size: 13px; font-weight: 500; color: var(--ink-subtle); }
 .doc .rfile-title { color: var(--ink-subtle); margin-bottom: 20px; }
 
 .rtest { scroll-margin-top: calc(var(--nav-h) + 64px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: 12px 28px; padding: 20px 0 22px; border-top: 1px solid var(--hairline); }
@@ -200,14 +200,16 @@ a { color: inherit; }
 .shot:hover { border-color: var(--primary); }
 .doc .shot img { width: 100%; height: 100%; object-fit: cover; margin: 0; border: 0; border-radius: 0; }
 .no-shot { display: grid; place-items: center; cursor: default; padding: 12px; }
-.doc .no-shot p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-tertiary); text-align: center; }
+.doc .no-shot p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-subtle); text-align: center; }
 .cell-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; }
 .cell-device { color: var(--ink-subtle); }
-.cell-time { color: var(--ink-tertiary); font-variant-numeric: tabular-nums; margin-left: auto; }
+.cell-time { color: var(--ink-subtle); font-variant-numeric: tabular-nums; margin-left: auto; }
 .doc .cell-measure { margin: 4px 0 0; font-size: 12px; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.doc .cell-signals { margin: 4px 0 0; display: grid; gap: 2px; }
+.doc .cell-signals code { font-size: 11px; color: var(--ink-muted); background: none; padding: 0; overflow-wrap: anywhere; }
 .shot-cell.is-empty { display: grid; align-content: start; }
-.doc .cell-note { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-tertiary); }
-.doc .generated { margin-top: 48px; font-size: 13px; color: var(--ink-tertiary); }
+.doc .cell-note { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-subtle); }
+.doc .generated { margin-top: 48px; font-size: 13px; color: var(--ink-subtle); }
 
 #viewer { max-width: min(1200px, 94vw); width: 100%; padding: 0; border: 1px solid var(--hairline-strong); border-radius: var(--r-lg); background: var(--surface-1); color: var(--ink); }
 #viewer::backdrop { background: rgb(0 0 0 / 0.78); }

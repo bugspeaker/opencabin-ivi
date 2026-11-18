@@ -1,16 +1,16 @@
 {
- "generated": "2026-11-18 15:28",
+ "generated": "2026-11-18 20:50",
  "devices": [
   {
    "kind": "aaos",
    "label": "AAOS 에뮬레이터",
    "model": "Car on x86_64 emulator",
    "serial": "emulator-5554",
-   "run_id": "20261118-151658",
-   "time": "2026-11-18T15:16:58",
-   "duration": 611.1,
+   "run_id": "20261118-203617-r5",
+   "time": "2026-11-18T20:36:17",
+   "duration": 585.1,
    "counts": {
-    "passed": 121,
+    "passed": 127,
     "skipped": 1,
     "xfailed": 1
    },
@@ -21,11 +21,11 @@
    "label": "태블릿 (Mock)",
    "model": "DBY-W09",
    "serial": "W3VBB22125209573",
-   "run_id": "20261118-151658",
-   "time": "2026-11-18T15:16:58",
-   "duration": 584.1,
+   "run_id": "20261118-203617-r5",
+   "time": "2026-11-18T20:36:18",
+   "duration": 615.6,
    "counts": {
-    "passed": 116,
+    "passed": 122,
     "skipped": 7
    },
    "gate": "pass"
@@ -40,7 +40,7 @@
      "name": "test_zone_applies_command_to_speaking_seat",
      "doc": "조수석에서 '나 더워'라고 하면 조수석 온도만 1°C 내려가야 합니다. 차량 신호로 확인합니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -49,20 +49,25 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.3,
+         "duration": 9.4,
          "message": "",
          "image": "img/aaos/test_zone_applies_command_to_speaking_seat.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=21.0",
+          "HVAC_TEMPERATURE_SET[0x1]=22.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.2,
+         "duration": 9.0,
          "message": "",
          "image": "img/mock/test_zone_applies_command_to_speaking_seat.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -81,20 +86,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 4.0,
          "message": "",
          "image": "img/aaos/test_typed_command_sets_vehicle_temperature.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=25.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.5,
          "message": "",
          "image": "img/mock/test_typed_command_sets_vehicle_temperature.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -113,20 +122,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_multiple_commands_in_one_sentence.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.9,
          "message": "",
          "image": "img/mock/test_multiple_commands_in_one_sentence.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -149,7 +160,8 @@
          "message": "",
          "image": "img/aaos/test_ambiguous_destination_offers_candidates.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -158,7 +170,8 @@
          "message": "",
          "image": "img/mock/test_ambiguous_destination_offers_candidates.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -168,7 +181,7 @@
      "name": "test_driving_locks_typing_and_refuses_mirror_fold",
      "doc": "주행 중에는 글자 입력이 막히고 추천 명령만 쓸 수 있습니다. 사이드 미러를 접어 달라는 명령은 거절합니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -177,20 +190,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.2,
+         "duration": 7.1,
          "message": "",
          "image": "img/aaos/test_driving_locks_typing_and_refuses_mirror_fold.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.0,
+         "duration": 7.3,
          "message": "",
          "image": "img/mock/test_driving_locks_typing_and_refuses_mirror_fold.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -209,20 +224,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 3.9,
          "message": "",
          "image": "img/aaos/test_voice_popup_and_assistant_share_history.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_voice_popup_and_assistant_share_history.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -247,20 +264,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 5.1,
          "message": "",
          "image": "img/aaos/test_api_signals_drive_the_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 5.3,
          "message": "",
          "image": "img/mock/test_api_signals_drive_the_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -279,20 +298,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 2.0,
          "message": "",
          "image": "img/aaos/test_api_low_range_shows_charger_card.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.2,
+         "duration": 2.7,
          "message": "",
          "image": "img/mock/test_api_low_range_shows_charger_card.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -311,20 +332,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 2.5,
          "message": "",
          "image": "img/aaos/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=3"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 1.6,
+         "duration": 3.3,
          "message": "",
          "image": "img/mock/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -349,20 +374,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.5,
          "message": "",
          "image": "img/aaos/test_can_drive_frames_reach_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 4.1,
          "message": "",
          "image": "img/mock/test_can_drive_frames_reach_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -381,20 +408,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.2,
+         "duration": 3.8,
          "message": "",
          "image": "img/aaos/test_can_battery_and_door_frames_reach_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_can_battery_and_door_frames_reach_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -413,20 +442,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_climate_button_goes_out_on_can.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.8,
          "message": "",
          "image": "img/mock/test_climate_button_goes_out_on_can.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -451,20 +482,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 3.8,
          "message": "",
          "image": "img/aaos/test_signal_is_shown_on_climate_and_home_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.8,
          "message": "",
          "image": "img/mock/test_signal_is_shown_on_climate_and_home_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -474,20 +507,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_signal_is_shown_on_climate_and_home_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.8,
          "message": "",
          "image": "img/mock/test_signal_is_shown_on_climate_and_home_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -506,11 +541,14 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_button_changes_signal_by_one_step_up-driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -519,7 +557,8 @@
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_up-driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -529,20 +568,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 3.5,
          "message": "",
          "image": "img/aaos/test_button_changes_signal_by_one_step_up-passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=22.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.6,
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_up-passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -552,20 +595,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_button_changes_signal_by_one_step_down-driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=21.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_down-driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -575,20 +622,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_button_changes_signal_by_one_step_down-passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=21.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_down-passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -607,11 +658,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_buttons_disabled_at_limits_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -620,7 +672,8 @@
          "message": "",
          "image": "img/mock/test_buttons_disabled_at_limits_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -630,20 +683,211 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_buttons_disabled_at_limits_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.7,
+         "message": "",
+         "image": "img/mock/test_buttons_disabled_at_limits_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_step_reaches_limit_and_disables",
+     "doc": "16.5°C에서 -를 한 번 누르면 차량 온도가 16.0°C가 되고 - 버튼이 꺼집니다. 27.5°C에서 +도 같습니다. 끝에 닿은 뒤 꺼진 버튼을 눌러도 차량 온도는 범위를 넘지 않습니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "driver",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.0,
+         "message": "",
+         "image": "img/aaos/test_step_reaches_limit_and_disables_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=28.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.6,
+         "message": "",
+         "image": "img/mock/test_step_reaches_limit_and_disables_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      },
+      {
+       "param": "passenger",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.3,
+         "message": "",
+         "image": "img/aaos/test_step_reaches_limit_and_disables_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=28.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 9.1,
+         "message": "",
+         "image": "img/mock/test_step_reaches_limit_and_disables_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_out_of_range_signal_is_shown_safely",
+     "doc": "차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고 차량 값을 그대로 보여 줍니다. 범위 밖으로 더 가는 버튼은 꺼지고, 반대 버튼을 한 번 누르면 차량 온도가 16.0~28.0°C 안의 0.5°C 단위 값이 됩니다. AAOS는 VHAL에 값을 바로 넣고, Mock 차량은 받은 값을 범위 안으로 잘라 둡니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "below_min",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/aaos/test_out_of_range_signal_is_shown_safely_below_min.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=16.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.9,
+         "message": "",
+         "image": "img/mock/test_out_of_range_signal_is_shown_safely_below_min.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      },
+      {
+       "param": "above_max",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/aaos/test_out_of_range_signal_is_shown_safely_above_max.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=28.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
          "duration": 3.8,
          "message": "",
-         "image": "img/mock/test_buttons_disabled_at_limits_passenger.webp",
+         "image": "img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_off_grid_signal_steps_back_to_grid",
+     "doc": "차량 쪽에서 0.5°C 단위가 아닌 온도(22.3°C)가 와도, 버튼을 한 번 누르면 차량 온도가 0.5°C 단위(+는 22.5°C, -는 22.0°C)로 맞춰집니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "up-22.5",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.4,
+         "message": "",
+         "image": "img/aaos/test_off_grid_signal_steps_back_to_grid_up-22.5.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/mock/test_off_grid_signal_steps_back_to_grid_up-22.5.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      },
+      {
+       "param": "down-22.0",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.4,
+         "message": "",
+         "image": "img/aaos/test_off_grid_signal_steps_back_to_grid_down-22.0.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -662,20 +906,25 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 5.2,
          "message": "",
          "image": "img/aaos/test_seats_are_independent.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5",
+          "HVAC_TEMPERATURE_SET[0x4]=22.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 5.2,
          "message": "",
          "image": "img/mock/test_seats_are_independent.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -691,7 +940,7 @@
      "name": "test_bottom_bar_temperature_drives_vehicle",
      "doc": "아래 바의 온도 버튼은 어느 화면에서든 차량 온도를 바꿉니다. 차량 쪽 값이 바뀌면 아래 바 숫자도 따라 바뀝니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -700,20 +949,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_bottom_bar_temperature_drives_vehicle_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_bottom_bar_temperature_drives_vehicle_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -723,20 +976,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_bottom_bar_temperature_drives_vehicle_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=22.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_bottom_bar_temperature_drives_vehicle_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -746,7 +1003,7 @@
      "name": "test_sync_mirrors_driver_temperature_to_passenger",
      "doc": "SYNC를 켜면 조수석 온도가 운전석과 같아지고, 그 뒤 운전석을 바꾸면 조수석 차량 값도 같이 바뀝니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -755,11 +1012,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.0,
          "message": "",
          "image": "img/aaos/test_sync_mirrors_driver_temperature_to_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=24.5",
+          "HVAC_TEMPERATURE_SET[0x4]=24.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -768,7 +1029,8 @@
          "message": "",
          "image": "img/mock/test_sync_mirrors_driver_temperature_to_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -787,11 +1049,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 4.9,
          "message": "",
          "image": "img/aaos/test_passenger_change_releases_sync.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5",
+          "HVAC_TEMPERATURE_SET[0x4]=21.5"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -800,7 +1066,8 @@
          "message": "",
          "image": "img/mock/test_passenger_change_releases_sync.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -810,7 +1077,7 @@
      "name": "test_trip_distance_follows_speed_signal",
      "doc": "현 주행 정보의 거리는 속도 신호에 따라 늘고, 차를 세우면 멈춥니다. 120 km/h로 3초를 달리면 0.1 km쯤 늘어납니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -823,16 +1090,18 @@
          "message": "",
          "image": "img/aaos/test_trip_distance_follows_speed_signal.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.1,
+         "duration": 6.9,
          "message": "",
          "image": "img/mock/test_trip_distance_follows_speed_signal.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -851,20 +1120,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_lane_assist_indicator_follows_speed.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 1.9,
          "message": "",
          "image": "img/mock/test_lane_assist_indicator_follows_speed.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -883,20 +1154,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.2,
+         "duration": 2.9,
          "message": "",
          "image": "img/aaos/test_utility_widget_pages.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.2,
          "message": "",
          "image": "img/mock/test_utility_widget_pages.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -915,20 +1188,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 3.9,
          "message": "",
          "image": "img/aaos/test_split_screen_toggle.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_split_screen_toggle.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -938,7 +1213,7 @@
      "name": "test_quick_control_mirror_locked_while_driving",
      "doc": "주행 중에는 빠른 제어의 사이드 미러 접기와 트렁크가 막히지만, 도어 잠금은 쓸 수 있습니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -947,11 +1222,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.5,
+         "duration": 7.0,
          "message": "",
          "image": "img/aaos/test_quick_control_mirror_locked_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -960,7 +1236,8 @@
          "message": "",
          "image": "img/mock/test_quick_control_mirror_locked_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -979,11 +1256,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.2,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_notifications_record_guidance_and_restriction.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -992,7 +1270,8 @@
          "message": "",
          "image": "img/mock/test_notifications_record_guidance_and_restriction.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1011,20 +1290,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_recent_app_slot.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_recent_app_slot.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1049,20 +1330,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.5,
          "message": "",
          "image": "img/aaos/test_driving_signals_are_shown.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.1,
          "message": "",
          "image": "img/mock/test_driving_signals_are_shown.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1072,7 +1355,7 @@
      "name": "test_video_button_locked_while_driving",
      "doc": "주행 중에는 미디어 화면의 영상 버튼이 꺼지고 안내 문구가 나옵니다. 차를 세우면 다시 누를 수 있습니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1081,20 +1364,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_video_button_locked_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.2,
          "message": "",
          "image": "img/mock/test_video_button_locked_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1113,20 +1398,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.2,
          "message": "",
          "image": "img/aaos/test_video_is_blocked_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.2,
          "message": "",
          "image": "img/mock/test_video_is_blocked_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1145,20 +1432,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_video_plays_when_parked.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 3.3,
          "message": "",
          "image": "img/mock/test_video_plays_when_parked.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1177,20 +1466,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_video_blocked_screen_follows_parking.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.1,
          "message": "",
          "image": "img/mock/test_video_blocked_screen_follows_parking.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1209,20 +1500,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 12.6,
+         "duration": 12.2,
          "message": "",
          "image": "img/aaos/test_video_resumes_where_it_stopped.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 13.1,
+         "duration": 12.7,
          "message": "",
          "image": "img/mock/test_video_resumes_where_it_stopped.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1241,20 +1534,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_video_next_clip.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_video_next_clip.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1279,20 +1574,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.3,
          "message": "",
          "image": "img/aaos/test_selecting_track_starts_it_0.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_selecting_track_starts_it_0.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -1302,20 +1599,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.3,
          "message": "",
          "image": "img/aaos/test_selecting_track_starts_it_2.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_selecting_track_starts_it_2.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -1329,16 +1628,18 @@
          "message": "",
          "image": "img/aaos/test_selecting_track_starts_it_4.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_selecting_track_starts_it_4.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1361,16 +1662,18 @@
          "message": "",
          "image": "img/aaos/test_play_pause_toggles.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_play_pause_toggles.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1389,20 +1692,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_media_stays_usable_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.6,
          "message": "",
          "image": "img/mock/test_media_stays_usable_while_driving.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1427,20 +1732,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.7,
+         "duration": 8.4,
          "message": "",
          "image": "img/aaos/test_guidance_counts_down_with_vehicle_speed.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.6,
+         "duration": 8.8,
          "message": "",
          "image": "img/mock/test_guidance_counts_down_with_vehicle_speed.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1450,7 +1757,7 @@
      "name": "test_parked_vehicle_does_not_advance_route",
      "doc": "차가 서 있으면 남은 거리가 줄지 않습니다. 안내가 시간이 아니라 속도 신호를 따라 진행된다는 것을 확인합니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1459,20 +1766,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.7,
+         "duration": 6.5,
          "message": "",
          "image": "img/aaos/test_parked_vehicle_does_not_advance_route.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.1,
+         "duration": 7.0,
          "message": "",
          "image": "img/mock/test_parked_vehicle_does_not_advance_route.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1482,7 +1791,7 @@
      "name": "test_search_locked_while_driving_but_favorites_work",
      "doc": "주행 중에는 검색 입력이 막히지만, 즐겨찾기로는 목적지를 고를 수 있습니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1491,20 +1800,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 4.1,
          "message": "",
          "image": "img/aaos/test_search_locked_while_driving_but_favorites_work.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_search_locked_while_driving_but_favorites_work.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1514,7 +1825,7 @@
      "name": "test_search_filters_destinations",
      "doc": "'역'으로 검색하면 판교역과 서울역만 남습니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1523,11 +1834,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.8,
          "message": "",
          "image": "img/aaos/test_search_filters_destinations.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -1536,7 +1848,8 @@
          "message": "",
          "image": "img/mock/test_search_filters_destinations.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1555,11 +1868,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.6,
+         "duration": 7.4,
          "message": "",
          "image": "img/aaos/test_arrival.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -1568,7 +1882,8 @@
          "message": "",
          "image": "img/mock/test_arrival.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1587,20 +1902,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.8,
+         "duration": 4.8,
          "message": "",
          "image": "img/aaos/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.8,
+         "duration": 5.6,
          "message": "",
          "image": "img/mock/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1625,20 +1942,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.8,
+         "duration": 5.5,
          "message": "",
          "image": "img/aaos/test_call_contact_shows_call_screen_and_recent.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.6,
+         "duration": 6.3,
          "message": "",
          "image": "img/mock/test_call_contact_shows_call_screen_and_recent.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1648,7 +1967,7 @@
      "name": "test_keypad_dial",
      "doc": "키패드로 번호를 눌러 전화를 걸면 통화 화면에 그 번호가 보입니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1657,20 +1976,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.8,
+         "duration": 6.3,
          "message": "",
          "image": "img/aaos/test_keypad_dial.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.5,
+         "duration": 7.3,
          "message": "",
          "image": "img/mock/test_keypad_dial.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1680,7 +2001,7 @@
      "name": "test_driving_locks_keypad_and_limits_contacts",
      "doc": "주행 중에는 키패드가 막히고 연락처는 5개까지만 보입니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1689,20 +2010,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 5.3,
          "message": "",
          "image": "img/aaos/test_driving_locks_keypad_and_limits_contacts.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 5.2,
          "message": "",
          "image": "img/mock/test_driving_locks_keypad_and_limits_contacts.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1721,20 +2044,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.8,
+         "duration": 6.0,
          "message": "",
          "image": "img/aaos/test_call_pauses_radio_then_resumes.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.6,
+         "duration": 7.5,
          "message": "",
          "image": "img/mock/test_call_pauses_radio_then_resumes.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1760,22 +2085,27 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 55.6,
+         "duration": 37.2,
          "message": "",
          "image": "img/aaos/test_power_cycle_brings_back_app_and_cabin_defaults.webp",
          "reruns": 0,
          "measures": {
-          "boot_seconds": "32.2"
-         }
+          "boot_seconds": "17.8"
+         },
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.0",
+          "HVAC_TEMPERATURE_SET[0x4]=22.0"
+         ]
         },
         "mock": {
          "outcome": "skipped",
          "label": "건너뜀",
-         "duration": 0.3,
+         "duration": 0.2,
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1800,20 +2130,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.5,
          "message": "",
          "image": "img/aaos/test_power_on_plays_default_station.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.9,
          "message": "",
          "image": "img/mock/test_power_on_plays_default_station.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1823,7 +2155,7 @@
      "name": "test_tune_and_seek",
      "doc": "미세 조정은 0.1 MHz씩 움직이고, 방송국 찾기는 방송이 있는 다음 주파수로 바로 넘어갑니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1832,20 +2164,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.8,
+         "duration": 5.1,
          "message": "",
          "image": "img/aaos/test_tune_and_seek.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.6,
+         "duration": 6.1,
          "message": "",
          "image": "img/mock/test_tune_and_seek.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1855,7 +2189,7 @@
      "name": "test_am_band_uses_khz_steps",
      "doc": "AM으로 바꾸면 주파수가 kHz 단위로 바뀌고 9 kHz씩 움직입니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -1864,20 +2198,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_am_band_uses_khz_steps.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_am_band_uses_khz_steps.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1896,20 +2232,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.7,
+         "duration": 5.6,
          "message": "",
          "image": "img/aaos/test_preset_save_and_recall.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.3,
+         "duration": 6.8,
          "message": "",
          "image": "img/mock/test_preset_save_and_recall.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1928,20 +2266,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.9,
+         "duration": 9.9,
          "message": "",
          "image": "img/aaos/test_preset_and_frequency_survive_app_restart.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.5,
+         "duration": 10.1,
          "message": "",
          "image": "img/mock/test_preset_and_frequency_survive_app_restart.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1960,20 +2300,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 5.3,
          "message": "",
          "image": "img/aaos/test_radio_and_media_play_one_at_a_time.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.3,
+         "duration": 6.2,
          "message": "",
          "image": "img/mock/test_radio_and_media_play_one_at_a_time.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1998,20 +2340,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.3,
          "message": "",
          "image": "img/aaos/test_reverse_gear_shows_camera.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 2.3,
          "message": "",
          "image": "img/mock/test_reverse_gear_shows_camera.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2030,11 +2374,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_camera_returns_to_previous_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2043,7 +2388,8 @@
          "message": "",
          "image": "img/mock/test_camera_returns_to_previous_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2062,20 +2408,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_gear_value_shows_reverse.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.6,
          "message": "",
          "image": "img/mock/test_gear_value_shows_reverse.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2094,24 +2442,26 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.0,
+         "duration": 7.6,
          "message": "",
          "image": "img/aaos/test_rear_camera_appears_within_two_seconds.webp",
          "reruns": 0,
          "measures": {
-          "camera_seconds": "0.66, 0.66, 0.66, 0.67, 0.65"
-         }
+          "camera_seconds": "0.65, 0.64, 0.64, 0.64, 0.63"
+         },
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.4,
          "message": "",
          "image": "img/mock/test_rear_camera_appears_within_two_seconds.webp",
          "reruns": 0,
          "measures": {
-          "camera_seconds": "0.36, 0.28, 0.29, 0.31, 0.22"
-         }
+          "camera_seconds": "0.28, 0.34, 0.28, 0.28, 0.26"
+         },
+         "signals": []
         }
        }
       }
@@ -2136,11 +2486,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_mph_setting_converts_vehicle_speed.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2149,7 +2500,8 @@
          "message": "",
          "image": "img/mock/test_mph_setting_converts_vehicle_speed.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2159,7 +2511,7 @@
      "name": "test_volume_steps",
      "doc": "볼륨은 한 단계씩 오르내립니다. 기본값 15에서 한 번 올리고 두 번 내리면 14가 됩니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -2168,20 +2520,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.0,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_volume_steps.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.3,
+         "duration": 5.1,
          "message": "",
          "image": "img/mock/test_volume_steps.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2200,11 +2554,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 11.1,
+         "duration": 10.5,
          "message": "",
          "image": "img/aaos/test_settings_survive_app_restart.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2213,7 +2568,8 @@
          "message": "",
          "image": "img/mock/test_settings_survive_app_restart.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2232,11 +2588,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 5.7,
          "message": "",
          "image": "img/aaos/test_reset_restores_defaults.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2245,7 +2602,8 @@
          "message": "",
          "image": "img/mock/test_reset_restores_defaults.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2264,20 +2622,22 @@
         "aaos": {
          "outcome": "skipped",
          "label": "건너뜀",
-         "duration": 1.8,
+         "duration": 1.7,
          "message": "Skipped: AAOS 는 시스템 바가 시계를 보여 준다 (앱 시계 없음)",
          "image": "img/aaos/test_12_hour_clock_on_tablet.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.5,
          "message": "",
          "image": "img/mock/test_12_hour_clock_on_tablet.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2302,20 +2662,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 2.0,
          "message": "",
          "image": "img/aaos/test_app_starts_with_vehicle_source_for_device.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 2.0,
          "message": "",
          "image": "img/mock/test_app_starts_with_vehicle_source_for_device.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2334,20 +2696,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.7,
          "message": "",
          "image": "img/aaos/test_parked_on_start.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.8,
+         "duration": 2.7,
          "message": "",
          "image": "img/mock/test_parked_on_start.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2366,20 +2730,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.5,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_home.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.5,
+         "duration": 2.4,
          "message": "",
          "image": "img/mock/test_each_tab_opens_home.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2389,20 +2755,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.6,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_navigation.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.6,
+         "duration": 2.5,
          "message": "",
          "image": "img/mock/test_each_tab_opens_navigation.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2412,20 +2780,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.2,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_radio.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.2,
          "message": "",
          "image": "img/mock/test_each_tab_opens_radio.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2439,7 +2809,8 @@
          "message": "",
          "image": "img/aaos/test_each_tab_opens_media.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2448,7 +2819,8 @@
          "message": "",
          "image": "img/mock/test_each_tab_opens_media.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2458,11 +2830,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.6,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_phone.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2471,7 +2844,8 @@
          "message": "",
          "image": "img/mock/test_each_tab_opens_phone.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2481,11 +2855,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.8,
+         "duration": 2.6,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_climate.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2494,7 +2869,8 @@
          "message": "",
          "image": "img/mock/test_each_tab_opens_climate.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2504,20 +2880,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.2,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_settings.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_each_tab_opens_settings.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2527,20 +2905,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.6,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_assistant.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.4,
+         "duration": 2.5,
          "message": "",
          "image": "img/mock/test_each_tab_opens_assistant.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2550,11 +2930,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.5,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_vehicle_controls.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2563,7 +2944,8 @@
          "message": "",
          "image": "img/mock/test_each_tab_opens_vehicle_controls.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2577,7 +2959,8 @@
          "message": "",
          "image": "img/aaos/test_each_tab_opens_apps.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2586,7 +2969,8 @@
          "message": "",
          "image": "img/mock/test_each_tab_opens_apps.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2605,11 +2989,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.8,
+         "duration": 2.7,
          "message": "",
          "image": "img/aaos/test_hvac_is_controllable.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -2618,7 +3003,8 @@
          "message": "",
          "image": "img/mock/test_hvac_is_controllable.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2644,11 +3030,14 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.4,
+         "duration": 1.8,
          "message": "",
          "image": "img/aaos/test_hvac_signal_is_shown_on_ui_25.0.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_DISPLAY_UNITS=48"
+         ]
         },
         "mock": {
          "outcome": "skipped",
@@ -2657,7 +3046,8 @@
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2667,11 +3057,14 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 2.3,
          "message": "",
          "image": "img/aaos/test_hvac_signal_is_shown_on_ui_20.0.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_DISPLAY_UNITS=48"
+         ]
         },
         "mock": {
          "outcome": "skipped",
@@ -2680,7 +3073,8 @@
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2700,11 +3094,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_hvac_ui_tap_changes_signal_driver-hvac_decrease_button--0.5.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_DISPLAY_UNITS=48",
+          "HVAC_TEMPERATURE_SET[0x1]=19.5"
+         ]
         },
         "mock": {
          "outcome": "skipped",
@@ -2713,7 +3111,8 @@
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2723,11 +3122,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_hvac_ui_tap_changes_signal_passenger-hvac_increase_button-0.5.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_DISPLAY_UNITS=48",
+          "HVAC_TEMPERATURE_SET[0x4]=20.5"
+         ]
         },
         "mock": {
          "outcome": "skipped",
@@ -2736,7 +3139,8 @@
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2756,11 +3160,12 @@
         "aaos": {
          "outcome": "xfailed",
          "label": "알려진 결함",
-         "duration": 1.3,
+         "duration": 1.4,
          "message": "알려진 결함: 1024x768 에서 운전석 온도 ▲ 가 홈 버튼에 가려 탭이 홈으로 간다 (docs/phase1-spike.md)",
          "image": "img/aaos/test_driver_temp_up_is_not_covered_by_home.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "skipped",
@@ -2769,7 +3174,8 @@
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2789,11 +3195,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 1.1,
+         "duration": 1.4,
          "message": "",
          "image": "img/aaos/test_speed_and_gear_change_driving_state.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "skipped",
@@ -2802,7 +3209,8 @@
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
          "image": null,
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2827,11 +3235,16 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.5,
          "message": "",
          "image": "img/aaos/test_ac_toggle_reaches_every_seat.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_AC_ON[0x10]=0",
+          "HVAC_AC_ON[0x40]=0",
+          "HVAC_AC_ON[0x20]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -2840,7 +3253,8 @@
          "message": "",
          "image": "img/mock/test_ac_toggle_reaches_every_seat.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2859,20 +3273,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 2.8,
          "message": "",
          "image": "img/aaos/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.8,
          "message": "",
          "image": "img/mock/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2882,7 +3298,7 @@
      "name": "test_fan_button_changes_signal_by_one",
      "doc": "풍량 + 또는 -를 한 번 누르면 HVAC_FAN_SPEED가 한 단계 바뀌고 화면 숫자도 같이 바뀝니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -2891,11 +3307,14 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_fan_button_changes_signal_by_one_up-4.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=4"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -2904,7 +3323,8 @@
          "message": "",
          "image": "img/mock/test_fan_button_changes_signal_by_one_up-4.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2914,11 +3334,14 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_fan_button_changes_signal_by_one_down-2.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=2"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -2927,7 +3350,8 @@
          "message": "",
          "image": "img/mock/test_fan_button_changes_signal_by_one_down-2.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2946,20 +3370,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.2,
+         "duration": 2.9,
          "message": "",
          "image": "img/aaos/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=1"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.2,
          "message": "",
          "image": "img/mock/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2969,20 +3397,24 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.2,
+         "duration": 4.1,
          "message": "",
          "image": "img/aaos/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=7"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 3.1,
          "message": "",
          "image": "img/mock/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2992,7 +3424,7 @@
      "name": "test_max_ac_sets_signal_and_coldest_settings",
      "doc": "FULL(최대 냉방)을 켜면 모든 좌석의 HVAC_MAX_AC_ON이 켜지고, 온도는 최저, 풍량은 최대가 되며 AUTO는 꺼집니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3001,20 +3433,26 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_max_ac_sets_signal_and_coldest_settings.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_AC_ON[0x1]=1",
+          "HVAC_TEMPERATURE_SET[0x1]=16.0",
+          "HVAC_TEMPERATURE_SET[0x4]=16.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_max_ac_sets_signal_and_coldest_settings.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3024,7 +3462,7 @@
      "name": "test_max_ac_off_restores_previous_settings",
      "doc": "FULL을 버튼으로 끄면 켜기 전 값인 22.0°C, 풍량 3으로 돌아갑니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3033,11 +3471,16 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 3.8,
          "message": "",
          "image": "img/aaos/test_max_ac_off_restores_previous_settings.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=3",
+          "HVAC_TEMPERATURE_SET[0x1]=22.0",
+          "HVAC_TEMPERATURE_SET[0x4]=22.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3046,7 +3489,8 @@
          "message": "",
          "image": "img/mock/test_max_ac_off_restores_previous_settings.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3056,7 +3500,7 @@
      "name": "test_max_ac_signal_is_shown_on_toggle",
      "doc": "차량 쪽에서 최대 냉방을 켜고 끄면 화면의 FULL 토글도 따라 바뀝니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3065,20 +3509,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_max_ac_signal_is_shown_on_toggle.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.9,
          "message": "",
          "image": "img/mock/test_max_ac_signal_is_shown_on_toggle.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3097,20 +3543,26 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 3.8,
          "message": "",
          "image": "img/aaos/test_manual_fan_releases_max_ac.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_MAX_AC_ON[0x1]=0",
+          "HVAC_FAN_SPEED[0x1]=6",
+          "HVAC_TEMPERATURE_SET[0x1]=16.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_manual_fan_releases_max_ac.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3129,11 +3581,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.7,
+         "duration": 4.1,
          "message": "",
          "image": "img/aaos/test_turning_ac_off_releases_max_ac.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_AC_ON[0x1]=0",
+          "HVAC_MAX_AC_ON[0x1]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3142,7 +3598,8 @@
          "message": "",
          "image": "img/mock/test_turning_ac_off_releases_max_ac.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3161,20 +3618,25 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_manual_fan_releases_auto.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_FAN_SPEED[0x1]=4",
+          "HVAC_AUTO_ON[0x1]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_manual_fan_releases_auto.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3184,7 +3646,7 @@
      "name": "test_defrost_changes_only_its_window",
      "doc": "앞 유리 김서림 제거를 누르면 앞 유리 신호만, 뒤를 누르면 뒤 유리 신호만 켜집니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3193,20 +3655,25 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.5,
          "message": "",
          "image": "img/aaos/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_DEFROSTER[0x1]=1",
+          "HVAC_DEFROSTER[0x2]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 4.2,
          "message": "",
          "image": "img/mock/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3216,11 +3683,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_DEFROSTER[0x2]=1",
+          "HVAC_DEFROSTER[0x1]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3229,7 +3700,8 @@
          "message": "",
          "image": "img/mock/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3239,7 +3711,7 @@
      "name": "test_seat_heat_cycles_levels_on_vehicle",
      "doc": "열선 버튼을 누를 때마다 꺼짐, 2단, 1단, 꺼짐 순서로 바뀝니다. 다른 좌석의 열선은 그대로입니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3248,11 +3720,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_seat_heat_cycles_levels_on_vehicle_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_SEAT_TEMPERATURE[0x1]=0",
+          "HVAC_SEAT_TEMPERATURE[0x4]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3261,7 +3737,8 @@
          "message": "",
          "image": "img/mock/test_seat_heat_cycles_levels_on_vehicle_driver.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3271,11 +3748,15 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.0,
+         "duration": 4.1,
          "message": "",
          "image": "img/aaos/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_SEAT_TEMPERATURE[0x4]=0",
+          "HVAC_SEAT_TEMPERATURE[0x1]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3284,7 +3765,8 @@
          "message": "",
          "image": "img/mock/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3294,7 +3776,7 @@
      "name": "test_seat_heat_signal_is_shown_everywhere",
      "doc": "차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3303,11 +3785,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_seat_heat_signal_is_shown_everywhere.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -3316,7 +3799,8 @@
          "message": "",
          "image": "img/mock/test_seat_heat_signal_is_shown_everywhere.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3335,20 +3819,25 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_bottom_bar_seat_heat_works_from_any_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_SEAT_TEMPERATURE[0x4]=2",
+          "HVAC_SEAT_TEMPERATURE[0x1]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_bottom_bar_seat_heat_works_from_any_screen.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3367,20 +3856,25 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.3,
          "message": "",
          "image": "img/aaos/test_assistant_seat_heat_follows_speaker_zone.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_SEAT_TEMPERATURE[0x4]=2",
+          "HVAC_SEAT_TEMPERATURE[0x1]=0"
+         ]
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_assistant_seat_heat_follows_speaker_zone.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3399,11 +3893,16 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 3.8,
          "message": "",
          "image": "img/aaos/test_door_lock_button_drives_every_door.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "DOOR_LOCK[0x4]=1",
+          "DOOR_LOCK[0x10]=1",
+          "DOOR_LOCK[0x40]=1"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3412,7 +3911,8 @@
          "message": "",
          "image": "img/mock/test_door_lock_button_drives_every_door.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3431,20 +3931,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 2.8,
          "message": "",
          "image": "img/aaos/test_door_lock_signal_is_shown.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.7,
          "message": "",
          "image": "img/mock/test_door_lock_signal_is_shown.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3463,20 +3965,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 2.0,
          "message": "",
          "image": "img/aaos/test_energy_signals_are_shown_on_cluster.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.2,
+         "duration": 2.3,
          "message": "",
          "image": "img/mock/test_energy_signals_are_shown_on_cluster.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3486,7 +3990,7 @@
      "name": "test_low_range_threshold",
      "doc": "주행 가능 거리가 30 km 이하로 떨어지면 '충전 필요'와 충전소 안내 카드가 뜹니다. 31 km에서는 뜨지 않습니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3495,20 +3999,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_low_range_threshold_31.0-False.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.0,
+         "duration": 1.9,
          "message": "",
          "image": "img/mock/test_low_range_threshold_31.0-False.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3518,20 +4024,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 2.8,
          "message": "",
          "image": "img/aaos/test_low_range_threshold_30.0-True.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.2,
+         "duration": 2.0,
          "message": "",
          "image": "img/mock/test_low_range_threshold_30.0-True.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3541,20 +4049,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 2.9,
          "message": "",
          "image": "img/aaos/test_low_range_threshold_29.0-True.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.0,
+         "duration": 1.9,
          "message": "",
          "image": "img/mock/test_low_range_threshold_29.0-True.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3573,20 +4083,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 5.2,
          "message": "",
          "image": "img/aaos/test_low_range_card_starts_guidance_to_nearest_charger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_low_range_card_starts_guidance_to_nearest_charger.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3605,11 +4117,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_low_range_is_recorded_in_notifications.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -3618,7 +4131,8 @@
          "message": "",
          "image": "img/mock/test_low_range_is_recorded_in_notifications.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3637,11 +4151,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_range_recovers_after_charging.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -3650,7 +4165,8 @@
          "message": "",
          "image": "img/mock/test_range_recovers_after_charging.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3669,20 +4185,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.1,
          "message": "",
          "image": "img/aaos/test_range_follows_speed_unit_setting.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.4,
          "message": "",
          "image": "img/mock/test_range_follows_speed_unit_setting.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3707,11 +4225,14 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.3,
          "message": "",
          "image": "img/aaos/test_voice_sets_driver_temperature_on_vehicle.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=24.0"
+         ]
         },
         "mock": {
          "outcome": "passed",
@@ -3720,7 +4241,8 @@
          "message": "",
          "image": "img/mock/test_voice_sets_driver_temperature_on_vehicle.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3730,7 +4252,7 @@
      "name": "test_voice_turns_on_radio",
      "doc": "'라디오 켜줘'라고 하면 라디오가 켜집니다.",
      "markers": [
-      "sanity"
+      "regression"
      ],
      "cases": [
       {
@@ -3739,11 +4261,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.3,
          "message": "",
          "image": "img/aaos/test_voice_turns_on_radio.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -3752,7 +4275,8 @@
          "message": "",
          "image": "img/mock/test_voice_turns_on_radio.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3771,20 +4295,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_voice_starts_guidance_home.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_voice_starts_guidance_home.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3803,20 +4329,22 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_voice_panel_closes_after_command.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.6,
          "message": "",
          "image": "img/mock/test_voice_panel_closes_after_command.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3835,11 +4363,12 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.5,
          "message": "",
          "image": "img/aaos/test_voice_calls_contact.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         },
         "mock": {
          "outcome": "passed",
@@ -3848,7 +4377,8 @@
          "message": "",
          "image": "img/mock/test_voice_calls_contact.webp",
          "reruns": 0,
-         "measures": {}
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3856,5 +4386,22 @@
     }
    ]
   }
- ]
+ ],
+ "stability": {
+  "rounds": 5,
+  "devices": 2,
+  "run_ids": [
+   "20261118-195509-r1",
+   "20261118-200531-r2",
+   "20261118-201545-r3",
+   "20261118-202600-r4",
+   "20261118-203617-r5"
+  ],
+  "executions": 1250,
+  "flaky": 0,
+  "failed": 0,
+  "reruns": 0,
+  "flaky_tests": [],
+  "failed_tests": []
+ }
 }

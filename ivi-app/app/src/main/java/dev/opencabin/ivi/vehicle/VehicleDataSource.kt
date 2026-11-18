@@ -1,6 +1,8 @@
 package dev.opencabin.ivi.vehicle
 
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /** 화면이 보는 차량 상태. 단위는 화면 기준(km/h, °C)으로 맞춘다. */
 data class VehicleState(
@@ -71,6 +73,15 @@ object HvacSpec {
     const val STEP_C = 0.5f
 
     fun clamp(celsius: Float) = celsius.coerceIn(MIN_C, MAX_C)
+
+    /**
+     * 온도 버튼 한 칸. 0.5°C 단위에 맞춘 바로 위(아래) 값이고, 범위 밖이면 끝값이다.
+     * 차량 쪽에서 22.3°C 처럼 단위가 어긋난 값이 오면 + 는 22.5, - 는 22.0 (2026-11-18 경계값 테스트에서 찾은 결함:
+     * 전에는 22.3 ± 0.5 = 22.8 / 21.8 을 그대로 차량에 썼다).
+     */
+    fun stepUp(celsius: Float) = clamp(floor(celsius / STEP_C + EPS) * STEP_C + STEP_C)
+    fun stepDown(celsius: Float) = clamp(ceil(celsius / STEP_C - EPS) * STEP_C - STEP_C)
+    private const val EPS = 1e-3f
 
     /** HVAC_FAN_SPEED 범위 (에뮬레이터 config: 1 ~ 7). */
     const val FAN_MIN = 1

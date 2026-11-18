@@ -5,7 +5,7 @@ import dev.opencabin.ivi.vehicle.Seat
 import java.util.Locale
 
 /*
- * 차량 음성 비서의 '말 → 동작' 부분 (docs/phase6-pleos.md).
+ * 차량 음성 비서의 '말 → 동작' 부분 (docs/phase7-layout.md 의 AI 어시스턴트).
  *
  * 참고한 기능 (공개 자료 기준, LLM 대신 규칙 기반으로 단순화):
  *   - 한 번에 여러 명령 ("에어컨 켜고 음악 틀어줘")
@@ -29,7 +29,7 @@ data class Place(val id: String, val name: String, val address: String, val dist
 object Places {
     val all = listOf(
         Place("home", "집", "경기 성남시 분당구", 12.4f, PlaceCategory.HOME),
-        Place("work", "회사", "42dot · 창업로40번길 20", 8.7f, PlaceCategory.WORK),
+        Place("work", "회사", "판교 업무지구 (가상 주소)", 8.7f, PlaceCategory.WORK),
         Place("pangyo_station", "판교역", "신분당선 · 경강선", 5.2f, PlaceCategory.STATION),
         Place("seoul_station", "서울역", "서울 용산구", 27.9f, PlaceCategory.STATION),
         Place("airport", "인천국제공항", "인천 중구", 68.3f, PlaceCategory.PLACE),

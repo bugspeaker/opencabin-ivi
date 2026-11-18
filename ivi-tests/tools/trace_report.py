@@ -103,7 +103,7 @@ def markdown(requirements, tests, outcomes, kinds):
         f"| 테스트 함수 | {len(tests)}개 |",
         f"| 요구사항이 없는 테스트 | {len(untraced)}개 |",
         "",
-        "결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 일부러 남겨 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.",
+        "결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.",
         "",
         "## 요구사항에서 테스트로",
         "",

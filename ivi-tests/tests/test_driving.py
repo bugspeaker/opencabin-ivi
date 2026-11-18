@@ -32,7 +32,7 @@ def test_driving_signals_are_shown(app, car):
 
 
 @pytest.mark.req("DRIVE-02")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_video_button_locked_while_driving(app, car):
     """주행 중에는 미디어 화면의 영상 버튼이 꺼지고 안내 문구가 나옵니다.
     차를 세우면 다시 누를 수 있습니다.

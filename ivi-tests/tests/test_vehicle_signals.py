@@ -44,7 +44,7 @@ def test_ac_signal_is_shown_on_climate_and_bottom_bar(app, car):
 
 
 @pytest.mark.req("HVAC-03")
-@pytest.mark.sanity
+@pytest.mark.regression
 @pytest.mark.parametrize("direction, expected", [("up", 4), ("down", 2)])
 def test_fan_button_changes_signal_by_one(app, car, direction, expected):
     """풍량 + 또는 -를 한 번 누르면 HVAC_FAN_SPEED가 한 단계 바뀌고 화면 숫자도 같이 바뀝니다."""
@@ -69,7 +69,7 @@ def test_fan_buttons_disabled_at_limits(app, car, level, blocked):
 
 
 @pytest.mark.req("HVAC-04")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_max_ac_sets_signal_and_coldest_settings(app, car):
     """FULL(최대 냉방)을 켜면 모든 좌석의 HVAC_MAX_AC_ON이 켜지고, 온도는 최저, 풍량은 최대가 되며 AUTO는 꺼집니다."""
     climate = app.climate()
@@ -88,7 +88,7 @@ def test_max_ac_sets_signal_and_coldest_settings(app, car):
 
 
 @pytest.mark.req("HVAC-04")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_max_ac_off_restores_previous_settings(app, car):
     """FULL을 버튼으로 끄면 켜기 전 값인 22.0°C, 풍량 3으로 돌아갑니다."""
     climate = app.climate()
@@ -104,7 +104,7 @@ def test_max_ac_off_restores_previous_settings(app, car):
 
 
 @pytest.mark.req("HVAC-04")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_max_ac_signal_is_shown_on_toggle(app, car):
     """차량 쪽에서 최대 냉방을 켜고 끄면 화면의 FULL 토글도 따라 바뀝니다."""
     climate = app.climate()
@@ -163,7 +163,7 @@ def test_manual_fan_releases_auto(app, car):
 
 
 @pytest.mark.req("HVAC-05")
-@pytest.mark.sanity
+@pytest.mark.regression
 @pytest.mark.parametrize("where, signal, other", [
     ("defrost_front", Signal.DEFROST_FRONT, Signal.DEFROST_REAR),
     ("defrost_rear", Signal.DEFROST_REAR, Signal.DEFROST_FRONT),
@@ -183,7 +183,7 @@ def test_defrost_changes_only_its_window(app, car, where, signal, other):
 # ---------------- 좌석 열선 ----------------
 
 @pytest.mark.req("HVAC-05")
-@pytest.mark.sanity
+@pytest.mark.regression
 @pytest.mark.parametrize("seat", list(Seat), ids=lambda s: s.tag)
 def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
     """열선 버튼을 누를 때마다 꺼짐, 2단, 1단, 꺼짐 순서로 바뀝니다.
@@ -201,7 +201,7 @@ def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
 
 
 @pytest.mark.req("HVAC-05")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_seat_heat_signal_is_shown_everywhere(app, car):
     """차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다."""
     climate = app.climate()
@@ -282,7 +282,7 @@ def test_energy_signals_are_shown_on_cluster(app, car):
 
 
 @pytest.mark.req("ENERGY-02")
-@pytest.mark.sanity
+@pytest.mark.regression
 @pytest.mark.parametrize("range_km, low", [(31.0, False), (30.0, True), (29.0, True)])
 def test_low_range_threshold(app, car, range_km, low):
     """주행 가능 거리가 30 km 이하로 떨어지면 '충전 필요'와 충전소 안내 카드가 뜹니다.

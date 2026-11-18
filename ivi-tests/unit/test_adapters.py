@@ -21,6 +21,17 @@ class FakeAdb:
         return ""
 
 
+class MockAppAdb(FakeAdb):
+    """앱의 Mock 수신기처럼 SET 에 받은 extra 이름을 돌려준다 (data="applied=...")."""
+
+    def shell(self, *args, **_):
+        self.calls.append(args)
+        if any(str(a).endswith("mock.SET") for a in args):
+            keys = [args[i + 1] for i, a in enumerate(args) if a in ("--es", "--ef", "--ei", "--ez")]
+            return f'Broadcast completed: result=0, data="applied={",".join(sorted(keys))}"'
+        return ""
+
+
 @pytest.mark.parametrize("text, expected", [("25.0°C", 25.0), ("16.5°C", 16.5), ("--", None), (" 22.0°C ", 22.0), ("23.5°", 23.5)])
 def test_parse_celsius(text, expected):
     assert parse_celsius(text) == expected
@@ -66,7 +77,7 @@ def test_mock_state_error_explains_app_must_run():
 
 
 def test_mock_set_uses_string_for_gear_and_float_for_numbers():
-    adb = FakeAdb()
+    adb = MockAppAdb()
     MockVehicle(adb).drive(50)
     args = adb.calls[0]
     assert args[args.index("gear") - 1] == "--es" and args[args.index("gear") + 1] == "D"
@@ -177,7 +188,7 @@ def test_aaos_signal_batch_retries_once_then_fails(monkeypatch):
 
 
 def test_mock_signals_use_typed_extras():
-    adb = FakeAdb()
+    adb = MockAppAdb()
     MockVehicle(adb).set_signals({Signal.AC: False, Signal.FAN: 5, Signal.RANGE_KM: 22})
     args = adb.calls[0]
     assert args[args.index("ac") - 1:args.index("ac") + 2] == ("--ez", "ac", "false")
@@ -195,10 +206,49 @@ def test_mock_signal_is_parsed_by_type():
 
 def test_reset_cabin_sets_every_signal_on_both_adapters():
     """기준 값 초기화는 신호 12개를 모두 넣는다 (하나라도 빠지면 테스트끼리 영향을 준다)."""
-    mock = FakeAdb()
+    mock = MockAppAdb()
     MockVehicle(mock).reset_cabin()
     assert all(name in mock.calls[0] for name in CABIN_DEFAULTS)
 
     aaos = FakeAdb({hex(Prop.INFO_EV_BATTERY_CAPACITY): "floatValues: [150000.0], int32Values: []", "--set": "Set property: {}\n" * 31})
     AaosVehicle(aaos).reset_cabin()
     assert aaos.calls[-1][0].count("--set") == 31  # 좌석 5 × 4 + 김서림 2 + 열선 2 + 문 4 + 센서 3
+
+
+def test_mock_set_fails_on_the_spot_when_app_did_not_take_the_values():
+    """앱이 꺼져 있어 브로드캐스트가 전달되지 않으면(화웨이) 그 자리에서 실패한다. 뒤의 대기에서 엉뚱하게 실패하지 않게."""
+    with pytest.raises(RuntimeError, match="들어가지 않았다"):
+        MockVehicle(FakeAdb({"mock.SET": "Broadcast completed: result=0"})).set_temperature(Seat.DRIVER, 25.0)
+    partial = FakeAdb({"mock.SET": 'Broadcast completed: result=0, data="applied=gear"'})
+    with pytest.raises(RuntimeError, match="speed_kmh"):
+        MockVehicle(partial).drive(50)
+
+
+def test_aaos_inject_temperature_goes_straight_to_vhal():
+    """범위 밖 값은 CarService 가 거절하므로, 차량 쪽 값은 VHAL --set 으로 넣는다."""
+    adb = FakeAdb({"--set": "Set property: {}"})
+    AaosVehicle(adb).inject_temperature(Seat.DRIVER, 15.5)
+    call = adb.calls[0]
+    assert call[:3] == ("dumpsys", "android.hardware.automotive.vehicle.IVehicle/default", "--set")
+    assert call[call.index("-f") + 1] == "15.5" and call[call.index("-a") + 1] == "1"
+
+
+def test_aaos_keeps_last_read_values_for_the_result_page():
+    """판정에 쓴 VHAL 값(마지막으로 읽은 3개)을 남긴다. 같은 property·area 는 마지막 값만, 다른 스레드(CAN 게이트웨이)가 읽은 값은 뺀다."""
+    import threading
+    adb = FakeAdb({
+        "0x15600503 0x1": "floatValues: [22.5], int32Values: []",
+        "0x15600503 0x4": "floatValues: [22.0], int32Values: []",
+        "0x11400400": "floatValues: [], int32Values: [4]",
+        "0x15200505": "floatValues: [], int32Values: [1]",
+    })
+    car = AaosVehicle(adb)
+    car.temperature(Seat.DRIVER)
+    car.get_property(Prop.GEAR_SELECTION)
+    car.temperature(Seat.PASSENGER)
+    car.temperature(Seat.DRIVER)
+    worker = threading.Thread(target=lambda: car.get_property(Prop.HVAC_AC_ON, 0x1))
+    worker.start()
+    worker.join()
+    assert car.take_observed() == ["GEAR_SELECTION=4", "HVAC_TEMPERATURE_SET[0x4]=22.0", "HVAC_TEMPERATURE_SET[0x1]=22.5"]
+    assert car.take_observed() == []  # 꺼내면 비운다

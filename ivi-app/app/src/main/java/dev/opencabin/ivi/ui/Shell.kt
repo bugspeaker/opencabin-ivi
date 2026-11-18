@@ -72,7 +72,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 /*
- * 화면 틀 (docs/phase7-pleos.md) — 차세대 양산 IVI(Pleos Connect)의 3영역 구조:
+ * 화면 틀 (docs/phase7-layout.md) — 양산 IVI 공개 자료에서 흔한 3영역 구조:
  *   ┌──────────────┬───────────────────────────────────────────┐
  *   │ 주행 정보     │ 상단 바: 검색 · 알림 · 데이터 소스 · 상태 · AI · 시계 │
  *   │ 속도·기어·    ├───────────────────────────────────────────┤
@@ -523,14 +523,14 @@ private fun BarTemperature(seat: Seat, state: VehicleState, flag: Boolean, flagL
     val usable = state.hvacAvailable && celsius != null
     Row(verticalAlignment = Alignment.CenterVertically) {
         Chevron(G.CHEVRON_LEFT, "bar_${seat.tag}_temp_down", usable && celsius!! > HvacSpec.MIN_C, IviColors.Cool) {
-            setTemperature(seat, celsius!! - HvacSpec.STEP_C, true)
+            setTemperature(seat, HvacSpec.stepDown(celsius!!), true)
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(72.dp)) {
             Text(tempShort(celsius), Modifier.testTag("bar_${seat.tag}_temp"), fontSize = 25.sp, fontWeight = FontWeight.Medium)
             Text(flagLabel, color = if (flag) IviColors.Green else IviColors.TextTertiary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         }
         Chevron(G.CHEVRON_RIGHT, "bar_${seat.tag}_temp_up", usable && celsius!! < HvacSpec.MAX_C, IviColors.Warm) {
-            setTemperature(seat, celsius!! + HvacSpec.STEP_C, true)
+            setTemperature(seat, HvacSpec.stepUp(celsius!!), true)
         }
     }
 }

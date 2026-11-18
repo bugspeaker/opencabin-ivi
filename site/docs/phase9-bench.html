@@ -22,24 +22,27 @@
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
         <a href="traceability.html">요구사항 추적표</a>
         <a href="requirements.html">요구사항</a>
         <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
         <a href="phase3-framework.html">3. 테스트 프레임워크</a>
         <a href="phase4-operations.html">4. 운영 · CI</a>
         <a href="phase5-design.html">5. 재점검과 디자인</a>
         <a href="phase6-features.html">6. 기능 확장</a>
-        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html">8. 차량 신호 확장</a>
         <a href="phase9-bench.html" aria-current="page">9. Test Bench 확장</a>
     </nav>
   </aside>
   <main id="content" class="doc">
 <h1 id="9단계-test-bench-확장-rest-api-원격-전원-가상-can-요구사항-추적"><a class="anchor" href="#9단계-test-bench-확장-rest-api-원격-전원-가상-can-요구사항-추적" aria-hidden="true">#</a>9단계 Test Bench 확장: REST API, 원격 전원, 가상 CAN, 요구사항 추적</h1>
-<p>2026-11-18에 정리했습니다. 공고의 우대사항 가운데 해 보지 않았던 세 가지(차량 네트워크, REST API와 원격 전원 제어, ISO 26262와 A-SPICE)를 이 프로젝트 안에서 할 수 있는 만큼 붙였습니다.</p>
-<p>먼저 밝혀 둘 것이 있습니다. 실제 ECU나 CAN 장비, 전원 공급기, 기능 안전 인증 경험은 여전히 없습니다. 이번 단계는 PC 안에서 흉내 낸 모의 환경과, 개념을 이 프로젝트에 적용해 본 결과입니다. 그래서 첫 화면 목차에서도 &#39;완료&#39;가 아니라 &#39;CAN만 모의&#39;, &#39;모의 장비&#39;, &#39;개념 적용&#39;으로 따로 표시했습니다.</p>
+<p>2026-11-18에 정리했습니다. 벤치를 사람 없이 돌리려면 다른 도구가 HTTP로 기기와 신호를 다루고, 전원을 껐다 켜고, 차량 네트워크 신호를 받을 수 있어야 합니다. 이 세 가지를 PC 안의 모의 환경으로 만들고, 요구사항과 테스트를 잇는 추적표를 더했습니다.</p>
+<p>실제 ECU나 CAN 장비, 전원 공급기, 기능 안전 인증 경험은 없습니다. 이번 단계는 PC 안에서 흉내 낸 모의 환경과, 개념을 이 프로젝트에 적용해 본 결과입니다. 그래서 첫 화면 목차에서도 &#39;CAN만 모의&#39;, &#39;모의 장비&#39;, &#39;개념 적용&#39;으로 따로 표시했습니다.</p>
 <h2 id="1-test-bench-rest-api-ivibench_apipy"><a class="anchor" href="#1-test-bench-rest-api-ivibench_apipy" aria-hidden="true">#</a>1. Test Bench REST API (<code>ivi/bench_api.py</code>)</h2>
 <p>벤치에 붙은 기기를 HTTP로 다루는 API입니다. 다른 팀의 도구나 CI가 adb 명령을 몰라도 기기 상태를 보고, 차량 신호를 넣고, 전원을 껐다 켜고, 테스트를 돌리고, 결과를 가져갈 수 있게 하려고 만들었습니다. 의존성을 늘리지 않으려고 표준 라이브러리(<code>http.server</code>)만 썼습니다.</p>
 <div class="table"><table><thead><tr>
@@ -140,7 +143,7 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <p><a href="requirements.html">요구사항</a> 26개에 ID를 붙이고, 모든 테스트 함수에 <code>@pytest.mark.req(&quot;ID&quot;)</code>를 달았습니다. <code>tools/trace_report.py</code>가 둘을 이어 <a href="traceability.html">요구사항 추적표</a>를 만듭니다. 요구사항마다 확인하는 테스트와 기기별 최신 결과가 나오고, 반대로 테스트 파일마다 어떤 요구사항을 확인하는지도 나옵니다.</p>
 <p>프레임워크 단위 테스트 <code>test_every_requirement_has_a_test_and_every_test_a_requirement</code>가 CI에서 세 가지를 막습니다. 테스트가 없는 요구사항, 요구사항이 없는 테스트, 없는 ID를 가리키는 테스트입니다. A-SPICE 검증 단계에서 요구하는 양방향 추적을 이 규모에 맞게 흉내 낸 것이고, 표준 심사를 받은 것은 아닙니다.</p>
 <h3 id="후방-카메라가-2초-안에-뜨는지"><a class="anchor" href="#후방-카메라가-2초-안에-뜨는지" aria-hidden="true">#</a>후방 카메라가 2초 안에 뜨는지</h3>
-<p>미국 기준 FMVSS 111은 후진을 시작하고 2.0초 안에 후방 영상을 보여 주라고 정해 두었습니다. <a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_rear_camera_appears_within_two_seconds</code></a>는 기어를 R로 바꾼 순간부터 카메라 화면이 보일 때까지를 다섯 번 재고, 가장 느린 값으로 판정합니다. 신호를 넣는 adb 시간까지 포함한 값이라 실제보다 느리게 잡힙니다.</p>
+<p>미국 기준 FMVSS 111은 후진을 시작하고 2.0초 안에 후방 영상을 보여 주라고 정해 두었습니다. <a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_rear_camera_appears_within_two_seconds</code></a>는 기어를 R로 바꾼 순간부터 카메라 화면이 보일 때까지를 다섯 번 재고, 가장 느린 값으로 판정합니다. 신호를 넣는 adb 시간까지 포함한 값이라 실제보다 느리게 잡힙니다. 법규의 2초 기준을 빌려 온 시험이고, 재는 것은 앱의 후방 카메라 화면 요소가 나타날 때까지입니다. 실제 카메라 영상이나 실차에서 잰 값은 아닙니다.</p>
 <div class="table"><table><thead><tr>
 <th>기기</th>
 <th>다섯 번 잰 값 (초)</th>
@@ -161,21 +164,77 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 </tr>
 </thead><tbody><tr>
 <td>AAOS 에뮬레이터 전체 E2E (123개)</td>
-<td>121개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (10분 10초)</td>
+<td>121개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (10분 11초)</td>
 </tr>
 <tr>
 <td>화웨이 태블릿 (Mock) 전체 E2E (123개)</td>
-<td>116개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (9분 43초)</td>
+<td>116개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (9분 44초)</td>
 </tr>
 <tr>
 <td>프레임워크 단위 테스트</td>
 <td>61개 통과. API 18개, CAN 게이트웨이 5개, 추적 검사 1개를 더했습니다.</td>
 </tr>
+<tr>
+<td>두 기기 병렬</td>
+<td>같은 시각(15:16:58)에 시작해 끝까지 10분 11초. 차례로 돌렸다면 약 19분 55초</td>
+</tr>
 </tbody></table></div>
 <p>새 E2E는 8개입니다. REST API 3개, CAN 3개, 후방 카메라 2초 1개, 전원 1개이고, 전원 테스트는 에뮬레이터에서만 돕니다. 결과 화면은 239장이고, 영상 화면 중 다른 차 번호판이 읽히는 두 장은 이번에도 흐리게 처리했습니다.</p>
+<h2 id="6-검토-뒤-보강-2026-11-18-저녁"><a class="anchor" href="#6-검토-뒤-보강-2026-11-18-저녁" aria-hidden="true">#</a>6. 검토 뒤 보강 (2026-11-18 저녁)</h2>
+<p>포트폴리오를 공고 기준으로 다시 검토하고, 그 결과를 테스트와 문서에 반영했습니다.</p>
+<div class="table"><table><thead><tr>
+<th>한 일</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td>경계값 테스트 6개 추가 (<a class="test-link" href="test-results.html#file-test_climate" title="테스트 결과와 화면 보기"><code>test_climate.py</code></a>)</td>
+<td>16.5→16.0°C, 27.5→28.0°C로 끝에 닿는 경로와 꺼진 버튼, 범위 밖 차량 값(15.5, 28.5°C), 0.5°C 단위가 아닌 차량 값(22.3°C). 고치기 전 앱에서 0.5°C 단위 결함을 찾았습니다(<a href="portfolio.html#3-결함과-원인-분석">포트폴리오 3장 8번</a>).</td>
+</tr>
+<tr>
+<td>앱 수정</td>
+<td>온도 버튼이 0.5°C 단위에 맞춘 다음 값을 씁니다. Mock 차량이 받은 값의 이름을 돌려줍니다. 앱 단위 테스트 3개를 더해 22개</td>
+</tr>
+<tr>
+<td>&#39;바뀌지 않음&#39; 확인</td>
+<td>운전석을 바꾼 뒤 조수석 신호와 화면을 1.5초 동안 봅니다(<code>stays</code>).</td>
+</tr>
+<tr>
+<td>게이트 단계 다시 정의</td>
+<td>sanity를 서비스별 대표 경로로 줄였습니다(55개 → 25개). Release 게이트를 정했습니다(<a href="portfolio.html#4-1-게이트-단계와-기준">포트폴리오 4-1</a>).</td>
+</tr>
+<tr>
+<td>대기와 실패 자료</td>
+<td>다시 볼 예외만 기다리고 코드 오류는 바로 올립니다. 대기 안의 화면 객체는 따로 기다리지 않습니다. 실패 자료를 실행과 기기별 폴더에 나눕니다. 프레임워크 단위 테스트 10개를 더해 71개</td>
+</tr>
+<tr>
+<td>결과 페이지</td>
+<td>AAOS에서 판정에 쓴 VHAL 값(예: <code>HVAC_TEMPERATURE_SET[0x1]=22.5</code>)을 화면과 함께 보여 줍니다.</td>
+</tr>
+<tr>
+<td>반복 실행</td>
+<td>전체 129개를 두 기기에서 5회 반복했습니다. 테스트 1,250건, flaky 0건, 실패 0건(<a href="flaky-report.html">반복 실행 통계</a>)</td>
+</tr>
+</tbody></table></div>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>결과 (5회 반복의 마지막 회차)</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS 에뮬레이터 전체 E2E (129개)</td>
+<td>127개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 45초)</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 (Mock) 전체 E2E (129개)</td>
+<td>122개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (10분 15초)</td>
+</tr>
+<tr>
+<td>두 기기 병렬</td>
+<td>끝까지 10분 16초. 차례로 돌렸다면 약 20분 0초</td>
+</tr>
+</tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

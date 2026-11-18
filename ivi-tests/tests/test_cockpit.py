@@ -8,7 +8,7 @@ from ivi.waits import wait_until
 
 
 @pytest.mark.req("HVAC-01", "UI-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 @pytest.mark.parametrize("seat", list(Seat), ids=lambda s: s.tag)
 def test_bottom_bar_temperature_drives_vehicle(app, car, seat):
     """아래 바의 온도 버튼은 어느 화면에서든 차량 온도를 바꿉니다.
@@ -25,7 +25,7 @@ def test_bottom_bar_temperature_drives_vehicle(app, car, seat):
 
 
 @pytest.mark.req("HVAC-06")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_sync_mirrors_driver_temperature_to_passenger(app, car):
     """SYNC를 켜면 조수석 온도가 운전석과 같아지고, 그 뒤 운전석을 바꾸면 조수석 차량 값도 같이 바뀝니다."""
     car.set_temperature(Seat.DRIVER, 24.0)
@@ -54,7 +54,7 @@ def test_passenger_change_releases_sync(app, car):
 
 
 @pytest.mark.req("DRIVE-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_trip_distance_follows_speed_signal(app, car):
     """현 주행 정보의 거리는 속도 신호에 따라 늘고, 차를 세우면 멈춥니다.
     120 km/h로 3초를 달리면 0.1 km쯤 늘어납니다.
@@ -110,7 +110,7 @@ def test_split_screen_toggle(app):
 
 
 @pytest.mark.req("DRIVE-03")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_quick_control_mirror_locked_while_driving(app, car):
     """주행 중에는 빠른 제어의 사이드 미러 접기와 트렁크가 막히지만, 도어 잠금은 쓸 수 있습니다."""
     qc = app.vehicle_controls()

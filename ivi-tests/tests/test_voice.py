@@ -16,7 +16,7 @@ def test_voice_sets_driver_temperature_on_vehicle(app, car):
 
 
 @pytest.mark.req("VOICE-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_voice_turns_on_radio(app):
     """'라디오 켜줘'라고 하면 라디오가 켜집니다."""
     voice = app.voice()

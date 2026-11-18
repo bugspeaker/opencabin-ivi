@@ -11,7 +11,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 
 /*
- * 내 차 그림: 소형 전기 해치백 (현대 아이오닉 3 공개 제원·디자인 참고, 사진·제조사 이미지 파일은 쓰지 않고 직접 그린다).
+ * 내 차 그림: 소형 전기 해치백 (공개된 양산 해치백의 제원과 비율을 참고해 직접 그린다. 사진·제조사 이미지 파일은 쓰지 않는다.
+ *   참고 자료는 docs/phase7-layout.md 의 '참고한 것').
  *   제원: 길이 4,155 · 폭 1,800 · 높이 1,505 · 휠베이스 2,680 mm (19인치 휠 225/45 R19 → 바퀴 지름 약 685 mm)
  *   특징: 앞에서 뒤까지 곧게 이어지다 리어 스포일러로 떨어지는 '에어로 해치' 지붕선,
  *         앞·뒤 픽셀 조명, 엠블럼 자리의 점 4개(모스 부호 H), 넓은 유리 지붕
@@ -32,7 +33,7 @@ private val PixelRed = Color(0xFFFF3B3B)
  * 위에서 본 내 차 (앞이 위). (cx, cy) 는 차 중심, length 는 화면에서의 차 길이.
  * braking=true 면(후진 등) 뒤 픽셀 조명을 밝게 그린다.
  */
-fun DrawScope.ioniq3Top(cx: Float, cy: Float, length: Float, body: Color, shade: Color, braking: Boolean = false) {
+fun DrawScope.hatchbackTop(cx: Float, cy: Float, length: Float, body: Color, shade: Color, braking: Boolean = false) {
     val l = length
     val w = l * WIDTH_RATIO
     val left = cx - w / 2
@@ -84,7 +85,7 @@ fun DrawScope.ioniq3Top(cx: Float, cy: Float, length: Float, body: Color, shade:
 }
 
 /** 옆에서 본 내 차 (앞이 왼쪽). 정차(P) 화면에서 크게 보여 준다. (cx, groundY) 는 차 가운데 아래(바닥), length 는 차 길이. */
-fun DrawScope.ioniq3Side(cx: Float, groundY: Float, length: Float, body: Color, shade: Color) {
+fun DrawScope.hatchbackSide(cx: Float, groundY: Float, length: Float, body: Color, shade: Color) {
     val l = length
     val x0 = cx - l / 2
     fun p(fx: Float, fy: Float) = Offset(x0 + l * fx, groundY - l * fy) // fy: 바닥에서 위로 (L 비율)

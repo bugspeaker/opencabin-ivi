@@ -17,7 +17,7 @@ def test_power_on_plays_default_station(app):
 
 
 @pytest.mark.req("MEDIA-02")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_tune_and_seek(app):
     """미세 조정은 0.1 MHz씩 움직이고, 방송국 찾기는 방송이 있는 다음 주파수로 바로 넘어갑니다."""
     radio = app.radio()
@@ -29,7 +29,7 @@ def test_tune_and_seek(app):
 
 
 @pytest.mark.req("MEDIA-02")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_am_band_uses_khz_steps(app):
     """AM으로 바꾸면 주파수가 kHz 단위로 바뀌고 9 kHz씩 움직입니다."""
     radio = app.radio()

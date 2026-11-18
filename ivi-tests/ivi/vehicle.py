@@ -1,6 +1,6 @@
 """차량 신호 어댑터. 테스트는 VehicleController 만 보고, 기기 종류에 따른 차이는 여기서 감춘다.
 
-AaosVehicle (AAOS 에뮬레이터, 실제 CarService·VHAL)
+AaosVehicle (AAOS 에뮬레이터: CarService 와 에뮬레이터의 VHAL. 실차 VHAL 이 아니다)
   - set_property(): CarService 경로 (`cmd car_service set-property-value`). 앱의 CarPropertyManager 와 같다. 쓰기 가능 값만.
   - force():        VHAL 직접 (`dumpsys <VHAL> --set`, root). 속도·기어 같은 읽기 전용 센서 값을 '차가 보낸 것처럼' 바꾼다.
   - `inject-vhal-event` 는 저장 값이 안 바뀌어 판정에 못 써서 쓰지 않는다 (docs/phase1-spike.md).
@@ -15,6 +15,7 @@ MockVehicle (일반 Android, 앱 안의 가짜 차량)
   - 앱 프로세스가 떠 있어야 받는다. 그래서 prepare() 는 앱을 띄운 다음에 부른다.
 """
 import re
+import threading
 import time
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -54,6 +55,9 @@ class Prop:
     EV_BATTERY_LEVEL = 0x11600309       # float Wh
     INFO_EV_BATTERY_CAPACITY = 0x11600106  # float Wh
     ENV_OUTSIDE_TEMPERATURE = 0x11600703  # float °C
+
+
+PROP_NAMES = {value: name for name, value in vars(Prop).items() if name.isupper()}
 
 
 class Signal:
@@ -122,6 +126,14 @@ class VehicleController(ABC):
     def __init__(self, adb):
         self.adb = adb
         self.retried = []  # 신호 주입 도구의 일시 오류로 다시 시도한 기록 (conftest 가 테스트 결과에 옮긴다)
+        self.observed = {}  # 테스트가 판정에 쓴 차량 값 (읽은 순서, 같은 property·area 는 마지막 값). AAOS 만 채운다
+
+    def take_observed(self, limit=3):
+        """마지막으로 읽은 차량 값 limit 개를 'HVAC_TEMPERATURE_SET[0x1]=22.5' 꼴로 돌려주고 비운다.
+        wait_until 이 조건을 만족한 순간 읽은 값이 마지막에 남으므로, 판정에 쓴 값이다 (결과 페이지에 보여 준다)."""
+        items = list(self.observed.items())[-limit:]
+        self.observed.clear()
+        return [f"{key}={value}" for key, value in items]
 
     def prepare(self):
         """테스트 시작 전: 정차 + 기본 온도 + 8단계 신호 기준 값."""
@@ -170,6 +182,11 @@ class VehicleController(ABC):
     def temperature(self, seat): ...
 
     @abstractmethod
+    def inject_temperature(self, seat, celsius):
+        """차량(ECU) 쪽에서 설정 온도가 바뀐 것처럼 넣는다. 앱의 쓰기 경로(CarService)가 거절하는 범위 밖 값이나
+        0.5 단위가 아닌 값도 넣을 수 있다 (경계값 테스트의 입력)."""
+
+    @abstractmethod
     def is_restricted(self): ...
 
     @abstractmethod
@@ -213,7 +230,12 @@ class AaosVehicle(VehicleController):
         if not floats or not ints:
             raise RuntimeError(f"property {hex(prop)} 값을 읽지 못했다: {out.strip()[:200]}")
         raw = (floats.group(1) or ints.group(1)).split(", ")[0]
-        return float(raw) if "." in raw else int(raw)
+        value = float(raw) if "." in raw else int(raw)
+        if threading.current_thread() is threading.main_thread():  # CAN 게이트웨이 스레드가 읽은 값은 판정이 아니다
+            key = PROP_NAMES.get(prop, hex(prop)) + (f"[{hex(area)}]" if area else "")
+            self.observed.pop(key, None)
+            self.observed[key] = value
+        return value
 
     def set_property(self, prop, value, area=Area.GLOBAL):
         out = self.adb.shell("cmd", "car_service", "set-property-value", hex(prop), hex(area), str(value))
@@ -330,6 +352,11 @@ class AaosVehicle(VehicleController):
     def temperature(self, seat):
         return self.get_property(Prop.HVAC_TEMPERATURE_SET, seat.area)
 
+    def inject_temperature(self, seat, celsius):
+        # CarService(set-property-value)는 범위 밖 값을 거절한다 (2026-11-18 확인: 15.5 → IllegalArgumentException).
+        # 에뮬레이터 VHAL 의 --set 은 범위 검사 없이 받는다 → 차량 쪽에서 이상한 값이 올라온 상황을 만든다
+        self.force(Prop.HVAC_TEMPERATURE_SET, float(celsius), seat.area)
+
     def is_restricted(self):
         return self.driving_state() == DrivingState.MOVING
 
@@ -358,7 +385,16 @@ class MockVehicle(VehicleController):
         extras = []
         for key, value in values.items():
             extras += ["--es", key, value] if isinstance(value, str) else ["--ef", key, str(float(value))]
-        self._broadcast("SET", *extras)
+        self._send_set(extras, values)
+
+    def _send_set(self, extras, keys):
+        """SET 브로드캐스트를 보내고, 앱이 돌려준 'applied=' 목록으로 값이 다 들어갔는지 그 자리에서 확인한다.
+        화웨이는 꺼진 앱에 브로드캐스트를 전달하지 않는다. 확인하지 않으면 주입이 빠진 채 뒤의 대기에서 엉뚱하게 실패한다."""
+        out = self._broadcast("SET", *extras)
+        found = re.search(r'data="applied=([^"]*)"', out)
+        missing = sorted(set(keys) - set(found.group(1).split(","))) if found else sorted(keys)
+        if missing:
+            raise RuntimeError(f"Mock 차량에 값이 들어가지 않았다 {missing} (앱이 떠 있는지 확인): {out.strip()[-200:]}")
 
     def state(self):
         out = self._broadcast("GET")
@@ -382,6 +418,10 @@ class MockVehicle(VehicleController):
     def temperature(self, seat):
         return float(self.state()[f"temp_{seat.tag}"])
 
+    def inject_temperature(self, seat, celsius):
+        # Mock 차량은 받은 값을 16.0~28.0 으로 자른다 (MockVehicleDataSource.applyExtras). 0.5 단위가 아닌 값은 그대로 둔다
+        self._set(**{f"temp_{seat.tag}": celsius})
+
     def is_restricted(self):
         return self.state()["restricted"] == "true"
 
@@ -396,7 +436,7 @@ class MockVehicle(VehicleController):
                 extras += ["--ei", name, str(int(value))]
             else:
                 extras += ["--ef", name, str(float(value))]
-        self._broadcast("SET", *extras)
+        self._send_set(extras, values)
 
     def signal(self, name):
         raw = self.state()[name]

@@ -255,10 +255,10 @@ private fun DrivingView(state: VehicleState, modifier: Modifier) {
             val length = minOf(w * 0.88f, h * 1.9f)
             val ground = h * 0.5f + length * 0.19f
             drawCircle(Brush.radialGradient(listOf(IviColors.Accent.copy(alpha = 0.16f), Color.Transparent), center = Offset(cx, ground - length * 0.15f), radius = w * 0.45f), w * 0.45f, Offset(cx, ground - length * 0.15f))
-            ioniq3Side(cx, ground, length, body, shade)
+            hatchbackSide(cx, ground, length, body, shade)
         } else {
             val length = w * 0.15f * 1.9f
-            ioniq3Top(cx, yAt(0.08f) - length / 2, length, body, shade, braking = state.gear == Gear.REVERSE)
+            hatchbackTop(cx, yAt(0.08f) - length / 2, length, body, shade, braking = state.gear == Gear.REVERSE)
         }
     }
 }

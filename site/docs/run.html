@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실행 방법 (Windows) · OpenCabin IVI</title>
+<meta name="theme-color" content="#010102">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 실행 방법</span>
+  <a class="src" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/run.md">원문 .md</a>
+</header>
+<div class="layout">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
+        <a href="traceability.html">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
+        <a href="readme.html">README</a>
+        <a href="run.html" aria-current="page">실행 방법</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html">9. Test Bench 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc">
+<h1 id="실행-방법-windows"><a class="anchor" href="#실행-방법-windows" aria-hidden="true">#</a>실행 방법 (Windows)</h1>
+<p>프로젝트는 영문 경로(<code>C:\dev\opencabin-ivi</code>)에 둡니다. Android 빌드 도구가 한글 경로에서 실패합니다.</p>
+<h2 id="1-에뮬레이터와-appium"><a class="anchor" href="#1-에뮬레이터와-appium" aria-hidden="true">#</a>1. 에뮬레이터와 Appium</h2>
+<ol>
+<li>Automotive 에뮬레이터를 켭니다. AVD도 영문 경로에 두고, priv-app으로 앱을 넣으려면 <code>-writable-system</code>으로 켭니다.<pre class="code"><code data-lang="powershell">$env:ANDROID_AVD_HOME = &quot;C:\android\avd&quot;; $env:ANDROID_SDK_ROOT = &quot;C:\android&quot;
+C:\android\emulator\emulator.exe -avd OpenCabin_AAOS_34 -writable-system -no-snapshot -no-boot-anim</code></pre>
+앱 빌드와 priv-app 설치 방법은 <a href="phase2-app.html">phase2-app.md</a>에 있습니다.
+에뮬레이터 공조를 태블릿과 같은 22.0°C, 섭씨 표시로 맞추려면 <code>python ivi-tests/tools/emulator_defaults.py --persist</code>를 한 번 돌립니다. 에뮬레이터가 재부팅됩니다.
+영상 화면에 실제 주행 영상을 띄우려면 블랙박스 mp4를 <code>.drive/</code>에 넣고 <code>python ivi-tests/tools/push_drive_videos.py</code>를 돌립니다. 영상이 없으면 가짜 재생 화면이 나옵니다.</li>
+<li>Appium 서버를 띄웁니다.<pre class="code"><code data-lang="powershell">$env:ANDROID_HOME = &quot;C:\android&quot;; appium --address 127.0.0.1 --port 4723</code></pre>
+</li>
+</ol>
+<h2 id="2-테스트"><a class="anchor" href="#2-테스트" aria-hidden="true">#</a>2. 테스트</h2>
+<pre class="code"><code data-lang="powershell">cd ivi-tests
+python -m venv .venv; .venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m pytest --serial emulator-5554              # 전체
+.venv\Scripts\python -m pytest --serial emulator-5554 -m smoke     # 빌드 게이트</code></pre>
+<p>기기가 한 대만 연결돼 있으면 <code>--serial</code>은 빼도 됩니다. 기기 종류는 자동으로 판별합니다.</p>
+<h2 id="3-두-기기-병렬-실행-반복-실행-단위-테스트"><a class="anchor" href="#3-두-기기-병렬-실행-반복-실행-단위-테스트" aria-hidden="true">#</a>3. 두 기기 병렬 실행, 반복 실행, 단위 테스트</h2>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\run_bench.py -m &quot;smoke or sanity&quot; --reruns 1
+.venv\Scripts\python tools\run_bench.py --repeat 5 --reruns 1        # 안정성 측정
+.venv\Scripts\python tools\flaky_report.py --last 5
+.venv\Scripts\python -m pytest unit</code></pre>
+<p>게이트 단계(smoke, sanity, regression, Release)의 기준은 <a href="portfolio.html#4-1-게이트-단계와-기준">포트폴리오 4-1</a>에 있습니다.</p>
+<p>앱 단위 테스트는 <code>ivi-app</code>에서 <code>.\gradlew testDebugUnitTest</code>로 돌립니다. 사용자 폴더가 한글 경로이면 Gradle 테스트 실행기가 실패하므로, 임시 폴더를 영문 경로로 바꿔서 돌립니다(<code>$env:TMP = &quot;C:\dev\.tmp&quot;; $env:TEMP = $env:TMP</code>).</p>
+<h2 id="4-test-bench-api"><a class="anchor" href="#4-test-bench-api" aria-hidden="true">#</a>4. Test Bench API</h2>
+<p>API를 띄우면 다른 도구가 HTTP로 기기와 신호, 전원, 실행 결과를 다룰 수 있습니다. 인증이 없으니 벤치 PC 안에서만 씁니다.</p>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\bench_api.py          # http://127.0.0.1:8770/api</code></pre>
+<h2 id="5-결과-사이트-만들기"><a class="anchor" href="#5-결과-사이트-만들기" aria-hidden="true">#</a>5. 결과 사이트 만들기</h2>
+<p><code>--shots</code>를 붙이면 테스트마다 끝난 화면을 남기고, 아래 명령이 그 결과를 소개 사이트로 옮깁니다.</p>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\run_bench.py --repeat 5 --reruns 1 --shots
+.venv\Scripts\python tools\publish_results.py --repeat-runs &quot;reports/runs/&lt;날짜&gt;-*-r*.json&quot;
+.venv\Scripts\python tools\trace_report.py
+cd ..\site; npm install; npm run build-docs</code></pre>
+<p>영상 화면에 다른 차 번호판이 읽히면 <code>publish_results.py --blur</code>로 그 부분을 흐리게 합니다.</p>
+<h2 id="환경-변수"><a class="anchor" href="#환경-변수" aria-hidden="true">#</a>환경 변수</h2>
+<div class="table"><table><thead><tr>
+<th>환경 변수</th>
+<th>기본값</th>
+<th>설명</th>
+</tr>
+</thead><tbody><tr>
+<td><code>IVI_SERIAL</code></td>
+<td>연결된 기기 한 대</td>
+<td>대상 기기. <code>--serial</code>과 같습니다.</td>
+</tr>
+<tr>
+<td><code>IVI_TAP</code></td>
+<td>화웨이와 아너는 <code>adb</code>, 그 밖에는 <code>appium</code></td>
+<td>화면을 누르는 방법</td>
+</tr>
+<tr>
+<td><code>APPIUM_URL</code></td>
+<td><code>http://127.0.0.1:4723</code></td>
+<td>Appium 서버 주소</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-에뮬레이터와-appium">1. 에뮬레이터와 Appium</a><a class="l2" href="#2-테스트">2. 테스트</a><a class="l2" href="#3-두-기기-병렬-실행-반복-실행-단위-테스트">3. 두 기기 병렬 실행, 반복 실행, 단위 테스트</a><a class="l2" href="#4-test-bench-api">4. Test Bench API</a><a class="l2" href="#5-결과-사이트-만들기">5. 결과 사이트 만들기</a><a class="l2" href="#환경-변수">환경 변수</a></nav>
+</div>
+
+</body>
+</html>

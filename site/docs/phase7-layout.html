@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>7단계 Pleos Connect 구조로 개편: 3영역 화면, AI 어시스턴트, 아래 공조 바 · OpenCabin IVI</title>
+<title>7단계 3영역 화면으로 개편: 주행 정보와 앱 영역, AI 어시스턴트, 아래 공조 바 · OpenCabin IVI</title>
 <meta name="theme-color" content="#010102">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,31 +15,34 @@
 <header class="top">
   <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
   <span class="crumb">문서 · 7. 3영역 화면 개편</span>
-  <a class="src" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/phase7-pleos.md">원문 .md</a>
+  <a class="src" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/phase7-layout.md">원문 .md</a>
 </header>
 <div class="layout">
   <aside class="side">
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
         <a href="traceability.html">요구사항 추적표</a>
         <a href="requirements.html">요구사항</a>
         <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
         <a href="phase3-framework.html">3. 테스트 프레임워크</a>
         <a href="phase4-operations.html">4. 운영 · CI</a>
         <a href="phase5-design.html">5. 재점검과 디자인</a>
         <a href="phase6-features.html">6. 기능 확장</a>
-        <a href="phase7-pleos.html" aria-current="page">7. 3영역 화면 개편</a>
+        <a href="phase7-layout.html" aria-current="page">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html">8. 차량 신호 확장</a>
         <a href="phase9-bench.html">9. Test Bench 확장</a>
     </nav>
   </aside>
   <main id="content" class="doc">
-<h1 id="7단계-pleos-connect-구조로-개편-3영역-화면-ai-어시스턴트-아래-공조-바"><a class="anchor" href="#7단계-pleos-connect-구조로-개편-3영역-화면-ai-어시스턴트-아래-공조-바" aria-hidden="true">#</a>7단계 Pleos Connect 구조로 개편: 3영역 화면, AI 어시스턴트, 아래 공조 바</h1>
-<p>2026-11-14에 정리했습니다. 현대차그룹의 차세대 인포테인먼트인 Pleos Connect(42dot 개발, AAOS 기반)의 공개 화면과 기능을 참고해서, 6단계 앱(내비게이션, 라디오, 전화, 설정, 후방 카메라, 음성)을 그 구조로 다시 짰습니다. 6단계의 기능과 테스트가 기대하는 동작은 그대로 살렸습니다.</p>
-<p>5단계와 같은 기준을 지켰습니다. 화면 구조와 기능 방향만 참고하고, 제조사 로고, 제품명, 서비스명(글레오 등), 전용 글꼴, 아이콘 파일, 실제 지도 데이터는 쓰지 않았습니다. 아이콘은 Canvas로 직접 그린 단순한 기호(<code>ui/Glyphs.kt</code>)이고, 앱 이름은 OpenCabin, 비서 이름은 &#39;AI 어시스턴트&#39;로 했습니다.</p>
+<h1 id="7단계-3영역-화면으로-개편-주행-정보와-앱-영역-ai-어시스턴트-아래-공조-바"><a class="anchor" href="#7단계-3영역-화면으로-개편-주행-정보와-앱-영역-ai-어시스턴트-아래-공조-바" aria-hidden="true">#</a>7단계 3영역 화면으로 개편: 주행 정보와 앱 영역, AI 어시스턴트, 아래 공조 바</h1>
+<p>2026-11-14에 정리했습니다. 양산 IVI(AAOS 기반)의 공개 화면과 기능을 참고해서(출처는 1장), 6단계 앱(내비게이션, 라디오, 전화, 설정, 후방 카메라, 음성)을 그 구조로 다시 짰습니다. 6단계의 기능과 테스트가 기대하는 동작은 그대로 살렸습니다.</p>
+<p>5단계와 같은 기준을 지켰습니다. 화면 구조와 기능 방향만 참고하고, 제조사 로고, 제품명, 서비스명, 전용 글꼴, 아이콘 파일, 실제 지도 데이터는 쓰지 않았습니다. 아이콘은 Canvas로 직접 그린 단순한 기호(<code>ui/Glyphs.kt</code>)이고, 앱 이름은 OpenCabin, 비서 이름은 &#39;AI 어시스턴트&#39;로 했습니다.</p>
 <h2 id="1-참고한-것"><a class="anchor" href="#1-참고한-것" aria-hidden="true">#</a>1. 참고한 것</h2>
 <div class="table"><table><thead><tr>
 <th>출처</th>
@@ -86,7 +89,7 @@
 <tr>
 <td>하단 바</td>
 <td>탭 7개와 읽기만 하는 온도</td>
-<td>왼쪽부터 차량, 운전석 온도(A/C), 열선, 그다음 공조, 미디어, 전화, 내비, AI, 앱 목록, 이전 실행 앱, 열선, 조수석 온도(SYNC). 온도는 어느 화면에서든 실제 VHAL 값을 바꿉니다.</td>
+<td>왼쪽부터 차량, 운전석 온도(A/C), 열선, 그다음 공조, 미디어, 전화, 내비, AI, 앱 목록, 이전 실행 앱, 열선, 조수석 온도(SYNC). 온도는 어느 화면에서든 차량 신호(AAOS에서는 에뮬레이터 VHAL 값)를 바꿉니다.</td>
 </tr>
 <tr>
 <td>홈</td>
@@ -158,8 +161,8 @@
 </tr>
 </tbody></table></div>
 <p>이 단계의 화면이라 상단 바 프로필에 이름이 없고 FULL 버튼도 아직 없습니다. 지금 화면은 <a href="test-results.html">테스트 결과</a>에서 볼 수 있습니다.</p>
-<h3 id="내-차-그림-아이오닉-3-참고"><a class="anchor" href="#내-차-그림-아이오닉-3-참고" aria-hidden="true">#</a>내 차 그림 (아이오닉 3 참고)</h3>
-<p>주행 정보에 나오는 내 차는 아이오닉 3의 공개 제원과 디자인을 참고해 Canvas로 직접 그렸습니다(<code>ui/CarArt.kt</code>). 제조사 사진이나 이미지 파일은 쓰지 않았습니다.</p>
+<h3 id="내-차-그림-공개된-소형-전기-해치백-참고"><a class="anchor" href="#내-차-그림-공개된-소형-전기-해치백-참고" aria-hidden="true">#</a>내 차 그림 (공개된 소형 전기 해치백 참고)</h3>
+<p>주행 정보에 나오는 내 차는 공개된 소형 전기 해치백의 제원과 디자인을 참고해 Canvas로 직접 그렸습니다(<code>ui/CarArt.kt</code>, 출처는 아래). 제조사 사진이나 이미지 파일은 쓰지 않았습니다.</p>
 <div class="table"><table><thead><tr>
 <th>참고한 공개 자료</th>
 <th>그림에 반영한 것</th>
@@ -344,7 +347,7 @@ ivi-app/app/src/test/          CabinAssistantTest (JVM, 17개)</code></pre>
 <p><img data-md src="../../docs/images/p7-tablet.png" alt="tablet" loading="lazy"></p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-참고한-것">1. 참고한 것</a><a class="l2" href="#2-무엇이-바뀌었나">2. 무엇이 바뀌었나</a><a class="l3" href="#내-차-그림-아이오닉-3-참고">내 차 그림 (아이오닉 3 참고)</a><a class="l3" href="#에뮬레이터-공조-값을-태블릿과-같게">에뮬레이터 공조 값을 태블릿과 같게</a><a class="l2" href="#3-ai-어시스턴트-assistantcabinassistantkt">3. AI 어시스턴트 (assistant/CabinAssistant.kt)</a><a class="l2" href="#4-구조">4. 구조</a><a class="l2" href="#5-테스트">5. 테스트</a><a class="l2" href="#6-회귀-테스트에서-잡은-것">6. 회귀 테스트에서 잡은 것</a><a class="l3" href="#6-1-안내-바의-목적지-글자-앞에-공백이-들어감-제가-만든-결함">6-1) 안내 바의 목적지 글자 앞에 공백이 들어감 (제가 만든 결함)</a><a class="l3" href="#6-2-후보-카드가-대답을-화면-밖으로-밀어냄-낮은-화면에서만">6-2) 후보 카드가 대답을 화면 밖으로 밀어냄 (낮은 화면에서만)</a><a class="l3" href="#6-3-한글-경로에서-gradle-단위-테스트-실행기가-죽음-이-pc-환경-문제">6-3) 한글 경로에서 Gradle 단위 테스트 실행기가 죽음 (이 PC 환경 문제)</a><a class="l2" href="#7-결과">7. 결과</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-참고한-것">1. 참고한 것</a><a class="l2" href="#2-무엇이-바뀌었나">2. 무엇이 바뀌었나</a><a class="l3" href="#내-차-그림-공개된-소형-전기-해치백-참고">내 차 그림 (공개된 소형 전기 해치백 참고)</a><a class="l3" href="#에뮬레이터-공조-값을-태블릿과-같게">에뮬레이터 공조 값을 태블릿과 같게</a><a class="l2" href="#3-ai-어시스턴트-assistantcabinassistantkt">3. AI 어시스턴트 (assistant/CabinAssistant.kt)</a><a class="l2" href="#4-구조">4. 구조</a><a class="l2" href="#5-테스트">5. 테스트</a><a class="l2" href="#6-회귀-테스트에서-잡은-것">6. 회귀 테스트에서 잡은 것</a><a class="l3" href="#6-1-안내-바의-목적지-글자-앞에-공백이-들어감-제가-만든-결함">6-1) 안내 바의 목적지 글자 앞에 공백이 들어감 (제가 만든 결함)</a><a class="l3" href="#6-2-후보-카드가-대답을-화면-밖으로-밀어냄-낮은-화면에서만">6-2) 후보 카드가 대답을 화면 밖으로 밀어냄 (낮은 화면에서만)</a><a class="l3" href="#6-3-한글-경로에서-gradle-단위-테스트-실행기가-죽음-이-pc-환경-문제">6-3) 한글 경로에서 Gradle 단위 테스트 실행기가 죽음 (이 PC 환경 문제)</a><a class="l2" href="#7-결과">7. 결과</a></nav>
 </div>
 
 </body>

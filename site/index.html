@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-/* 모든 값은 프로젝트 루트 DESIGN.md 의 토큰에서만 가져옵니다. */
+/* 모든 값은 site/design-tokens.md 의 토큰에서만 가져옵니다. */
 :root {
   /* colors */
   --primary: #5e6ad2;
@@ -28,10 +28,10 @@
   --hairline-strong: #34343a;
   --semantic-success: #27a644;
 
-  /* type families (DESIGN.md: Linear 전용 서체 + 문서에 적힌 대체 서체) */
-  --font-display: "Linear Display", Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-text: "Linear Text", Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Linear Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* type families (Inter 웹폰트, 없으면 시스템 글꼴) */
+  --font-display: Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-text: Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* rounded */
   --r-xs: 4px; --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-pill: 9999px;
@@ -54,9 +54,9 @@ img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 2px solid rgb(94 105 209 / 0.5); outline-offset: 2px; }
 
-/* typography tokens */
-.display-xl { font-family: var(--font-display); font-size: 80px; font-weight: 600; line-height: 1.05; letter-spacing: -3px; margin: 0; }
-.display-lg { font-family: var(--font-display); font-size: 56px; font-weight: 600; line-height: 1.10; letter-spacing: -1.8px; margin: 0; }
+/* typography tokens. 위계: h1(display-xl) > 공고 목차 제목(display-lg) > 섹션 제목(display-md) */
+.display-xl { font-family: var(--font-display); font-size: 56px; font-weight: 600; line-height: 1.10; letter-spacing: -1.8px; margin: 0; }
+.display-lg { font-family: var(--font-display); font-size: 48px; font-weight: 600; line-height: 1.12; letter-spacing: -1.4px; margin: 0; }
 .display-md { font-family: var(--font-display); font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 0; }
 .headline   { font-family: var(--font-display); font-size: 28px; font-weight: 600; line-height: 1.20; letter-spacing: -0.6px; margin: 0; }
 .card-title { font-family: var(--font-display); font-size: 22px; font-weight: 500; line-height: 1.25; letter-spacing: -0.4px; margin: 0; }
@@ -96,31 +96,26 @@ section { padding: var(--s-section) 0 0; }
 .brand { display: flex; align-items: center; gap: var(--s-xs); font-family: var(--font-display); font-size: 14px; font-weight: 600; }
 .brand-mark { width: 20px; height: 20px; border-radius: var(--r-sm); background: var(--primary); }
 .nav-links { display: flex; gap: var(--s-xxs); margin: 0 auto; font-size: 14px; }
-.nav-links a { padding: 8px 14px; border-radius: var(--r-md); color: var(--ink-subtle); }
+.nav-links a { padding: 8px 12px; border-radius: var(--r-md); color: var(--ink-subtle); white-space: nowrap; }
 .nav-links a:hover { color: var(--ink); }
 .nav-cta { display: flex; gap: var(--s-xs); }
 
 /* hero */
-.hero { padding: 64px 0 0; }
-.hero-copy { display: grid; gap: var(--s-lg); max-width: 960px; }
+.hero { padding: 56px 0 0; }
+.hero-copy { display: grid; gap: var(--s-md); max-width: 960px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+.limits { display: flex; gap: var(--s-xs); align-items: baseline; margin: var(--s-md) 0 0; padding: var(--s-sm) var(--s-md); border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-1); color: var(--ink-muted); font-size: 14px; line-height: 1.5; }
+.limits strong { flex: none; font-weight: 500; color: var(--ink); }
 
 /* 요구 역량 목차 (build-docs.mjs 가 만든다) */
 .fit { padding-top: var(--s-xxl); scroll-margin-top: 56px; }
 .fit-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s-xl); margin-bottom: var(--s-lg); }
 .fit-head-copy { display: grid; gap: var(--s-sm); min-width: 0; }
-.fit-score { flex: none; display: grid; gap: var(--s-xs); justify-items: end; width: 260px; text-align: right; }
-.fit-score-num { margin: 0; font-family: var(--font-display); font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -1px; color: var(--ink-tertiary); font-variant-numeric: tabular-nums; }
-.fit-score-num span { color: var(--ink); }
-.fit-bar { width: 100%; height: 4px; border-radius: var(--r-pill); background: var(--surface-3); overflow: hidden; }
-.fit-bar { display: flex; gap: 2px; }
-.fit-bar span { display: block; height: 100%; border-radius: inherit; background: var(--semantic-success); }
-.fit-bar span.is-partial { background: var(--primary); }
 .fit-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-lg); align-items: start; }
 .fit-col { display: grid; gap: var(--s-lg); }
 .fit-group { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); overflow: hidden; }
 .fit-group-title { display: flex; justify-content: space-between; margin: 0; padding: var(--s-md) var(--s-lg) var(--s-xs); font-size: 13px; font-weight: 500; line-height: 1.3; letter-spacing: 0.4px; color: var(--ink-subtle); }
-.fit-group-title span { font-family: var(--font-mono); font-weight: 400; color: var(--ink-tertiary); }
+.fit-group-title span { font-family: var(--font-mono); font-weight: 400; color: var(--ink-subtle); }
 .fit-list { list-style: none; margin: 0; padding: 0; }
 .fit-item + .fit-item { border-top: 1px solid var(--hairline); }
 .fit-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: var(--s-sm); align-items: center; padding: var(--s-sm) var(--s-lg); }
@@ -128,21 +123,34 @@ a.fit-row { transition: background-color .15s ease; }
 a.fit-row:hover { background: var(--surface-2); }
 a.fit-row:hover .fit-dest { color: var(--ink); }
 a.fit-row:focus-visible { outline-offset: -2px; }
-.fit-num { align-self: start; padding-top: 2px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-tertiary); }
+.fit-num { align-self: start; padding-top: 3px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-subtle); }
 .fit-body { display: grid; gap: 2px; min-width: 0; }
-.fit-title { font-size: 15px; font-weight: 500; line-height: 1.4; color: var(--ink); }
-.fit-done { font-size: 13px; line-height: 1.45; color: var(--ink-subtle); }
+.fit-title { font-size: 16px; font-weight: 500; line-height: 1.4; color: var(--ink); }
+.fit-done { font-size: 15px; line-height: 1.5; color: var(--ink-muted); }
 .fit-side { display: grid; justify-items: end; gap: 6px; }
 .fit-state { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: var(--r-pill); background: var(--surface-2); color: var(--ink-subtle); font-size: 12px; line-height: 1.4; white-space: nowrap; }
-.fit-state.is-done { background: rgb(39 166 68 / 0.12); color: var(--semantic-success); }
-.fit-state.is-done::before { content: ""; width: 6px; height: 6px; border-radius: var(--r-pill); background: currentColor; }
 .fit-state.is-partial { background: rgb(94 106 210 / 0.16); color: var(--primary-hover); }
 .fit-state.is-partial::before { content: ""; width: 6px; height: 6px; border-radius: var(--r-pill); border: 1.5px solid currentColor; }
 .fit-dest { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; line-height: 1.4; color: var(--ink-subtle); white-space: nowrap; }
 .fit-arrow { flex: none; }
 .is-gap .fit-row { padding-top: var(--s-xs); padding-bottom: var(--s-xs); }
 .is-gap .fit-title { font-size: 14px; font-weight: 400; color: var(--ink-subtle); }
-.stats-section { padding-top: var(--s-lg); }
+.stats-section { padding-top: var(--s-xl); }
+
+/* 구조도 */
+.arch-figure { margin: 0; }
+.arch-scroll { overflow-x: auto; }
+.arch-scroll svg { display: block; width: 100%; min-width: 760px; height: auto; }
+.arch-box { fill: var(--surface-2); stroke: var(--hairline-strong); }
+.arch-box.is-mock { fill: none; stroke-dasharray: 4 4; }
+.arch-zone { fill: none; stroke: var(--hairline-strong); stroke-dasharray: 6 6; }
+.arch-zone-label { fill: var(--ink-subtle); font-size: 13px; font-weight: 500; letter-spacing: 0.4px; }
+.arch-title { fill: var(--ink); font-size: 15px; font-weight: 600; }
+.arch-sub { fill: var(--ink-subtle); font-size: 12px; }
+.arch-line { fill: none; stroke: var(--primary-hover); stroke-width: 1.6; }
+.arch-line.is-mock { stroke: var(--ink-subtle); stroke-dasharray: 5 4; }
+.arch-label { fill: var(--ink-muted); font-family: var(--font-mono); font-size: 11px; }
+.arch-note { fill: var(--ink-subtle); font-size: 13px; }
 a.stat { transition: background-color .15s ease, border-color .15s ease; }
 a.stat:hover { background: var(--surface-2); border-color: var(--hairline-strong); }
 
@@ -158,7 +166,8 @@ a.stat:hover { background: var(--surface-2); border-color: var(--hairline-strong
 .shot-card { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-xl); padding: var(--s-lg); }
 .shot-card img { border-radius: var(--r-md); border: 1px solid var(--hairline); width: 100%; }
 .hero .shot-card { margin-top: var(--s-xxl); }
-.shot-caption { display: flex; justify-content: space-between; gap: var(--s-md); margin-top: var(--s-md); }
+.shot-caption { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-md); margin-top: var(--s-md); }
+.shot-caption > a { flex: none; white-space: nowrap; }
 
 /* stats */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-md); }
@@ -183,6 +192,7 @@ a.stat:hover { background: var(--surface-2); border-color: var(--hairline-strong
   font-size: 12px; line-height: 1.4; padding: 2px 8px; border-radius: var(--r-pill);
 }
 .status-dot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--semantic-success); }
+.device-note { margin-top: var(--s-md); }
 
 /* changelog */
 .changelog-row {
@@ -193,8 +203,8 @@ a.stat:hover { background: var(--surface-2); border-color: var(--hairline-strong
 .changelog-row .card-title { font-size: 22px; }
 
 /* run */
-.code { background: var(--surface-2); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: var(--s-md); overflow-x: auto; margin: 0; color: var(--ink-muted); }
-.code .c { color: var(--ink-tertiary); }
+.code { background: var(--surface-2); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: var(--s-md); margin: 0; color: var(--ink-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+.code .c { color: var(--ink-subtle); }
 .run-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-lg); align-items: start; }
 .run-steps { display: grid; gap: var(--s-md); margin: 0; padding: 0; list-style: none; counter-reset: step; }
 .run-steps li { display: grid; grid-template-columns: 32px 1fr; gap: var(--s-sm); counter-increment: step; }
@@ -210,9 +220,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: var(--s-lg); 
 footer nav { display: flex; gap: var(--s-lg); flex-wrap: wrap; }
 footer a:hover { color: var(--ink); }
 
-/* responsive (DESIGN.md breakpoints) */
+/* responsive (design-tokens.md 의 breakpoints) */
 @media (max-width: 1024px) {
-  .display-xl { font-size: 56px; letter-spacing: -1.8px; line-height: 1.10; }
+  .nav-links { display: none; }
+  .nav-cta { margin-left: auto; }
+  .display-xl { font-size: 48px; letter-spacing: -1.4px; line-height: 1.12; }
+  .display-lg { font-size: 40px; letter-spacing: -1px; line-height: 1.15; }
   .fit-cols { grid-template-columns: minmax(0, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); }
@@ -229,15 +242,13 @@ footer a:hover { color: var(--ink); }
   .hero { padding-top: var(--s-xl); }
   .stats-section { padding-top: var(--s-lg); }
   .fit-head { flex-direction: column; align-items: stretch; gap: var(--s-md); }
-  .fit-score { justify-items: start; width: 100%; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s-sm); }
-  .fit-score-num { font-size: 28px; }
-  .fit-bar { grid-column: 1 / -1; }
+  .limits { flex-direction: column; gap: var(--s-xxs); }
   .fit-row { grid-template-columns: 24px minmax(0, 1fr); padding: var(--s-sm) var(--s-md); }
   .fit-side { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
   .fit-group-title { padding: var(--s-sm) var(--s-md) var(--s-xs); }
+  .display-xl { font-size: 36px; letter-spacing: -0.9px; line-height: 1.15; }
+  .display-lg { font-size: 32px; letter-spacing: -0.7px; line-height: 1.2; }
   .display-md { font-size: 28px; letter-spacing: -0.6px; line-height: 1.2; }
-  .display-xl { font-size: 40px; letter-spacing: -1px; line-height: 1.15; }
-  .display-lg { font-size: 40px; letter-spacing: -1px; line-height: 1.15; }
   .grid-3, .grid-2 { grid-template-columns: 1fr; }
   .shot-card { padding: var(--s-sm); }
   .shot-caption { flex-direction: column; gap: var(--s-xxs); }
@@ -246,7 +257,9 @@ footer a:hover { color: var(--ink); }
   .btn { min-height: 44px; }
 }
 @media (max-width: 480px) {
-  .stats { grid-template-columns: 1fr; }
+  .stats { gap: var(--s-xs); }
+  .stats .card { padding: var(--s-md); }
+  .stats .headline { font-size: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
@@ -260,8 +273,9 @@ footer a:hover { color: var(--ink); }
     <a class="brand" href="#top" aria-label="OpenCabin IVI 홈"><span class="brand-mark" aria-hidden="true"></span>OpenCabin IVI</a>
     <nav class="nav-links" aria-label="주요 메뉴">
       <a href="#fit">요구 역량</a>
-      <a href="#screens">화면</a>
+      <a href="#arch">구조</a>
       <a href="#devices">기기</a>
+      <a href="#screens">화면</a>
       <a href="#phases">진행 상황</a>
       <a href="#run">실행</a>
     </nav>
@@ -278,8 +292,8 @@ footer a:hover { color: var(--ink); }
     <div class="hero">
       <div class="hero-copy">
         <p class="eyebrow">AAOS 인포테인먼트 테스트 자동화</p>
-        <h1 class="display-lg">AAOS IVI 앱<br>E2E 테스트 자동화</h1>
-        <p class="body-lg muted">가상 차량용 인포테인먼트 앱을 만들고, 화면 조작이 VHAL 신호까지 이어지는지 E2E 테스트로 검증했습니다. 같은 테스트 코드를 AAOS 에뮬레이터와 일반 Android 태블릿에서 돌립니다.</p>
+        <h1 class="display-xl">AAOS IVI 앱<br>E2E 테스트 자동화</h1>
+        <p class="body-lg muted">화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 직접 만든 가상 IVI 앱이고, 같은 테스트를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="docs/test-results.html">테스트 결과 보기</a>
           <a class="btn btn-secondary" href="docs/portfolio.html">포트폴리오 문서</a>
@@ -287,101 +301,125 @@ footer a:hover { color: var(--ink); }
       </div>
     </div>
 
+    <!-- stats:start (build-docs.mjs 가 results.json 으로 채운다) -->
+    <section class="stats-section" aria-label="최근 결과">
+      <div class="stats">
+        <a class="card stat" href="docs/test-results.html">
+          <p class="eyebrow">E2E 테스트</p>
+          <p class="headline">129개</p>
+          <p class="body-sm subtle">두 기기에서 같은 테스트 코드</p>
+        </a>
+        <a class="card stat" href="docs/test-results.html">
+          <p class="eyebrow">AAOS 에뮬레이터</p>
+          <p class="headline">127개 통과</p>
+          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 9분 45초</p>
+        </a>
+        <a class="card stat" href="docs/test-results.html">
+          <p class="eyebrow">태블릿 (Mock)</p>
+          <p class="headline">122개 통과</p>
+          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 15초</p>
+        </a>
+        <a class="card stat" href="docs/flaky-report.html">
+          <p class="eyebrow">반복 실행 5회 × 기기 2대</p>
+          <p class="headline">flaky 0건</p>
+          <p class="body-sm subtle">테스트 1,250건 실행, 재시도 0번, 실패 0건</p>
+        </a>
+      </div>
+    </section>
+    <!-- stats:end -->
+
+    <p class="limits"><strong>한계</strong><span>실차, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</span></p>
+
     <!-- fit:start (build-docs.mjs 가 requirements.mjs 와 results.json 으로 채운다. 직접 고치지 않는다) -->
     <section id="fit" class="fit" aria-labelledby="fit-title">
       <div class="fit-head">
         <div class="fit-head-copy">
           <p class="eyebrow">요구 역량</p>
-          <h2 id="fit-title" class="display-md">42dot Test Automation Engineer, IVI System</h2>
-          <p class="body-sm subtle">채용 공고에 안내된 역량을 이 프로젝트에 적용하고 테스트한 결과입니다. 항목을 누르면 테스트 결과나 기록으로 이동합니다.</p>
-        </div>
-        <div class="fit-score">
-          <p class="fit-score-num"><span>13</span> / 16</p>
-          <p class="caption subtle">항목 완료, 3개는 모의 환경과 개념 적용</p>
-          <div class="fit-bar" aria-hidden="true"><span style="width:81%"></span><span class="is-partial" style="width:19%"></span></div>
+          <h2 id="fit-title" class="display-lg">42dot Test Automation Engineer, IVI System</h2>
+          <p class="body-lg muted">채용 공고의 항목마다 이 프로젝트에서 한 일과 근거입니다. 항목을 누르면 근거가 되는 테스트 결과나 기록으로 이동합니다.</p>
         </div>
       </div>
       <div class="fit-cols">
         <div class="fit-col">
         <div class="fit-group">
-          <h3 class="fit-group-title">주요 업무 <span>7 / 7</span></h3>
+          <h3 class="fit-group-title">주요 업무 <span>7개</span></h3>
           <ol class="fit-list">
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=services">
               <span class="fit-num">01</span>
-              <span class="fit-body"><span class="fit-title">IVI 서비스별 검증 전략</span><span class="fit-done">HVAC, 차량 설정, 클러스터 연동, 미디어를 서비스별로 나눠 테스트했습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 72개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">IVI 서비스별 검증 전략</span><span class="fit-done">HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 깨지면 큰 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 78개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=gating">
               <span class="fit-num">02</span>
-              <span class="fit-body"><span class="fit-title">Smoke · Sanity · Regression 게이팅</span><span class="fit-done">smoke 13개, sanity 55개, regression 49개로 나누고 PR, main, Nightly마다 돌리는 범위를 다르게 했습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 13개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">Smoke · Sanity · Regression 게이팅</span><span class="fit-done">smoke 13개, sanity 25개, regression 85개를 고르는 기준, 시간, 통과 조건을 정하고 PR, main, Nightly, Release마다 돌리는 범위를 나눴습니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 13개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=e2e">
               <span class="fit-num">03</span>
               <span class="fit-body"><span class="fit-title">UI와 CarProperty/VHAL을 잇는 E2E</span><span class="fit-done">화면 조작이 차량 신호로, 신호 변화가 화면으로 이어지는지 양쪽을 봤습니다. 좌석과 문은 area마다 확인합니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 31개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 31개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=integration">
               <span class="fit-num">04</span>
-              <span class="fit-body"><span class="fit-title">터치부터 하위 연동까지 통합 검증</span><span class="fit-done">음성과 터치가 차량 신호까지, 신호 변화가 경고와 충전소 안내까지 이어지는지 확인했습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 10개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">터치부터 하위 연동까지 통합 검증</span><span class="fit-done">AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(IVI_HvacStatus)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 13개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
-            <li class="fit-item"><a class="fit-row" href="docs/phase7-pleos.html#5-테스트">
+            <li class="fit-item"><a class="fit-row" href="docs/phase7-layout.html#5-테스트">
               <span class="fit-num">05</span>
-              <span class="fit-body"><span class="fit-title">프레임워크와 스크립트 유지보수</span><span class="fit-done">화면 객체로 테스트와 화면을 나눠 둬서, 7단계 화면 개편 때 테스트 64개 중 1개만 고쳤습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">7단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">프레임워크와 스크립트 유지보수</span><span class="fit-done">7단계에서 아래 바 구성이 바뀌었을 때 화면 객체(screens.py)의 여는 경로만 고쳤고, 화면 개편 때문에 바꾼 테스트는 기존 64개 가운데 1개입니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">7단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=injection">
               <span class="fit-num">06</span>
-              <span class="fit-body"><span class="fit-title">ADB · shell · CarPropertyManager로 Property Injection</span><span class="fit-done">속도, 기어, 주행 가능 거리처럼 읽기 전용인 신호는 dumpsys로 VHAL에 직접 넣었습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 34개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">ADB · shell · CarPropertyManager로 Property Injection</span><span class="fit-done">앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 34개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
-            <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=flaky">
+            <li class="fit-item"><a class="fit-row" href="docs/flaky-report.html">
               <span class="fit-num">07</span>
-              <span class="fit-body"><span class="fit-title">Flaky 최소화 · 병렬 실행</span><span class="fit-done">재시도 기록, 격리 목록, flaky 통계를 만들고 두 기기를 병렬로 돌렸습니다. 이번 실행의 재시도는 0번입니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">재시도 0<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">Flaky 최소화 · 병렬 실행</span><span class="fit-done">두 기기를 병렬로 5번 반복해 테스트 1,250건을 돌렸고, 재시도로 통과한 것(flaky)은 0건입니다. 재시도 기록, 격리 목록, flaky 통계를 직접 만들었습니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">반복 실행 통계<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>
         </div>
         </div>
         <div class="fit-col">
         <div class="fit-group">
-          <h3 class="fit-group-title">자격요건 <span>5 / 5</span></h3>
+          <h3 class="fit-group-title">자격요건 <span>5개</span></h3>
           <ol class="fit-list">
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=android">
               <span class="fit-num">08</span>
-              <span class="fit-body"><span class="fit-title">Android/AAOS 테스트 자동화 구축과 운영</span><span class="fit-done">AAOS 에뮬레이터와 태블릿에서 E2E 123개를 돌리고, 테스트마다 끝난 화면을 남겼습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 123개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">Android/AAOS 테스트 자동화 구축과 운영</span><span class="fit-done">AAOS 에뮬레이터와 태블릿에서 E2E 129개를 돌리고, 테스트마다 끝난 화면을 남겼습니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 129개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase3-framework.html#구조">
               <span class="fit-num">09</span>
-              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 61개 있습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 71개 있습니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase1-spike.html#appium을-aaos에-붙일-때-필요한-것">
               <span class="fit-num">10</span>
               <span class="fit-body"><span class="fit-title">Appium 등 UI 자동화 도구</span><span class="fit-done">Appium(UiAutomator2)을 AAOS의 다중 사용자 환경(user 10)에 붙여 썼습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">1단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-side"><span class="fit-dest">1단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
-            <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#5-결함과-원인-분석">
+            <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#3-결함과-원인-분석">
               <span class="fit-num">11</span>
               <span class="fit-body"><span class="fit-title">ADB · Logcat · Shell</span><span class="fit-done">실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">결함 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-side"><span class="fit-dest">결함 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#8-3-github-실행-기록">
               <span class="fit-num">12</span>
               <span class="fit-body"><span class="fit-title">Git · CI/CD</span><span class="fit-done">PR 단위로 작업했고, GitHub Actions가 PR마다 빌드와 단위 테스트를 돌립니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">실행 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-side"><span class="fit-dest">실행 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>
         </div>
         <div class="fit-group">
-          <h3 class="fit-group-title">우대사항 <span>1 / 4, 일부 3</span></h3>
+          <h3 class="fit-group-title">우대사항 <span>4개</span></h3>
           <ol class="fit-list">
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=vhal">
               <span class="fit-num">13</span>
               <span class="fit-body"><span class="fit-title">VHAL · CarService · CarPropertyManager</span><span class="fit-done">신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.</span></span>
-              <span class="fit-side"><span class="fit-state is-done">완료</span><span class="fit-dest">테스트 35개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              <span class="fit-side"><span class="fit-dest">테스트 35개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=network">
               <span class="fit-num">14</span>
@@ -395,7 +433,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/traceability.html">
               <span class="fit-num">16</span>
-              <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span><span class="fit-done">요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 후방 카메라가 2초 안에 뜨는지(FMVSS 111) 잽니다. 인증이나 심사 경험은 없습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span><span class="fit-done">요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-partial">개념 적용</span><span class="fit-dest">추적표<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>
@@ -405,65 +443,140 @@ footer a:hover { color: var(--ink); }
     </section>
     <!-- fit:end -->
 
-    <!-- stats:start (build-docs.mjs 가 results.json 으로 채운다) -->
-    <section class="stats-section" aria-label="최근 결과">
-      <div class="stats">
-        <a class="card stat" href="docs/test-results.html">
-          <p class="eyebrow">E2E 테스트</p>
-          <p class="headline">123개</p>
-          <p class="body-sm subtle">두 기기에서 같은 테스트 코드</p>
-        </a>
-        <a class="card stat" href="docs/test-results.html">
-          <p class="eyebrow">AAOS 에뮬레이터</p>
-          <p class="headline">121개 통과</p>
-          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 10분 11초</p>
-        </a>
-        <a class="card stat" href="docs/test-results.html">
-          <p class="eyebrow">태블릿 (Mock)</p>
-          <p class="headline">116개 통과</p>
-          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 9분 44초</p>
-        </a>
-        <a class="card stat" href="docs/test-results.html?req=flaky">
-          <p class="eyebrow">실패와 재시도</p>
-          <p class="headline">0건</p>
-          <p class="body-sm subtle">두 기기에서 238번 실행</p>
-        </a>
+    <section id="arch">
+      <div class="section-head">
+        <p class="eyebrow">구조</p>
+        <h2 class="display-md">테스트가 화면과 신호를 오가는 길</h2>
+        <p class="body-lg muted">테스트 코드에는 확인할 내용만 적고, 화면을 찾고 누르는 일은 화면 객체가, 신호를 넣고 읽는 일은 차량 어댑터가 합니다. 기기마다 다른 점은 어댑터 안에서 처리합니다.</p>
       </div>
+      <figure class="shot-card arch-figure">
+        <div class="arch-scroll">
+        <svg viewBox="0 0 1020 400" role="img" aria-labelledby="arch-svg-title arch-svg-desc" font-family="Inter, system-ui, sans-serif">
+          <title id="arch-svg-title">테스트 환경 구조</title>
+          <desc id="arch-svg-desc">작업 PC의 pytest가 화면 객체로 Appium을 거쳐 앱 화면을 조작하고, 차량 어댑터로 adb를 거쳐 CarService와 에뮬레이터 VHAL의 값을 넣고 읽는다. 앱은 CarPropertyManager로 CarService와 VHAL을 쓴다. PC 안의 가상 ECU가 가상 CAN 버스로 보낸 프레임은 CAN 게이트웨이가 VHAL에 넣고, 공조 값은 게이트웨이가 읽어 CAN 프레임으로 보낸다. 태블릿에서는 CarService와 VHAL 대신 앱 안의 Mock 차량을 쓴다.</desc>
+          <defs>
+            <marker id="arch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--primary-hover)"/></marker>
+            <marker id="arch-arrow-mock" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--ink-subtle)"/></marker>
+          </defs>
+          <rect class="arch-zone" x="8" y="8" width="392" height="384" rx="12"/>
+          <text class="arch-zone-label" x="24" y="32">작업 PC (Test Bench)</text>
+          <rect class="arch-zone" x="420" y="8" width="592" height="252" rx="12"/>
+          <text class="arch-zone-label" x="436" y="32">AAOS 에뮬레이터</text>
+
+          <rect class="arch-box" x="24" y="110" width="110" height="60" rx="8"/>
+          <text class="arch-title" x="79" y="136" text-anchor="middle">pytest</text>
+          <text class="arch-sub" x="79" y="156" text-anchor="middle">E2E 테스트</text>
+
+          <rect class="arch-box" x="160" y="50" width="220" height="56" rx="8"/>
+          <text class="arch-title" x="176" y="74">화면 객체</text>
+          <text class="arch-sub" x="176" y="94">screens.py</text>
+          <rect class="arch-box" x="160" y="170" width="220" height="56" rx="8"/>
+          <text class="arch-title" x="176" y="194">차량 어댑터</text>
+          <text class="arch-sub" x="176" y="214">vehicle.py · adb</text>
+          <rect class="arch-box" x="160" y="300" width="220" height="56" rx="8"/>
+          <text class="arch-title" x="176" y="324">CAN 게이트웨이</text>
+          <text class="arch-sub" x="176" y="344">can_gateway.py · 모의</text>
+          <rect class="arch-box is-mock" x="24" y="300" width="96" height="56" rx="8"/>
+          <text class="arch-title" x="72" y="324" text-anchor="middle">가상 ECU</text>
+          <text class="arch-sub" x="72" y="344" text-anchor="middle">python-can</text>
+
+          <rect class="arch-box" x="480" y="50" width="220" height="56" rx="8"/>
+          <text class="arch-title" x="496" y="74">IVI 앱 화면</text>
+          <text class="arch-sub" x="496" y="94">Compose · testTag</text>
+          <rect class="arch-box" x="480" y="170" width="220" height="56" rx="8"/>
+          <text class="arch-title" x="496" y="194">CarService</text>
+          <text class="arch-sub" x="496" y="214">앱은 CarPropertyManager로</text>
+          <rect class="arch-box" x="760" y="170" width="236" height="56" rx="8"/>
+          <text class="arch-title" x="776" y="194">에뮬레이터 VHAL</text>
+          <text class="arch-sub" x="776" y="214">가상 차량 값 (실차 아님)</text>
+          <rect class="arch-box is-mock" x="760" y="50" width="236" height="56" rx="8"/>
+          <text class="arch-sub" x="776" y="74">태블릿에서는 CarService, VHAL 대신</text>
+          <text class="arch-sub" x="776" y="94">앱 안의 Mock 차량 (am broadcast)</text>
+
+          <path class="arch-line" d="M134 124H147V78H156" marker-end="url(#arch-arrow)"/>
+          <path class="arch-line" d="M134 156H147V198H156" marker-end="url(#arch-arrow)"/>
+          <path class="arch-line" d="M380 78H476" marker-end="url(#arch-arrow)"/>
+          <text class="arch-label" x="429" y="70" text-anchor="middle">Appium</text>
+          <path class="arch-line" d="M590 110V166" marker-start="url(#arch-arrow)" marker-end="url(#arch-arrow)"/>
+          <text class="arch-label" x="598" y="143">읽기 · 쓰기</text>
+          <path class="arch-line" d="M704 198H756" marker-start="url(#arch-arrow)" marker-end="url(#arch-arrow)"/>
+          <path class="arch-line" d="M380 188H476" marker-end="url(#arch-arrow)"/>
+          <text class="arch-label" x="429" y="180" text-anchor="middle">cmd car_service</text>
+          <path class="arch-line" d="M380 212H430V244H830V230" marker-end="url(#arch-arrow)"/>
+          <text class="arch-label" x="590" y="239" text-anchor="middle">dumpsys VHAL --set</text>
+          <path class="arch-line is-mock" d="M384 328H900V230" marker-start="url(#arch-arrow-mock)" marker-end="url(#arch-arrow-mock)"/>
+          <text class="arch-label" x="640" y="320" text-anchor="middle">adb: 프레임 값을 VHAL에 넣고, 공조 값을 읽어 보냄</text>
+          <path class="arch-line is-mock" d="M124 328H156" marker-start="url(#arch-arrow-mock)" marker-end="url(#arch-arrow-mock)"/>
+          <text class="arch-label" x="140" y="378" text-anchor="middle">가상 CAN 버스</text>
+          <path class="arch-line is-mock" d="M79 172V296" marker-end="url(#arch-arrow-mock)"/>
+          <text class="arch-note" x="436" y="378">점선은 PC 안의 모의 환경입니다. 실차, HIL, CAN 장비는 쓰지 않았습니다.</text>
+        </svg>
+        </div>
+        <figcaption class="shot-caption">
+          <span class="body-sm">값을 넣는 길이 둘인 이유: 설정 온도처럼 앱이 쓰는 값은 앱과 같은 CarService 경로로, 속도·기어처럼 차량(ECU) 쪽에서 바뀌는 값은 VHAL에 바로 넣습니다.</span>
+          <a class="caption inline-link" href="docs/portfolio.html#5-4-신호-주입-명령">주입 명령 비교</a>
+        </figcaption>
+      </figure>
     </section>
-    <!-- stats:end -->
+
+    <section id="devices">
+      <div class="section-head">
+        <p class="eyebrow">기기</p>
+        <h2 class="display-md">같은 테스트를 두 기기에서</h2>
+        <p class="body-lg muted">기기 종류는 자동으로 판별합니다. 기기에 CarService가 있으면 VHAL을, 없으면 앱 안의 Mock 차량 서비스를 씁니다. 두 기기는 병렬로 돌립니다.</p>
+      </div>
+      <!-- devices:start (build-docs.mjs 가 results.json 으로 채운다) -->
+    <div class="grid-2">
+        <article class="card device">
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
+          <h3 class="card-title">AAOS 에뮬레이터</h3>
+          <p class="body-sm muted">CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거칩니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.</p>
+          <div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>통과 127, 건너뜀 1, 알려진 결함 1</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>9분 45초</span></div>
+            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">CarPropertyManager</span></div>
+          </div>
+        </article>
+        <article class="card device">
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
+          <h3 class="card-title">Android 태블릿</h3>
+          <p class="body-sm muted">화웨이 태블릿에서는 앱 안의 Mock 차량 서비스를 씁니다. AAOS 전용 테스트는 건너뜁니다. 터치 지연, 백그라운드 강제 종료 같은 실기기 문제는 이 기기에서 나왔습니다.</p>
+          <div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>통과 122, 건너뜀 7</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>10분 15초</span></div>
+            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">MockVehicleDataSource</span></div>
+          </div>
+        </article>
+      </div>
+      <p class="body-sm subtle device-note">두 기기를 같은 시각에 병렬로 시작해 끝까지 10분 16초 걸렸습니다. 차례로 돌렸다면 약 20분 0초입니다.</p>
+      <!-- devices:end -->
+    </section>
 
     <section id="screens">
       <div class="section-head">
         <p class="eyebrow">화면</p>
-        <h2 class="display-lg">테스트 대상 앱</h2>
-        <p class="body-lg muted">Kotlin과 Compose로 만든 IVI 앱입니다. 화면은 왼쪽 주행 정보, 위쪽 상태 바, 오른쪽 앱 영역, 아래쪽 공조 바로 나뉩니다. 공조와 도어 잠금, 주행 정보는 차량 신호와 연결돼 있습니다.</p>
+        <h2 class="display-md">테스트 대상 앱</h2>
+        <p class="body-lg muted">Kotlin과 Compose로 만든 가상 IVI 앱입니다. 왼쪽 주행 정보 패널, 위쪽 상태 바, 오른쪽 앱 영역, 아래쪽 공조 바로 나뉩니다. 공조와 도어 잠금, 주행 정보는 차량 신호와 연결돼 있습니다.</p>
       </div>
-      <figure class="shot-card lead-shot">
-        <img src="../docs/images/p9-guidance.png" width="1024" height="768" alt="주행 중 경로 안내 화면. 왼쪽에 속도 120 km/h와 주행 정보, 가운데에 지도와 경로 안내, 오른쪽에 블루투스 오디오, 아래에 앱 바와 공조 바가 있다.">
-        <figcaption class="shot-caption">
-          <span class="body-sm">주행 중 경로 안내</span>
-          <span class="caption subtle">AAOS 에뮬레이터 · <a class="inline-link" href="docs/test-results.html#test_guidance_counts_down_with_vehicle_speed">test_guidance_counts_down_with_vehicle_speed</a>가 끝난 화면</span>
-        </figcaption>
-      </figure>
       <div class="grid-3">
         <article class="card feature">
-          <img src="../docs/images/p9-climate-full.png" width="1024" height="768" alt="공조 화면. FULL을 켜서 양쪽 온도가 16.0°C, 풍량이 7이다.">
+          <img src="../docs/images/p9-guidance.png" width="1024" height="768" loading="lazy" alt="주행 중 경로 안내 화면. 왼쪽에 속도 120 km/h와 주행 정보, 가운데에 지도와 경로 안내, 오른쪽에 블루투스 오디오, 아래에 앱 바와 공조 바가 있다.">
+          <div class="feature-text">
+            <h3 class="card-title">주행 중 경로 안내</h3>
+            <p class="body-sm muted">속도 신호를 넣으면 남은 거리가 줄어듭니다. 왼쪽 주행 정보 패널은 계기판 역할을 하는 앱 안의 화면입니다.</p>
+            <a class="feature-link" href="docs/test-results.html#test_guidance_counts_down_with_vehicle_speed">경로 안내 테스트 결과</a>
+          </div>
+        </article>
+        <article class="card feature">
+          <img src="../docs/images/p9-climate-full.png" width="1024" height="768" loading="lazy" alt="공조 화면. FULL을 켜서 양쪽 온도가 16.0°C, 풍량이 7이다.">
           <div class="feature-text">
             <h3 class="card-title">전 좌석 공조</h3>
-            <p class="body-sm muted">온도, A/C, FULL(최대 냉방), AUTO, 풍량, 김서림, 좌석 열선을 CarProperty 신호로 읽고 씁니다.</p>
+            <p class="body-sm muted">온도, A/C, FULL(최대 냉방), AUTO, 풍량, 김서림, 좌석 열선을 CarProperty 신호로 읽고 씁니다. 범위 끝과 범위 밖 값도 확인합니다.</p>
             <a class="feature-link" href="docs/test-results.html#file-test_climate">공조 테스트 결과</a>
           </div>
         </article>
         <article class="card feature">
-          <img src="../docs/images/p9-assistant.png" width="1024" height="768" alt="AI 어시스턴트 대화 화면. 조수석에서 '나 더워'라고 하자 조수석 온도를 21.0°C로 낮췄다고 답한다.">
-          <div class="feature-text">
-            <h3 class="card-title">AI 어시스턴트</h3>
-            <p class="body-sm muted">한 문장에 명령이 여러 개 있어도 처리하고, 말한 사람의 좌석에 맞춰 동작합니다. 정해 둔 규칙으로 움직이며 주행 중에는 일부 명령을 거절합니다.</p>
-            <a class="feature-link" href="docs/test-results.html#file-test_assistant">어시스턴트 테스트 결과</a>
-          </div>
-        </article>
-        <article class="card feature">
-          <img src="../docs/images/p9-lowrange.png" width="1024" height="768" alt="주행 가능 거리가 29 km로 떨어져 '충전 필요' 표시와 충전소 안내 카드가 뜬 화면">
+          <img src="../docs/images/p9-lowrange.png" width="1024" height="768" loading="lazy" alt="주행 가능 거리가 29 km로 떨어져 '충전 필요' 표시와 충전소 안내 카드가 뜬 화면">
           <div class="feature-text">
             <h3 class="card-title">차량 신호</h3>
             <p class="body-sm muted">주행 가능 거리, 배터리, 외기 온도, 도어 잠금을 보여 줍니다. 거리가 30 km 이하로 떨어지면 가까운 충전소를 안내합니다.</p>
@@ -471,57 +584,27 @@ footer a:hover { color: var(--ink); }
           </div>
         </article>
         <article class="card feature">
-          <img src="../docs/images/p9-reverse.png" width="1024" height="768" alt="기어가 R이 되어 후방 카메라 화면과 주차 가이드 선이 뜬 화면">
+          <img src="../docs/images/p9-reverse.png" width="1024" height="768" loading="lazy" alt="기어가 R이 되어 후방 카메라 화면과 주차 가이드 선이 뜬 화면">
           <div class="feature-text">
             <h3 class="card-title">후방 카메라</h3>
-            <p class="body-sm muted">기어 신호가 R이 되면 모든 화면 위에 카메라 화면과 주차 가이드 선이 뜹니다.</p>
+            <p class="body-sm muted">기어 신호가 R이 되면 모든 화면 위에 카메라 화면과 주차 가이드 선이 뜹니다. 카메라 영상은 가짜 화면입니다.</p>
             <a class="feature-link" href="docs/test-results.html#file-test_rear_camera">후방 카메라 테스트 결과</a>
           </div>
         </article>
         <article class="card feature">
-          <img src="../docs/images/p9-video.png" width="1024" height="768" alt="영상 화면에서 직접 찍은 고속도로 블랙박스 영상이 재생되고 있다.">
+          <img src="../docs/images/p9-assistant.png" width="1024" height="768" loading="lazy" alt="AI 어시스턴트 대화 화면. 조수석에서 '나 더워'라고 하자 조수석 온도를 21.0°C로 낮췄다고 답한다.">
           <div class="feature-text">
-            <h3 class="card-title">영상과 미디어</h3>
-            <p class="body-sm muted">직접 찍은 블랙박스 영상을 재생합니다. 주행 중에는 영상이 멈추고, 차를 세우면 멈춘 자리부터 이어집니다. 음악과 라디오는 주행 중에도 쓸 수 있습니다.</p>
-            <a class="feature-link" href="docs/test-results.html#test_video_resumes_where_it_stopped">영상 테스트 결과</a>
+            <h3 class="card-title">AI 어시스턴트</h3>
+            <p class="body-sm muted">한 문장에 명령이 여러 개 있어도 처리하고, 말한 사람의 좌석에 맞춰 동작합니다. LLM이 아니라 정해 둔 규칙으로 움직입니다.</p>
+            <a class="feature-link" href="docs/test-results.html#file-test_assistant">어시스턴트 테스트 결과</a>
           </div>
         </article>
         <article class="card feature">
-          <img src="../docs/images/p9-voice.png" width="1024" height="768" alt="음성 명령으로 운전석 온도를 24.0°C로 맞춘 화면">
+          <img src="../docs/images/p9-video.png" width="1024" height="768" loading="lazy" alt="영상 화면에서 직접 찍은 고속도로 블랙박스 영상이 재생되고 있다.">
           <div class="feature-text">
-            <h3 class="card-title">음성 명령</h3>
-            <p class="body-sm muted">"운전석 온도 24도로 맞춰줘"라고 하면 차량의 운전석 온도 신호가 실제로 24.0°C가 됐는지까지 확인합니다.</p>
-            <a class="feature-link" href="docs/test-results.html#file-test_voice">음성 명령 테스트 결과</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="devices">
-      <div class="section-head">
-        <p class="eyebrow">기기</p>
-        <h2 class="display-lg">같은 테스트를 두 기기에서</h2>
-        <p class="body-lg muted">기기 종류는 자동으로 판별합니다. 기기에 CarService가 있으면 VHAL을, 없으면 앱 안의 Mock 차량 서비스를 씁니다.</p>
-      </div>
-      <div class="grid-2">
-        <article class="card device">
-          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
-          <h3 class="card-title">AAOS 에뮬레이터</h3>
-          <p class="body-sm muted">에뮬레이터의 CarService와 VHAL을 씁니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.</p>
-          <div>
-            <div class="device-row body-sm"><span class="subtle">결과</span><span>121개 통과, 1개 건너뜀, 1개 알려진 결함</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>10분 10초</span></div>
-            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">CarPropertyManager</span></div>
-          </div>
-        </article>
-        <article class="card device">
-          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
-          <h3 class="card-title">Android 태블릿</h3>
-          <p class="body-sm muted">화웨이 태블릿에서는 Mock 차량 서비스를 씁니다. AAOS 전용 테스트 7개는 건너뜁니다.</p>
-          <div>
-            <div class="device-row body-sm"><span class="subtle">결과</span><span>116개 통과, 7개 건너뜀</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>9분 43초</span></div>
-            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">MockVehicleDataSource</span></div>
+            <h3 class="card-title">영상과 미디어</h3>
+            <p class="body-sm muted">직접 찍은 블랙박스 영상을 재생합니다. 주행 중에는 영상이 멈추고, 차를 세우면 멈춘 자리부터 이어집니다.</p>
+            <a class="feature-link" href="docs/test-results.html#test_video_resumes_where_it_stopped">영상 테스트 결과</a>
           </div>
         </article>
       </div>
@@ -530,13 +613,13 @@ footer a:hover { color: var(--ink); }
     <section id="phases">
       <div class="section-head">
         <p class="eyebrow">진행 상황</p>
-        <h2 class="display-lg">단계별 진행</h2>
+        <h2 class="display-md">단계별 진행</h2>
       </div>
       <div>
         <div class="changelog-row">
           <span class="mono subtle">09</span>
-          <div><h3 class="card-title">Test Bench 확장</h3><p class="body-sm muted">Test Bench REST API와 원격 전원 제어, 가상 CAN 버스와 VHAL 게이트웨이, 요구사항 추적표를 붙였습니다. 실제 장비가 아니라 PC 안의 모의 환경입니다.</p></div>
-          <span class="caption subtle">E2E 123개</span>
+          <div><h3 class="card-title">Test Bench 확장과 검토 반영</h3><p class="body-sm muted">Test Bench REST API와 원격 전원 제어, 가상 CAN 버스와 VHAL 게이트웨이, 요구사항 추적표를 붙였습니다(PC 안의 모의 환경). 경계값 테스트를 더해 온도 버튼 결함 1건을 찾아 고쳤고, 두 기기에서 전체를 5회 반복해 안정성을 쟀습니다.</p></div>
+          <span class="caption subtle">E2E 129개</span>
         </div>
         <div class="changelog-row">
           <span class="mono subtle">08</span>
@@ -545,7 +628,7 @@ footer a:hover { color: var(--ink); }
         </div>
         <div class="changelog-row">
           <span class="mono subtle">07</span>
-          <div><h3 class="card-title">Pleos Connect 구조</h3><p class="body-sm muted">화면을 세 영역으로 나누고 분할 화면, 아래 공조 바, AI 어시스턴트, 알림 센터를 넣었습니다.</p></div>
+          <div><h3 class="card-title">3영역 화면 개편</h3><p class="body-sm muted">양산 IVI 공개 자료의 3영역 구조를 참고해 분할 화면, 아래 공조 바, AI 어시스턴트, 알림 센터를 넣었습니다.</p></div>
           <span class="caption subtle">E2E 84개</span>
         </div>
         <div class="changelog-row">
@@ -575,11 +658,11 @@ footer a:hover { color: var(--ink); }
       <div class="run-grid">
         <div class="section-head" style="margin-bottom:0">
           <p class="eyebrow">실행</p>
-          <h2 class="display-lg">실행 방법</h2>
+          <h2 class="display-md">실행 방법</h2>
           <ol class="run-steps body-sm muted">
             <li><span>Automotive 에뮬레이터를 <span class="mono">-writable-system</span>으로 켭니다. 프로젝트와 AVD는 영문 경로에 둡니다.</span></li>
             <li><span>Appium 서버를 <span class="mono">127.0.0.1:4723</span>에 띄웁니다.</span></li>
-            <li><span>pytest를 돌립니다. 기기가 1대면 <span class="mono">--serial</span>은 빼도 됩니다.</span></li>
+            <li><span>pytest를 돌립니다. 기기가 1대면 <span class="mono">--serial</span>은 빼도 됩니다. 자세한 방법은 <a class="inline-link" href="docs/run.html">실행 문서</a>에 있습니다.</span></li>
           </ol>
         </div>
         <div class="shot-card">
@@ -587,11 +670,12 @@ footer a:hover { color: var(--ink); }
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
-<span class="c"># 빌드 게이트</span>
+<span class="c"># 빌드 게이트 (smoke)</span>
 .venv\Scripts\python -m pytest -m smoke
 
 <span class="c"># 두 기기 병렬, 실패하면 한 번 더</span>
-.venv\Scripts\python tools\run_bench.py -m "smoke or sanity" --reruns 1</pre>
+.venv\Scripts\python tools\run_bench.py -m "smoke or sanity"
+    --reruns 1</pre>
         </div>
       </div>
     </section>
@@ -600,10 +684,10 @@ python -m venv .venv
       <div class="cta-banner">
         <div class="copy">
           <h2 class="headline">단계별 설계와 검증 기록</h2>
-          <p class="body-sm muted">단계마다 바꾼 내용과 찾은 결함을 문서로 남겼습니다.</p>
+          <p class="body-sm muted">단계마다 바꾼 내용과 찾은 결함을 문서로 남겼습니다. 판단의 이유와 측정값은 결정 기록에 모았습니다.</p>
         </div>
         <div class="hero-actions">
-          <a class="btn btn-secondary" href="docs/phase1-spike.html">1단계부터</a>
+          <a class="btn btn-secondary" href="docs/decisions.html">결정 기록</a>
           <a class="btn btn-primary" href="docs/phase9-bench.html">최신 기록 보기</a>
         </div>
       </div>
@@ -618,7 +702,8 @@ python -m venv .venv
     <nav aria-label="문서">
       <a href="docs/portfolio.html">포트폴리오</a>
       <a href="docs/readme.html">README</a>
-      <a href="docs/phase2-app.html">앱 빌드</a>
+      <a href="docs/run.html">실행 방법</a>
+      <a href="docs/decisions.html">결정 기록</a>
       <a href="docs/phase3-framework.html">테스트 프레임워크</a>
       <a href="docs/phase4-operations.html">운영</a>
     </nav>

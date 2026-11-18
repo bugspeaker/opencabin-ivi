@@ -12,11 +12,5 @@ build/
 node_modules/
 *.iml
 
-# 저장소에 넣지 않는 개인·참고 자료
-# 참고 사진(보도 사진 등 타사 이미지): 저작권 때문에 공개 저장소에 올리지 않는다
-Pleosconnect/
-# 지원 준비 메모 (개인 문서)
-docs/42dot-fit.md
-
 # 블랙박스 주행 영상 (번호판 · 위치가 담긴 개인 자료). tools/push_drive_videos.py 로 기기에만 올린다
 .drive/

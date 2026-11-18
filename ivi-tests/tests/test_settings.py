@@ -17,7 +17,7 @@ def test_mph_setting_converts_vehicle_speed(app, car):
 
 
 @pytest.mark.req("SET-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_volume_steps(app):
     """볼륨은 한 단계씩 오르내립니다.
     기본값 15에서 한 번 올리고 두 번 내리면 14가 됩니다.

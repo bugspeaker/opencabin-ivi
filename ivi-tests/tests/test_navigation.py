@@ -24,7 +24,7 @@ def test_guidance_counts_down_with_vehicle_speed(app, car):
 
 
 @pytest.mark.req("NAV-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_parked_vehicle_does_not_advance_route(app, car):
     """차가 서 있으면 남은 거리가 줄지 않습니다.
     안내가 시간이 아니라 속도 신호를 따라 진행된다는 것을 확인합니다.
@@ -38,7 +38,7 @@ def test_parked_vehicle_does_not_advance_route(app, car):
 
 
 @pytest.mark.req("DRIVE-03")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_search_locked_while_driving_but_favorites_work(app, car):
     """주행 중에는 검색 입력이 막히지만, 즐겨찾기로는 목적지를 고를 수 있습니다."""
     nav = app.navigation()
@@ -53,7 +53,7 @@ def test_search_locked_while_driving_but_favorites_work(app, car):
 
 
 @pytest.mark.req("NAV-01")
-@pytest.mark.sanity
+@pytest.mark.regression
 def test_search_filters_destinations(app):
     """'역'으로 검색하면 판교역과 서울역만 남습니다."""
     nav = app.navigation()

@@ -20,6 +20,7 @@ import java.util.Locale
  *                --ei heat_driver 0 --ei heat_passenger 0 --ez doors_locked true --ef range_km 320 --ef battery_pct 80 --ef outside_c 18
  *   읽기: adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.GET
  *           → "Broadcast completed: result=0, data="speed_kmh=50.0;gear=D;..."
+ *   SET 의 응답: data="applied=gear,speed_kmh" (받은 extra 이름)
  *
  * 주행 중 제한 규칙은 AAOS 기본 설정과 맞춘다: P 가 아니고 속도가 0 보다 크면 제한.
  */
@@ -39,7 +40,12 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                ACTION_SET -> applyExtras(intent)
+                ACTION_SET -> {
+                    applyExtras(intent)
+                    // 받은 값의 이름을 돌려준다. 테스트가 주입이 앱에 들어갔는지 그 자리에서 확인한다
+                    // (화웨이는 꺼진 앱에 브로드캐스트를 전달하지 않아서, 전에는 뒤의 대기에서 엉뚱하게 실패했다)
+                    resultData = "applied=" + (intent.extras?.keySet()?.sorted()?.joinToString(",") ?: "")
+                }
                 ACTION_GET -> resultData = describe(_state.value)
             }
         }

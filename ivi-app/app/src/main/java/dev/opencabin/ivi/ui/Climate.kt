@@ -130,10 +130,10 @@ private fun SeatPanel(
         TemperatureBar(celsius)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             TempButton("−", "${seat.tag}_temp_down", celsius != null && celsius > HvacSpec.MIN_C, IviColors.Cool) {
-                setTemperature(seat, celsius!! - HvacSpec.STEP_C, true)
+                setTemperature(seat, HvacSpec.stepDown(celsius!!), true)
             }
             TempButton("+", "${seat.tag}_temp_up", celsius != null && celsius < HvacSpec.MAX_C, IviColors.Warm) {
-                setTemperature(seat, celsius!! + HvacSpec.STEP_C, true)
+                setTemperature(seat, HvacSpec.stepUp(celsius!!), true)
             }
         }
         // 좌석 열선: 차량 신호 HVAC_SEAT_TEMPERATURE. 누를 때마다 꺼짐 → 2단 → 1단 → 꺼짐

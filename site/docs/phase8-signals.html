@@ -22,16 +22,19 @@
     <nav aria-label="문서 목록">
         <a href="portfolio.html">포트폴리오</a>
         <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="decisions.html">결정 기록</a>
         <a href="traceability.html">요구사항 추적표</a>
         <a href="requirements.html">요구사항</a>
         <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
         <a href="phase1-spike.html">1. 기술 검증</a>
         <a href="phase2-app.html">2. 앱</a>
         <a href="phase3-framework.html">3. 테스트 프레임워크</a>
         <a href="phase4-operations.html">4. 운영 · CI</a>
         <a href="phase5-design.html">5. 재점검과 디자인</a>
         <a href="phase6-features.html">6. 기능 확장</a>
-        <a href="phase7-pleos.html">7. 3영역 화면 개편</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
         <a href="phase8-signals.html" aria-current="page">8. 차량 신호 확장</a>
         <a href="phase9-bench.html">9. Test Bench 확장</a>
     </nav>
@@ -310,14 +313,14 @@
 <p>E2E는 84개에서 108개가 됐습니다. 새로 만든 24개는 모두 화면과 신호를 양쪽에서 보고, 같은 테스트가 AAOS(VHAL)와 태블릿(Mock)에서 모두 통과합니다.</p>
 <p>이날 태블릿은 처음에 adb <code>unauthorized</code> 상태였습니다. adb 서버를 다시 켠 뒤라 기기에서 USB 디버깅을 다시 승인해야 했습니다. USB 디버깅 승인, 설치 승인, 실행 순서로 진행했습니다.</p>
 <p>같은 묶음을 여러 번 돌리는 반복 안정성은 이번에 한 번만 봤습니다. 7단계의 두 번 반복에서 한 번 흔들렸던 <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a>은 이번 에뮬레이터 전체 실행 두 번(단독 한 번, 병렬 한 번)에서는 재현되지 않았습니다. 원인은 아직 확인하지 못했습니다.</p>
-<h2 id="6-42dot-test-automation-engineer-ivi-system"><a class="anchor" href="#6-42dot-test-automation-engineer-ivi-system" aria-hidden="true">#</a>6. 42dot Test Automation Engineer, IVI System</h2>
+<h2 id="6-채용-공고-항목과-이-단계"><a class="anchor" href="#6-채용-공고-항목과-이-단계" aria-hidden="true">#</a>6. 채용 공고 항목과 이 단계</h2>
 <div class="table"><table><thead><tr>
 <th>요구 역량</th>
 <th>이 단계에서 보여 주는 것</th>
 </tr>
 </thead><tbody><tr>
 <td>AAOS IVI 주요 서비스(HVAC, 차량 설정, 클러스터 연동, 미디어) 검증</td>
-<td>HVAC 신호 여섯 가지와 도어를 연결하고, 클러스터 역할을 하는 주행 정보에 차량 신호 세 가지를 보여 줍니다.</td>
+<td>HVAC 신호 여섯 가지와 도어를 연결하고, 앱 왼쪽의 주행 정보 패널(계기판 역할)에 차량 신호 세 가지를 보여 줍니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 다루지 않았습니다.</td>
 </tr>
 <tr>
 <td>UI 상호작용과 CarProperty/VHAL을 아우르는 E2E 설계</td>
@@ -367,7 +370,7 @@
 <h3 id="7-2-화면과-문구"><a class="anchor" href="#7-2-화면과-문구" aria-hidden="true">#</a>7-2) 화면과 문구</h3>
 <ul>
 <li>상단 바 프로필에 로그인한 운전자 이름(조예훈)을 보여 줍니다. 설정 화면의 시스템 항목에도 계정 줄을 넣었습니다.</li>
-<li>내비게이션 &#39;회사&#39;의 주소를 42dot 근무지 주소(성남시 수정구 창업로40번길 20)로 바꿨습니다. 이름과 거리(8.7 km)는 테스트가 보고 있어서 그대로 뒀습니다.</li>
+<li>내비게이션 &#39;회사&#39;에 주소 줄을 넣었습니다(11-18부터 가상 주소). 이름과 거리(8.7 km)는 테스트가 보고 있어서 그대로 뒀습니다.</li>
 <li>에뮬레이터에서 화면을 하나씩 찍어 보며 어색한 곳을 고쳤습니다. 앱 목록의 위아래 줄이 어긋나던 것은 칸 너비를 같게 맞췄고, 줄글이던 설정의 시스템 정보는 이름과 값 줄로 나눴고, 공조 가운데 패널 아래가 비던 것은 묶음 간격을 고르게 했습니다.</li>
 <li>AI 어시스턴트 대답에 쓰던 &#39;(으)로&#39;, &#39;을(를)&#39; 같은 괄호 표기를 받침에 맞는 조사로 바꿨습니다(<code>CabinAssistant.josa</code>, 단위 테스트 2개 추가). 알림 문구도 &#39;합니다&#39; 말투로 맞췄습니다.</li>
 </ul>
@@ -415,7 +418,7 @@
 <p>영상에는 다른 차 번호판이 찍혀 있습니다. 결과 화면 중 번호판이 읽히는 두 장(두 기기의 <a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_video_resumes_where_it_stopped</code></a>)은 <code>publish_results.py --blur</code>로 그 부분을 흐리게 해서 올렸습니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-연결한-신호">1. 연결한 신호</a><a class="l2" href="#2-화면에서-달라진-것">2. 화면에서 달라진 것</a><a class="l2" href="#3-테스트-설계">3. 테스트 설계</a><a class="l3" href="#3-1-어댑터-carset_signal과-carsignal">3-1) 어댑터: car.set_signal()과 car.signal()</a><a class="l3" href="#3-2-테스트마다-기준-값으로-되돌리기-테스트-격리">3-2) 테스트마다 기준 값으로 되돌리기 (테스트 격리)</a><a class="l3" href="#3-3-토글-상태를-색이-아니라-checked로">3-3) 토글 상태를 색이 아니라 checked로</a><a class="l3" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개">3-4) 테스트 목록 (tests/test_vehicle_signals.py, 24개)</a><a class="l2" href="#4-진행하면서-잡은-것">4. 진행하면서 잡은 것</a><a class="l3" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-했음">4-1) 도어 잠금은 권한 목록까지 바꿔야 했음</a><a class="l3" href="#4-2-테스트-쪽-경쟁-조건-1건-제가-만든-것">4-2) 테스트 쪽 경쟁 조건 1건 (제가 만든 것)</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-42dot-test-automation-engineer-ivi-system">6. 42dot Test Automation Engineer, IVI System</a><a class="l2" href="#7-8단계-이후에-더한-것-2026-11-16">7. 8단계 이후에 더한 것 (2026-11-16)</a><a class="l3" href="#7-1-최대-냉방-화면의-full-버튼">7-1) 최대 냉방 (화면의 FULL 버튼)</a><a class="l3" href="#7-2-화면과-문구">7-2) 화면과 문구</a><a class="l3" href="#7-3-결과">7-3) 결과</a><a class="l3" href="#7-4-테스트별-결과-화면-2026-11-18">7-4) 테스트별 결과 화면 (2026-11-18)</a><a class="l3" href="#7-5-영상-화면에-실제-주행-영상-2026-11-18">7-5) 영상 화면에 실제 주행 영상 (2026-11-18)</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-연결한-신호">1. 연결한 신호</a><a class="l2" href="#2-화면에서-달라진-것">2. 화면에서 달라진 것</a><a class="l2" href="#3-테스트-설계">3. 테스트 설계</a><a class="l3" href="#3-1-어댑터-carset_signal과-carsignal">3-1) 어댑터: car.set_signal()과 car.signal()</a><a class="l3" href="#3-2-테스트마다-기준-값으로-되돌리기-테스트-격리">3-2) 테스트마다 기준 값으로 되돌리기 (테스트 격리)</a><a class="l3" href="#3-3-토글-상태를-색이-아니라-checked로">3-3) 토글 상태를 색이 아니라 checked로</a><a class="l3" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개">3-4) 테스트 목록 (tests/test_vehicle_signals.py, 24개)</a><a class="l2" href="#4-진행하면서-잡은-것">4. 진행하면서 잡은 것</a><a class="l3" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-했음">4-1) 도어 잠금은 권한 목록까지 바꿔야 했음</a><a class="l3" href="#4-2-테스트-쪽-경쟁-조건-1건-제가-만든-것">4-2) 테스트 쪽 경쟁 조건 1건 (제가 만든 것)</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-채용-공고-항목과-이-단계">6. 채용 공고 항목과 이 단계</a><a class="l2" href="#7-8단계-이후에-더한-것-2026-11-16">7. 8단계 이후에 더한 것 (2026-11-16)</a><a class="l3" href="#7-1-최대-냉방-화면의-full-버튼">7-1) 최대 냉방 (화면의 FULL 버튼)</a><a class="l3" href="#7-2-화면과-문구">7-2) 화면과 문구</a><a class="l3" href="#7-3-결과">7-3) 결과</a><a class="l3" href="#7-4-테스트별-결과-화면-2026-11-18">7-4) 테스트별 결과 화면 (2026-11-18)</a><a class="l3" href="#7-5-영상-화면에-실제-주행-영상-2026-11-18">7-5) 영상 화면에 실제 주행 영상 (2026-11-18)</a></nav>
 </div>
 
 </body>

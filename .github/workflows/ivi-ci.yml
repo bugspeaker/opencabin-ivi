@@ -4,11 +4,16 @@
 #  unit   (GitHub 호스트)   테스트 프레임워크 자체 검증 (기기 없음)
 #  e2e    (self-hosted Test Bench)  AAOS 에뮬레이터 + 태블릿에 같은 테스트를 병렬 실행
 #
-# 이벤트별 범위 (Shift-left: 빠른 것부터, 넓은 것은 Nightly)
-#  pull_request       smoke                   (약 30초, 머지 전 게이트)
-#  push(main)         smoke or sanity         (약 1~2분)
+# 이벤트별 범위 (Shift-left: 빠른 것부터, 넓은 것은 Nightly). 단계별 기준과 Release 게이트: docs/portfolio.md 4-1
+#  pull_request       smoke                   (13개, 기기당 약 35초, 머지 전 게이트)
+#  push(main)         smoke or sanity         (38개, 기기당 약 2분 15초, 두 기기 병렬)
 #  schedule(Nightly)  전체 (smoke+sanity+regression+spike)
-#  workflow_dispatch  입력한 마커
+#  workflow_dispatch  입력한 마커. Release 후보는 markers 를 비우고 repeat 3
+#  (시간은 2026-11-18 실측 합. docs/portfolio.md 4-1 표와 같다)
+#
+# 공개 저장소라 다른 사람의 PR 이 Test Bench(self-hosted) 에서 코드를 돌리지 못하게 한다:
+#  - e2e 는 이 저장소 안의 브랜치에서 온 PR 만 (포크 PR 은 build/unit 만)
+#  - workflow_dispatch 입력은 스크립트에 바로 넣지 않고 env 로 넘긴다 (명령 주입 방지)
 #
 # Test Bench 준비 (Windows PC 한 대, 준비되면 저장소 변수 IVI_BENCH=online 으로 e2e 를 켠다):
 #  - self-hosted runner, 라벨 `ivi-bench`. 이 PC 의 사용자 계정으로 실행 (AAOS priv-app 과 같은 debug 서명 키를 쓰려고)
@@ -78,7 +83,9 @@ jobs:
     needs: [build, unit]
     # Test Bench(self-hosted runner)가 켜져 있을 때만 돈다.
     # 저장소 변수 IVI_BENCH=online 이 없으면 건너뛴다 (러너 없이 job 이 무한 대기하지 않도록)
-    if: vars.IVI_BENCH == 'online'
+    if: >-
+      vars.IVI_BENCH == 'online' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: [self-hosted, windows, ivi-bench]
     # Test Bench 는 하나뿐이라 E2E 는 한 번에 하나만 돈다 (뒤에 온 실행은 기다린다).
     # build/unit 은 GitHub 호스트라 막지 않는다
@@ -122,14 +129,18 @@ jobs:
       - name: E2E (기기 병렬)
         id: e2e
         working-directory: ivi-tests
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_MARKERS: ${{ inputs.markers }}
+          INPUT_REPEAT: ${{ inputs.repeat }}
         run: |
-          $markers = switch ("${{ github.event_name }}") {
+          $markers = switch ($env:EVENT_NAME) {
             "pull_request"      { "smoke" }
             "schedule"          { "" }
-            "workflow_dispatch" { "${{ inputs.markers }}" }
+            "workflow_dispatch" { $env:INPUT_MARKERS }
             default             { "smoke or sanity" }
           }
-          $repeat = if ("${{ inputs.repeat }}") { "${{ inputs.repeat }}" } else { "1" }
+          $repeat = if ($env:INPUT_REPEAT -match '^[1-9][0-9]?$') { $env:INPUT_REPEAT } else { "1" }
           $pyArgs = @("--repeat", $repeat, "--reruns", "1", "--reruns-delay", "2")
           if ($markers) { $pyArgs += @("-m", $markers) }
           Write-Host "markers='$markers' repeat=$repeat"

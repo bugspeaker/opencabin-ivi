@@ -1,4 +1,4 @@
-// docs/*.md 와 README.md 를 사이트 디자인(DESIGN.md 토큰)에 맞춘 HTML 로 바꾼다.
+// docs/*.md 와 README.md 를 사이트 디자인(site/design-tokens.md 토큰)에 맞춘 HTML 로 바꾼다.
 // file:// 로 열면 브라우저가 .md 를 읽어 올 수 없어서, 미리 HTML 로 만들어 둔다.
 //
 //   cd site && npm install && npm run build-docs
@@ -6,7 +6,8 @@
 // 결과: site/docs/*.html (커밋한다. 문서를 고치면 다시 실행)
 // 테스트 결과 페이지(test-results.html)는 site/results/results.json 으로 만든다
 // (ivi-tests/tools/publish_results.py 가 실행 기록과 끝 화면에서 만든다).
-// 소개 페이지(site/index.html)의 요구 역량 목차와 결과 수치도 같은 자료로 다시 쓴다 (<!-- fit:… -->, <!-- stats:… -->).
+// 소개 페이지(site/index.html)의 요구 역량 목차, 결과 수치, 기기 카드도 같은 자료로 다시 쓴다 (<!-- fit:… -->, <!-- stats:… -->, <!-- devices:… -->).
+// 숫자를 손으로 쓰지 않는다: 같은 페이지 안에서 시간이 1초씩 달랐던 일이 있다 (2026-11-18 검토).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,16 +33,19 @@ function githubUrl(target) {
 const PAGES = [
   { src: "docs/portfolio.md", out: "portfolio.html", nav: "포트폴리오" },
   { src: "docs/test-results.md", out: "test-results.html", nav: "테스트 결과", results: true },
+  { src: "docs/flaky-report.md", out: "flaky-report.html", nav: "반복 실행 통계" },
+  { src: "docs/decisions.md", out: "decisions.html", nav: "결정 기록" },
   { src: "docs/traceability.md", out: "traceability.html", nav: "요구사항 추적표", wide: true },
   { src: "docs/requirements.md", out: "requirements.html", nav: "요구사항" },
   { src: "README.md", out: "readme.html", nav: "README" },
+  { src: "docs/run.md", out: "run.html", nav: "실행 방법" },
   { src: "docs/phase1-spike.md", out: "phase1-spike.html", nav: "1. 기술 검증" },
   { src: "docs/phase2-app.md", out: "phase2-app.html", nav: "2. 앱" },
   { src: "docs/phase3-framework.md", out: "phase3-framework.html", nav: "3. 테스트 프레임워크" },
   { src: "docs/phase4-operations.md", out: "phase4-operations.html", nav: "4. 운영 · CI" },
   { src: "docs/phase5-design.md", out: "phase5-design.html", nav: "5. 재점검과 디자인" },
   { src: "docs/phase6-features.md", out: "phase6-features.html", nav: "6. 기능 확장" },
-  { src: "docs/phase7-pleos.md", out: "phase7-pleos.html", nav: "7. 3영역 화면 개편" },
+  { src: "docs/phase7-layout.md", out: "phase7-layout.html", nav: "7. 3영역 화면 개편" },
   { src: "docs/phase8-signals.md", out: "phase8-signals.html", nav: "8. 차량 신호 확장" },
   { src: "docs/phase9-bench.md", out: "phase9-bench.html", nav: "9. Test Bench 확장" },
 ];
@@ -201,6 +205,7 @@ function reqIndex(data) {
     runs: results.filter((r) => r.outcome !== "skipped").length,
     bad: results.filter((r) => BAD.has(r.outcome)).length,
     retries: results.reduce((n, r) => n + (r.reruns || 0), 0),
+    stability: data.stability ?? null,  // publish_results.py --repeat-runs 로 넣는 반복 실행 통계
   };
   const byTest = new Map(); // 테스트 이름 → 이 테스트를 근거로 쓰는 항목 id
   const text = (v) => (typeof v === "function" ? v(stats) : v);
@@ -232,7 +237,7 @@ function renderResults(page) {
   const groupLabel = Object.fromEntries(GROUPS.map((g) => [g.id, g.label]));
   // 첫 화면 목차에서 ?req=<id> 로 들어올 때 쓰는 정보 (근거가 테스트인 항목만)
   const reqMeta = Object.fromEntries(reqs.filter((r) => !r.gap && !r.link).map((r) => [r.id, {
-    eyebrow: `요구 역량 ${r.num} · ${groupLabel[r.group]}`, title: r.title, note: r.note || r.done,
+    eyebrow: `요구 역량 ${r.num} · ${groupLabel[r.group]}`, title: r.title, note: r.note ? `${esc(r.done)} ${r.note}` : r.done,
     count: r.count, filter: Boolean(r.select), chip: r.chip || "", onlyBad: Boolean(r.onlyBad),
   }]));
   const devices = data.devices.map((d) => `
@@ -268,10 +273,14 @@ function renderResults(page) {
             : `<div class="shot shot-${k} no-shot"><p>${esc(r.message || "화면 없음")}</p></div>`;
           const measures = Object.entries(r.measures || {}).map(([k, v]) =>
             `<p class="cell-measure">${esc(MEASURE_LABEL[k] || k)}: ${esc(v)}초</p>`).join("");
+          // 판정에 쓴 차량 값 (AAOS: CarService 로 읽은 VHAL 값)
+          const signals = (r.signals || []).length
+            ? `<p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)">${r.signals.map((s) => `<code>${esc(s)}</code>`).join("")}</p>` : "";
           return `<div class="shot-cell">
               ${media}
               <div class="cell-meta"><span class="cell-device">${esc(dev.label)}</span><span class="pill p-${r.outcome}">${esc(r.label)}</span><span class="cell-time">${r.duration}초</span></div>
               ${measures}
+              ${signals}
             </div>`;
         }).join("");
         return `<div class="case">${c.param ? `<p class="case-param"><code>[${esc(c.param)}]</code></p>` : ""}<div class="case-shots">${cells}</div></div>`;
@@ -295,7 +304,7 @@ function renderResults(page) {
   const markers = [...new Set(data.files.flatMap((f) => f.tests.flatMap((t) => t.markers)))];
   const body = `
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E ${total}개를 기기마다 한 번씩 돌린 결과입니다. 테스트가 끝난 직후의 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다.</p>
+    <p class="lead">E2E ${total}개를 두 기기에서 돌린 결과입니다${data.stability ? ` (${data.stability.rounds}회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>)` : ""}. 테스트가 끝난 직후의 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 그 테스트가 판정에 쓴 VHAL 값입니다.</p>
     <div class="device-cards">${devices}</div>
     <section class="req-banner" id="req-banner" aria-live="polite" hidden>
       <div class="req-copy">
@@ -404,9 +413,8 @@ function renderResults(page) {
 const ARROW = `<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 function renderFit({ reqs }) {
-  const doneCount = reqs.filter((r) => !r.gap && !r.partial).length;
-  const partialCount = reqs.filter((r) => r.partial).length;
-  const pct = (n) => Math.round((n / reqs.length) * 100);
+  // '완료' 표시와 점수(13 / 16)는 두지 않는다: 공고 항목에 완료 기준이 없어 "무엇을 기준으로 완료인가"만 묻게 된다 (2026-11-18 검토).
+  // 오른쪽에는 근거의 종류(테스트 몇 개, 기록)만, 모의 환경이나 개념 적용인 항목은 그 사실만 표시한다
   const row = (r) => {
     if (r.gap) {
       return `<li class="fit-item is-gap"><div class="fit-row">
@@ -420,13 +428,13 @@ function renderFit({ reqs }) {
     return `<li class="fit-item"><a class="fit-row" href="${esc(href)}">
               <span class="fit-num">${r.num}</span>
               <span class="fit-body"><span class="fit-title">${esc(r.title)}</span><span class="fit-done">${esc(r.done)}</span></span>
-              <span class="fit-side"><span class="fit-state ${r.partial ? "is-partial" : "is-done"}">${esc(r.partial || "완료")}</span><span class="fit-dest">${esc(dest)}${ARROW}</span></span>
+              <span class="fit-side">${r.partial ? `<span class="fit-state is-partial">${esc(r.partial)}</span>` : ""}<span class="fit-dest">${esc(dest)}${ARROW}</span></span>
             </a></li>`;
   };
   const group = (g) => {
     const items = reqs.filter((r) => r.group === g.id);
     return `<div class="fit-group">
-          <h3 class="fit-group-title">${esc(g.label)} <span>${items.filter((r) => !r.gap && !r.partial).length} / ${items.length}${items.some((r) => r.partial) ? `, 일부 ${items.filter((r) => r.partial).length}` : ""}</span></h3>
+          <h3 class="fit-group-title">${esc(g.label)} <span>${items.length}개</span></h3>
           <ol class="fit-list">
             ${items.map(row).join("\n            ")}
           </ol>
@@ -437,13 +445,8 @@ function renderFit({ reqs }) {
       <div class="fit-head">
         <div class="fit-head-copy">
           <p class="eyebrow">요구 역량</p>
-          <h2 id="fit-title" class="display-md">42dot Test Automation Engineer, IVI System</h2>
-          <p class="body-sm subtle">채용 공고에 안내된 역량을 이 프로젝트에 적용하고 테스트한 결과입니다. 항목을 누르면 테스트 결과나 기록으로 이동합니다.</p>
-        </div>
-        <div class="fit-score">
-          <p class="fit-score-num"><span>${doneCount}</span> / ${reqs.length}</p>
-          <p class="caption subtle">항목 완료${partialCount ? `, ${partialCount}개는 모의 환경과 개념 적용` : ""}</p>
-          <div class="fit-bar" aria-hidden="true"><span style="width:${pct(doneCount)}%"></span>${partialCount ? `<span class="is-partial" style="width:${pct(partialCount)}%"></span>` : ""}</div>
+          <h2 id="fit-title" class="display-lg">42dot Test Automation Engineer, IVI System</h2>
+          <p class="body-lg muted">채용 공고의 항목마다 이 프로젝트에서 한 일과 근거입니다. 항목을 누르면 근거가 되는 테스트 결과나 기록으로 이동합니다.</p>
         </div>
       </div>
       <div class="fit-cols">
@@ -471,7 +474,11 @@ function renderStats({ stats }, data) {
     const note = d.kind === "mock" ? other(d).map((s) => s.replace("건너뜀", "AAOS 전용 건너뜀")) : other(d);
     cards.push(card(esc(d.label), `${d.counts.passed ?? 0}개 통과`, [...note, fmtTime(d.duration)].join(", "), "docs/test-results.html"));
   }
-  cards.push(card("실패와 재시도", `${stats.bad}건`, `두 기기에서 ${stats.runs}번 실행`, "docs/test-results.html?req=flaky"));
+  const st = stats.stability;
+  cards.push(st
+    ? card(`반복 실행 ${st.rounds}회 × 기기 ${st.devices}대`, `flaky ${st.flaky}건`,
+        `테스트 ${st.executions.toLocaleString("en-US")}건 실행, 재시도 ${st.reruns}번, 실패 ${st.failed}건`, "docs/flaky-report.html")
+    : card("실패와 재시도", `${stats.bad}건`, `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번 (기기마다 1회 실행)`, "docs/test-results.html"));
   return `<section class="stats-section" aria-label="최근 결과">
       <div class="stats">
         ${cards.join("\n        ")}
@@ -479,16 +486,51 @@ function renderStats({ stats }, data) {
     </section>`;
 }
 
+function renderDevices(data) {
+  const KO = { passed: "통과", skipped: "건너뜀", xfailed: "알려진 결함", flaky: "재시도 후 통과", failed: "실패", error: "오류", xpassed: "알려진 결함 통과", quarantined: "격리" };
+  const ABOUT = {
+    aaos: { title: "AAOS 에뮬레이터", text: "CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거칩니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.", source: "CarPropertyManager" },
+    mock: { title: "Android 태블릿", text: "화웨이 태블릿에서는 앱 안의 Mock 차량 서비스를 씁니다. AAOS 전용 테스트는 건너뜁니다. 터치 지연, 백그라운드 강제 종료 같은 실기기 문제는 이 기기에서 나왔습니다.", source: "MockVehicleDataSource" },
+  };
+  const date = (t) => t.slice(0, 10);
+  const cards = data.devices.map((d) => {
+    const a = ABOUT[d.kind] ?? { title: d.label, text: "", source: "" };
+    const counts = Object.entries(d.counts).map(([k, v]) => `${KO[k] ?? k} ${v}`).join(", ");
+    return `<article class="card device">
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>${esc(date(d.time))} 전체 실행</span>
+          <h3 class="card-title">${esc(a.title)}</h3>
+          <p class="body-sm muted">${esc(a.text)}</p>
+          <div>
+            <div class="device-row body-sm"><span class="subtle">결과</span><span>${esc(counts)}</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>${fmtTime(d.duration)}</span></div>
+            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">${esc(a.source)}</span></div>
+          </div>
+        </article>`;
+  });
+  // 두 기기를 같은 run id 로 동시에 시작했으면 병렬 실행이다. 끝까지 걸린 시간 = 가장 늦게 끝난 기기
+  const sameRun = new Set(data.devices.map((d) => d.run_id)).size === 1 && data.devices.length > 1;
+  const start = Math.min(...data.devices.map((d) => Date.parse(d.time)));
+  const wall = Math.max(...data.devices.map((d) => Date.parse(d.time) / 1000 + d.duration)) - start / 1000;
+  const serial = data.devices.reduce((n, d) => n + d.duration, 0);
+  const note = sameRun
+    ? `<p class="body-sm subtle device-note">두 기기를 같은 시각에 병렬로 시작해 끝까지 ${fmtTime(wall)} 걸렸습니다. 차례로 돌렸다면 약 ${fmtTime(serial)}입니다.</p>`
+    : "";
+  return `<div class="grid-2">
+        ${cards.join("\n        ")}
+      </div>
+      ${note}`;
+}
+
 function writeIndex() {
   const idx = reqIndex(RESULTS);
   let html = readFileSync(INDEX, "utf8");
-  for (const [name, block] of [["fit", renderFit(idx)], ["stats", renderStats(idx, RESULTS)]]) {
+  for (const [name, block] of [["fit", renderFit(idx)], ["stats", renderStats(idx, RESULTS)], ["devices", renderDevices(RESULTS)]]) {
     const re = new RegExp(`(<!-- ${name}:start[^>]*-->)[\\s\\S]*?(\\s*<!-- ${name}:end -->)`);
     if (!re.test(html)) { console.warn(`건너뜀: index.html 에 <!-- ${name}:start --> 표시가 없다`); continue; }
     html = html.replace(re, (m, a, b) => `${a}\n    ${block}${b}`);
   }
   writeFileSync(INDEX, html, "utf8");
-  console.log("site/results/results.json + site/requirements.mjs → site/index.html (요구 역량 목차, 결과 수치)");
+  console.log("site/results/results.json + site/requirements.mjs → site/index.html (요구 역량 목차, 결과 수치, 기기 카드)");
 }
 
 mkdirSync(OUT, { recursive: true });
