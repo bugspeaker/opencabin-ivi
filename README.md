@@ -4,14 +4,18 @@
 테스트 대상은 직접 만든 가상 IVI 앱입니다. 같은 테스트를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.
 실제 차량, HIL, CAN 장비는 쓰지 않았습니다. CAN과 원격 전원은 PC 안의 모의 환경입니다.
 
+> [!TIP]
+> **공고 항목별 근거는 [소개 사이트](https://bugspeaker.github.io/opencabin-ivi/)에서 한눈에 볼 수 있습니다.**
+>
+> 공고의 주요 업무, 자격요건, 우대사항마다 이 프로젝트에서 한 일을 적었고, 항목을 누르면 근거가 되는 테스트 결과와 테스트가 끝난 화면으로 바로 이동합니다.
+> 문서로 보려면 [포트폴리오 1장](docs/portfolio.md#1-공고-요구사항과-한-일), 판단의 이유와 측정값은 [결정 기록](docs/decisions.md)에 있습니다.
+
 | | 결과 (2026-11-18) |
 |---|---|
 | E2E | 129개. AAOS 127 통과, 1 건너뜀, 1 알려진 결함 / 태블릿 122 통과, 7 건너뜀. 두 기기에서 5회 반복해 테스트 1,250건, flaky 0건, 실패 0건 ([통계](docs/flaky-report.md)) |
 | 게이트 | PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 ([기준과 시간](docs/portfolio.md#4-1-게이트-단계와-기준)) |
 | CI | PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 71개 (GitHub Actions). E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다 |
 | 추적 | 요구사항 26개 ↔ 테스트 함수 101개. 빠진 곳이 있으면 unit job이 실패합니다 |
-
-공고 항목별 근거: [소개 사이트](https://bugspeaker.github.io/opencabin-ivi/) · [docs/portfolio.md 1장](docs/portfolio.md#1-공고-요구사항과-한-일) · 결정과 근거: [docs/decisions.md](docs/decisions.md)
 
 ```mermaid
 flowchart LR
