@@ -2,7 +2,7 @@
 import pytest
 
 from ivi.vehicle import Seat
-from ivi.waits import wait_until
+from ivi.waits import wait_value
 
 
 @pytest.mark.req("VOICE-01", "HVAC-01")
@@ -12,7 +12,7 @@ def test_voice_sets_driver_temperature_on_vehicle(app, car):
     voice = app.voice()
     result = voice.say(0)  # "운전석 온도 24도로 맞춰줘"
     assert "24.0" in result
-    wait_until(lambda: car.temperature(Seat.DRIVER) == 24.0, what="차량 운전석 온도 24.0")
+    wait_value(lambda: car.temperature(Seat.DRIVER), 24.0, what="차량 운전석 온도")
 
 
 @pytest.mark.req("VOICE-01")

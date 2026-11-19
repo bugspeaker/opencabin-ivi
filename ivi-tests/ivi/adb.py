@@ -61,10 +61,16 @@ class Adb:
         return found
 
     # ---- 로그 ----
-    def logcat_clear(self):
-        self.run("logcat", "-c", check=False)
+    def log_mark(self):
+        """지금 기기 시각을 logcat -T 가 받는 형식('초.밀리초', epoch)으로. 테스트를 시작할 때 찍어 두고 실패 자료를 이 시각부터 모은다.
+        예전에는 테스트마다 logcat -c 로 버퍼를 지웠는데, 여러 사람·도구가 같은 기기를 쓰는 벤치에서는 남의 로그까지 지운다."""
+        return self.shell("date", "+%s", check=False).strip() + ".000"
 
-    def logcat_dump(self, lines=3000):
+    def logcat_dump(self, since=None, lines=3000):
+        """since(log_mark 값) 이후의 로그. 버퍼는 지우지 않는다. since 가 없으면 마지막 lines 줄."""
+        if since:
+            out = self.run("logcat", "-d", "-v", "threadtime", "-T", since, check=False, timeout=60)
+            return "".join(out.splitlines(keepends=True)[-lines:])
         return self.run("logcat", "-d", "-t", str(lines), "-v", "threadtime", check=False, timeout=60)
 
     def screencap_displays(self):

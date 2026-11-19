@@ -249,6 +249,9 @@ function renderResults(page) {
         <p class="eyebrow">${esc(d.label)}</p>
         <p class="device-model">${esc(d.model)}</p>
         <div class="pills">${countsLine(d.counts)}</div>
+        <p class="device-note">${d.kind === "mock"
+          ? "화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. 차량 값은 앱 안의 Mock이라 VHAL 경로는 AAOS에서만 확인합니다."
+          : "CarService와 에뮬레이터 VHAL을 거칩니다. 화면→신호, 신호→화면을 모두 VHAL 값으로 판정합니다."}</p>
         <dl>
           <div><dt>실행</dt><dd>${esc(d.time.replace("T", " ").slice(0, 16))}</dd></div>
           <div><dt>시간</dt><dd>${fmtTime(d.duration)}</dd></div>
@@ -464,6 +467,11 @@ function renderFit({ reqs }) {
     </section>`;
 }
 
+// 반복 실행 건수를 기기별로: "(AAOS 640, 태블릿 610)"
+const byKind = (st) => st.executions_by_kind
+  ? ` (${Object.entries(st.executions_by_kind).map(([k, n]) => `${k === "aaos" ? "AAOS" : "태블릿"} ${n.toLocaleString("en-US")}`).join(", ")})`
+  : "";
+
 function renderStats({ stats }, data) {
   const dev = (kind) => data.devices.find((d) => d.kind === kind);
   const KO = { skipped: "건너뜀", xfailed: "알려진 결함", flaky: "재시도 후 통과", failed: "실패", error: "오류", xpassed: "알려진 결함 통과", quarantined: "격리" };
@@ -476,12 +484,14 @@ function renderStats({ stats }, data) {
   const cards = [card("E2E 테스트", `${stats.total}개`, "두 기기에서 같은 테스트 코드", "docs/test-results.html")];
   for (const d of data.devices) {
     const note = d.kind === "mock" ? other(d).map((s) => s.replace("건너뜀", "AAOS 전용 건너뜀")) : other(d);
-    cards.push(card(esc(d.label), `${d.counts.passed ?? 0}개 통과`, [...note, fmtTime(d.duration)].join(", "), "docs/test-results.html"));
+    // 태블릿 숫자가 VHAL 경로까지 증명하는 것처럼 읽히지 않게, 차량 값의 출처를 숫자 바로 옆에 둔다
+    const source = d.kind === "mock" ? " · 차량 값은 앱 안 Mock" : "";
+    cards.push(card(esc(d.label), `${d.counts.passed ?? 0}개 통과`, [...note, fmtTime(d.duration)].join(", ") + source, "docs/test-results.html"));
   }
   const st = stats.stability;
   cards.push(st
     ? card(`반복 실행 ${st.rounds}회 × 기기 ${st.devices}대`, `flaky ${st.flaky}건`,
-        `테스트 ${st.executions.toLocaleString("en-US")}건 실행, 재시도 ${st.reruns}번, 실패 ${st.failed}건`, "docs/flaky-report.html")
+        `테스트 ${st.executions.toLocaleString("en-US")}건${byKind(st)} 실행, 재시도 ${st.reruns}번, 실패 ${st.failed}건`, "docs/flaky-report.html")
     : card("실패와 재시도", `${stats.bad}건`, `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번 (기기마다 1회 실행)`, "docs/test-results.html"));
   return `<section class="stats-section" aria-label="최근 결과">
       <div class="stats">

@@ -17,6 +17,12 @@ from pathlib import Path
 QUARANTINE_KEYWORD = "quarantined"
 
 
+def junit_name(run_id, kind, serial):
+    """JUnit 결과 파일 이름. run id 를 넣는다: --repeat 로 돌리면 회차마다 같은 이름에 덮어써서
+    Release 반복의 앞 회차 실패 기록이 사라지던 문제 (2026-11-19 검토에서 발견)."""
+    return f"junit-{run_id}-{kind}-{serial}.xml"
+
+
 def _reason(report):
     """실패 한 줄 요약: assert 메시지 (없으면 traceback 끝부분)."""
     crash = getattr(report.longrepr, "reprcrash", None)

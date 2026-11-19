@@ -106,6 +106,7 @@ section { padding: var(--s-section) 0 0; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
 .limits { display: flex; gap: var(--s-xs); align-items: baseline; margin: var(--s-md) 0 0; padding: var(--s-sm) var(--s-md); border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-1); color: var(--ink-muted); font-size: 14px; line-height: 1.5; }
 .limits strong { flex: none; font-weight: 500; color: var(--ink); }
+.limits a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 
 /* 요구 역량 목차 (build-docs.mjs 가 만든다) */
 .fit { padding-top: var(--s-xxl); scroll-margin-top: 56px; }
@@ -293,7 +294,7 @@ footer a:hover { color: var(--ink); }
       <div class="hero-copy">
         <p class="eyebrow">AAOS 인포테인먼트 테스트 자동화</p>
         <h1 class="display-xl">AAOS IVI 앱<br>E2E 테스트 자동화</h1>
-        <p class="body-lg muted">화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 직접 만든 가상 IVI 앱이고, 같은 테스트를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.</p>
+        <p class="body-lg muted">화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="docs/test-results.html">테스트 결과 보기</a>
           <a class="btn btn-secondary" href="docs/portfolio.html">포트폴리오 문서</a>
@@ -317,18 +318,19 @@ footer a:hover { color: var(--ink); }
         <a class="card stat" href="docs/test-results.html">
           <p class="eyebrow">태블릿 (Mock)</p>
           <p class="headline">122개 통과</p>
-          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 15초</p>
+          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 15초 · 차량 값은 앱 안 Mock</p>
         </a>
         <a class="card stat" href="docs/flaky-report.html">
           <p class="eyebrow">반복 실행 5회 × 기기 2대</p>
           <p class="headline">flaky 0건</p>
-          <p class="body-sm subtle">테스트 1,250건 실행, 재시도 0번, 실패 0건</p>
+          <p class="body-sm subtle">테스트 1,250건 (AAOS 640, 태블릿 610) 실행, 재시도 0번, 실패 0건</p>
         </a>
       </div>
     </section>
     <!-- stats:end -->
 
     <p class="limits"><strong>한계</strong><span>실차, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</span></p>
+    <p class="limits"><strong>만든 방식</strong><span>2026-11-13 ~ 2026-11-18, 혼자 진행했습니다. 게임 QA 약 8년. 웹 BVT를 Playwright와 pytest로 만든 경험이 있고, 모바일과 AAOS 테스트 자동화는 이 프로젝트가 처음입니다. 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 PR마다 실행 결과와 변경 내용을 확인하고 병합했습니다. <a href="docs/decisions.html">결정 기록</a></span></p>
 
     <!-- fit:start (build-docs.mjs 가 requirements.mjs 와 results.json 으로 채운다. 직접 고치지 않는다) -->
     <section id="fit" class="fit" aria-labelledby="fit-title">
@@ -376,7 +378,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/flaky-report.html">
               <span class="fit-num">07</span>
-              <span class="fit-body"><span class="fit-title">Flaky 최소화 · 병렬 실행</span><span class="fit-done">두 기기를 병렬로 5번 반복해 테스트 1,250건을 돌렸고, 재시도로 통과한 것(flaky)은 0건입니다. 재시도 기록, 격리 목록, flaky 통계를 직접 만들었습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Flaky 최소화 · 병렬 실행</span><span class="fit-done">두 기기를 병렬로 5번 반복해 테스트 1,250건을 돌렸고, 재시도로 통과한 것(flaky)은 0건입니다. 재시도 기록, 격리 목록, flaky 통계와 Release 게이트를 만들었습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">반복 실행 통계<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>
@@ -393,7 +395,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase3-framework.html#구조">
               <span class="fit-num">09</span>
-              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 71개 있습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 94개 있습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase1-spike.html#appium을-aaos에-붙일-때-필요한-것">

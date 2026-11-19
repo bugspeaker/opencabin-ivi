@@ -11,11 +11,11 @@ AAOS 에서 실패하면 권한부터 본다: 공조 = CONTROL_CAR_CLIMATE, 도�
 import pytest
 
 from ivi.vehicle import Seat, Signal
-from ivi.waits import wait_until
+from ivi.waits import wait_until, wait_value
 
 
 def wait_signal(car, name, expected, what=None):
-    wait_until(lambda: car.signal(name) == expected, what=what or f"차량 신호 {name} = {expected!r}")
+    wait_value(lambda: car.signal(name), expected, what=what or f"차량 신호 {name}")
 
 
 # ---------------- 공조: A/C · AUTO · 풍량 · 김서림 ----------------
@@ -52,7 +52,7 @@ def test_fan_button_changes_signal_by_one(app, car, direction, expected):
     assert climate.fan() == 3
     (climate.fan_up if direction == "up" else climate.fan_down)()
     wait_signal(car, Signal.FAN, expected)
-    wait_until(lambda: climate.fan() == expected, what=f"풍량 표시 {expected}")
+    wait_value(lambda: climate.fan(), expected, what="풍량 표시")
 
 
 @pytest.mark.req("HVAC-03")
@@ -62,7 +62,7 @@ def test_fan_buttons_disabled_at_limits(app, car, level, blocked):
     """풍량이 최저 1이면 -가, 최고 7이면 +가 눌리지 않고 신호도 범위를 벗어나지 않습니다."""
     climate = app.climate()
     car.set_signal(Signal.FAN, level)
-    wait_until(lambda: climate.fan() == level, what=f"풍량 표시 {level}")
+    wait_value(lambda: climate.fan(), level, what="풍량 표시")
     climate.wait_enabled(blocked, False)
     climate.tap(blocked)
     assert car.signal(Signal.FAN) == level
@@ -82,9 +82,9 @@ def test_max_ac_sets_signal_and_coldest_settings(app, car):
     wait_signal(car, Signal.AUTO, False)
     wait_signal(car, Signal.AC, True)
     for seat in Seat:
-        wait_until(lambda: car.temperature(seat) == 16.0, what=f"{seat.tag} 온도 최저")
+        wait_value(lambda: car.temperature(seat), 16.0, what=f"차량 {seat.tag} 온도 (최저)")
     climate.wait_checked("max_ac", True)
-    wait_until(lambda: climate.fan() == 7, what="풍량 표시 7")
+    wait_value(lambda: climate.fan(), 7, what="풍량 표시")
 
 
 @pytest.mark.req("HVAC-04")
@@ -99,7 +99,7 @@ def test_max_ac_off_restores_previous_settings(app, car):
     wait_until(lambda: not any(car.signal_all(Signal.MAX_AC)), what="전 좌석 최대 냉방 꺼짐")
     wait_signal(car, Signal.FAN, 3)
     for seat in Seat:
-        wait_until(lambda: car.temperature(seat) == 22.0, what=f"{seat.tag} 온도 복원")
+        wait_value(lambda: car.temperature(seat), 22.0, what=f"차량 {seat.tag} 온도 (복원)")
     climate.wait_checked("max_ac", False)
 
 
@@ -196,7 +196,7 @@ def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
     for expected in (2, 1, 0):
         climate.tap_seat_heat(seat)
         wait_signal(car, Signal.heat(seat), expected)
-        wait_until(lambda: climate.seat_heat(seat) == expected, what=f"{seat.tag} 열선 표시 {expected}단")
+        wait_value(lambda: climate.seat_heat(seat), expected, what=f"{seat.tag} 열선 표시 단계")
     assert car.signal(Signal.heat(other)) == 0
 
 
@@ -206,8 +206,8 @@ def test_seat_heat_signal_is_shown_everywhere(app, car):
     """차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다."""
     climate = app.climate()
     car.set_signal(Signal.HEAT_DRIVER, 1)
-    wait_until(lambda: climate.seat_heat(Seat.DRIVER) == 1, what="공조 화면 운전석 열선 1단")
-    wait_until(lambda: app.bar().seat_heat(Seat.DRIVER) == 1, what="아래 바 운전석 열선 1")
+    wait_value(lambda: climate.seat_heat(Seat.DRIVER), 1, what="공조 화면 운전석 열선 단계")
+    wait_value(lambda: app.bar().seat_heat(Seat.DRIVER), 1, what="아래 바 운전석 열선 단계")
     assert app.bar().seat_heat(Seat.PASSENGER) == 0
     app.vehicle_controls().wait_text("qc_seat_heat_value", "1단")
 
@@ -220,7 +220,7 @@ def test_bottom_bar_seat_heat_works_from_any_screen(app, car):
     bar = app.bar()
     bar.tap_seat_heat(Seat.PASSENGER)
     wait_signal(car, Signal.HEAT_PASSENGER, 2)
-    wait_until(lambda: bar.seat_heat(Seat.PASSENGER) == 2, what="아래 바 조수석 열선 2")
+    wait_value(lambda: bar.seat_heat(Seat.PASSENGER), 2, what="아래 바 조수석 열선 단계")
     assert car.signal(Signal.HEAT_DRIVER) == 0
 
 
@@ -272,13 +272,13 @@ def test_energy_signals_are_shown_on_cluster(app, car):
     미터는 km로, Wh는 %로 바꿔 보여 줍니다.
     """
     cluster = app.cluster()
-    wait_until(lambda: (cluster.range_km(), cluster.battery_percent()) == (320, 80), what="기준 값 320 km · 80 %")
-    wait_until(lambda: cluster.outside_temperature() == 18.0, what="외기 온도 18.0°C")
+    wait_value(lambda: (cluster.range_km(), cluster.battery_percent()), (320, 80), what="기준 값 (주행 가능 거리 km, 배터리 %)")
+    wait_value(lambda: cluster.outside_temperature(), 18.0, what="외기 온도 표시")
     assert not cluster.low_range_warning()
 
     car.set_signals({Signal.RANGE_KM: 154.0, Signal.BATTERY_PCT: 42.0, Signal.OUTSIDE_C: -3.5})
-    wait_until(lambda: (cluster.range_km(), cluster.battery_percent()) == (154, 42), what="154 km · 42 %")
-    wait_until(lambda: cluster.outside_temperature() == -3.5, what="외기 온도 -3.5°C")
+    wait_value(lambda: (cluster.range_km(), cluster.battery_percent()), (154, 42), what="(주행 가능 거리 km, 배터리 %)")
+    wait_value(lambda: cluster.outside_temperature(), -3.5, what="외기 온도 표시")
 
 
 @pytest.mark.req("ENERGY-02")
@@ -290,8 +290,8 @@ def test_low_range_threshold(app, car, range_km, low):
     """
     cluster = app.cluster()
     car.set_signal(Signal.RANGE_KM, range_km)
-    wait_until(lambda: cluster.range_km() == int(range_km), what=f"주행 가능 거리 {range_km:g} km")
-    wait_until(lambda: cluster.low_range_warning() == low, what=f"충전 필요 표시 {low}")
+    wait_value(lambda: cluster.range_km(), int(range_km), what="주행 가능 거리(km)")
+    wait_value(lambda: cluster.low_range_warning(), low, what="충전 필요 표시")
     assert app.visible("low_range_card") == low
 
 
@@ -339,7 +339,7 @@ def test_range_recovers_after_charging(app, car):
     app.wait_visible("low_range_card", expected=False)
     wait_until(lambda: not cluster.low_range_warning(), what="충전 필요 표시 사라짐")
     # 거리와 배터리는 서로 다른 신호라 따로 도착한다 → 바로 assert 하지 않고 기다린다 (8단계 회귀에서 한 번 실패)
-    wait_until(lambda: cluster.battery_percent() == 75, what="배터리 75 %")
+    wait_value(lambda: cluster.battery_percent(), 75, what="배터리(%)")
 
 
 @pytest.mark.req("ENERGY-01", "SET-01")
@@ -351,4 +351,4 @@ def test_range_follows_speed_unit_setting(app, car):
     settings = app.settings()
     settings.toggle("unit_mph")
     cluster = app.cluster()
-    wait_until(lambda: (cluster.range_km(), cluster.range_unit()) == (199, "mi"), what="199 mi")
+    wait_value(lambda: (cluster.range_km(), cluster.range_unit()), (199, "mi"), what="주행 가능 거리 표시 (값, 단위)")

@@ -10,7 +10,7 @@ import pytest
 from appium.webdriver.common.appiumby import AppiumBy
 
 from ivi.vehicle import Area, DrivingState, Prop, TempUnit
-from ivi.waits import wait_until
+from ivi.waits import wait_until, wait_value
 
 pytestmark = pytest.mark.aaos
 
@@ -55,7 +55,7 @@ def test_hvac_signal_is_shown_on_ui(driver, vehicle, celsius):
     """운전석 설정 온도 property를 바꾸면 AAOS 기본 하단 공조 바의 숫자가 따라 바뀝니다."""
     label = expected_label(vehicle, celsius)
     vehicle.set_property(Prop.HVAC_TEMPERATURE_SET, celsius, Area.DRIVER)
-    wait_until(lambda: driver_temp_label(driver) == label, what=f"운전석 온도 표시 {label}")
+    wait_value(lambda: driver_temp_label(driver), label, what="운전석 온도 표시")
 
 
 @pytest.mark.req("SPIKE-01")
@@ -69,12 +69,12 @@ def test_hvac_ui_tap_changes_signal(driver, vehicle, side, button, delta):
     area = SIDES[side]
     start = expected_label(vehicle, 20.0)
     vehicle.set_property(Prop.HVAC_TEMPERATURE_SET, 20.0, area)
-    wait_until(lambda: temp_label(driver, side) == start, what=f"{side} 시작 온도 표시 {start}")
+    wait_value(lambda: temp_label(driver, side), start, what=f"{side} 시작 온도 표시")
 
     driver.find_element(*hvac(side, button)).click()
 
     expected = 20.0 + delta
-    wait_until(lambda: vehicle.get_property(Prop.HVAC_TEMPERATURE_SET, area) == expected, what=f"{side} 설정 온도 {expected}°C")
+    wait_value(lambda: vehicle.get_property(Prop.HVAC_TEMPERATURE_SET, area), expected, what=f"{side} 설정 온도(°C)")
     wait_until(lambda: temp_label(driver, side) != start, what=f"{side} 온도 표시 변경")
 
 
@@ -98,10 +98,10 @@ def test_speed_and_gear_change_driving_state(vehicle):
     """속도와 기어를 VHAL에 넣으면 CarService의 주행 상태가 바뀝니다.
     주행 중 화면 제한은 이 값을 보고 동작합니다.
     """
-    assert wait_until(lambda: vehicle.driving_state() == DrivingState.PARKED, what="정차 상태")
+    wait_value(lambda: vehicle.driving_state(), DrivingState.PARKED, what="주행 상태 (정차)")
 
     vehicle.drive(50.0)  # km/h (VHAL 에는 13.9 m/s 로 들어간다)
-    wait_until(lambda: vehicle.driving_state() == DrivingState.MOVING, what="주행 상태(MOVING)")
+    wait_value(lambda: vehicle.driving_state(), DrivingState.MOVING, what="주행 상태 (MOVING)")
 
     vehicle.park()
-    wait_until(lambda: vehicle.driving_state() == DrivingState.PARKED, what="다시 정차 상태")
+    wait_value(lambda: vehicle.driving_state(), DrivingState.PARKED, what="주행 상태 (다시 정차)")

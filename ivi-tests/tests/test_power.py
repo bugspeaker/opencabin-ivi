@@ -9,7 +9,7 @@ from appium import webdriver
 from ivi.power import EmulatorPower
 from ivi.screens import IviApp
 from ivi.vehicle import Seat
-from ivi.waits import wait_until
+from ivi.waits import wait_value
 
 BOOT_LIMIT = 180.0
 
@@ -30,12 +30,12 @@ def test_power_cycle_brings_back_app_and_cabin_defaults(device, pytestconfig, re
     request.node.user_properties.append(("boot_seconds", f"{boot:.1f}"))
     assert boot <= BOOT_LIMIT, f"부팅이 {boot:.0f}초 걸렸다"
 
-    wait_until(lambda: device.adb.shell("am", "get-current-user").strip() == str(device.user), timeout=90,
-               what=f"운전자 사용자 {device.user} 준비")
+    wait_value(lambda: device.adb.shell("am", "get-current-user").strip(), str(device.user), timeout=90,
+               what="현재 사용자 (운전자 사용자 준비)")
     vehicle = device.vehicle
     vehicle.ensure_root()
-    wait_until(lambda: vehicle.temperature(Seat.DRIVER) == 22.0 and vehicle.temperature(Seat.PASSENGER) == 22.0,
-               timeout=60, what="공조 기본값 22.0°C (VHAL 초기값)")
+    wait_value(lambda: (vehicle.temperature(Seat.DRIVER), vehicle.temperature(Seat.PASSENGER)), (22.0, 22.0),
+               timeout=60, what="공조 기본값 (운전석, 조수석. VHAL 초기값)")
 
     # 이전 Appium 세션은 에뮬레이터와 함께 끊겼다. 새로 만들고, 결과 화면(--shots)도 이 세션으로 찍게 한다
     options = device.appium_options()
@@ -49,6 +49,6 @@ def test_power_cycle_brings_back_app_and_cabin_defaults(device, pytestconfig, re
 
     screen = IviApp(session, tapper=device.tapper())
     device.launch(reset=True)
-    wait_until(lambda: screen.text("source_badge") == "AAOS", timeout=90, what="앱이 CarService에 연결")
+    wait_value(lambda: screen.text("source_badge"), "AAOS", timeout=90, what="데이터 소스 표시 (CarService 연결)")
     home = screen.home()
-    wait_until(lambda: home.summary_temperature(Seat.DRIVER) == 22.0, timeout=30, what="화면 운전석 온도 22.0")
+    wait_value(lambda: home.summary_temperature(Seat.DRIVER), 22.0, timeout=30, what="화면 운전석 온도")

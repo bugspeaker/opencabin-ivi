@@ -9,7 +9,7 @@ import pytest
 
 from ivi.can_gateway import GEAR_D, GEAR_P, CanGateway, EcuNode, virtual_bus, wait_for_frame
 from ivi.vehicle import Seat
-from ivi.waits import wait_until
+from ivi.waits import wait_until, wait_value
 
 
 @pytest.fixture
@@ -51,7 +51,7 @@ def test_can_battery_and_door_frames_reach_screen(app, can_net):
     """BMS가 주행 가능 거리 25 km를 보내면 '충전 필요'가 뜨고, BCM이 문 열림을 보내면 빠른 제어의 도어 표시가 '열림'이 됩니다."""
     can_net.ecu.send("BMS_Status", period=0.5, BatterySoc=8.0, RangeRemaining=25.0)
     cluster = app.cluster()
-    wait_until(lambda: cluster.range_km() == 25, what="주행 가능 거리 25 km")
+    wait_value(lambda: cluster.range_km(), 25, what="주행 가능 거리(km)")
     wait_until(cluster.low_range_warning, what="충전 필요 표시")
 
     can_net.ecu.send("BCM_Status", period=0.5, DoorsLocked=0, OutsideTemp=-3.0)

@@ -1,7 +1,7 @@
 """블루투스 핸즈프리 전화(가상)의 통화 화면, 최근 통화, 키패드, 주행 중 제한을 확인합니다."""
 import pytest
 
-from ivi.waits import wait_until
+from ivi.waits import wait_until, wait_value
 
 
 @pytest.mark.req("MEDIA-02")
@@ -42,7 +42,7 @@ def test_driving_locks_keypad_and_limits_contacts(app, car):
 
     car.drive(50.0)
     phone.wait_visible("phone_list_limited")
-    wait_until(lambda: len(phone.contact_names()) == 5, what="주행 중 연락처 5개")
+    wait_value(lambda: len(phone.contact_names()), 5, what="주행 중 연락처 수")
 
     phone.tab("keypad")
     phone.wait_visible("phone_keypad_locked")

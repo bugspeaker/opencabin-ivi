@@ -8,7 +8,7 @@
 #  pull_request       smoke                   (13개, 기기당 약 35초, 머지 전 게이트)
 #  push(main)         smoke or sanity         (38개, 기기당 약 2분 15초, 두 기기 병렬)
 #  schedule(Nightly)  전체 (smoke+sanity+regression+spike)
-#  workflow_dispatch  입력한 마커. Release 후보는 markers 를 비우고 repeat 3
+#  workflow_dispatch  입력한 마커. Release 후보는 markers 를 비우고 repeat 3 → tools/release_gate.py 가 다섯 조건 확인
 #  (시간은 2026-11-18 실측 합. docs/portfolio.md 4-1 표와 같다)
 #
 # 공개 저장소라 다른 사람의 PR 이 Test Bench(self-hosted) 에서 코드를 돌리지 못하게 한다:
@@ -141,10 +141,25 @@ jobs:
             default             { "smoke or sanity" }
           }
           $repeat = if ($env:INPUT_REPEAT -match '^[1-9][0-9]?$') { $env:INPUT_REPEAT } else { "1" }
+          # Release 후보 = 수동 실행, markers 비움, 반복 2회 이상. 다음 단계가 이번 실행만 골라 다섯 조건을 확인한다
+          $release = ($env:EVENT_NAME -eq "workflow_dispatch") -and (-not $markers) -and ([int]$repeat -ge 2)
+          "release=$($release.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          "repeat=$repeat" >> $env:GITHUB_OUTPUT
+          "since=$(Get-Date -Format 'yyyyMMdd-HHmmss')" >> $env:GITHUB_OUTPUT
           $pyArgs = @("--repeat", $repeat, "--reruns", "1", "--reruns-delay", "2")
           if ($markers) { $pyArgs += @("-m", $markers) }
           Write-Host "markers='$markers' repeat=$repeat"
           .venv\Scripts\python tools\run_bench.py @pyArgs
+
+      # Release 게이트 (docs/portfolio.md 4-1): failed·error 0, flaky 0, 격리 목록 형식과 2개 이하,
+      # 추적 누락 0, xfailed = known_defects.txt. 하나라도 어기면 이 단계가 실패해 Release 후보를 막는다
+      - name: Release 게이트
+        if: always() && steps.e2e.outputs.release == 'true'
+        working-directory: ivi-tests
+        env:
+          SINCE: ${{ steps.e2e.outputs.since }}
+          REPEAT: ${{ steps.e2e.outputs.repeat }}
+        run: .venv\Scripts\python tools\release_gate.py --since $env:SINCE --expect $env:REPEAT
 
       - name: Flaky 리포트
         if: always()

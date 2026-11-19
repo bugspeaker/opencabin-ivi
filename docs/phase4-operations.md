@@ -44,7 +44,7 @@
 
 - `reports/history/results.jsonl`: 누적 기록. 테스트 하나가 한 줄이고 실행, 기기, 판정, 재시도, 앱 재실행, 시간, 첫 오류를 담습니다.
 - `reports/runs/<run>-<serial>.json`: 이번 실행의 요약과 테스트별 결과
-- `reports/junit-<aaos|mock>-<serial>.xml`
+- `reports/junit-<run>-<aaos|mock>-<serial>.xml` (2026-11-19까지는 run id 없이 `junit-<aaos|mock>-<serial>.xml`이라, `--repeat`로 돌리면 회차마다 덮어써 앞 회차 기록이 사라졌습니다)
 
 실제 기기에서 확인용 테스트를 일부러 만들어 돌려 봤고, 확인한 뒤에는 지웠습니다. 첫 시도만 실패하는 테스트는 `flaky, reruns 1`로 기록되고 첫 실패 자료가 저장됐습니다. 격리 목록에 넣은 실패 테스트는 `quarantined`로 기록되고 게이트는 통과했습니다.
 

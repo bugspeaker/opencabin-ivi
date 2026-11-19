@@ -252,3 +252,25 @@ def test_aaos_keeps_last_read_values_for_the_result_page():
     worker.join()
     assert car.take_observed() == ["GEAR_SELECTION=4", "HVAC_TEMPERATURE_SET[0x4]=22.0", "HVAC_TEMPERATURE_SET[0x1]=22.5"]
     assert car.take_observed() == []  # 꺼내면 비운다
+
+
+def test_logcat_is_collected_from_test_start_without_clearing(monkeypatch):
+    """실패 자료의 logcat 은 테스트 시작 시각(-T)부터 모으고, 버퍼를 지우지(-c) 않는다 (같은 기기를 쓰는 다른 도구의 로그 보존)."""
+    from types import SimpleNamespace
+
+    from ivi.adb import Adb
+
+    calls = []
+
+    def fake_run(cmd, **_):
+        calls.append(cmd)
+        out = "1763540703\n" if cmd[3:5] == ["shell", "date"] else "".join(f"line {i}\n" for i in range(5))
+        return SimpleNamespace(returncode=0, stdout=out, stderr="")
+
+    monkeypatch.setattr("ivi.adb.subprocess.run", fake_run)
+    adb = Adb("emulator-5554")
+    since = adb.log_mark()
+    assert since == "1763540703.000"  # 점이 없으면 logcat 은 시각이 아니라 줄 수로 읽는다
+    assert adb.logcat_dump(since=since, lines=3) == "line 2\nline 3\nline 4\n"
+    assert calls[-1] == ["adb", "-s", "emulator-5554", "logcat", "-d", "-v", "threadtime", "-T", "1763540703.000"]
+    assert not any("-c" in cmd for cmd in calls)

@@ -7,7 +7,7 @@ import pytest
 
 from ivi.bench_api import Bench, BenchDevice, call, serve_in_thread
 from ivi.vehicle import CABIN_DEFAULTS, Signal
-from ivi.waits import wait_until
+from ivi.waits import wait_until, wait_value
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def test_api_low_range_shows_charger_card(app, bench):
     cluster = app.cluster()
     status, reply = call(url, "POST", f"/api/devices/{serial}/signals", {"range_km": 25, "battery_pct": 8})
     assert status == 200, reply
-    wait_until(lambda: cluster.range_km() == 25, what="주행 가능 거리 25 km")
+    wait_value(lambda: cluster.range_km(), 25, what="주행 가능 거리(km)")
     wait_until(cluster.low_range_warning, what="충전 필요 표시")
     assert app.visible("low_range_card")
 

@@ -232,9 +232,41 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <td>끝까지 10분 16초. 차례로 돌렸다면 약 20분 0초</td>
 </tr>
 </tbody></table></div>
+<h2 id="7-외부-검토-반영-2026-11-19"><a class="anchor" href="#7-외부-검토-반영-2026-11-19" aria-hidden="true">#</a>7. 외부 검토 반영 (2026-11-19)</h2>
+<p>공고 기준 외부 검토에서 &#39;문서에는 있는데 코드에는 없는 것&#39;을 짚어 받았습니다. 그 가운데 코드로 고칠 수 있는 것을 고쳤습니다.</p>
+<div class="table"><table><thead><tr>
+<th>지적</th>
+<th>고친 것</th>
+</tr>
+</thead><tbody><tr>
+<td>Release 게이트 다섯 조건 가운데 2, 3, 5는 검사하는 코드가 없었음</td>
+<td><code>tools/release_gate.py</code>가 실행 결과 파일로 다섯 조건을 모두 확인하고, 어기면 종료 코드 1. 격리 목록은 사유, 등록일, 해제 조건 칸이 빠진 줄을 거절. 알려진 결함 목록 <code>known_defects.txt</code>. ivi-ci.yml의 Release 후보 실행 뒤에 붙임. 단위 테스트는 게이트 16개, 격리 목록 형식 5개</td>
+</tr>
+<tr>
+<td>&#39;고정 sleep은 쓰지 않습니다&#39;라고 썼는데 3곳에 있었고, <code>wait_value</code>는 2곳에만 적용</td>
+<td>sleep 3곳을 <code>stays</code>(정한 시간 동안 계속 읽어 한 번이라도 바뀌면 실패)로, 값 대기 47곳을 <code>wait_value</code>로</td>
+</tr>
+<tr>
+<td>테스트마다 <code>logcat -c</code>로 버퍼를 지움 (같은 기기를 쓰는 다른 도구의 로그까지 지움)</td>
+<td>테스트 시작 시각을 찍어 두고 실패 때 <code>logcat -T</code>로 그 뒤만 모음</td>
+</tr>
+<tr>
+<td>반복 실행 원자료가 저장소에 없음. <code>--repeat</code>이면 JUnit 파일이 회차마다 덮어써짐</td>
+<td>5회 × 2기기 결과 파일 10개를 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-18-repeat5/README.md">evidence</a>에 남김. JUnit 이름에 run id. 다시 세 보니 <a href="flaky-report.html">반복 실행 통계</a>의 flaky_report 출력 절이 r5 뒤의 다른 실행을 섞어 센 것이었음(1,250건, flaky 0, 실패 0은 그대로) → 원자료 기준으로 다시 만듦</td>
+</tr>
+<tr>
+<td>범위 밖 온도 테스트가 &#39;값 A 또는 끝값&#39;처럼 넓게 판정</td>
+<td>기기마다 기대값 하나(AAOS 15.5 → 16.0, Mock 16.0 → 16.5)</td>
+</tr>
+<tr>
+<td>태블릿 숫자가 VHAL 경로까지 증명하는 것처럼 읽힘</td>
+<td>숫자 옆에 &#39;차량 값은 앱 안 Mock&#39;과 기기별 건수(AAOS 640, 태블릿 610)</td>
+</tr>
+</tbody></table></div>
+<p>프레임워크 단위 테스트는 71개에서 94개가 됐습니다. 테스트 코드(대기 방식, 범위 밖 온도 기대값)를 바꾼 뒤의 두 기기 E2E 재실행은 아직 하지 않았습니다. 위 결과 표는 바꾸기 전 코드로 돌린 2026-11-18 저녁 실행입니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

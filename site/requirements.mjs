@@ -85,7 +85,7 @@ export const REQUIREMENTS = [
   {
     id: "flaky", group: "duty", title: "Flaky 최소화 · 병렬 실행",
     done: (s) => s.stability
-      ? `두 기기를 병렬로 ${s.stability.rounds}번 반복해 테스트 ${s.stability.executions.toLocaleString("en-US")}건을 돌렸고, 재시도로 통과한 것(flaky)은 ${s.stability.flaky}건입니다. 재시도 기록, 격리 목록, flaky 통계를 직접 만들었습니다.`
+      ? `두 기기를 병렬로 ${s.stability.rounds}번 반복해 테스트 ${s.stability.executions.toLocaleString("en-US")}건을 돌렸고, 재시도로 통과한 것(flaky)은 ${s.stability.flaky}건입니다. 재시도 기록, 격리 목록, flaky 통계와 Release 게이트를 만들었습니다.`
       : "재시도 기록, 격리 목록, flaky 통계를 만들고 두 기기를 병렬로 돌렸습니다.",
     link: { href: "docs/flaky-report.html", label: "반복 실행 통계" },
   },
@@ -96,7 +96,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 직접 만들었습니다. 프레임워크 단위 테스트가 71개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 94개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
