@@ -79,7 +79,7 @@
 </tr>
 <tr>
 <td>GitHub Actions</td>
-<td>2026-11-18 기준 ivi-ci 26회(성공 25회, 첫 실행 1회 취소), pages 1회. e2e job은 아직 GitHub에서 돌리지 않았습니다 (<a href="#8-3-github-실행-기록">8-3</a>)</td>
+<td>2026-11-19 기준 ivi-ci 31회(성공 30회, 첫 실행 1회 취소), pages 3회. GitHub에서 돈 것은 build와 unit job뿐이고, e2e job은 아직 GitHub에서 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 (<a href="#8-3-github-실행-기록">8-3</a>)</td>
 </tr>
 </tbody></table></div>
 <p>알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_1024p_landscape</code>)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼(SystemUI) 쪽 문제라 앱에서 고칠 수 없어 <code>xfail(strict=True)</code>로 걸어 두었습니다. 고쳐지면 이 테스트가 실패로 바뀌어 바로 알 수 있습니다. 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.</p>
@@ -742,7 +742,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <li>공개 저장소라 포크에서 온 PR은 e2e를 돌리지 않습니다(build와 unit만). <code>workflow_dispatch</code> 입력은 스크립트에 바로 넣지 않고 환경 변수로 넘깁니다.</li>
 </ul>
 <h3 id="8-3-github-실행-기록"><a class="anchor" href="#8-3-github-실행-기록" aria-hidden="true">#</a>8-3. GitHub 실행 기록</h3>
-<p>2026-11-16부터 11-18까지 ivi-ci 워크플로가 26회 돌았습니다(<code>gh run list</code>로 센 값, 2026-11-18 기준). Test Bench를 켜 두지 않았기 때문에 e2e job은 모두 건너뛰었습니다.</p>
+<p>2026-11-16부터 11-19 새벽까지 ivi-ci 워크플로가 31회 돌았습니다(<code>gh run list</code>로 센 값, 2026-11-19 기준). Test Bench를 켜 두지 않았기 때문에 e2e job은 모두 건너뛰었습니다. 이 문서를 고친 뒤의 PR과 Nightly 실행은 이 표에 들어 있지 않습니다.</p>
 <div class="table"><table><thead><tr>
 <th>이벤트</th>
 <th>횟수</th>
@@ -752,27 +752,27 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tr>
 </thead><tbody><tr>
 <td>PR 생성, 갱신</td>
-<td>14</td>
+<td>16</td>
 <td>통과, 4~5분</td>
 <td>통과, 15~23초</td>
 <td>모두 success</td>
 </tr>
 <tr>
 <td>main push (병합)</td>
-<td>10</td>
+<td>12</td>
 <td>통과</td>
 <td>통과</td>
-<td>9회 success, 1회 취소</td>
+<td>11회 success, 1회 취소</td>
 </tr>
 <tr>
 <td>Nightly (매일 03:00 KST)</td>
-<td>2</td>
+<td>3</td>
 <td>통과</td>
 <td>통과</td>
 <td>모두 success</td>
 </tr>
 </tbody></table></div>
-<p>소개 사이트를 올리는 pages 워크플로도 1회 돌았습니다.</p>
+<p>소개 사이트를 올리는 pages 워크플로는 3회 돌았습니다.</p>
 <p>취소한 1회는 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 두 번째 실행부터는 그 수정이 들어간 실행입니다.</p>
 <p>앱 단위 테스트는 CI에서 처음으로 Gradle로 돌았습니다. 작업 PC는 사용자 폴더가 한글 경로라 Gradle 테스트 실행기가 죽어서, 그동안은 <code>java</code>로 직접 돌려 확인했습니다.</p>
 <p><img data-md src="../../docs/images/ci-runs.png" alt="GitHub Actions 실행 목록 (2026-11-16에 찍은 처음 4회)" loading="lazy"></p>
@@ -786,6 +786,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <li>앱은 가상 IVI입니다. 지도, 라디오, 통화는 가상 데이터이고, AI 어시스턴트는 LLM이 아니라 규칙 기반입니다. 운전자 보조 표시와 주변 차량은 연출입니다. 화면 구조는 공개 자료를 참고했고 타사 로고, 이미지, 코드는 쓰지 않았습니다.</li>
 <li>앱도 직접 만들어서 테스트에 필요한 testTag와 테스트 훅을 마음대로 넣을 수 있었습니다. 다른 팀이 만든 앱을 테스트하는 실제 환경과 다릅니다.</li>
 <li>CI에서 e2e는 아직 GitHub로 돌리지 않았습니다. build와 unit만 GitHub에서 통과했고, e2e는 같은 명령(<code>run_bench.py</code>)을 작업 PC에서 실행해 확인했습니다. 공개 저장소라 개인 PC를 self-hosted 러너로 붙이지 않기로 했습니다.</li>
+<li>태블릿의 Mock 차량은 주입한 온도를 16.0~28.0°C 안으로 잘라서 받습니다. 그래서 <a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_out_of_range_signal_is_shown_safely</code></a>는 태블릿에서 &#39;범위 밖 값을 그대로 보여 주는지&#39;가 아니라 &#39;끝값에서 버튼이 꺼지고 안쪽으로 돌아오는지&#39;만 확인합니다. 범위 밖 값 표시는 AAOS(VHAL에 바로 주입)에서만 확인한 것입니다.</li>
 <li>반복 실행은 하루(2026-11-18) 5회입니다. 기간에 걸친 flaky 추세는 아직 없습니다.</li>
 <li>사이드 미러, 트렁크, 차일드 락, 실내등, 전조등은 차량 신호에 연결하지 않은 화면 상태입니다.</li>
 </ul>

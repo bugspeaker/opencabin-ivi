@@ -138,9 +138,14 @@ def driver(device, pytestconfig):
     if port:
         options.set_capability("appium:systemPort", port)
     session = webdriver.Remote(pytestconfig.getoption("--appium-url"), options=options)
-    session.implicitly_wait(0)  # 기다림은 화면 객체가 명시적으로 한다
-    if device.automotive:
-        session.update_settings({"enableMultiWindows": True})  # SystemUI(하단 HVAC 바)도 보이게
+    try:
+        session.implicitly_wait(0)  # 기다림은 화면 객체가 명시적으로 한다
+        if device.automotive:
+            session.update_settings({"enableMultiWindows": True})  # SystemUI(하단 HVAC 바)도 보이게
+    except Exception:
+        # yield 전에 실패하면 아래 정리 코드가 돌지 않는다. Appium 세션이 남아 다음 실행이 막히지 않게 여기서 닫는다
+        session.quit()
+        raise
     yield session
     try:
         session.quit()
