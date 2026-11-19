@@ -5,7 +5,7 @@
 #  e2e    (self-hosted Test Bench)  AAOS 에뮬레이터 + 태블릿에 같은 테스트를 병렬 실행
 #
 # 이벤트별 범위 (Shift-left: 빠른 것부터, 넓은 것은 Nightly). 단계별 기준과 Release 게이트: docs/portfolio.md 4-1
-#  pull_request       smoke                   (13개, 기기당 약 35초, 머지 전 게이트)
+#  pull_request       smoke                   (13개, 기기당 약 45초, 머지 전 게이트. 공조 화면↔VHAL 왕복 포함)
 #  push(main)         smoke or sanity         (38개, 기기당 약 2분 15초, 두 기기 병렬)
 #  schedule(Nightly)  전체 (smoke+sanity+regression+spike)
 #  workflow_dispatch  입력한 마커. Release 후보는 markers 를 비우고 repeat 3 → tools/release_gate.py 가 다섯 조건 확인

@@ -55,7 +55,7 @@
 <p>화면 + → VHAL 22.0→22.5, VHAL에 25.0 주입 → 화면 25.0 (AAOS 에뮬레이터)</p>
 <blockquote class="callout callout-tip"><p class="callout-title">안내</p>
 <p><strong>공고 항목별 근거는 <a href="https://bugspeaker.github.io/opencabin-ivi/" target="_blank" rel="noopener">소개 사이트</a>에서 한눈에 볼 수 있습니다.</strong></p>
-<p>공고의 주요 업무, 자격요건, 우대사항마다 이 프로젝트에서 한 일을 적었고, 항목을 누르면 근거가 되는 테스트 결과와 테스트가 끝난 화면으로 바로 이동합니다.
+<p>공고의 주요 업무, 자격요건, 우대사항마다 이 프로젝트에서 한 일을 적었고, 항목을 누르면 근거가 되는 테스트 결과와 판정 직후 화면으로 바로 이동합니다.
 문서로 보려면 <a href="portfolio.html#1-공고-요구사항과-한-일">포트폴리오 1장</a>, 판단의 이유와 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</p>
 </blockquote>
 <div class="table"><table><thead><tr>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
 <td>게이트와 CI</td>
-<td>PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 뒤 <a href="portfolio.html#4-1-게이트-단계와-기준">Release 게이트</a> 다섯 조건. GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 94개를 돌리고, 요구사항 26개 ↔ 테스트 함수 101개 추적이 빠지면 실패합니다. E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다</td>
+<td>PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 뒤 <a href="portfolio.html#4-1-게이트-단계와-기준">Release 게이트</a> 다섯 조건. GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 94개를 돌리고, 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 129개) 추적이 빠지면 실패합니다. E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다</td>
 </tr>
 </tbody></table></div>
 <h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
@@ -100,7 +100,7 @@ docs/                 포트폴리오, 단계별 기록, 요구사항과 추적�
 site/                 소개 사이트</code></pre>
 <h2 id="실행"><a class="anchor" href="#실행" aria-hidden="true">#</a>실행</h2>
 <p>에뮬레이터를 <code>-writable-system</code>으로 켜고 Appium 서버를 띄운 뒤, <code>ivi-tests</code>에서 <code>pytest -m smoke</code> 또는 두 기기 병렬 실행 <code>tools\run_bench.py</code>를 돌립니다.
-테스트마다 끝난 화면과 판정은 <a href="test-results.html">docs/test-results.md</a>에서 볼 수 있습니다.
+테스트마다 판정과 판정 직후 화면은 <a href="test-results.html">docs/test-results.md</a>에서 볼 수 있습니다.
 자세한 방법과 환경 변수는 <a href="run.html">docs/run.md</a>에 있습니다.</p>
 <h2 id="찾은-결함과-알려진-결함"><a class="anchor" href="#찾은-결함과-알려진-결함" aria-hidden="true">#</a>찾은 결함과 알려진 결함</h2>
 <p>앱 결함, 실기기 문제, 플랫폼 결함, 테스트 코드의 경쟁 조건까지 찾은 결함의 증상, 원인, 조치는 <a href="portfolio.html#3-결함과-원인-분석">포트폴리오 3장</a>의 표(8개 항목)에 있습니다.</p>
@@ -175,7 +175,12 @@ site/                 소개 사이트</code></pre>
 <td>116개 통과, 7개 건너뜀 (9분 44초)</td>
 </tr>
 <tr>
-<td>8단계 (2026-11-16, 108개)</td>
+<td>8단계 끝 (2026-11-18 아침, 115개)</td>
+<td>113개 통과, 1개 건너뜀, 1개 알려진 결함 (9분 35초)</td>
+<td>109개 통과, 6개 건너뜀 (9분 11초)</td>
+</tr>
+<tr>
+<td>8단계 중간 (2026-11-16, 108개)</td>
 <td>106개 통과, 1개 건너뜀, 1개 알려진 결함 (6분 40초)</td>
 <td>102개 통과, 6개 건너뜀 (7분 6초)</td>
 </tr>

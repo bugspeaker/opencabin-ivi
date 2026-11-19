@@ -31,7 +31,7 @@
 | `--font-display`, `--font-text` | Inter (Google Fonts), 없으면 시스템 글꼴 |
 | `--font-mono` | JetBrains Mono, 없으면 시스템 고정폭 글꼴 |
 
-제목 위계는 h1(`display-xl`, 56px) > 공고 목차 제목(`display-lg`, 48px) > 섹션 제목(`display-md`, 40px)입니다. 1024px 아래에서는 48 / 40 / 40px, 768px 아래에서는 36 / 32 / 28px로 줄입니다.
+제목 위계는 h1(`display-xl`, 44px) > 섹션 제목(`display-md`, 40px) > 공고 목차 제목(`headline`, 28px)입니다. 첫 화면에서 큰 제목이 두 번 나와 눈이 두 번 멈추지 않게, 목차 제목은 h1보다 확실히 작게 둡니다(2026-11-19 검토). h1은 1024px 아래에서 40px, 768px 아래에서 30px로 줄입니다. 첫 화면 오른쪽에는 화면↔VHAL 데모 GIF를 두고, 1024px 아래에서는 글 아래로 내립니다.
 
 | 클래스 | 크기 | 쓰는 곳 |
 |---|---|---|

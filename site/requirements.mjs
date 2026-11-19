@@ -6,7 +6,8 @@
 // select 는 합집합이다: files(테스트 파일) · tests(함수 이름) · doc(설명 정규식) 중 하나라도 맞으면 넣는다.
 // doc 은 설명 문구가 바뀌면 조용히 빠지므로, 되도록 files 와 tests 로 적는다.
 // select 대신 chip(마커 칩을 미리 고름) · onlyBad(실패·재시도만) · all(전체) 을 쓸 수 있다.
-// 테스트로 보일 수 없는 항목은 link 로 문서의 해당 절에 잇는다.
+// 테스트로 보일 수 없는 항목은 link 로 문서의 해당 절에 잇는다. 근거가 표인 항목은 link 와 select/chip 을 함께 둔다:
+// 목차는 문서의 표로 가고, 결과 페이지 ?req=<id> 로 그 항목의 테스트도 볼 수 있다.
 
 export const GROUPS = [
   { id: "duty", label: "주요 업무" },
@@ -17,13 +18,17 @@ export const GROUPS = [
 export const REQUIREMENTS = [
   {
     id: "services", group: "duty", title: "IVI 서비스별 검증 전략",
-    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 깨지면 큰 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다.",
+    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다.",
+    // 근거는 테스트 목록이 아니라 서비스별 전략 표다. 테스트 목록은 결과 페이지 ?req=services 로 그대로 볼 수 있다
+    link: { href: "docs/portfolio.html#4-2-서비스별-검증", label: "서비스별 전략 표" },
     note: "서비스별 위험, 확인 방향, 테스트 수는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.",
     select: { files: ["test_climate.py", "test_vehicle_signals.py", "test_settings.py", "test_cockpit.py", "test_driving.py", "test_media.py", "test_radio.py"] },
   },
   {
     id: "gating", group: "duty", title: "Smoke · Sanity · Regression 게이팅",
     done: (s) => `smoke ${s.smoke}개, sanity ${s.sanity}개, regression ${s.regression}개를 고르는 기준, 시간, 통과 조건을 정하고 PR, main, Nightly, Release마다 돌리는 범위를 나눴습니다.`,
+    // 근거는 게이트 기준 표와 ivi-ci.yml 이다. smoke 목록은 결과 페이지 ?req=gating 으로 볼 수 있다
+    link: { href: "docs/portfolio.html#4-1-게이트-단계와-기준", label: "게이트 기준 표" },
     chip: "smoke",
     note: "빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다. 단계별 기준과 Release 게이트는 <a href=\"portfolio.html#4-1-게이트-단계와-기준\">포트폴리오 4-1</a>에 있습니다.",
   },
@@ -91,7 +96,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "android", group: "must", title: "Android/AAOS 테스트 자동화 구축과 운영",
-    done: (s) => `AAOS 에뮬레이터와 태블릿에서 E2E ${s.total}개를 돌리고, 테스트마다 끝난 화면을 남겼습니다.`,
+    done: (s) => `AAOS 에뮬레이터와 태블릿에서 E2E ${s.total}개를 돌리고, 테스트마다 판정 직후 화면을 남겼습니다.`,
     all: true,
   },
   {
@@ -122,7 +127,7 @@ export const REQUIREMENTS = [
   // 아래 셋은 실제 장비나 인증 경험이 아니라 PC 안의 모의 환경, 개념 적용이라 그 사실을 표시한다 (partial)
   {
     id: "network", group: "plus", title: "차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)", partial: "CAN만 모의",
-    done: "가상 CAN 버스와 DBC로 VCU, BMS, BCM을 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다.",
+    done: "가상 CAN 버스와 DBC로 VCU, BMS, BCM 역할의 가상 ECU를 두고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다.",
     select: { files: ["test_can_gateway.py"] },
     note: "PC 안의 가상 CAN 버스에서 돌린 테스트입니다. 실제 ECU와 CAN 장비, 버스 부하와 타이밍은 다루지 않았습니다.",
   },

@@ -1,6 +1,6 @@
 # 테스트 결과
 
-기기마다 E2E 전체를 돌린 결과와, 테스트가 끝난 순간의 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다. 두 기기에서 5회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다.
+기기마다 E2E 전체를 돌린 결과와 판정 직후 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다. 두 기기에서 5회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다.
 AAOS 칸 아래의 `PROPERTY[area]=값`은 그 테스트가 판정에 쓴 VHAL 값(CarService로 읽은 마지막 값)입니다.
 소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.
 

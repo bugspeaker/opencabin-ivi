@@ -194,6 +194,10 @@ mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
 const BAD = new Set(["failed", "error", "flaky", "xpassed"]);
 const MEASURE_LABEL = { camera_seconds: "카메라가 뜨기까지", boot_seconds: "부팅" };
 const MARKER_LABEL = { smoke: "smoke", sanity: "sanity", regression: "regression", spike: "spike", aaos: "AAOS 전용" };
+// 필터 칩은 게이트 순서대로 (smoke → sanity → regression), 그 뒤에 기술 검증과 기기 조건
+const MARKER_ORDER = ["smoke", "sanity", "regression", "spike", "aaos"];
+// 긴 테스트 이름이 좁은 화면에서 글자 중간이 아니라 단어('_') 뒤에서 줄바꿈되게
+const breakable = (name) => esc(name).replace(/_/g, "_<wbr>");
 const fmtTime = (s) => `${Math.floor(s / 60)}분 ${Math.floor(s % 60)}초`;  // pytest 와 같이 버림
 
 /** requirements.mjs 의 항목마다 근거 테스트와 숫자를 붙인다. */
@@ -240,7 +244,7 @@ function renderResults(page) {
   const { reqs, byTest } = reqIndex(data);
   const groupLabel = Object.fromEntries(GROUPS.map((g) => [g.id, g.label]));
   // 첫 화면 목차에서 ?req=<id> 로 들어올 때 쓰는 정보 (근거가 테스트인 항목만)
-  const reqMeta = Object.fromEntries(reqs.filter((r) => !r.gap && !r.link).map((r) => [r.id, {
+  const reqMeta = Object.fromEntries(reqs.filter((r) => !r.gap && (r.select || r.chip || r.onlyBad || r.all)).map((r) => [r.id, {
     eyebrow: `요구 역량 ${r.num} · ${groupLabel[r.group]}`, title: r.title, note: r.note ? `${esc(r.done)} ${r.note}` : r.done,
     count: r.count, filter: Boolean(r.select), chip: r.chip || "", onlyBad: Boolean(r.onlyBad),
   }]));
@@ -275,7 +279,7 @@ function renderResults(page) {
           const caption = `${t.name}${c.param ? ` [${c.param}]` : ""} · ${dev.label} · ${r.label} · ${r.duration}초`;
           const media = r.image
             ? `<button type="button" class="shot shot-${k}" data-full="../results/${esc(r.image)}" data-caption="${esc(caption)}" aria-label="${esc(dev.label)} 화면 크게 보기">
-                <img src="../results/${esc(r.image)}" alt="${esc(dev.label)}에서 ${esc(t.name)} 이 끝난 화면" loading="lazy" decoding="async">
+                <img src="../results/${esc(r.image)}" alt="${esc(dev.label)}에서 ${esc(t.name)} 판정 직후 화면" loading="lazy" decoding="async">
               </button>`
             : `<div class="shot shot-${k} no-shot"><p>${esc(r.message || "화면 없음")}</p></div>`;
           const measures = Object.entries(r.measures || {}).map(([k, v]) =>
@@ -295,7 +299,7 @@ function renderResults(page) {
       const marks = t.markers.map((m) => `<span class="mark-chip">${esc(MARKER_LABEL[m] || m)}</span>`).join("");
       return `<article class="rtest" id="${esc(t.name)}" data-markers="${esc(t.markers.join(" "))}" data-reqs="${esc((byTest.get(t.name) ?? []).join(" "))}" data-bad="${bad ? 1 : 0}">
           <div class="rtest-text">
-            <header class="rtest-head"><a class="rtest-name" href="#${esc(t.name)}"><code>${esc(t.name)}</code></a>${marks}</header>
+            <header class="rtest-head"><a class="rtest-name" href="#${esc(t.name)}"><code>${breakable(t.name)}</code></a>${marks}</header>
             ${t.doc ? `<p class="rtest-doc">${esc(t.doc)}</p>` : ""}
           </div>
           <div class="rtest-cases">${cases}</div>
@@ -308,10 +312,11 @@ function renderResults(page) {
       </section>`;
   }).join("\n");
 
-  const markers = [...new Set(data.files.flatMap((f) => f.tests.flatMap((t) => t.markers)))];
+  const used = new Set(data.files.flatMap((f) => f.tests.flatMap((t) => t.markers)));
+  const markers = [...MARKER_ORDER.filter((m) => used.has(m)), ...[...used].filter((m) => !MARKER_ORDER.includes(m))];
   const body = `
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E ${total}개를 두 기기에서 돌린 결과입니다${data.stability ? ` (${data.stability.rounds}회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>)` : ""}. 테스트가 끝난 직후의 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 그 테스트가 판정에 쓴 VHAL 값입니다.</p>
+    <p class="lead">E2E ${total}개를 두 기기에서 돌린 결과입니다${data.stability ? ` (${data.stability.rounds}회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>)` : ""}. 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 그 테스트가 판정에 쓴 VHAL 값입니다.</p>
     <div class="device-cards">${devices}</div>
     <section class="req-banner" id="req-banner" aria-live="polite" hidden>
       <div class="req-copy">
@@ -452,7 +457,7 @@ function renderFit({ reqs }) {
       <div class="fit-head">
         <div class="fit-head-copy">
           <p class="eyebrow">요구 역량</p>
-          <h2 id="fit-title" class="display-lg">42dot Test Automation Engineer, IVI System</h2>
+          <h2 id="fit-title" class="headline">42dot Test Automation Engineer, IVI System</h2>
           <p class="body-lg muted">채용 공고의 항목마다 이 프로젝트에서 한 일과 근거입니다. 항목을 누르면 근거가 되는 테스트 결과나 기록으로 이동합니다.</p>
         </div>
       </div>
@@ -467,6 +472,8 @@ function renderFit({ reqs }) {
     </section>`;
 }
 
+// 반복 실행한 날짜 (run id 앞 YYYYMMDD): "11-18"
+const runDate = (st) => [...new Set(st.run_ids.map((id) => `${id.slice(4, 6)}-${id.slice(6, 8)}`))].join(", ");
 // 반복 실행 건수를 기기별로: "(AAOS 640, 태블릿 610)"
 const byKind = (st) => st.executions_by_kind
   ? ` (${Object.entries(st.executions_by_kind).map(([k, n]) => `${k === "aaos" ? "AAOS" : "태블릿"} ${n.toLocaleString("en-US")}`).join(", ")})`
@@ -490,8 +497,10 @@ function renderStats({ stats }, data) {
   }
   const st = stats.stability;
   cards.push(st
-    ? card(`반복 실행 ${st.rounds}회 × 기기 ${st.devices}대`, `flaky ${st.flaky}건`,
-        `테스트 ${st.executions.toLocaleString("en-US")}건${byKind(st)} 실행, 재시도 ${st.reruns}번, 실패 ${st.failed}건`, "docs/flaky-report.html")
+    // 조건(언제, 어디서)을 숫자 옆에: 'flaky 0'만 크게 쓰면 조건 없는 주장처럼 읽힌다 (2026-11-19 검토)
+    ? card(`반복 실행 ${st.rounds}회 × 기기 ${st.devices}대 (${runDate(st)}, 같은 PC)`,
+        `재시도 ${st.reruns} / ${st.executions.toLocaleString("en-US")}건`,
+        `테스트 ${st.executions.toLocaleString("en-US")}건${byKind(st)}, flaky ${st.flaky}건, 실패 ${st.failed}건`, "docs/flaky-report.html")
     : card("실패와 재시도", `${stats.bad}건`, `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번 (기기마다 1회 실행)`, "docs/test-results.html"));
   return `<section class="stats-section" aria-label="최근 결과">
       <div class="stats">

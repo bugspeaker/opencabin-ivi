@@ -105,7 +105,7 @@ Appium 서버 하나로 두 세션을 동시에 쓰려면 UiAutomator2 `systemPo
 
 | 이벤트 | 범위 | 기기당 시간 (2026-11-18 실측, 129개 기준) |
 |---|---|---|
-| pull_request | smoke (13개) | 약 35초 |
+| pull_request | smoke (13개) | 약 35초 (2026-11-19에 공조 화면↔VHAL 왕복을 넣은 뒤 약 45초) |
 | push (main) | smoke와 sanity (38개) | 약 2분 15초, 두 기기 병렬 |
 | schedule (매일 03:00 KST) | 전체 (129개) | 약 8분 45초~9분 15초, 두 기기 병렬 |
 | workflow_dispatch | 입력한 마커와 반복 횟수. Release 후보는 전체, 반복 3회 | - |

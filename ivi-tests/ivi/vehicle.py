@@ -89,7 +89,10 @@ CABIN_DEFAULTS = {
     Signal.RANGE_KM: 320.0, Signal.BATTERY_PCT: 80.0, Signal.OUTSIDE_C: 18.0,
 }
 
-SEAT_AREAS = (0x1, 0x4, 0x10, 0x40, 0x20)  # 에뮬레이터 HVAC area: 1열 좌·우, 2열 좌·우·가운데
+# 에뮬레이터 HVAC area: 1열 좌·우, 2열 좌·우·가운데. 앱은 area 를 CarPropertyConfig 에서 읽지만 테스트는 일부러 고정한다:
+# 앱과 같은 출처에서 기대값을 읽으면 config 가 틀렸을 때 둘이 같이 틀려 결함이 보이지 않는다.
+# 다른 차종(다른 VHAL 설정)에서 돌릴 때는 `cmd car_service get-property-config` 로 읽은 area 와 이 목록을 먼저 맞춰 본다.
+SEAT_AREAS = (0x1, 0x4, 0x10, 0x40, 0x20)
 DOOR_AREAS = (0x1, 0x4, 0x10, 0x40)
 
 

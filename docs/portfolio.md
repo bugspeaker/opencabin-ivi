@@ -16,9 +16,9 @@
 | 두 기기 병렬 | 같은 시각에 시작해 끝까지 10분 16초. 차례로 돌렸다면 약 20분 0초 |
 | 반복 실행 | 전체를 두 기기에서 5회씩, 테스트 1,250건(AAOS 640, 태블릿 610) 실행. 재시도로 통과한 것(flaky) 0건, 실패 0건, Release 게이트 다섯 조건 통과 ([반복 실행 통계와 원자료](flaky-report.md)) |
 | 단위 테스트 | 프레임워크 94개, 앱 22개 모두 통과 |
-| 테스트별 결과 | 기기마다 판정, 테스트가 끝난 화면, AAOS는 판정에 쓴 VHAL 값까지: [테스트 결과](test-results.md) |
-| 요구사항 추적 | 요구사항 26개 ↔ 테스트 함수 101개. 빠진 곳이 있으면 CI의 unit job이 실패합니다: [추적표](traceability.md) |
-| GitHub Actions | 2026-11-19 기준 ivi-ci 31회(성공 30회, 첫 실행 1회 취소), pages 3회. GitHub에서 돈 것은 build와 unit job뿐이고, e2e job은 아직 GitHub에서 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 ([8-3](#8-3-github-실행-기록)) |
+| 테스트별 결과 | 기기마다 판정, 판정 직후 화면, AAOS는 판정에 쓴 VHAL 값까지: [테스트 결과](test-results.md) |
+| 요구사항 추적 | 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 129개). 빠진 곳이 있으면 CI의 unit job이 실패합니다: [추적표](traceability.md) |
+| GitHub Actions | build와 unit job은 PR, main push, Nightly마다 GitHub에서 돕니다([실행 기록](https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml)). GitHub에서 돈 것은 build와 unit job뿐이고, e2e job은 아직 GitHub에서 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 ([8-3](#8-3-github-실행-기록)) |
 
 알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼(SystemUI) 쪽 문제라 앱에서 고칠 수 없어 `xfail(strict=True)`로 걸어 두었습니다. 고쳐지면 이 테스트가 실패로 바뀌어 바로 알 수 있습니다. 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.
 
@@ -54,7 +54,7 @@
 
 | 공고의 주요 업무 | 이 프로젝트에서 한 일 | 자세히 |
 |---|---|---|
-| IVI 서비스별 검증 전략 | HVAC, 차량 설정(도어), 주행 정보 패널, 미디어를 나누고, 서비스마다 깨지면 큰 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트를 배치했습니다. | [4-2](#4-2-서비스별-검증) |
+| IVI 서비스별 검증 전략 | HVAC, 차량 설정(도어), 주행 정보 패널, 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트를 배치했습니다. | [4-2](#4-2-서비스별-검증) |
 | Smoke / Sanity / Regression 게이팅 | 단계마다 고르는 기준, 시간, 통과 조건을 정하고 PR, main, Nightly, Release에 돌리는 범위를 나눴습니다. | [4-1](#4-1-게이트-단계와-기준) |
 | UI와 CarProperty/VHAL을 잇는 E2E | 화면과 신호를 양쪽에서 확인하고, 좌석과 문은 area마다 봅니다. | [5-1](#5-1-양방향-검증과-area-단위-판정) |
 | 터치부터 하위 연동까지 통합 | AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(`IVI_HvacStatus`)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다. CAN 쪽은 PC 안의 가상 버스(python-can, DBC)입니다. 거리 부족 신호가 경고, 충전소 카드, 경로 안내로 이어지는 흐름도 확인합니다. | [test_can_gateway.py](../ivi-tests/tests/test_can_gateway.py), [결과](test-results.md#test_climate_button_goes_out_on_can) |
@@ -66,7 +66,7 @@
 
 | 공고의 자격요건 | 이 프로젝트에서 한 일 |
 |---|---|
-| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실제 태블릿에서 E2E 129개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 끝난 화면도 남깁니다. |
+| Android/AAOS 자동화 구축과 운영 | AAOS 에뮬레이터와 실제 태블릿에서 E2E 129개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 판정 직후 화면도 남깁니다. |
 | Python 테스트 프레임워크 (Pytest) | 훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 94개 있습니다. |
 | Appium 등 UI 자동화 도구 | Appium(UiAutomator2)을 썼고, AAOS의 다중 사용자 환경(user 10)에 맞춰 설정했습니다. |
 | ADB, Logcat, Shell | adb 어댑터를 만들고, 실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다. |
@@ -77,7 +77,7 @@
 | 공고의 우대사항 | 지금 상태 |
 |---|---|
 | VHAL, CarService, CarPropertyManager | 신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다. |
-| 차량 네트워크 (Ethernet, DDS, SOME/IP, CAN) | CAN만 모의 환경에서 해 봤습니다. PC 안의 가상 CAN 버스와 DBC로 ECU를 흉내 내고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지와 화면의 공조 값이 CAN으로 나가는지 확인합니다([9단계](phase9-bench.md)). 실제 CAN 장비와 Ethernet, DDS, SOME/IP는 경험이 없습니다. |
+| 차량 네트워크 (Ethernet, DDS, SOME/IP, CAN) | CAN만 모의 환경에서 해 봤습니다. PC 안의 가상 CAN 버스와 DBC로 가상 ECU를 두고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지와 화면의 공조 값이 CAN으로 나가는지 확인합니다([9단계](phase9-bench.md)). 실제 CAN 장비와 Ethernet, DDS, SOME/IP는 경험이 없습니다. |
 | REST API 자동화, 원격 전원 제어 | 모의 장비로 해 봤습니다. Test Bench REST API로 기기, 신호, 전원, 실행 결과를 다루고 API 테스트를 붙였습니다. 에뮬레이터 전원을 원격으로 껐다 켜서 부팅과 기본값 복귀를 확인합니다. 실제 전원 공급기나 릴레이는 쓰지 않았습니다. |
 | ISO 26262, A-SPICE | 개념만 적용해 봤습니다. 요구사항 26개와 테스트를 양방향으로 잇는 [추적표](traceability.md)를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없고 더 공부해야 합니다. |
 
@@ -197,7 +197,7 @@ flowchart LR
 | 단계 | 고르는 기준 | 개수 | 기기당 시간 (실측 합) | 언제 | 통과 조건 |
 |---|---|---|---|---|---|
 | unit | 테스트 도구 자체가 맞는지 (기기 없음) | 94 | 약 11초 | 모든 PR, push | 실패 0 |
-| smoke | 이 빌드를 올려도 되는지: 앱 실행, 데이터 소스, 탭 이동, 공조 제어 권한 | 13 | 약 35초 | PR | failed, error 0 |
+| smoke | 이 빌드를 올려도 되는지: 앱 실행, 데이터 소스, 탭 이동, 공조의 화면↔차량 왕복(화면 + 한 번이 차량 22.5°C로, 차량 쪽 25.0°C가 화면으로) | 13 | 약 45초 | PR | failed, error 0 |
 | sanity | 서비스마다 '화면→신호', '신호→화면' 대표 경로 하나씩, 주행 중 제한 대표 | 25 | 약 1분 45초 | main push (smoke와 함께) | failed, error 0. 재시도로 통과한 것은 flaky로 기록 |
 | regression | 경계값, 조합, 예전 결함 재발 확인, 대표가 아닌 경로 | 85 | 약 6분 30초~7분 | Nightly | 위와 같음 |
 | spike | AAOS 기본 SystemUI (1단계 기술 검증) | 6 | 약 15초 (AAOS만) | Nightly | 알려진 결함은 strict xfail 유지 |
@@ -219,7 +219,7 @@ sanity는 처음에 55개(전체의 45%)까지 늘어 regression과 크기가 �
 
 ### 4-2. 서비스별 검증
 
-| 서비스 | 깨지면 큰 위험 | 확인 방향 | 요구사항 | 테스트 (smoke / sanity / regression) | 이 프로젝트에서 보지 못하는 것 |
+| 서비스 | 주요 위험 | 확인 방향 | 요구사항 | 테스트 (smoke / sanity / regression) | 이 프로젝트에서 보지 못하는 것 |
 |---|---|---|---|---|---|
 | HVAC | 다른 좌석 area에 쓰기, 범위 밖이나 단위가 어긋난 값 쓰기, 화면과 신호 불일치 | 화면→신호: 버튼, 아래 바, 음성이 `HVAC_TEMPERATURE_SET`과 A/C 전 좌석 area를 바꾸는지. 신호→화면: VHAL 값이 공조 화면, 홈, 아래 바에 같은 값으로 보이는지 | HVAC-01~06 | 1 / 11 / 31 | 실제 공조 ECU의 응답 지연과 거절, 실차의 area 구성 |
 | 차량 설정 | 일부 문만 잠김, 설정이 재시작 뒤 사라짐 | 화면→신호: 도어 버튼이 모든 문 area의 `DOOR_LOCK`을 바꾸는지. 신호→화면: 차량 쪽 문 열림이 화면에 보이는지. 속도 단위 설정이 차량 정보 표시에 반영되는지 | BODY-01, SET-01 | 0 / 3 / 7 | 실제 BCM. 사이드 미러, 트렁크 같은 항목은 신호에 연결하지 않은 화면 상태 |
@@ -302,7 +302,7 @@ if out.count("Set property") == len(commands):   # 31개가 모두 들어갔는�
 | 명령 | 경로 | 쓰는 곳 |
 |---|---|---|
 | `cmd car_service set-property-value` | CarService를 거쳐 VHAL로 (앱과 같은 경로) | 운전석, 조수석 설정 온도. 앱이 쓰는 값을 같은 권한 경로로 바꿀 때 |
-| `dumpsys <VHAL> --set` (root) | VHAL에 바로 | 차량(ECU) 쪽에서 값이 바뀐 상황을 흉내 낼 때. 속도, 기어 같은 읽기 전용 값과, A/C, 풍량, 도어처럼 쓰기 가능한 값의 '차량 쪽 변화' 모두 |
+| `dumpsys <VHAL> --set` (root) | VHAL에 바로 | 차량(ECU) 쪽에서 값이 바뀐 상황을 만들 때. 속도, 기어 같은 읽기 전용 값과, A/C, 풍량, 도어처럼 쓰기 가능한 값의 '차량 쪽 변화' 모두 |
 | `cmd car_service inject-vhal-event` | 이벤트만 보냄 | 쓰지 않습니다. 저장된 값이 바뀌지 않아 `get`으로 판정할 수 없습니다. |
 
 둘을 나눈 기준은 '그 값을 누가 바꾸는가'입니다. 앱이 바꾸는 값을 테스트가 준비할 때는 앱과 같은 CarService 경로를 써야 권한과 범위 검사까지 같은 조건이 됩니다. 차량이 바꾸는 값은 CarService가 범위 밖 값을 거절하기 때문에(3장 8번) VHAL에 바로 넣어야 이상한 값이 올라오는 상황까지 만들 수 있습니다. 읽기는 모두 `cmd car_service get-property-value`로 합니다.
@@ -386,15 +386,15 @@ flowchart LR
 
 ### 8-3. GitHub 실행 기록
 
-2026-11-16부터 11-19 새벽까지 ivi-ci 워크플로가 31회 돌았습니다(`gh run list`로 센 값, 2026-11-19 기준). Test Bench를 켜 두지 않았기 때문에 e2e job은 모두 건너뛰었습니다. 이 문서를 고친 뒤의 PR과 Nightly 실행은 이 표에 들어 있지 않습니다.
+ivi-ci 워크플로의 build와 unit job은 PR, main push, Nightly(매일 03:00 KST)마다 GitHub에서 돕니다. e2e job은 Test Bench(self-hosted 러너)를 켜 두지 않아서 건너뜁니다. 실행 횟수와 결과는 [Actions 실행 기록](https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml)에 있습니다. 횟수를 문서에 적으면 PR마다 낡아서 링크로 둡니다.
 
-| 이벤트 | 횟수 | build | unit | 결과 |
-|---|---|---|---|---|
-| PR 생성, 갱신 | 16 | 통과, 4~5분 | 통과, 15~23초 | 모두 success |
-| main push (병합) | 12 | 통과 | 통과 | 11회 success, 1회 취소 |
-| Nightly (매일 03:00 KST) | 3 | 통과 | 통과 | 모두 success |
+| 이벤트 | build | unit | e2e |
+|---|---|---|---|
+| PR 생성, 갱신 | 앱 빌드와 앱 단위 테스트 (4~5분) | 프레임워크 단위 테스트 (15~30초) | 건너뜀 |
+| main push (병합) | 같음 | 같음 | 건너뜀 |
+| Nightly | 같음 | 같음 | 건너뜀 |
 
-소개 사이트를 올리는 pages 워크플로는 3회 돌았습니다.
+소개 사이트는 pages 워크플로가 `site/`나 `docs/images/`가 바뀐 main push마다 올립니다.
 
 취소한 1회는 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 두 번째 실행부터는 그 수정이 들어간 실행입니다.
 
@@ -415,6 +415,7 @@ flowchart LR
 - 앱도 이 프로젝트에서 만들어서 테스트에 필요한 testTag와 테스트 훅을 마음대로 넣을 수 있었습니다. 다른 팀이 만든 앱을 테스트하는 실제 환경과 다릅니다.
 - CI에서 e2e는 아직 GitHub로 돌리지 않았습니다. build와 unit만 GitHub에서 통과했고, e2e는 같은 명령(`run_bench.py`)을 작업 PC에서 실행해 확인했습니다. 공개 저장소라 개인 PC를 self-hosted 러너로 붙이지 않기로 했습니다.
 - `test_out_of_range_signal_is_shown_safely`는 기기마다 기대값이 다릅니다. AAOS는 VHAL에 범위 밖 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주는지, ▲ 한 번에 차량 값이 16.0°C가 되는지 봅니다. 태블릿의 Mock 차량은 받은 값을 16.0~28.0°C로 잘라 두므로 15.5°C는 16.0°C가 되고, ▲ 한 번에 16.5°C가 되는지만 봅니다. 범위 밖 값 표시는 AAOS에서만 확인한 것입니다.
+- 테스트 쪽 차량 어댑터는 좌석 area를 에뮬레이터 값으로 고정했습니다(`SEAT_AREAS`, [`ivi/vehicle.py`](../ivi-tests/ivi/vehicle.py)). 앱이 `CarPropertyConfig`에서 읽은 area와 출처가 다른 기대값으로 두어, 설정이 틀렸을 때 앱과 테스트가 같이 틀리지 않게 하려는 것입니다. 다른 차종에서는 `cmd car_service get-property-config`로 읽은 area와 이 목록을 먼저 맞춰 봐야 합니다.
 - 앱의 온도 범위(16.0~28.0°C)와 0.5°C 증분은 앱 코드(`HvacSpec`)에 고정했습니다. 좌석 area는 `CarPropertyConfig`에서 읽지만 범위와 증분은 읽지 않습니다. 차종마다 다르면 area별 최소·최대 값과 `HVAC_TEMPERATURE_SET`의 `configArray`에서 읽어야 합니다.
 - 반복 실행은 하루(2026-11-18) 5회입니다. 기간에 걸친 flaky 추세는 아직 없습니다.
 - 2026-11-19에 테스트 코드의 대기 방식(고정 sleep → `stays`, 값 대기 → `wait_value`)과 범위 밖 온도 테스트의 기대값을 바꿨습니다. 위 E2E 결과와 반복 실행 5회는 바꾸기 전 코드로 돌린 것입니다. 바꾼 코드로는 두 기기 전체를 1회 다시 돌려 AAOS 127 통과, 1 건너뜀, 1 알려진 결함, 태블릿 122 통과, 7 건너뜀, 재시도 0이었습니다([원자료](evidence/2026-11-19-after-review/README.md)). 반복 실행은 아직 다시 하지 않았습니다.
@@ -425,7 +426,7 @@ flowchart LR
 
 1. Bench 전용 PC나 비공개 저장소의 self-hosted 러너로 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.
 2. 반복 실행을 Nightly로 쌓아 기간별 flaky 추세를 보려고 합니다.
-3. 차량 네트워크는 SOME/IP와 DDS도 같은 방식으로 흉내 내 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.
+3. 차량 네트워크는 SOME/IP와 DDS도 같은 방식의 모의 환경으로 해 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.
 
 ---
 
