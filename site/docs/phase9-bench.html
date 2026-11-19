@@ -263,7 +263,30 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <td>숫자 옆에 &#39;차량 값은 앱 안 Mock&#39;과 기기별 건수(AAOS 640, 태블릿 610)</td>
 </tr>
 </tbody></table></div>
-<p>프레임워크 단위 테스트는 71개에서 94개가 됐습니다. 테스트 코드(대기 방식, 범위 밖 온도 기대값)를 바꾼 뒤의 두 기기 E2E 재실행은 아직 하지 않았습니다. 위 결과 표는 바꾸기 전 코드로 돌린 2026-11-18 저녁 실행입니다.</p>
+<p>프레임워크 단위 테스트는 71개에서 94개가 됐습니다.</p>
+<p>바꾼 테스트 코드로 두 기기 전체를 1회 다시 돌렸습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-19-after-review/README.md">원자료</a>). 위 6절의 결과 표와 반복 실행 5회는 바꾸기 전 코드 기준입니다.</p>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>결과 (2026-11-19, <code>20261119-104613</code>)</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS 에뮬레이터</td>
+<td>127개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (11분 43초)</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 (Mock)</td>
+<td>122개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (8분 48초)</td>
+</tr>
+<tr>
+<td>범위 밖 온도 (AAOS)</td>
+<td>마지막 VHAL 값 16.0, 28.0 (새 기대값과 같음)</td>
+</tr>
+<tr>
+<td>Release 게이트 (1회분)</td>
+<td>다섯 조건 통과</td>
+</tr>
+</tbody></table></div>
+<p>이 실행 전에 한 번은 AAOS 쪽이 모두 오류였습니다. 막 켠 에뮬레이터에서 UiAutomator2 서버의 화면 캡처가 계속 실패하다 계측 프로세스가 죽었고(<code>UiAutomation returned null</code>, <code>instrumentation process is not running</code>), Appium 세션이 실행 전체에서 하나라 그 뒤 테스트가 모두 준비 단계 오류가 됐습니다. 검토에서 짚은 &#39;세션이 끊기면 전체 실패로 번짐&#39;이 실제로 일어난 것입니다. smoke로 안정된 것을 확인하고 다시 돌렸습니다. 세션 복구는 아직 없습니다.</p>
 
   </main>
   <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a></nav>
