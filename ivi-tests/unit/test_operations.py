@@ -239,7 +239,7 @@ def test_condition_table_check_finds_stale_rows():
 
 
 def test_recorder_keeps_vhal_values_of_last_attempt(recorder):
-    """판정에 쓴 차량 값(user_properties 'vhal')은 마지막 시도 것만 남는다. 결과 페이지가 화면 옆에 보여 준다."""
+    """마지막으로 읽은 차량 값(user_properties 'vhal')은 마지막 시도 것만 남는다. 결과 페이지가 화면 옆에 보여 준다."""
     nodeid = "tests/test_climate.py::test_button_changes_signal_by_one_step[up-driver]"
     run(recorder, nodeid,
         ("call", "rerun", {"props": [("vhal", "HVAC_TEMPERATURE_SET[0x1]=22.0")]}),
@@ -316,3 +316,27 @@ def test_run_bench_judges_exit_code_and_result_file(code, summary, reasons):
     from tools import run_bench
 
     assert run_bench.judge(code, summary) == (not reasons, reasons)
+
+
+@pytest.mark.parametrize("code, summary, reasons", [
+    (0, None, ["결과 파일 없음 (pytest 가 끝나기 전에 죽었거나 시간 제한에 걸림)"]),           # 정상 종료인데 결과 없음
+    (0, {"run_id": "r1", "serial": "s1", "gate": "fail", "problems": ["failed 1, error 0"]},
+     ["failed 1, error 0"]),                                                               # 정상 종료인데 결과는 실패
+    (0, {"run_id": "r0", "serial": "s1", "gate": "pass"},
+     ["결과 파일의 run_id 'r0' 가 이번 실행의 'r1' 와 다르다"]),                              # 다른 실행의 결과 파일
+    (0, {"run_id": "r1", "serial": "s1", "gate": "pass"}, []),
+], ids=["no_result", "failed_summary", "other_run", "clean"])
+def test_run_bench_checks_result_belongs_to_this_run(code, summary, reasons):
+    from tools import run_bench
+
+    assert run_bench.judge(code, summary, run_id="r1", serial="s1") == (not reasons, reasons)
+
+
+@pytest.mark.parametrize("value", ["0", "-1"])
+def test_run_bench_repeat_must_be_positive(value):
+    """--repeat 0 이면 아무것도 돌리지 않고 종료 코드 0 으로 끝나 '통과'처럼 보였다."""
+    from tools import run_bench
+
+    with pytest.raises(SystemExit):
+        run_bench.parse_args(["--repeat", value])
+    assert run_bench.parse_args(["--repeat", "3", "-m", "smoke"])[0].repeat == 3

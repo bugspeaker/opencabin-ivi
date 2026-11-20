@@ -116,3 +116,20 @@ def test_timeout_keeps_last_error_as_cause():
     with pytest.raises(AssertionError, match="마지막 오류: NoSuchElementException") as caught:
         wait_until(lambda: (_ for _ in ()).throw(NoSuchElementException("없음")), timeout=0.1, interval=0.02)
     assert isinstance(caught.value.__cause__, NoSuchElementException)
+
+
+def test_wait_value_session_lost_after_a_value_was_read():
+    """값을 한 번 읽은 뒤 세션이 끊기면, '마지막 값' 메시지로 바꾸지 않고 세션 끊김을 바로 올린다 (원인은 이어 둔다)."""
+    reads = iter([22.0])
+
+    def read():
+        try:
+            return next(reads)
+        except StopIteration:
+            raise WebDriverException("instrumentation process is not running (probably crashed)") from None
+
+    started = time.monotonic()
+    with pytest.raises(SessionLost) as caught:
+        wait_value(read, 22.5, timeout=5, interval=0.01, what="화면 운전석 온도")
+    assert time.monotonic() - started < 1
+    assert isinstance(caught.value.__cause__, WebDriverException)

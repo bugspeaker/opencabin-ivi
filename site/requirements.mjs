@@ -101,7 +101,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 129개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
@@ -139,7 +139,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "safety", group: "plus", title: "ISO 26262, A-SPICE", partial: "개념 적용",
-    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없습니다.",
+    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 연결 누락 0은 조건별 검증이 충분하다는 뜻이 아니라서, 조건이 여럿인 요구사항은 조건마다 확인하는 곳을 따로 적고 테스트가 없는 조건을 밝혔습니다. 인증이나 심사 경험은 없습니다.",
     link: { href: "docs/traceability.html", label: "추적표" },
   },
 ];

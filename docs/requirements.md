@@ -35,12 +35,16 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 
 ## 복합 요구사항: 조건마다 확인하는 곳
 
-요구사항 하나에 조건이 여럿이면, 테스트 이름이 붙어 있다는 것만으로 모든 조건을 확인했다고 할 수 없습니다. 그래서 조건을 나누고, 조건마다 어느 테스트의 어떤 확인(assert 또는 대기)이 그 조건을 보는지 적었습니다. 확인하지 않는 조건은 '확인하지 않음'으로 남겼습니다.
+요구사항 하나에 조건이 여럿이면, 테스트 이름이 붙어 있다는 것만으로 모든 조건을 확인했다고 할 수 없습니다. 추적표의 '요구사항 ID 연결 누락 0'은 연결이 빠지지 않았다는 뜻이고, 조건별 검증이 충분하다거나 표준을 지켰다는 뜻은 아닙니다. 그래서 조건을 나누고, 조건마다 어느 테스트의 어떤 확인(assert 또는 대기)이 그 조건을 보는지 적었습니다. 확인하지 않는 조건은 '확인하지 않음'으로 남겼습니다.
 
 `trace_report.py`가 이 표의 테스트가 실제로 있고 그 요구사항 ID를 달고 있는지 검사합니다. 테스트 이름이 바뀌거나 요구사항 표시가 빠지면 CI의 unit job이 실패합니다.
 
 | 조건 | 내용 | 테스트 | 그 조건을 보는 확인 |
 |---|---|---|---|
+| SYS-01.1 | 기기에 맞는 차량 데이터에 연결한다 (AAOS는 CarService, 태블릿은 Mock) | `test_app_starts_with_vehicle_source_for_device` | `assert app.source_badge() == device.vehicle.badge`, 연결 안 됨·오류 표시가 없음 |
+| SYS-01.2 | 연결한 차량 값이 시작 화면에 맞게 보인다 | `test_parked_on_start` | `wait_text("speed_value", "0")`, `assert home.gear() == "P"` |
+| SYS-01.3 | 권한이 있으면 공조를 제어할 수 있다 | `test_hvac_is_controllable` | `assert not climate.unavailable()` 뒤 화면 + 한 번이 차량 22.5°C로 |
+| SYS-01.4 | 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 준다 | 확인하지 않음 | 앱 코드(`CarVehicleDataSource`가 `SecurityException`을 받아 '값 없음')에는 있지만, 권한을 뺀 상태로 돌리는 E2E나 앱 단위 테스트가 없다 |
 | HVAC-02.1 | 버튼 한 번에 0.5°C 바뀐다 | `test_button_changes_signal_by_one_step` | 차량 값 `wait_value(car.temperature(seat), 22.5)`(▼는 21.5)와 화면 `wait_temperature`를 따로 본다. 좌석 2 × 방향 2 |
 | HVAC-02.2 | 끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌린다 | `test_buttons_disabled_at_limits` | `wait_enabled("<좌석>_temp_down", False)`와 `assert climate.can_increase(seat)`. 28.0°C는 반대 |
 | HVAC-02.3 | 버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않는다 | `test_step_reaches_limit_and_disables` | 16.5→16.0°C `wait_value`, `wait_enabled(False)`, 꺼진 버튼을 누른 뒤 1.5초 동안 `stays(car.temperature(seat) == 16.0)`. 28.0°C도 같다 |

@@ -10,6 +10,8 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 | 테스트 함수 | 101개 |
 | 요구사항이 없는 테스트 | 0개 |
 
+'요구사항이 없는 테스트 0개', '테스트가 있는 요구사항 26개'는 요구사항 ID 연결이 빠지지 않았다는 수치입니다. 조건별 검증이 충분하다거나 표준(ISO 26262, A-SPICE)을 지켰다는 뜻은 아닙니다. 조건별로 어디까지 확인했는지는 아래 '복합 요구사항' 표에 있습니다.
+
 결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.
 
 ## 요구사항에서 테스트로
@@ -45,10 +47,14 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 
 ## 복합 요구사항: 조건마다 확인하는 곳
 
-조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 [요구사항](requirements.md#복합-요구사항-조건마다-확인하는-곳)에 적었습니다. 조건 23개 가운데 테스트가 없는 조건은 1개입니다.
+조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 [요구사항](requirements.md#복합-요구사항-조건마다-확인하는-곳)에 적었습니다. 조건 27개 가운데 테스트가 없는 조건은 2개입니다.
 
 | 조건 | 내용 | 테스트 | 그 조건을 보는 확인 | AAOS 에뮬레이터 | 태블릿 |
 |---|---|---|---|---|---|
+| SYS-01.1 | 기기에 맞는 차량 데이터에 연결한다 (AAOS는 CarService, 태블릿은 Mock) | `test_app_starts_with_vehicle_source_for_device` | `assert app.source_badge() == device.vehicle.badge`, 연결 안 됨·오류 표시가 없음 | 1/1 통과 | 1/1 통과 |
+| SYS-01.2 | 연결한 차량 값이 시작 화면에 맞게 보인다 | `test_parked_on_start` | `wait_text("speed_value", "0")`, `assert home.gear() == "P"` | 1/1 통과 | 1/1 통과 |
+| SYS-01.3 | 권한이 있으면 공조를 제어할 수 있다 | `test_hvac_is_controllable` | `assert not climate.unavailable()` 뒤 화면 + 한 번이 차량 22.5°C로 | 1/1 통과 | 1/1 통과 |
+| SYS-01.4 | 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 준다 | 확인하지 않음 | 앱 코드(`CarVehicleDataSource`가 `SecurityException`을 받아 '값 없음')에는 있지만, 권한을 뺀 상태로 돌리는 E2E나 앱 단위 테스트가 없다 | 확인하지 않음 | 확인하지 않음 |
 | HVAC-02.1 | 버튼 한 번에 0.5°C 바뀐다 | `test_button_changes_signal_by_one_step` | 차량 값 `wait_value(car.temperature(seat), 22.5)`(▼는 21.5)와 화면 `wait_temperature`를 따로 본다. 좌석 2 × 방향 2 | 4/4 통과 | 4/4 통과 |
 | HVAC-02.2 | 끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌린다 | `test_buttons_disabled_at_limits` | `wait_enabled("<좌석>_temp_down", False)`와 `assert climate.can_increase(seat)`. 28.0°C는 반대 | 2/2 통과 | 2/2 통과 |
 | HVAC-02.3 | 버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않는다 | `test_step_reaches_limit_and_disables` | 16.5→16.0°C `wait_value`, `wait_enabled(False)`, 꺼진 버튼을 누른 뒤 1.5초 동안 `stays(car.temperature(seat) == 16.0)`. 28.0°C도 같다 | 2/2 통과 | 2/2 통과 |

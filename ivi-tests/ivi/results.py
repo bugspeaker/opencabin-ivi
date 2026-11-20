@@ -62,7 +62,7 @@ class Recorder:
     def __init__(self, run_id, device, code=None):
         self.run_id = run_id
         self.device = device  # {"serial", "kind", "model"}
-        self.code = code or {}  # {"commit", "dirty"} (code_version). 요약에만 남긴다
+        self.code = code or {}  # {"commit", "dirty", "app", "command", "launcher"}. 요약에만 남긴다
         self.records = {}
         self.started = time.time()
 
@@ -97,7 +97,7 @@ class Recorder:
             rec["session_restarts"] = max(rec["session_restarts"], len(restarts))
             rec["session_restart_reason"] = restarts[-1]
         signals = [value for key, value in report.user_properties if key == "vhal"]
-        if signals:  # 판정에 쓴 차량 값. 재시도면 마지막 시도 것
+        if signals:  # 테스트 중 마지막으로 읽은 차량 값(최대 3개). 재시도면 마지막 시도 것
             rec["signals"] = signals
         for key, value in report.user_properties:
             if key == "shot":  # 끝 화면 (--shots). 재시도면 마지막 시도 것

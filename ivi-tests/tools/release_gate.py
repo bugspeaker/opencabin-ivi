@@ -11,15 +11,17 @@
 조건 (하나라도 어기면 이유를 출력하고 종료 코드 1)
   1. 실행 완전성. 회차마다 필수 기기 종류(기본 aaos, mock)의 결과가 모두 있고, 각 결과에 지금 코드에서 수집한
      테스트(tools/collect_tests.py)가 빠짐없이 판정과 함께 있으며, pytest 종료 코드가 0 이다.
-     건너뜀은 기기 전용 마커(태블릿의 aaos, AAOS 의 tablet)로 정해 둔 것만 허용한다. --commit 을 주면 모든 결과가
-     그 커밋에서, 커밋하지 않은 변경 없이 돈 것이어야 한다
+     건너뜀은 기기 전용 마커(태블릿의 aaos, AAOS 의 tablet)로 정해 둔 것만 허용한다. 같은 회차·기기의 결과가 둘이거나
+     한 결과 안에 같은 테스트가 두 번 있으면 막는다. 결과에 APK 가 적혀 있으면 회차·기기마다 같은 APK 여야 한다.
+     --commit 을 주면 모든 결과가 그 커밋에서, 커밋하지 않은 변경 없이 돈 것이어야 한다
   2. 모든 회차, 모든 기기에서 failed·error·xpassed 0
   3. 모든 회차에서 flaky 0. 비교 기준(직전 Nightly 등)을 따로 두지 않고, 이번 Release 반복 안에서
      재시도로 통과한 테스트가 하나도 없어야 한다
-  4. 격리 목록(quarantine.txt)의 모든 줄에 이유, 등록일, 해제 조건이 있고 MAX_ENTRIES(2)줄 이하
+  4. 격리 목록(quarantine.txt)의 모든 줄에 이유, 등록일, 해제 조건이 있고 MAX_ENTRIES(2)줄 이하. 파일이 없으면 막는다
   5. 요구사항 추적 누락 0 (tools/trace_report.check, unit job 과 같은 검사)
-  6. xfailed 가 된 테스트 = 알려진 결함 목록(known_defects.txt).
-     목록에 없는 xfail, 목록에 있는데 xfailed 가 아니거나 실행되지 않은 테스트가 있으면 막는다
+  6. xfailed 가 된 테스트 = 알려진 결함 목록(known_defects.txt). 회차·기기마다 따로 본다(한 회차에서 한 번 xfailed 였다고
+     다른 회차를 넘기지 않는다). 목록에 없는 xfail, 목록에 있는데 xfailed 가 아니거나 실행되지 않은 테스트, 목록 파일이
+     없는 경우를 막는다
 """
 import argparse
 import json
@@ -100,6 +102,12 @@ def pick(runs, run_ids=None, last=0, since=""):
     return {run_id: runs[run_id] for run_id in chosen}
 
 
+def _runs(labels):
+    """'회차 기기' 목록을 줄여 보여 준다."""
+    more = f" 외 {len(labels) - EXAMPLES}건" if len(labels) > EXAMPLES else ""
+    return ", ".join(labels[:EXAMPLES]) + more
+
+
 def _examples(nodeids):
     nodeids = sorted(nodeids)
     more = f" 외 {len(nodeids) - EXAMPLES}개" if len(nodeids) > EXAMPLES else ""
@@ -113,12 +121,18 @@ def check_completeness(check, runs, inventory, expected_rounds, kinds, commit):
         return
     if expected_rounds and len(runs) != expected_rounds:
         check.problems.append(f"반복 {expected_rounds}회 가운데 결과가 있는 회차는 {len(runs)}회")
-    legacy_exit, legacy_commit, commits = 0, 0, set()
+    legacy_exit, legacy_commit, commits, apks, legacy_apk = 0, 0, set(), set(), 0
     for run_id, results in runs.items():
-        present = {run["summary"].get("kind") for run in results}
-        check.problems += [f"{run_id} {kind}: 결과 파일 없음 (필수 기기)" for kind in kinds if kind not in present]
+        kinds_seen = [run["summary"].get("kind") for run in results]
+        check.problems += [f"{run_id} {kind}: 결과 파일 없음 (필수 기기)" for kind in kinds if kind not in kinds_seen]
+        check.problems += [f"{run_id} {kind}: 같은 회차에 결과가 {kinds_seen.count(kind)}개 (중복)"
+                           for kind in sorted(set(kinds_seen)) if kinds_seen.count(kind) > 1]
         for run in results:
             summary, label = run["summary"], f"{run_id} {run['summary']['serial']}"
+            nodeids = [test["nodeid"] for test in run["tests"]]
+            repeated = sorted({nodeid for nodeid in nodeids if nodeids.count(nodeid) > 1})
+            if repeated:
+                check.problems.append(f"{label}: 같은 테스트의 결과가 두 번 이상 ({_examples(repeated)})")
             outcomes = {test["nodeid"]: test["outcome"] for test in run["tests"]}
             failed_inside = any(outcome in ("failed", "error") for outcome in outcomes.values())
 
@@ -145,6 +159,11 @@ def check_completeness(check, runs, inventory, expected_rounds, kinds, commit):
             if unexpected:
                 check.problems.append(f"{label}: 기기 전용이 아닌데 건너뛴 테스트 {len(unexpected)}개 ({_examples(unexpected)})")
 
+            apk = (summary.get("app") or {}).get("apk_sha256")
+            if apk:
+                apks.add(apk)
+            else:
+                legacy_apk += 1
             if not summary.get("commit"):
                 legacy_commit += 1
                 continue
@@ -155,6 +174,10 @@ def check_completeness(check, runs, inventory, expected_rounds, kinds, commit):
                 check.problems.append(f"{label}: 커밋 {summary['commit'][:7]} 에서 돈 결과 (확인할 커밋 {commit[:7]})")
     if len(commits) > 1:
         check.problems.append("회차·기기마다 다른 커밋에서 돈 결과가 섞였다: " + ", ".join(sorted(c[:7] for c in commits)))
+    if len(apks) > 1:
+        check.problems.append("회차·기기마다 다른 APK 로 돈 결과가 섞였다: " + ", ".join(sorted(a[:12] for a in apks)))
+    if legacy_apk:
+        check.notes.append(f"APK 가 적히지 않은 결과 파일 {legacy_apk}개 (APK 를 남기기 전 형식). 같은 빌드였는지 확인할 수 없다")
     if legacy_exit:
         check.notes.append(f"종료 코드가 없는 결과 파일 {legacy_exit}개 (커밋·종료 코드를 남기기 전 형식). "
                            "지금 코드의 테스트 목록과 하나씩 맞춰 끝까지 돌았는지 본다")
@@ -191,6 +214,9 @@ def evaluate(runs, quarantine_text, known_text, trace, expected_rounds=None, inv
                 elif test["outcome"] == "flaky":
                     flaky.problems.append(f"{run_id} {serial} {test['nodeid']}: 재시도 {test.get('reruns', 1)}번 뒤 통과")
 
+    if quarantine_text is None:
+        quarantine_check.problems.append("격리 목록 파일(quarantine.txt)이 없다. 빈 목록으로 보지 않는다")
+        quarantine_text = ""
     try:
         entries = quarantine.parse(quarantine_text)
         if len(entries) > quarantine.MAX_ENTRIES:
@@ -204,28 +230,44 @@ def evaluate(runs, quarantine_text, known_text, trace, expected_rounds=None, inv
     trace_check.problems += [f"요구사항이 없는 테스트: {name}" for name in untraced]
     trace_check.problems += [f"없는 요구사항 ID: {item}" for item in unknown]
 
+    if known_text is None:
+        known_check.problems.append("알려진 결함 목록 파일(known_defects.txt)이 없다. 빈 목록으로 보지 않는다")
+        known_text = ""
     try:
         defects = parse_known_defects(known_text)
     except ValueError as err:
         known_check.problems.append(str(err))
         defects = []
-    seen = {}  # nodeid → 실행된 판정들 (건너뜀 제외)
-    for results in runs.values():
+    unlisted = {}      # nodeid → 목록에 없는데 xfailed 였던 실행들
+    not_xfailed = {}   # (결함 번호, nodeid, 판정) → 실행들
+    not_run = {}       # (결함 번호, 패턴) → 실행들
+    for run_id, results in runs.items():
         for run in results:
-            for test in run["tests"]:
-                if test["outcome"] != "skipped":
-                    seen.setdefault(test["nodeid"], set()).add(test["outcome"])
-    for nodeid, outcomes in sorted(seen.items()):
-        defect = next((d for d in defects if d.matches(nodeid)), None)
-        if "xfailed" in outcomes and defect is None:
-            known_check.problems.append(f"목록에 없는 xfail: {nodeid}")
-        if defect is not None and outcomes != {"xfailed"}:
-            others = ", ".join(sorted(str(o) for o in outcomes - {"xfailed"}))
-            known_check.problems.append(f"알려진 결함 {defect.defect}번이 xfailed 가 아님 ({others}): {nodeid}. "
-                                        "고쳐졌다면 xfail 과 목록에서 함께 지운다")
+            label = f"{run_id} {run['summary']['serial']}"
+            allowed_skip = DEVICE_ONLY_SKIP.get(run["summary"].get("kind"))
+            outcomes = {test["nodeid"]: test["outcome"] for test in run["tests"]}
+            for nodeid, outcome in outcomes.items():
+                if outcome == "xfailed" and not any(d.matches(nodeid) for d in defects):
+                    unlisted.setdefault(nodeid, []).append(label)
+            for defect in defects:
+                # 이 기기에서 돌아야 하는 결함 테스트: 지금 코드 목록에서 고르고, 기기 전용으로 건너뛰는 것은 뺀다
+                targets = [nodeid for nodeid, marks in inventory.items()
+                           if defect.matches(nodeid) and allowed_skip not in marks]
+                ran = [nodeid for nodeid in targets if outcomes.get(nodeid) not in (None, "skipped")]
+                if targets and not ran:
+                    not_run.setdefault((defect.defect, defect.pattern), []).append(label)
+                for nodeid in ran:
+                    if outcomes[nodeid] != "xfailed":
+                        not_xfailed.setdefault((defect.defect, nodeid, outcomes[nodeid]), []).append(label)
+    known_check.problems += [f"목록에 없는 xfail: {nodeid} ({_runs(labels)})" for nodeid, labels in sorted(unlisted.items())]
+    known_check.problems += [f"알려진 결함 {number}번이 xfailed 가 아님 ({outcome}): {nodeid} ({_runs(labels)}). "
+                             "고쳐졌다면 xfail 과 목록에서 함께 지운다"
+                             for (number, nodeid, outcome), labels in sorted(not_xfailed.items(), key=str)]
+    known_check.problems += [f"알려진 결함 {number}번 테스트가 실행되지 않음: {pattern} ({_runs(labels)})"
+                             for (number, pattern), labels in sorted(not_run.items())]
     for defect in defects:
-        if not any(defect.matches(nodeid) for nodeid in seen):
-            known_check.problems.append(f"알려진 결함 {defect.defect}번 테스트가 실행되지 않음: {defect.pattern}")
+        if not any(defect.matches(nodeid) for nodeid in inventory):
+            known_check.problems.append(f"알려진 결함 {defect.defect}번 테스트가 지금 코드에 없음: {defect.pattern}")
     return checks
 
 
@@ -258,7 +300,8 @@ def main(argv=None):
 
     sys.stdout.reconfigure(encoding="utf-8")
     runs = pick(load_runs(args.runs_dir), args.runs, args.last, args.since)
-    read = lambda path: Path(path).read_text(encoding="utf-8") if Path(path).exists() else ""  # noqa: E731
+    # 정책 파일이 없으면 None: 빈 목록으로 조용히 바꾸지 않고 조건 4, 6 이 막는다
+    read = lambda path: Path(path).read_text(encoding="utf-8") if Path(path).exists() else None  # noqa: E731
     trace = trace_report.check(trace_report.read_requirements(), trace_report.read_test_reqs())
     try:
         inventory = collect_tests.collect()

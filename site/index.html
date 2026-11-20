@@ -107,6 +107,8 @@ section { padding: var(--s-section) 0 0; }
 .hero-demo img { display: block; height: auto; }
 .hero-demo figcaption { margin-top: var(--s-xs); font-size: 13px; line-height: 1.5; color: var(--ink-subtle); }
 .hero-copy { display: grid; gap: var(--s-md); max-width: 960px; }
+/* 첫 화면 소개 문단은 한 줄을 짧게 (약 36자). 넓은 화면에서 한 줄이 50자를 넘어 읽는 눈이 길게 움직였다 (2026-11-20 검토) */
+.hero-copy > .body-lg { max-width: 38rem; line-height: 1.6; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
 .limits { display: flex; gap: var(--s-xs); align-items: baseline; margin: var(--s-md) 0 0; padding: var(--s-sm) var(--s-md); border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-1); color: var(--ink-muted); font-size: 14px; line-height: 1.5; }
 .limits strong { flex: none; font-weight: 500; color: var(--ink); }
@@ -306,7 +308,7 @@ footer a:hover { color: var(--ink); }
           <a class="btn btn-secondary" href="docs/portfolio.html">포트폴리오 문서</a>
         </div>
         <p class="limits"><strong>한계</strong><span>실차, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</span></p>
-        <p class="limits"><strong>만든 사람</strong><span>게임 QA 약 8년. 웹 BVT를 Playwright와 pytest로 만든 경험이 있고, 모바일과 AAOS 테스트 자동화는 이 프로젝트가 처음입니다. 2026-11-13부터 혼자 진행했습니다. 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했고, 저는 Test Bench에서 E2E를 직접 돌려 결과와 실패 자료를 확인하고, 외부 검토에서 반영할 항목을 고르고, PR마다 변경 내용과 실행 결과를 보고 병합했습니다. <a href="docs/decisions.html">결정 기록</a></span></p>
+        <p class="limits"><strong>만든 사람</strong><span>게임 QA 약 8년과 Playwright·pytest 기반 웹 BVT 구축 경험을 바탕으로 AAOS 테스트 자동화로 영역을 넓혔습니다. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다. 2026-11-13부터 혼자 진행했습니다. 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했고, 저는 Test Bench에서 E2E를 직접 돌려 결과와 실패 자료를 확인하고, 외부 검토에서 반영할 항목을 고르고, PR마다 변경 내용과 실행 결과를 보고 병합했습니다. <a href="docs/decisions.html">결정 기록</a></span></p>
       </div>
       <figure class="shot-card hero-demo">
         <img src="../docs/images/demo-ui-vhal.gif" width="800" height="776" alt="운전석 + 를 누르면 VHAL 값이 22.0에서 22.5로, VHAL에 25.0을 넣으면 화면이 25.0으로 바뀌는 모습 (AAOS 에뮬레이터)">
@@ -377,7 +379,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase3-framework.html#구조">
               <span class="fit-num">09</span>
-              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 129개 있습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase1-spike.html#appium을-aaos에-붙일-때-필요한-것">
@@ -417,7 +419,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/traceability.html">
               <span class="fit-num">16</span>
-              <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span><span class="fit-done">요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span><span class="fit-done">요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 연결 누락 0은 조건별 검증이 충분하다는 뜻이 아니라서, 조건이 여럿인 요구사항은 조건마다 확인하는 곳을 따로 적고 테스트가 없는 조건을 밝혔습니다. 인증이나 심사 경험은 없습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-partial">개념 적용</span><span class="fit-dest">추적표<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>

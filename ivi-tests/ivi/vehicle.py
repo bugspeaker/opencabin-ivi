@@ -129,7 +129,7 @@ class VehicleController(ABC):
     def __init__(self, adb):
         self.adb = adb
         self.retried = []  # 신호 주입 도구의 일시 오류로 다시 시도한 기록 (conftest 가 테스트 결과에 옮긴다)
-        self.observed = {}  # 테스트가 판정에 쓴 차량 값 (읽은 순서, 같은 property·area 는 마지막 값). AAOS 만 채운다
+        self.observed = {}  # 테스트 중에 읽은 차량 값 (읽은 순서, 같은 property·area 는 마지막 값). AAOS 만 채운다
 
     def take_observed(self, limit=3):
         """마지막으로 읽은 차량 값 limit 개를 'HVAC_TEMPERATURE_SET[0x1]=22.5' 꼴로 돌려주고 비운다.

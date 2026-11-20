@@ -64,6 +64,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td>0개</td>
 </tr>
 </tbody></table></div>
+<p>&#39;요구사항이 없는 테스트 0개&#39;, &#39;테스트가 있는 요구사항 26개&#39;는 요구사항 ID 연결이 빠지지 않았다는 수치입니다. 조건별 검증이 충분하다거나 표준(ISO 26262, A-SPICE)을 지켰다는 뜻은 아닙니다. 조건별로 어디까지 확인했는지는 아래 &#39;복합 요구사항&#39; 표에 있습니다.</p>
 <p>결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.</p>
 <h2 id="요구사항에서-테스트로"><a class="anchor" href="#요구사항에서-테스트로" aria-hidden="true">#</a>요구사항에서 테스트로</h2>
 <div class="table"><table><thead><tr>
@@ -284,7 +285,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 </tbody></table></div>
 <h2 id="복합-요구사항-조건마다-확인하는-곳"><a class="anchor" href="#복합-요구사항-조건마다-확인하는-곳" aria-hidden="true">#</a>복합 요구사항: 조건마다 확인하는 곳</h2>
-<p>조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 <a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>에 적었습니다. 조건 23개 가운데 테스트가 없는 조건은 1개입니다.</p>
+<p>조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 <a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>에 적었습니다. 조건 27개 가운데 테스트가 없는 조건은 2개입니다.</p>
 <div class="table"><table><thead><tr>
 <th>조건</th>
 <th>내용</th>
@@ -294,6 +295,38 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <th>태블릿</th>
 </tr>
 </thead><tbody><tr>
+<td>SYS-01.1</td>
+<td>기기에 맞는 차량 데이터에 연결한다 (AAOS는 CarService, 태블릿은 Mock)</td>
+<td><a class="test-link" href="test-results.html#test_app_starts_with_vehicle_source_for_device" title="테스트 결과와 화면 보기"><code>test_app_starts_with_vehicle_source_for_device</code></a></td>
+<td><code>assert app.source_badge() == device.vehicle.badge</code>, 연결 안 됨·오류 표시가 없음</td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+</tr>
+<tr>
+<td>SYS-01.2</td>
+<td>연결한 차량 값이 시작 화면에 맞게 보인다</td>
+<td><a class="test-link" href="test-results.html#test_parked_on_start" title="테스트 결과와 화면 보기"><code>test_parked_on_start</code></a></td>
+<td><code>wait_text(&quot;speed_value&quot;, &quot;0&quot;)</code>, <code>assert home.gear() == &quot;P&quot;</code></td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+</tr>
+<tr>
+<td>SYS-01.3</td>
+<td>권한이 있으면 공조를 제어할 수 있다</td>
+<td><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_hvac_is_controllable</code></a></td>
+<td><code>assert not climate.unavailable()</code> 뒤 화면 + 한 번이 차량 22.5°C로</td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+</tr>
+<tr>
+<td>SYS-01.4</td>
+<td>권한이 없는 신호는 앱이 멈추지 않고 &#39;값 없음&#39;으로 보여 준다</td>
+<td>확인하지 않음</td>
+<td>앱 코드(<code>CarVehicleDataSource</code>가 <code>SecurityException</code>을 받아 &#39;값 없음&#39;)에는 있지만, 권한을 뺀 상태로 돌리는 E2E나 앱 단위 테스트가 없다</td>
+<td>확인하지 않음</td>
+<td>확인하지 않음</td>
+</tr>
+<tr>
 <td>HVAC-02.1</td>
 <td>버튼 한 번에 0.5°C 바뀐다</td>
 <td><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_button_changes_signal_by_one_step</code></a></td>

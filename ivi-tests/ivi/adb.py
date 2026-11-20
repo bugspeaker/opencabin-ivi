@@ -33,6 +33,25 @@ class Adb:
         """AAOS 는 운전자 화면이 사용자 10 이다. 일반 기기는 0."""
         return int(self.shell("am", "get-current-user").strip())
 
+    def app_identity(self, package):
+        """설치된 앱의 식별값: {"version": versionName (versionCode), "apk_sha256": 기기에 있는 APK 의 sha256}.
+        결과 파일에 남겨 '어느 빌드를 시험한 결과인지'를 잇는다. tools/install_app.py 가 같은 해시로 설치를 건너뛴다.
+        읽지 못하면 빈 값 (결과 기록 때문에 실행이 실패하지 않게)."""
+        identity = {"version": "", "apk_sha256": ""}
+        try:
+            path = self.shell("pm", "path", package, check=False).strip().splitlines()
+            if path and path[0].startswith("package:"):
+                out = self.shell("sha256sum", path[0].removeprefix("package:"), check=False).split()
+                identity["apk_sha256"] = out[0] if out and len(out[0]) == 64 else ""
+            dump = self.shell("dumpsys", "package", package, check=False)
+            name = re.search(r"versionName=(\S+)", dump)
+            code = re.search(r"versionCode=(\d+)", dump)
+            if name:
+                identity["version"] = name.group(1) + (f" ({code.group(1)})" if code else "")
+        except (AdbError, OSError, subprocess.SubprocessError):
+            pass
+        return identity
+
     def model(self):
         return self.shell("getprop", "ro.product.model").strip()
 

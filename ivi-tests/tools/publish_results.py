@@ -170,6 +170,7 @@ def build(runs, blur_boxes=None, repeat=None):
             "counts": summary["counts"], "gate": summary["gate"],
             # 어느 코드로 돈 결과인지 (2026-11-20 부터 결과 파일에 남는다. 그 전 실행은 빈 값)
             "commit": summary.get("commit", ""), "dirty": summary.get("dirty", False),
+            "app": summary.get("app", {}), "command": summary.get("launcher") or summary.get("command", ""),
         })
         for test in run["tests"]:
             nodeid = test["nodeid"]
@@ -215,16 +216,18 @@ def markdown(data):
            if data.get("stability") else ""),
         "AAOS 칸 아래의 `PROPERTY[area]=값`은 테스트 중에 CarService로 마지막으로 읽은 차량 값(최대 3개)입니다. 판정 직전에 읽은 값이 맨 뒤에 옵니다.",
         "소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.",
-        "이 결과가 어느 코드로 돈 것인지, 그 뒤에 바뀐 코드는 무엇으로 확인했는지는 [README의 '결과 자료와 검증 시점'](../README.md#결과-자료와-검증-시점)에 있습니다.",
+        "판정과 화면은 아래 표의 실행에서 나온 것입니다. 그 뒤 바꾼 코드를 무엇으로 확인했는지는 별도 기록인 [README의 '결과 자료와 검증 시점'](../README.md#결과-자료와-검증-시점)에 있습니다.",
         "",
-        "| 기기 | 실행 | 코드 | 결과 | 시간 |",
-        "|---|---|---|---|---|",
+        "| 기기 | 실행 | 코드 | 앱 (APK sha256) | 결과 | 시간 |",
+        "|---|---|---|---|---|---|",
     ]
     for d in data["devices"]:
         counts = ", ".join(f"{OUTCOME_LABEL.get(k, k)} {v}" for k, v in sorted(d["counts"].items()))
         code = (f"`{d['commit'][:7]}`" + (" (커밋 안 한 변경 있음)" if d.get("dirty") else "")) if d.get("commit") \
             else "기록 없음 (커밋을 남기기 전 형식)"
-        lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {code} | {counts} | {fmt_time(d['duration'])} |")
+        app = d.get("app") or {}
+        apk = f"{app.get('version') or '버전 미기록'}, `{app['apk_sha256'][:12]}`" if app.get("apk_sha256") else "기록 없음"
+        lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {code} | {apk} | {counts} | {fmt_time(d['duration'])} |")
     lines += ["", DEVICE_NOTE]
     kinds = [d["kind"] for d in data["devices"]]
     for f in data["files"]:

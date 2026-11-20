@@ -20,6 +20,7 @@ CLOCK = "tests/test_settings.py::test_clock_on_tablet"
 # 지금 코드에서 수집한 테스트 (tools/collect_tests.collect 와 같은 꼴): 알려진 결함은 AAOS 전용, 시계는 태블릿 전용
 INVENTORY = {OK: {"smoke"}, KNOWN_ID: {"aaos", "spike"}, CLOCK: {"tablet", "regression"}}
 COMMIT = "a" * 40
+APP = {"version": "1.0 (1)", "apk_sha256": "c" * 64}
 
 
 def run(run_id, serial, kind, outcomes, **summary):
@@ -27,7 +28,7 @@ def run(run_id, serial, kind, outcomes, **summary):
     tests = [{"nodeid": nodeid, "outcome": outcome, "reruns": 1 if outcome == "flaky" else 0, "message": ""}
              for nodeid, outcome in outcomes.items()]
     return {"summary": {"run_id": run_id, "serial": serial, "kind": kind, "exitstatus": 0, "commit": COMMIT,
-                        "dirty": False, **summary}, "tests": tests}
+                        "dirty": False, "app": APP, **summary}, "tests": tests}
 
 
 def bench(rounds=2, aaos=None, mock=None, aaos_summary=None, mock_summary=None):
@@ -146,6 +147,29 @@ def test_condition1_legacy_result_files_pass_with_notes():
     assert "커밋 aaaaaaa 에서 돈 결과인지 확인할 수 없다" in failing(evaluate(runs, commit=COMMIT))[1][0]
 
 
+def test_condition1_one_test_missing_in_one_round_blocks():
+    """한 회차, 한 기기에서 일반 테스트 하나만 빠진 결과. 다른 회차에 있다고 넘어가지 않는다."""
+    runs = bench()
+    runs["20261118-200002-r2"][1]["tests"] = [t for t in runs["20261118-200002-r2"][1]["tests"] if t["nodeid"] != OK]
+    assert failing(evaluate(runs)) == {1: [f"20261118-200002-r2 TABLET: 지금 코드의 테스트 1개가 돌지 않음 ({OK})"]}
+
+
+def test_condition1_duplicate_results_block():
+    runs = bench()
+    runs["20261118-200001-r1"].append(runs["20261118-200001-r1"][1])  # 같은 회차에 태블릿 결과가 둘
+    runs["20261118-200002-r2"][0]["tests"].append(dict(runs["20261118-200002-r2"][0]["tests"][0]))  # 같은 테스트 두 번
+    problems = failing(evaluate(runs))[1]
+    assert "20261118-200001-r1 mock: 같은 회차에 결과가 2개 (중복)" in problems
+    assert f"20261118-200002-r2 emulator-5554: 같은 테스트의 결과가 두 번 이상 ({OK})" in problems
+
+
+def test_condition1_different_apk_blocks():
+    """회차·기기마다 같은 빌드여야 한다. 결과 파일의 APK sha256 으로 본다."""
+    other = {"version": "1.0 (2)", "apk_sha256": "d" * 64}
+    problems = failing(evaluate(bench(mock_summary={2: {"app": other}})))
+    assert problems == {1: [f"회차·기기마다 다른 APK 로 돈 결과가 섞였다: {'c' * 12}, {'d' * 12}"]}
+
+
 def test_condition1_without_inventory_blocks():
     checks = release_gate.evaluate(bench(), CLEAN_QUARANTINE, KNOWN, NO_TRACE_GAP)
     assert "지금 코드의 테스트 목록이 없어" in failing(checks)[1][0]
@@ -193,19 +217,34 @@ def test_condition6_unlisted_xfail_blocks():
     hidden = "tests/test_a.py::test_hidden"
     runs = bench(aaos={n: {hidden: "xfailed"} for n in (1, 2)}, mock={n: {hidden: "passed"} for n in (1, 2)})
     problems = failing(evaluate(runs, inventory={**INVENTORY, hidden: set()}))
-    assert problems == {6: ["목록에 없는 xfail: tests/test_a.py::test_hidden"]}
+    assert problems == {6: ["목록에 없는 xfail: tests/test_a.py::test_hidden "
+                            "(20261118-200001-r1 emulator-5554, 20261118-200002-r2 emulator-5554)"]}
 
 
 def test_condition6_known_defect_not_xfailed_blocks():
     # strict xfail 이 XPASS 로 바뀌면 failed 로 기록된다 → 조건 2 와 함께 6 도 막는다 (목록이 낡음)
     problems = failing(evaluate(bench(aaos={2: {KNOWN_ID: "failed"}})))
     assert list(problems) == [2, 6] and "알려진 결함 3번이 xfailed 가 아님 (failed)" in problems[6][0]
+    # 회차마다 따로 본다: 1회차에서 xfailed 였어도 2회차는 그 회차만 짚는다
+    assert "(20261118-200002-r2 emulator-5554)" in problems[6][0] and "r1" not in problems[6][0]
+
+
+@pytest.mark.parametrize("missing, condition, message", [
+    ("quarantine", 4, "격리 목록 파일(quarantine.txt)이 없다"),
+    ("known", 6, "알려진 결함 목록 파일(known_defects.txt)이 없다"),
+])
+def test_missing_policy_file_blocks(missing, condition, message):
+    """정책 파일이 없으면 빈 목록으로 조용히 바꾸지 않는다 (빈 격리 목록은 통과, 빈 결함 목록은 엉뚱한 이유로 막힌다)."""
+    texts = {"quarantine": CLEAN_QUARANTINE, "known": KNOWN, missing: None}
+    problems = failing(evaluate(bench(), texts["quarantine"], texts["known"]))
+    assert message in problems[condition][0]
 
 
 def test_condition6_known_defect_not_run_blocks():
     problems = failing(evaluate(bench(aaos={1: {KNOWN_ID: "skipped"}, 2: {KNOWN_ID: "skipped"}})))
     # AAOS 전용 테스트를 AAOS 에서 건너뛴 것이라 조건 1 도 막는다
-    assert list(problems) == [1, 6] and problems[6] == [f"알려진 결함 3번 테스트가 실행되지 않음: {KNOWN_ID}"]
+    assert list(problems) == [1, 6] and problems[6] == [
+        f"알려진 결함 3번 테스트가 실행되지 않음: {KNOWN_ID} (20261118-200001-r1 emulator-5554, 20261118-200002-r2 emulator-5554)"]
 
 
 def test_cli_reads_run_files_and_returns_exit_code(tmp_path, capsys, monkeypatch):
@@ -234,6 +273,11 @@ def test_cli_reads_run_files_and_returns_exit_code(tmp_path, capsys, monkeypatch
         path.unlink()
     assert release_gate.main(common + ["--known-defects", str(tmp_path / "known.txt")]) == 1
     assert "막음 (조건 1)" in capsys.readouterr().out
+
+    # 정책 파일 경로가 틀려 파일이 없으면 막는다
+    assert release_gate.main(["--runs-dir", str(runs_dir), "--quarantine", str(tmp_path / "없음.txt"),
+                              "--known-defects", str(tmp_path / "known.txt")]) == 1
+    assert "격리 목록 파일(quarantine.txt)이 없다" in capsys.readouterr().out
 
 
 def test_repository_known_defects_match_strict_xfail_tests():

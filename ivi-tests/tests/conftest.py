@@ -33,6 +33,7 @@ from appium import webdriver
 
 from ivi import quarantine
 from ivi.device import Device
+from ivi.vehicle import PACKAGE
 from ivi.results import QUARANTINE_KEYWORD, Recorder, code_version, junit_name
 from ivi.screens import IviApp
 from ivi.session import SessionHolder
@@ -72,9 +73,11 @@ def pytest_configure(config):
     device = Device.connect(serial)
     config.ivi_device = device
     run_id = config.getoption("--run-id") or time.strftime("%Y%m%d-%H%M%S")
-    # 어느 코드로 돈 결과인지 남긴다. Release 게이트가 회차마다 같은 커밋인지, 고치지 않은 코드인지 본다
+    # 어느 코드와 어느 빌드로, 어떤 명령으로 돈 결과인지 남긴다. Release 게이트가 회차·기기마다 같은 커밋, 같은 APK 인지 본다
     config.ivi_recorder = Recorder(run_id, {"serial": serial, "kind": device.kind, "model": device.model},
-                                   code=code_version(ROOT))
+                                   code={**code_version(ROOT), "app": device.adb.app_identity(PACKAGE),
+                                         "command": " ".join(["pytest", *config.invocation_params.args]),
+                                         "launcher": os.environ.get("IVI_LAUNCHER", "")})
     config.pluginmanager.register(config.ivi_recorder, "ivi_recorder")  # pytest_runtest_logreport 를 받는다
     if not config.option.xmlpath:
         config.option.xmlpath = str(REPORT_DIR / junit_name(run_id, device.kind, serial))
@@ -229,7 +232,9 @@ def vehicle(device, request):
 
 
 def _cleanup_vehicle(device, request):
-    """정차·값 복원. 실패하면 teardown 오류로 남지만(결과 기록은 준비 단계의 원래 오류를 지우지 않는다), 재시도 기록은 옮긴다."""
+    """정차·값 복원. 실패하면 teardown 오류로 남지만(결과 기록은 준비 단계의 원래 오류를 지우지 않는다), 재시도 기록은 옮긴다.
+    정리가 실패한 뒤에도 실행은 이어 간다. 다음 테스트의 준비(prepare)가 정차, 온도, 신호 12종을 모두 기준값으로 다시 쓰기 때문이다.
+    그 준비마저 실패하면 그 테스트가 준비 단계 오류가 되고, 어느 쪽이든 Release 게이트는 막는다 (unit/test_fixtures.py)."""
     try:
         device.vehicle.cleanup()
     finally:
@@ -249,7 +254,7 @@ def _record_retries(device, request):
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
-    # 판정에 쓴 차량 값 (AAOS 의 CarService 로 읽은 VHAL 값, 마지막 3개). 결과 페이지에서 화면 옆에 보여 준다
+    # 테스트 중 마지막으로 읽은 차량 값 (AAOS 의 CarService 로 읽은 VHAL 값, 최대 3개). assert 의 증거 전체는 아니다. 결과 페이지에서 화면 옆에 보여 준다
     if report.when == "call":
         device = getattr(item.config, "ivi_device", None)
         if device is not None:
