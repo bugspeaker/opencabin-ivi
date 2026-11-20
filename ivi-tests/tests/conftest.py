@@ -5,13 +5,14 @@
 
 픽스처
   device   세션 하나에 기기 하나 (ivi.device.Device). 세션 시작 때 앱을 한 번 종료해 깨끗하게 시작
-  driver   Appium 세션 (AAOS 전용 설정, 병렬 실행용 --system-port)
+  driver   Appium 세션 (AAOS 전용 설정, 병렬 실행용 --system-port). 실행 전체에서 하나를 쓰고, 끊기면 다음 테스트 시작 때 다시 붙인다
   app      테스트마다 저장 설정을 기본값으로(테스트 훅), 화면을 초기화(--activity-clear-task), 차량을 정차·기본 온도로. 끝나면 정차·값 복원
   car      app 과 함께 쓰는 차량 어댑터 (device.vehicle)
   vehicle  앱 없이 차량만 쓰는 테스트(1단계 spike)용
 
 운영
   재시도   --reruns N (pytest-rerunfailures). 재시도에서 통과하면 'flaky' 로 기록
+  세션     Appium 세션이 끊겨 있으면 테스트 시작 전에 다시 붙이고 'session_restart' 로 기록 (ivi/session.py)
   격리     quarantine.txt 에 있는 테스트는 xfail(strict=False) → 돌리되 게이트를 막지 않음
   기록     reports/history/results.jsonl (누적), reports/runs/<run>-<serial>.json (이번 실행), JUnit
   실패자료 reports/artifacts/<테스트>[__재시도 n]/ 화면·UI 계층·차량 상태·액티비티·logcat (정리 전에 남김)
@@ -30,6 +31,7 @@ from ivi import quarantine
 from ivi.device import Device
 from ivi.results import QUARANTINE_KEYWORD, Recorder, junit_name
 from ivi.screens import IviApp
+from ivi.session import SessionHolder
 
 ROOT = Path(__file__).resolve().parent.parent
 REPORT_DIR = ROOT / "reports"
@@ -120,7 +122,8 @@ def pytest_terminal_summary(terminalreporter, config):
         counts = ", ".join(f"{key} {value}" for key, value in sorted(summary["counts"].items()))
         terminalreporter.write_sep("-", "ivi run")
         terminalreporter.write_line(f"{summary['kind']}:{summary['serial']}  gate={summary['gate']}  {counts}  "
-                                    f"relaunch {summary['relaunches']}  vhal_retry {summary.get('infra_retries', 0)}  ({summary['duration']}s)")
+                                    f"relaunch {summary['relaunches']}  vhal_retry {summary.get('infra_retries', 0)}  "
+                                    f"session_restart {summary.get('session_restarts', 0)}  ({summary['duration']}s)")
         terminalreporter.write_line(f"기록: {run_file}")
 
 
@@ -135,6 +138,13 @@ def device(pytestconfig):
 
 @pytest.fixture(scope="session")
 def driver(device, pytestconfig):
+    """Appium 세션 자리(SessionHolder). 테스트는 webdriver 처럼 쓰고, 끊긴 세션은 _appium_session_alive 가 다시 붙인다."""
+    holder = SessionHolder(lambda: _new_session(device, pytestconfig))
+    yield holder
+    holder.quit_session()  # 전원 테스트가 기기를 껐다 켜면 이 세션은 이미 끊겨 있다 (오류 없이 넘어간다)
+
+
+def _new_session(device, pytestconfig):
     options = device.appium_options()
     port = pytestconfig.getoption("--system-port")
     if port:
@@ -145,14 +155,22 @@ def driver(device, pytestconfig):
         if device.automotive:
             session.update_settings({"enableMultiWindows": True})  # SystemUI(하단 HVAC 바)도 보이게
     except Exception:
-        # yield 전에 실패하면 아래 정리 코드가 돌지 않는다. Appium 세션이 남아 다음 실행이 막히지 않게 여기서 닫는다
+        # 설정 중에 실패하면 Appium 세션이 남아 다음 실행이 막히지 않게 여기서 닫는다
         session.quit()
         raise
-    yield session
-    try:
-        session.quit()
-    except Exception:  # noqa: BLE001 - 전원 테스트가 기기를 껐다 켜면 이 세션은 이미 끊겨 있다
-        pass
+    return session
+
+
+@pytest.fixture(autouse=True)
+def _appium_session_alive(request):
+    """드라이버를 쓰는 테스트마다 시작 전에 Appium 세션을 확인하고, 끊겼으면 다시 붙인다.
+    2026-11-19: 막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽자 세션 하나에 묶인 뒤의 테스트가 모두 error 였다.
+    다시 붙인 일은 숨기지 않고 JUnit property(session_restart)와 결과 기록에 남긴다."""
+    if "driver" not in request.fixturenames:
+        return
+    reason = request.getfixturevalue("driver").ensure_alive()
+    if reason:
+        request.node.user_properties.append(("session_restart", reason))
 
 
 @pytest.fixture

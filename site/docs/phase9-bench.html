@@ -286,7 +286,7 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <td>다섯 조건 통과</td>
 </tr>
 </tbody></table></div>
-<p>이 실행 전에 한 번은 AAOS 쪽이 모두 오류였습니다. 막 켠 에뮬레이터에서 UiAutomator2 서버의 화면 캡처가 계속 실패하다 계측 프로세스가 죽었고(<code>UiAutomation returned null</code>, <code>instrumentation process is not running</code>), Appium 세션이 실행 전체에서 하나라 그 뒤 테스트가 모두 준비 단계 오류가 됐습니다. 검토에서 짚은 &#39;세션이 끊기면 전체 실패로 번짐&#39;이 실제로 일어난 것입니다. smoke로 안정된 것을 확인하고 다시 돌렸습니다. 세션 복구는 아직 없습니다.</p>
+<p>이 실행 전에 한 번은 AAOS 쪽이 모두 오류였습니다. 막 켠 에뮬레이터에서 UiAutomator2 서버의 화면 캡처가 계속 실패하다 계측 프로세스가 죽었고(<code>UiAutomation returned null</code>, <code>instrumentation process is not running</code>), Appium 세션이 실행 전체에서 하나라 그 뒤 테스트가 모두 준비 단계 오류가 됐습니다. 검토에서 짚은 &#39;세션이 끊기면 전체 실패로 번짐&#39;이 실제로 일어난 것입니다. smoke로 안정된 것을 확인하고 다시 돌렸습니다. 세션 복구는 2026-11-20에 넣었습니다(아래 3차 반영).</p>
 <h3 id="2차-반영-같은-날"><a class="anchor" href="#2차-반영-같은-날" aria-hidden="true">#</a>2차 반영 (같은 날)</h3>
 <div class="table"><table><thead><tr>
 <th>지적</th>
@@ -321,9 +321,37 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <td>앱과 출처가 다른 기대값으로 일부러 고정했다는 이유와, 다른 차종에서 <code>get-property-config</code>로 먼저 맞춰 볼 것을 코드와 포트폴리오 9장에 적음</td>
 </tr>
 </tbody></table></div>
+<h3 id="3차-반영-appium-세션-복구-2026-11-20"><a class="anchor" href="#3차-반영-appium-세션-복구-2026-11-20" aria-hidden="true">#</a>3차 반영: Appium 세션 복구 (2026-11-20)</h3>
+<p>2차까지 보류했던 검토 F12입니다. 11-19 재실행에서 실제로 세션 끊김이 전체 실패로 번졌기 때문에 고쳤습니다(<a href="decisions.html#13-appium-세션이-끊기면-다음-테스트-시작-때-다시-붙이고-기록">결정 기록 13번</a>).</p>
+<div class="table"><table><thead><tr>
+<th>한 일</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td><code>ivi/session.py</code>의 <code>SessionHolder</code>: 테스트 시작 때 세션 확인, 끊겼으면 다시 붙임(서버가 다시 뜨는 중이면 3초 간격 3번)</td>
+<td>단위 테스트 12개 (계측 프로세스 죽음, 세션 없음, 서버에 닿지 않음, 다시 붙이기 실패, 코드 오류는 재연결로 보지 않음 등)</td>
+</tr>
+<tr>
+<td>결과 기록과 통계에 <code>session_restarts</code></td>
+<td>터미널 요약, <code>run_bench.py</code> 출력, flaky 통계의 실행 요약과 불안정 테스트 표에 &#39;세션 재연결&#39;</td>
+</tr>
+<tr>
+<td>AAOS에서 실행 중 UiAutomator2 서버 강제 종료 2번</td>
+<td>smoke와 sanity 38개 모두 통과(재시도로 통과 3), 세션 재연결 3번. 1번은 끊기 전에 계측 프로세스가 스스로 죽음</td>
+</tr>
+<tr>
+<td>태블릿에서 실행 중 Appium 서버 재시작</td>
+<td>38개 모두 통과(재시도로 통과 1), 세션 재연결 1번</td>
+</tr>
+<tr>
+<td>끊지 않고 두 기기 전체 (<code>20261120-202159</code>)</td>
+<td>AAOS 127 통과, 1 건너뜀, 1 알려진 결함 / 태블릿 122 통과, 7 건너뜀. 재시도 0, 세션 재연결 0</td>
+</tr>
+</tbody></table></div>
+<p>원자료: <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">evidence/2026-11-20-session-recovery</a>. 프레임워크 단위 테스트는 94개에서 106개가 됐습니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a><a class="l3" href="#2차-반영-같은-날">2차 반영 (같은 날)</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a><a class="l3" href="#2차-반영-같은-날">2차 반영 (같은 날)</a><a class="l3" href="#3차-반영-appium-세션-복구-2026-11-20">3차 반영: Appium 세션 복구 (2026-11-20)</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
