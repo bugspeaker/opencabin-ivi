@@ -2,10 +2,10 @@
 import time
 
 import pytest
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import InvalidSessionIdException, NoSuchElementException, WebDriverException
 
 from ivi.screens import Screen
-from ivi.waits import polling, stays, wait_until, wait_value
+from ivi.waits import SessionLost, polling, session_lost, stays, wait_until, wait_value
 
 
 def test_retries_element_not_found_then_returns_value():
@@ -67,3 +67,52 @@ def test_find_inside_wait_does_not_start_its_own_wait():
     assert time.monotonic() - started < 2
     assert driver.calls >= 2  # 바깥 대기가 여러 번 다시 봤다
     assert not polling()      # 대기가 끝나면 원래대로
+
+
+def test_session_lost_is_raised_at_once_not_after_timeout():
+    """UiAutomator2 계측 프로세스가 죽은 응답은 다시 봐도 살아나지 않는다. 제한 시간을 쓰지 않고 SessionLost 로 바로 올린다
+    (2026-11-19 막 켠 에뮬레이터에서 이 응답이 대기마다 제한 시간을 다 쓰며 이어졌다)."""
+    calls = []
+
+    def check():
+        calls.append(1)
+        raise WebDriverException("'GET /source' cannot be proxied to UiAutomator2 server because the instrumentation "
+                                 "process is not running (probably crashed)")
+
+    started = time.monotonic()
+    with pytest.raises(SessionLost, match="Appium 세션이 끊겨") as caught:
+        wait_until(check, timeout=10, interval=0.01, what="화면 요소 'source_badge'")
+    assert time.monotonic() - started < 1 and len(calls) == 1
+    assert isinstance(caught.value.__cause__, WebDriverException)  # 원래 응답은 원인으로 남는다
+
+
+@pytest.mark.parametrize("err, lost", [
+    (InvalidSessionIdException("invalid session id"), True),
+    (WebDriverException("A session is either terminated or not started"), True),
+    (NoSuchElementException("없음"), False),
+    (WebDriverException("An unknown server-side error occurred"), False),
+    (RuntimeError("adb: device offline"), False),
+], ids=["invalid_session", "terminated", "no_element", "other_server_error", "adb"])
+def test_session_lost_classification(err, lost):
+    assert session_lost(err) is lost
+
+
+def test_wait_value_keeps_read_error_after_last_value():
+    """값을 한 번 읽은 뒤 읽기가 실패하기 시작하면, 마지막 값과 함께 그 오류도 남긴다 ('22.0 에 머묾'으로 읽히지 않게)."""
+    reads = iter([22.0])
+
+    def read():
+        try:
+            return next(reads)
+        except StopIteration:
+            raise RuntimeError("adb: device offline") from None
+
+    with pytest.raises(AssertionError, match=r"마지막으로 읽은 값: 22\.0, 그 뒤 읽기 오류: RuntimeError: adb: device offline") as caught:
+        wait_value(read, 22.5, timeout=0.2, interval=0.02, what="차량 온도")
+    assert isinstance(caught.value.__cause__, RuntimeError)
+
+
+def test_timeout_keeps_last_error_as_cause():
+    with pytest.raises(AssertionError, match="마지막 오류: NoSuchElementException") as caught:
+        wait_until(lambda: (_ for _ in ()).throw(NoSuchElementException("없음")), timeout=0.1, interval=0.02)
+    assert isinstance(caught.value.__cause__, NoSuchElementException)

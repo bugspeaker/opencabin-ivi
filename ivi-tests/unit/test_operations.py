@@ -237,3 +237,56 @@ def test_flaky_report_counts_executions_from_run_files(tmp_path):
     flaky_report.main(["--runs-dir", str(tmp_path), "--out", str(out)])
     # 건너뜀만 빼고 센다 (알려진 결함은 실행한 것). flaky 1, 실패 0
     assert "| aaos | 4 | 4/4 (100%) | 3 | 1 | 0 |" in out.read_text(encoding="utf-8")
+
+
+# ---------------- 실행 하나의 판정: 종료 코드와 끝까지 돌았는지 ----------------
+
+def _passing_run(recorder, *nodeids):
+    for nodeid in nodeids:
+        run(recorder, nodeid, ("setup", "passed", {}), ("call", "passed", {}), ("teardown", "passed", {}))
+
+
+def test_summary_fails_when_pytest_did_not_finish(recorder):
+    """돈 테스트가 모두 통과해도, 고른 테스트보다 판정이 적거나 종료 코드가 0 이 아니면 게이트 실패다
+    (Appium 세션이 끊겨 conftest 가 실행을 멈춘 경우: 종료 코드 2)."""
+    _passing_run(recorder, "t::a", "t::b")
+    assert recorder.summary(exitstatus=0, collected=2)["gate"] == "pass"
+    stopped = recorder.summary(exitstatus=2, collected=5)
+    assert stopped["gate"] == "fail"
+    assert stopped["problems"] == ["고른 테스트 5개 가운데 2개만 돌았다", "pytest 종료 코드 2 (중단됨)"]
+    assert stopped["exitstatus"] == 2 and stopped["collected"] == 5
+
+
+def test_summary_fails_on_no_tests_and_unfinished_test(recorder):
+    assert recorder.summary(exitstatus=5, collected=0)["problems"] == ["pytest 종료 코드 5 (수집된 테스트 없음)"]
+    run(recorder, "t::cut", ("setup", "passed", {}))  # 준비까지만 하고 판정 없이 끝남
+    assert "판정 없이 끝난 테스트 1개 (예: t::cut)" in recorder.summary(exitstatus=0, collected=1)["problems"]
+
+
+def test_teardown_failure_keeps_original_setup_error(recorder):
+    """준비가 실패한 뒤 정리도 실패하면, 원인인 준비 단계 오류를 지우지 않는다."""
+    run(recorder, "t::e", ("setup", "failed", {"message": "VHAL --set 실패"}),
+        ("teardown", "failed", {"message": "정차로 되돌리기 실패"}))
+    rec = recorder.records["t::e"]
+    assert rec["outcome"] == "error"
+    assert rec["message"].startswith("VHAL --set 실패") and "정리 단계도 실패: 정차로 되돌리기 실패" in rec["message"]
+
+
+def test_summary_carries_code_version():
+    recorder = Recorder("run1", {"serial": "s1", "kind": "aaos", "model": "m"}, code={"commit": "abc", "dirty": False})
+    _passing_run(recorder, "t::a")
+    assert recorder.summary()["commit"] == "abc"
+    assert "commit" not in recorder.rows()[0]  # 테스트 행마다 반복하지 않는다
+
+
+@pytest.mark.parametrize("code, summary, reasons", [
+    (0, {"gate": "pass"}, []),
+    (2, {"gate": "pass"}, ["pytest 종료 코드 2 (중단됨)"]),          # 결과 파일은 깨끗해도 중단된 실행
+    (3, {"gate": "pass"}, ["pytest 종료 코드 3 (pytest 내부 오류)"]),
+    (1, {"gate": "fail", "problems": ["failed 1, error 0"]}, ["failed 1, error 0"]),
+    (1, None, ["결과 파일 없음 (pytest 가 끝나기 전에 죽었거나 시간 제한에 걸림)", "pytest 종료 코드 1 (실패한 테스트 있음)"]),
+], ids=["clean", "interrupted", "internal_error", "failed_test", "killed"])
+def test_run_bench_judges_exit_code_and_result_file(code, summary, reasons):
+    from tools import run_bench
+
+    assert run_bench.judge(code, summary) == (not reasons, reasons)

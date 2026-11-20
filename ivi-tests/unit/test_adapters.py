@@ -274,3 +274,20 @@ def test_logcat_is_collected_from_test_start_without_clearing(monkeypatch):
     assert adb.logcat_dump(since=since, lines=3) == "line 2\nline 3\nline 4\n"
     assert calls[-1] == ["adb", "-s", "emulator-5554", "logcat", "-d", "-v", "threadtime", "-T", "1763540703.000"]
     assert not any("-c" in cmd for cmd in calls)
+
+
+def test_aaos_cleanup_restores_only_what_this_test_saved():
+    """정리는 준비가 중간에 실패해도 돈다. 저장 전에 실패했으면 정차만 하고, 앞 테스트가 저장한 값으로 되돌리지 않는다."""
+    adb = FakeAdb({"whoami": "root", "--set": "Set property"})
+    vehicle = AaosVehicle(adb)
+    vehicle.cleanup()  # 준비 없이 정리 (준비 맨 앞에서 실패한 경우)
+    assert not any("--restore-prop" in call for call in adb.calls)
+    assert any("--set" in call for call in adb.calls)  # 정차는 한다
+
+    adb.calls.clear()
+    vehicle._saved = True  # 준비가 저장까지 한 경우
+    vehicle.cleanup()
+    assert sum("--restore-prop" in call for call in adb.calls) == 2
+    adb.calls.clear()
+    vehicle.cleanup()  # 같은 저장 값으로 두 번 되돌리지 않는다
+    assert not any("--restore-prop" in call for call in adb.calls)

@@ -214,16 +214,23 @@ class AaosVehicle(VehicleController):
             self.adb.run("wait-for-device", timeout=60)
             wait_until(lambda: self.adb.shell("whoami").strip() == "root", timeout=20, what="adb root")
 
+    _saved = False
+
     def prepare(self):
         self.ensure_root()
         for prop, area in self._restored:
             self.save(prop, area)
+        self._saved = True
         super().prepare()
 
     def cleanup(self):
+        # 정리는 준비가 중간에 실패해도 돈다(conftest). 저장하기 전에 실패했으면 되돌릴 값이 없으니 정차만 한다.
+        # 그대로 restore 하면 앞 테스트가 저장해 둔 값으로 되돌리게 된다
+        saved, self._saved = self._saved, False
         self.park()
-        for prop, area in self._restored:
-            self.restore(prop, area)
+        if saved:
+            for prop, area in self._restored:
+                self.restore(prop, area)
 
     # ---- 저수준: property ----
     def get_property(self, prop, area=Area.GLOBAL):
