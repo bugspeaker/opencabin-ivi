@@ -61,13 +61,12 @@ def test_reset_restores_defaults(app):
 
 
 @pytest.mark.req("SET-01")
+@pytest.mark.tablet  # AAOS 는 시스템 바가 시계를 보여 준다 (앱 시계 없음)
 @pytest.mark.regression
-def test_12_hour_clock_on_tablet(app, device):
+def test_12_hour_clock_on_tablet(app):
     """태블릿에는 시스템 바가 없어서 앱이 시계를 직접 그립니다.
     24시간 시계를 끄면 오전, 오후가 붙은 12시간 형식으로 바뀝니다.
     """
-    if device.automotive:
-        pytest.skip("AAOS 는 시스템 바가 시계를 보여 준다 (앱 시계 없음)")
     settings = app.settings()
     settings.toggle("clock24")
     wait_until(lambda: any(word in app.text("status_clock") for word in ("오전", "오후")), what="12시간 형식")

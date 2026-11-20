@@ -193,9 +193,9 @@ mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
 
 const BAD = new Set(["failed", "error", "flaky", "xpassed"]);
 const MEASURE_LABEL = { camera_seconds: "카메라가 뜨기까지", boot_seconds: "부팅" };
-const MARKER_LABEL = { smoke: "smoke", sanity: "sanity", regression: "regression", spike: "spike", aaos: "AAOS 전용" };
+const MARKER_LABEL = { smoke: "smoke", sanity: "sanity", regression: "regression", spike: "spike", aaos: "AAOS 전용", tablet: "태블릿 전용" };
 // 필터 칩은 게이트 순서대로 (smoke → sanity → regression), 그 뒤에 기술 검증과 기기 조건
-const MARKER_ORDER = ["smoke", "sanity", "regression", "spike", "aaos"];
+const MARKER_ORDER = ["smoke", "sanity", "regression", "spike", "aaos", "tablet"];
 // 긴 테스트 이름이 좁은 화면에서 글자 중간이 아니라 단어('_') 뒤에서 줄바꿈되게
 const breakable = (name) => esc(name).replace(/_/g, "_<wbr>");
 const fmtTime = (s) => `${Math.floor(s / 60)}분 ${Math.floor(s % 60)}초`;  // pytest 와 같이 버림
@@ -284,9 +284,9 @@ function renderResults(page) {
             : `<div class="shot shot-${k} no-shot"><p>${esc(r.message || "화면 없음")}</p></div>`;
           const measures = Object.entries(r.measures || {}).map(([k, v]) =>
             `<p class="cell-measure">${esc(MEASURE_LABEL[k] || k)}: ${esc(v)}초</p>`).join("");
-          // 판정에 쓴 차량 값 (AAOS: CarService 로 읽은 VHAL 값)
+          // 테스트 중 마지막으로 읽은 차량 값, 최대 3개 (AAOS: CarService 로 읽은 VHAL 값)
           const signals = (r.signals || []).length
-            ? `<p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)">${r.signals.map((s) => `<code>${esc(s)}</code>`).join("")}</p>` : "";
+            ? `<p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)">${r.signals.map((s) => `<code>${esc(s)}</code>`).join("")}</p>` : "";
           return `<div class="shot-cell">
               ${media}
               <div class="cell-meta"><span class="cell-device">${esc(dev.label)}</span><span class="pill p-${r.outcome}">${esc(r.label)}</span><span class="cell-time">${r.duration}초</span></div>
@@ -316,7 +316,7 @@ function renderResults(page) {
   const markers = [...MARKER_ORDER.filter((m) => used.has(m)), ...[...used].filter((m) => !MARKER_ORDER.includes(m))];
   const body = `
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E ${total}개를 두 기기에서 돌린 결과입니다${data.stability ? ` (${data.stability.rounds}회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>)` : ""}. 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 그 테스트가 판정에 쓴 VHAL 값입니다.</p>
+    <p class="lead">E2E ${total}개를 두 기기에서 돌린 결과입니다${data.stability ? ` (${data.stability.rounds}회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>)` : ""}. 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 테스트 중에 마지막으로 읽은 차량 값(최대 3개)입니다. 이 결과가 어느 코드로 돈 것인지와 그 뒤 바꾼 코드의 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">결과 자료와 검증 시점</a>에 있습니다.</p>
     <div class="device-cards">${devices}</div>
     <section class="req-banner" id="req-banner" aria-live="polite" hidden>
       <div class="req-copy">

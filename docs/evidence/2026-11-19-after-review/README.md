@@ -18,7 +18,7 @@
 .venv\Scripts\python tools\release_gate.py --runs-dir ..\docs\evidence\2026-11-19-after-review\runs
 ```
 
-실행한 테스트 250건(AAOS 128, 태블릿 122), flaky 0, 실패 0이 나오고 Release 게이트 다섯 조건이 통과합니다. 한 회만 돌린 것이라 반복 실행 통계를 대신하지는 않습니다.
+실행한 테스트 250건(AAOS 128, 태블릿 122), flaky 0, 실패 0이 나오고 Release 게이트 여섯 조건이 통과합니다(2026-11-20에 실행 완전성 조건을 더한 게이트로 다시 돌린 값). 한 회만 돌린 것이라 반복 실행 통계를 대신하지는 않습니다.
 
 ## 같이 남길 것
 

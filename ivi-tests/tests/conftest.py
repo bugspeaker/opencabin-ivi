@@ -7,6 +7,7 @@
   device   세션 하나에 기기 하나 (ivi.device.Device). 세션 시작 때 앱을 한 번 종료해 깨끗하게 시작
   driver   Appium 세션 (AAOS 전용 설정, 병렬 실행용 --system-port). 실행 전체에서 하나를 쓰고, 끊기면 다음 테스트 시작 때 다시 붙인다
   app      테스트마다 저장 설정을 기본값으로(테스트 훅), 화면을 초기화(--activity-clear-task), 차량을 정차·기본 온도로. 끝나면 정차·값 복원
+           (정리는 준비보다 먼저 등록한다. 준비가 중간에 실패해도 차량을 되돌린다)
   car      app 과 함께 쓰는 차량 어댑터 (device.vehicle)
   vehicle  앱 없이 차량만 쓰는 테스트(1단계 spike)용
 
@@ -14,7 +15,10 @@
   재시도   --reruns N (pytest-rerunfailures). 재시도에서 통과하면 'flaky' 로 기록
   세션     Appium 세션이 끊겨 있으면 테스트 시작 전에 다시 붙이고 'session_restart' 로 기록 (ivi/session.py)
   격리     quarantine.txt 에 있는 테스트는 xfail(strict=False) → 돌리되 게이트를 막지 않음
-  기록     reports/history/results.jsonl (누적), reports/runs/<run>-<serial>.json (이번 실행), JUnit
+  기기전용 aaos 마커는 태블릿(Mock)에서, tablet 마커는 AAOS 에서 건너뜀. Release 게이트는 이 두 경우 말고 건너뛴 테스트를 막는다
+  세션끊김 테스트 도중 세션이 끊기면 대기가 제한 시간을 쓰지 않고 바로 실패시킨다(ivi.waits.SessionLost). 그 실패는 그대로
+           남고, 다음 시도(재시도 포함)를 시작할 때 위 '세션' 이 다시 붙인다. 실패 자료에 세션 끊김이라고 적는다
+  기록     reports/history/results.jsonl (누적), reports/runs/<run>-<serial>.json (이번 실행: 커밋, 종료 코드, 수집 수 포함), JUnit
   실패자료 reports/artifacts/<테스트>[__재시도 n]/ 화면·UI 계층·차량 상태·액티비티·logcat (정리 전에 남김)
   결과화면 --shots 를 주면 통과한 테스트도 끝 화면을 reports/shots/<run>-<serial>/ 에 남긴다 (tools/publish_results.py 가 사이트로 옮긴다)
 """
@@ -29,9 +33,11 @@ from appium import webdriver
 
 from ivi import quarantine
 from ivi.device import Device
-from ivi.results import QUARANTINE_KEYWORD, Recorder, junit_name
+from ivi.vehicle import PACKAGE
+from ivi.results import QUARANTINE_KEYWORD, Recorder, code_version, junit_name
 from ivi.screens import IviApp
 from ivi.session import SessionHolder
+from ivi.waits import session_lost
 
 ROOT = Path(__file__).resolve().parent.parent
 REPORT_DIR = ROOT / "reports"
@@ -67,7 +73,11 @@ def pytest_configure(config):
     device = Device.connect(serial)
     config.ivi_device = device
     run_id = config.getoption("--run-id") or time.strftime("%Y%m%d-%H%M%S")
-    config.ivi_recorder = Recorder(run_id, {"serial": serial, "kind": device.kind, "model": device.model})
+    # 어느 코드와 어느 빌드로, 어떤 명령으로 돈 결과인지 남긴다. Release 게이트가 회차·기기마다 같은 커밋, 같은 APK 인지 본다
+    config.ivi_recorder = Recorder(run_id, {"serial": serial, "kind": device.kind, "model": device.model},
+                                   code={**code_version(ROOT), "app": device.adb.app_identity(PACKAGE),
+                                         "command": " ".join(["pytest", *config.invocation_params.args]),
+                                         "launcher": os.environ.get("IVI_LAUNCHER", "")})
     config.pluginmanager.register(config.ivi_recorder, "ivi_recorder")  # pytest_runtest_logreport 를 받는다
     if not config.option.xmlpath:
         config.option.xmlpath = str(REPORT_DIR / junit_name(run_id, device.kind, serial))
@@ -87,6 +97,8 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if device is not None and "aaos" in item.keywords and not device.automotive:
             item.add_marker(pytest.mark.skip(reason=f"AAOS 전용 (현재 기기: {device.label})"))
+        if device is not None and "tablet" in item.keywords and device.automotive:
+            item.add_marker(pytest.mark.skip(reason=f"태블릿(Mock) 전용 (현재 기기: {device.label})"))
         entry = quarantine.find(entries, item.nodeid)
         if entry:
             item.add_marker(getattr(pytest.mark, QUARANTINE_KEYWORD))
@@ -110,8 +122,9 @@ def pytest_runtest_call(item):
 
 def pytest_sessionfinish(session, exitstatus):
     recorder = getattr(session.config, "ivi_recorder", None)
-    if recorder and recorder.records:
-        summary, run_file = recorder.write(REPORT_DIR)
+    if recorder:
+        # 테스트가 하나도 돌지 않았어도(수집 오류, 0개 선택) 파일을 남긴다. 파일이 없으면 '왜 없는지'를 알 수 없다
+        summary, run_file = recorder.write(REPORT_DIR, exitstatus=int(exitstatus), collected=session.testscollected)
         session.config.ivi_summary = (summary, run_file)
 
 
@@ -124,6 +137,8 @@ def pytest_terminal_summary(terminalreporter, config):
         terminalreporter.write_line(f"{summary['kind']}:{summary['serial']}  gate={summary['gate']}  {counts}  "
                                     f"relaunch {summary['relaunches']}  vhal_retry {summary.get('infra_retries', 0)}  "
                                     f"session_restart {summary.get('session_restarts', 0)}  ({summary['duration']}s)")
+        for problem in summary.get("problems", []):
+            terminalreporter.write_line(f"  게이트 실패 이유: {problem}")
         terminalreporter.write_line(f"기록: {run_file}")
 
 
@@ -176,14 +191,16 @@ def _appium_session_alive(request):
 @pytest.fixture
 def app(device, driver, request):
     screen = IviApp(driver, tapper=device.tapper())
+    # 차량 정리를 준비보다 **먼저** 등록한다. yield 뒤에 두면 준비가 중간에 실패했을 때(예: 정차는 했는데 신호 기준값
+    # 쓰기 실패) 정리가 돌지 않아, 다음 테스트가 앞 테스트의 차량 상태로 시작한다. finalizer 는 teardown 에 돌므로
+    # 실패 자료(pytest_runtest_makereport)는 정리 전 상태 그대로 남는다
+    request.addfinalizer(lambda: _cleanup_vehicle(device, request))
     _start_app(device, screen, request)
     # 저장 설정을 기본값으로 (테스트끼리 영향 없게). 앱을 띄운 **뒤에** 부른다:
     # 화웨이는 꺼져 있는 앱에는 브로드캐스트를 전달하지 않는다 (logcat 'targets O+, restricted', 6단계에서 발견)
     device.reset_app_state()
     device.vehicle.prepare()
-    yield screen
-    device.vehicle.cleanup()
-    _record_retries(device, request)
+    return screen
 
 
 def _start_app(device, screen, request, attempts=2):
@@ -209,10 +226,19 @@ def car(app, device):
 
 @pytest.fixture
 def vehicle(device, request):
+    request.addfinalizer(lambda: _cleanup_vehicle(device, request))  # app 과 같은 이유로 준비보다 먼저
     device.vehicle.prepare()
-    yield device.vehicle
-    device.vehicle.cleanup()
-    _record_retries(device, request)
+    return device.vehicle
+
+
+def _cleanup_vehicle(device, request):
+    """정차·값 복원. 실패하면 teardown 오류로 남지만(결과 기록은 준비 단계의 원래 오류를 지우지 않는다), 재시도 기록은 옮긴다.
+    정리가 실패한 뒤에도 실행은 이어 간다. 다음 테스트의 준비(prepare)가 정차, 온도, 신호 12종을 모두 기준값으로 다시 쓰기 때문이다.
+    그 준비마저 실패하면 그 테스트가 준비 단계 오류가 되고, 어느 쪽이든 Release 게이트는 막는다 (unit/test_fixtures.py)."""
+    try:
+        device.vehicle.cleanup()
+    finally:
+        _record_retries(device, request)
 
 
 def _record_retries(device, request):
@@ -228,7 +254,7 @@ def _record_retries(device, request):
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
-    # 판정에 쓴 차량 값 (AAOS 의 CarService 로 읽은 VHAL 값, 마지막 3개). 결과 페이지에서 화면 옆에 보여 준다
+    # 테스트 중 마지막으로 읽은 차량 값 (AAOS 의 CarService 로 읽은 VHAL 값, 최대 3개). assert 의 증거 전체는 아니다. 결과 페이지에서 화면 옆에 보여 준다
     if report.when == "call":
         device = getattr(item.config, "ivi_device", None)
         if device is not None:
@@ -236,9 +262,14 @@ def pytest_runtest_makereport(item, call):
     # 정리(teardown) 전에 남겨야 실패 순간의 화면·차량 상태가 보인다. 재시도로 사라질 실패도 남긴다 (flaky 원인 분석용)
     # 정리 단계 실패(예: 정차로 되돌리는 VHAL 쓰기 실패)도 남긴다 — 5단계에서 이 경우 자료가 없어 원인 추적이 늦었다
     if report.failed:
-        folder = _save_artifacts(item, suffix="__teardown" if report.when == "teardown" else "")
+        folder = _save_artifacts(item, suffix="" if report.when == "call" else f"__{report.when}")
         if folder:
             report.sections.append(("ivi artifacts", str(folder)))
+        # 세션이 끊긴 실패는 실패 자료 폴더에 표시해 둔다. 다음 시도를 시작할 때 _appium_session_alive 가 세션을 다시 붙인다.
+        # 실행을 멈추지는 않는다: 다시 붙인 뒤의 테스트는 정상으로 돌 수 있고(2026-11-20 확인), 끊긴 시도는 failed·flaky 로
+        # 남아 Release 게이트가 막는다
+        if folder and call.excinfo is not None and session_lost(call.excinfo.value):
+            (folder / "session_lost.txt").write_text(f"{type(call.excinfo.value).__name__}: {call.excinfo.value}", encoding="utf-8")
     # 결과 페이지용 끝 화면: 판정이 난 직후, 정리 전에 찍는다 (정리가 화면을 처음 상태로 돌리기 전)
     if report.when == "call" and item.config.getoption("--shots", default=False):
         shot = _save_result_shot(item)

@@ -6,6 +6,7 @@
     python tools/publish_results.py --runs reports/runs/A.json reports/runs/B.json
     python tools/publish_results.py --blur aaos/test_video_resumes_where_it_stopped:800,455,60,28   # 번호판 가리기
     python tools/publish_results.py --repeat-runs "reports/runs/20261118-2*-r*.json"   # 반복 실행 통계도 함께 (사이트 지표 카드)
+    python tools/publish_results.py --refresh-docs           # 결과는 그대로 두고 테스트 설명·마커만 다시 읽어 넣기
     cd ../site && npm run build-docs                         # 결과 페이지(site/docs/test-results.html) 다시 만들기
 
 만드는 것
@@ -40,7 +41,7 @@ OUTCOME_LABEL = {
     "passed": "통과", "flaky": "재시도 후 통과", "failed": "실패", "error": "오류",
     "skipped": "건너뜀", "xfailed": "알려진 결함", "xpassed": "알려진 결함 통과", "quarantined": "격리",
 }
-MARKERS = ("smoke", "sanity", "regression", "spike", "aaos")
+MARKERS = ("smoke", "sanity", "regression", "spike", "aaos", "tablet")
 IMAGE_WIDTH = 960
 
 
@@ -167,6 +168,9 @@ def build(runs, blur_boxes=None, repeat=None):
             "kind": kind, "label": KINDS[kind], "model": summary.get("model", ""), "serial": summary.get("serial", ""),
             "run_id": summary["run_id"], "time": first_time, "duration": summary["duration"],
             "counts": summary["counts"], "gate": summary["gate"],
+            # 어느 코드로 돈 결과인지 (2026-11-20 부터 결과 파일에 남는다. 그 전 실행은 빈 값)
+            "commit": summary.get("commit", ""), "dirty": summary.get("dirty", False),
+            "app": summary.get("app", {}), "command": summary.get("launcher") or summary.get("command", ""),
         })
         for test in run["tests"]:
             nodeid = test["nodeid"]
@@ -210,15 +214,20 @@ def markdown(data):
         "기기마다 E2E 전체를 돌린 결과와 판정 직후 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다."
         + (f" 두 기기에서 {data['stability']['rounds']}회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다."
            if data.get("stability") else ""),
-        "AAOS 칸 아래의 `PROPERTY[area]=값`은 그 테스트가 판정에 쓴 VHAL 값(CarService로 읽은 마지막 값)입니다.",
+        "AAOS 칸 아래의 `PROPERTY[area]=값`은 테스트 중에 CarService로 마지막으로 읽은 차량 값(최대 3개)입니다. 판정 직전에 읽은 값이 맨 뒤에 옵니다.",
         "소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.",
+        "판정과 화면은 아래 표의 실행에서 나온 것입니다. 그 뒤 바꾼 코드를 무엇으로 확인했는지는 별도 기록인 [README의 '결과 자료와 검증 시점'](../README.md#결과-자료와-검증-시점)에 있습니다.",
         "",
-        "| 기기 | 실행 | 결과 | 시간 |",
-        "|---|---|---|---|",
+        "| 기기 | 실행 | 코드 | 앱 (APK sha256) | 결과 | 시간 |",
+        "|---|---|---|---|---|---|",
     ]
     for d in data["devices"]:
         counts = ", ".join(f"{OUTCOME_LABEL.get(k, k)} {v}" for k, v in sorted(d["counts"].items()))
-        lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {counts} | {fmt_time(d['duration'])} |")
+        code = (f"`{d['commit'][:7]}`" + (" (커밋 안 한 변경 있음)" if d.get("dirty") else "")) if d.get("commit") \
+            else "기록 없음 (커밋을 남기기 전 형식)"
+        app = d.get("app") or {}
+        apk = f"{app.get('version') or '버전 미기록'}, `{app['apk_sha256'][:12]}`" if app.get("apk_sha256") else "기록 없음"
+        lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {code} | {apk} | {counts} | {fmt_time(d['duration'])} |")
     lines += ["", DEVICE_NOTE]
     kinds = [d["kind"] for d in data["devices"]]
     for f in data["files"]:
@@ -247,7 +256,24 @@ def markdown(data):
 
 
 DEVICE_NOTE = ("태블릿 열은 화면 동작과 실기기에서만 나는 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. "
-               "차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다.")
+               "차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다. "
+               "건너뜀은 그 기기에 해당하지 않는 테스트입니다(태블릿은 AAOS 전용, AAOS는 태블릿 전용 시계). "
+               "Release 게이트는 이 밖의 건너뜀을 막습니다.")
+
+
+def refresh_docs(path=SITE_RESULTS / "results.json"):
+    """결과는 그대로 두고 테스트 설명(docstring)과 마커만 지금 코드에서 다시 읽는다. 기기 없이 문구를 고칠 때 쓴다."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    current = {t["name"]: (f, t) for f in read_tests() for t in f["tests"]}
+    for f in data["files"]:
+        for t in f["tests"]:
+            if t["name"] in current:
+                source_file, source = current[t["name"]]
+                f["title"] = source_file["title"]
+                t.update({key: value for key, value in source.items() if key != "cases"})
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    DOC.write_text(markdown(data), encoding="utf-8", newline="\n")
+    return data
 
 
 def fmt_time(seconds):
@@ -260,7 +286,12 @@ def main():
     parser.add_argument("--repeat-runs", metavar="GLOB", help="반복 실행 기록 (reports/runs/*-r*.json). 안정성 통계를 results.json 에 넣는다")
     parser.add_argument("--blur", action="append", metavar="KIND/TEST:X,Y,W,H",
                         help="흐리게 할 영역 (번호판 등). 올리는 이미지(가로 960px) 기준. 여러 번 줄 수 있다")
+    parser.add_argument("--refresh-docs", action="store_true", help="결과는 그대로, 테스트 설명과 마커만 다시 읽는다")
     args = parser.parse_args()
+    if args.refresh_docs:
+        refresh_docs()
+        print(f"설명과 마커만 다시 읽음 → {SITE_RESULTS / 'results.json'}, {DOC}")
+        return
     runs = pick_runs(args.runs)
     if not runs:
         sys.exit("화면이 있는 실행 기록이 없습니다. pytest 를 --shots 로 돌리세요.")

@@ -30,7 +30,7 @@ export const REQUIREMENTS = [
     // 근거는 게이트 기준 표와 ivi-ci.yml 이다. smoke 목록은 결과 페이지 ?req=gating 으로 볼 수 있다
     link: { href: "docs/portfolio.html#4-1-게이트-단계와-기준", label: "게이트 기준 표" },
     chip: "smoke",
-    note: "빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다. 단계별 기준과 Release 게이트는 <a href=\"portfolio.html#4-1-게이트-단계와-기준\">포트폴리오 4-1</a>에 있습니다.",
+    note: "빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다. Release 게이트는 실패가 0인지만 보지 않고, 두 기기 모두 지금 코드의 테스트를 끝까지 돌렸는지(종료 코드 0, 기기 전용이 아닌 건너뜀 없음)를 먼저 봅니다. 단계별 기준과 여섯 조건은 <a href=\"portfolio.html#4-1-게이트-단계와-기준\">포트폴리오 4-1</a>에 있습니다.",
   },
   {
     id: "e2e", group: "duty", title: "UI와 CarProperty/VHAL을 잇는 E2E",
@@ -101,7 +101,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 106개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
@@ -139,7 +139,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "safety", group: "plus", title: "ISO 26262, A-SPICE", partial: "개념 적용",
-    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없습니다.",
+    done: "요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 연결 누락 0은 조건별 검증이 충분하다는 뜻이 아니라서, 조건이 여럿인 요구사항은 조건마다 확인하는 곳을 따로 적고 테스트가 없는 조건을 밝혔습니다. 인증이나 심사 경험은 없습니다.",
     link: { href: "docs/traceability.html", label: "추적표" },
   },
 ];

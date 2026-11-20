@@ -234,7 +234,7 @@ def test_aaos_inject_temperature_goes_straight_to_vhal():
 
 
 def test_aaos_keeps_last_read_values_for_the_result_page():
-    """판정에 쓴 VHAL 값(마지막으로 읽은 3개)을 남긴다. 같은 property·area 는 마지막 값만, 다른 스레드(CAN 게이트웨이)가 읽은 값은 뺀다."""
+    """마지막으로 읽은 VHAL 값(최대 3개)을 남긴다. 같은 property·area 는 마지막 값만, 다른 스레드(CAN 게이트웨이)가 읽은 값은 뺀다."""
     import threading
     adb = FakeAdb({
         "0x15600503 0x1": "floatValues: [22.5], int32Values: []",
@@ -274,3 +274,37 @@ def test_logcat_is_collected_from_test_start_without_clearing(monkeypatch):
     assert adb.logcat_dump(since=since, lines=3) == "line 2\nline 3\nline 4\n"
     assert calls[-1] == ["adb", "-s", "emulator-5554", "logcat", "-d", "-v", "threadtime", "-T", "1763540703.000"]
     assert not any("-c" in cmd for cmd in calls)
+
+
+def test_aaos_cleanup_restores_only_what_this_test_saved():
+    """정리는 준비가 중간에 실패해도 돈다. 저장 전에 실패했으면 정차만 하고, 앞 테스트가 저장한 값으로 되돌리지 않는다."""
+    adb = FakeAdb({"whoami": "root", "--set": "Set property"})
+    vehicle = AaosVehicle(adb)
+    vehicle.cleanup()  # 준비 없이 정리 (준비 맨 앞에서 실패한 경우)
+    assert not any("--restore-prop" in call for call in adb.calls)
+    assert any("--set" in call for call in adb.calls)  # 정차는 한다
+
+    adb.calls.clear()
+    vehicle._saved = True  # 준비가 저장까지 한 경우
+    vehicle.cleanup()
+    assert sum("--restore-prop" in call for call in adb.calls) == 2
+    adb.calls.clear()
+    vehicle.cleanup()  # 같은 저장 값으로 두 번 되돌리지 않는다
+    assert not any("--restore-prop" in call for call in adb.calls)
+
+
+def test_app_identity_reads_apk_hash_and_version(monkeypatch):
+    """결과 파일에 남기는 빌드 식별값: 기기에 있는 APK 의 sha256 과 versionName (versionCode). 못 읽으면 빈 값."""
+    from ivi.adb import Adb, AdbError
+
+    outputs = {"pm path": "package:/data/app/dev.opencabin.ivi/base.apk\n",
+               "sha256sum": "ab" * 32 + "  /data/app/dev.opencabin.ivi/base.apk\n",
+               "dumpsys package": "    versionCode=7 minSdk=31\n    versionName=0.9.0\n"}
+    adb = Adb("s1")
+    monkeypatch.setattr(adb, "shell", lambda *args, **_: next(v for k, v in outputs.items() if k in " ".join(args)))
+    assert adb.app_identity("dev.opencabin.ivi") == {"version": "0.9.0 (7)", "apk_sha256": "ab" * 32}
+
+    def broken(*_args, **_kw):
+        raise AdbError("device offline")
+    monkeypatch.setattr(adb, "shell", broken)
+    assert adb.app_identity("dev.opencabin.ivi") == {"version": "", "apk_sha256": ""}

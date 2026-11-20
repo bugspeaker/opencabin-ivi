@@ -212,8 +212,34 @@ def test_every_requirement_has_a_test_and_every_test_a_requirement():
     assert unknown == [], f"없는 요구사항 ID: {unknown}"
 
 
+def test_condition_table_matches_test_code():
+    """복합 요구사항의 조건 표: 적힌 테스트가 있고, 그 요구사항 ID 를 달고 있다 (이름이 바뀌면 표가 낡은 것)."""
+    from tools import trace_report
+
+    conditions = trace_report.read_conditions()
+    assert len(conditions) >= 20
+    assert {row["req"] for row in conditions} >= {"HVAC-02", "HVAC-04", "DRIVE-02", "ENERGY-02"}
+    assert trace_report.check_conditions(conditions, trace_report.read_test_reqs()) == []
+
+
+def test_condition_table_check_finds_stale_rows():
+    from tools import trace_report
+
+    tests = {"test_a": ("test_x.py", ["HVAC-02"]), "test_b": ("test_x.py", ["HVAC-01"])}
+    rows = [{"id": "HVAC-02.1", "req": "HVAC-02", "tests": ["test_a"], "cell": "`test_a`"},
+            {"id": "HVAC-02.2", "req": "HVAC-02", "tests": ["test_b"], "cell": "`test_b`"},
+            {"id": "HVAC-02.3", "req": "HVAC-02", "tests": ["test_gone"], "cell": "`test_gone`"},
+            {"id": "HVAC-02.4", "req": "HVAC-02", "tests": [], "cell": "확인하지 않음"},
+            {"id": "HVAC-02.5", "req": "HVAC-02", "tests": [], "cell": "-"}]
+    assert trace_report.check_conditions(rows, tests) == [
+        'HVAC-02.2: test_b 에 @pytest.mark.req("HVAC-02") 가 없다',
+        "HVAC-02.3: 없는 테스트 test_gone",
+        "HVAC-02.5: 테스트 칸에 테스트 이름도 '확인하지 않음'도 없다",
+    ]
+
+
 def test_recorder_keeps_vhal_values_of_last_attempt(recorder):
-    """판정에 쓴 차량 값(user_properties 'vhal')은 마지막 시도 것만 남는다. 결과 페이지가 화면 옆에 보여 준다."""
+    """마지막으로 읽은 차량 값(user_properties 'vhal')은 마지막 시도 것만 남는다. 결과 페이지가 화면 옆에 보여 준다."""
     nodeid = "tests/test_climate.py::test_button_changes_signal_by_one_step[up-driver]"
     run(recorder, nodeid,
         ("call", "rerun", {"props": [("vhal", "HVAC_TEMPERATURE_SET[0x1]=22.0")]}),
@@ -237,3 +263,80 @@ def test_flaky_report_counts_executions_from_run_files(tmp_path):
     flaky_report.main(["--runs-dir", str(tmp_path), "--out", str(out)])
     # 건너뜀만 빼고 센다 (알려진 결함은 실행한 것). flaky 1, 실패 0
     assert "| aaos | 4 | 4/4 (100%) | 3 | 1 | 0 |" in out.read_text(encoding="utf-8")
+
+
+# ---------------- 실행 하나의 판정: 종료 코드와 끝까지 돌았는지 ----------------
+
+def _passing_run(recorder, *nodeids):
+    for nodeid in nodeids:
+        run(recorder, nodeid, ("setup", "passed", {}), ("call", "passed", {}), ("teardown", "passed", {}))
+
+
+def test_summary_fails_when_pytest_did_not_finish(recorder):
+    """돈 테스트가 모두 통과해도, 고른 테스트보다 판정이 적거나 종료 코드가 0 이 아니면 게이트 실패다
+    (예: 사람이 Ctrl+C 로 멈춘 실행, 내부 오류로 중단된 실행: 종료 코드 2·3)."""
+    _passing_run(recorder, "t::a", "t::b")
+    assert recorder.summary(exitstatus=0, collected=2)["gate"] == "pass"
+    stopped = recorder.summary(exitstatus=2, collected=5)
+    assert stopped["gate"] == "fail"
+    assert stopped["problems"] == ["고른 테스트 5개 가운데 2개만 돌았다", "pytest 종료 코드 2 (중단됨)"]
+    assert stopped["exitstatus"] == 2 and stopped["collected"] == 5
+
+
+def test_summary_fails_on_no_tests_and_unfinished_test(recorder):
+    assert recorder.summary(exitstatus=5, collected=0)["problems"] == ["pytest 종료 코드 5 (수집된 테스트 없음)"]
+    run(recorder, "t::cut", ("setup", "passed", {}))  # 준비까지만 하고 판정 없이 끝남
+    assert "판정 없이 끝난 테스트 1개 (예: t::cut)" in recorder.summary(exitstatus=0, collected=1)["problems"]
+
+
+def test_teardown_failure_keeps_original_setup_error(recorder):
+    """준비가 실패한 뒤 정리도 실패하면, 원인인 준비 단계 오류를 지우지 않는다."""
+    run(recorder, "t::e", ("setup", "failed", {"message": "VHAL --set 실패"}),
+        ("teardown", "failed", {"message": "정차로 되돌리기 실패"}))
+    rec = recorder.records["t::e"]
+    assert rec["outcome"] == "error"
+    assert rec["message"].startswith("VHAL --set 실패") and "정리 단계도 실패: 정차로 되돌리기 실패" in rec["message"]
+
+
+def test_summary_carries_code_version():
+    recorder = Recorder("run1", {"serial": "s1", "kind": "aaos", "model": "m"}, code={"commit": "abc", "dirty": False})
+    _passing_run(recorder, "t::a")
+    assert recorder.summary()["commit"] == "abc"
+    assert "commit" not in recorder.rows()[0]  # 테스트 행마다 반복하지 않는다
+
+
+@pytest.mark.parametrize("code, summary, reasons", [
+    (0, {"gate": "pass"}, []),
+    (2, {"gate": "pass"}, ["pytest 종료 코드 2 (중단됨)"]),          # 결과 파일은 깨끗해도 중단된 실행
+    (3, {"gate": "pass"}, ["pytest 종료 코드 3 (pytest 내부 오류)"]),
+    (1, {"gate": "fail", "problems": ["failed 1, error 0"]}, ["failed 1, error 0"]),
+    (1, None, ["결과 파일 없음 (pytest 가 끝나기 전에 죽었거나 시간 제한에 걸림)", "pytest 종료 코드 1 (실패한 테스트 있음)"]),
+], ids=["clean", "interrupted", "internal_error", "failed_test", "killed"])
+def test_run_bench_judges_exit_code_and_result_file(code, summary, reasons):
+    from tools import run_bench
+
+    assert run_bench.judge(code, summary) == (not reasons, reasons)
+
+
+@pytest.mark.parametrize("code, summary, reasons", [
+    (0, None, ["결과 파일 없음 (pytest 가 끝나기 전에 죽었거나 시간 제한에 걸림)"]),           # 정상 종료인데 결과 없음
+    (0, {"run_id": "r1", "serial": "s1", "gate": "fail", "problems": ["failed 1, error 0"]},
+     ["failed 1, error 0"]),                                                               # 정상 종료인데 결과는 실패
+    (0, {"run_id": "r0", "serial": "s1", "gate": "pass"},
+     ["결과 파일의 run_id 'r0' 가 이번 실행의 'r1' 와 다르다"]),                              # 다른 실행의 결과 파일
+    (0, {"run_id": "r1", "serial": "s1", "gate": "pass"}, []),
+], ids=["no_result", "failed_summary", "other_run", "clean"])
+def test_run_bench_checks_result_belongs_to_this_run(code, summary, reasons):
+    from tools import run_bench
+
+    assert run_bench.judge(code, summary, run_id="r1", serial="s1") == (not reasons, reasons)
+
+
+@pytest.mark.parametrize("value", ["0", "-1"])
+def test_run_bench_repeat_must_be_positive(value):
+    """--repeat 0 이면 아무것도 돌리지 않고 종료 코드 0 으로 끝나 '통과'처럼 보였다."""
+    from tools import run_bench
+
+    with pytest.raises(SystemExit):
+        run_bench.parse_args(["--repeat", value])
+    assert run_bench.parse_args(["--repeat", "3", "-m", "smoke"])[0].repeat == 3

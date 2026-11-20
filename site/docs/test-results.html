@@ -42,7 +42,7 @@
   <main id="content" class="doc results">
 
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E 129개를 두 기기에서 돌린 결과입니다 (5회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>). 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 그 테스트가 판정에 쓴 VHAL 값입니다.</p>
+    <p class="lead">E2E 129개를 두 기기에서 돌린 결과입니다 (5회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>). 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 테스트 중에 마지막으로 읽은 차량 값(최대 3개)입니다. 이 결과가 어느 코드로 돈 것인지와 그 뒤 바꾼 코드의 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">결과 자료와 검증 시점</a>에 있습니다.</p>
     <div class="device-cards">
       <section class="device-card">
         <p class="eyebrow">AAOS 에뮬레이터</p>
@@ -79,7 +79,7 @@
     </section>
     <div class="filters" role="group" aria-label="테스트 거르기">
       <button type="button" class="chip" aria-pressed="true" data-filter="">전체</button>
-      <button type="button" class="chip" aria-pressed="false" data-filter="smoke">smoke</button><button type="button" class="chip" aria-pressed="false" data-filter="sanity">sanity</button><button type="button" class="chip" aria-pressed="false" data-filter="regression">regression</button><button type="button" class="chip" aria-pressed="false" data-filter="spike">spike</button><button type="button" class="chip" aria-pressed="false" data-filter="aaos">AAOS 전용</button>
+      <button type="button" class="chip" aria-pressed="false" data-filter="smoke">smoke</button><button type="button" class="chip" aria-pressed="false" data-filter="sanity">sanity</button><button type="button" class="chip" aria-pressed="false" data-filter="regression">regression</button><button type="button" class="chip" aria-pressed="false" data-filter="spike">spike</button><button type="button" class="chip" aria-pressed="false" data-filter="aaos">AAOS 전용</button><button type="button" class="chip" aria-pressed="false" data-filter="tablet">태블릿 전용</button>
       <label class="only-bad"><input type="checkbox" id="only-bad"> 실패나 재시도만</label>
       <span class="filter-count" id="filter-count" aria-live="polite"></span>
       <select class="jump" id="jump" aria-label="파일로 이동"><option value="">파일로 이동</option><option value="file-test_assistant">test_assistant.py</option><option value="file-test_bench_api">test_bench_api.py</option><option value="file-test_can_gateway">test_can_gateway.py</option><option value="file-test_climate">test_climate.py</option><option value="file-test_cockpit">test_cockpit.py</option><option value="file-test_driving">test_driving.py</option><option value="file-test_media">test_media.py</option><option value="file-test_navigation">test_navigation.py</option><option value="file-test_phone">test_phone.py</option><option value="file-test_power">test_power.py</option><option value="file-test_radio">test_radio.py</option><option value="file-test_rear_camera">test_rear_camera.py</option><option value="file-test_settings">test_settings.py</option><option value="file-test_smoke">test_smoke.py</option><option value="file-test_spike_aaos">test_spike_aaos.py</option><option value="file-test_vehicle_signals">test_vehicle_signals.py</option><option value="file-test_voice">test_voice.py</option></select>
@@ -87,7 +87,7 @@
     <p class="empty-note" id="empty-note" hidden>조건에 맞는 테스트가 없습니다.</p>
     <section class="rfile" id="file-test_assistant">
         <h2><a class="anchor" href="#file-test_assistant" aria-hidden="true">#</a>test_assistant.py <span class="rfile-count">6</span></h2>
-        <p class="rfile-title">AI 어시스턴트에 한 말이 실제 차량 신호까지 이어지는지 확인합니다.</p>
+        <p class="rfile-title">AI 어시스턴트에 한 말이 차량 값까지 이어지는지 확인합니다(AAOS는 CarService/VHAL 값, 태블릿은 Mock 차량 값).</p>
         <article class="rtest" id="test_zone_applies_command_to_speaking_seat" data-markers="regression" data-reqs="integration" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_zone_applies_command_to_speaking_seat"><code>test_<wbr>zone_<wbr>applies_<wbr>command_<wbr>to_<wbr>speaking_<wbr>seat</code></a><span class="mark-chip">regression</span></header>
@@ -99,7 +99,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">9.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=21.0</code><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=21.0</code><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_zone_applies_command_to_speaking_seat.webp" data-caption="test_zone_applies_command_to_speaking_seat · 태블릿 (Mock) · 통과 · 9초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_zone_applies_command_to_speaking_seat.webp" alt="태블릿 (Mock)에서 test_zone_applies_command_to_speaking_seat 판정 직후 화면" loading="lazy" decoding="async">
@@ -120,7 +120,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=25.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=25.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_typed_command_sets_vehicle_temperature.webp" data-caption="test_typed_command_sets_vehicle_temperature · 태블릿 (Mock) · 통과 · 4.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_typed_command_sets_vehicle_temperature.webp" alt="태블릿 (Mock)에서 test_typed_command_sets_vehicle_temperature 판정 직후 화면" loading="lazy" decoding="async">
@@ -271,7 +271,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">2.5초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=3</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=3</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp" data-caption="test_api_rejects_invalid_value_and_leaves_vehicle_alone · 태블릿 (Mock) · 통과 · 3.3초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp" alt="태블릿 (Mock)에서 test_api_rejects_invalid_value_and_leaves_vehicle_alone 판정 직후 화면" loading="lazy" decoding="async">
@@ -398,7 +398,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_button_changes_signal_by_one_step_up-driver.webp" data-caption="test_button_changes_signal_by_one_step [up-driver] · 태블릿 (Mock) · 통과 · 3.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_button_changes_signal_by_one_step_up-driver.webp" alt="태블릿 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
@@ -412,7 +412,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=22.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=22.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_button_changes_signal_by_one_step_up-passenger.webp" data-caption="test_button_changes_signal_by_one_step [up-passenger] · 태블릿 (Mock) · 통과 · 3.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_button_changes_signal_by_one_step_up-passenger.webp" alt="태블릿 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
@@ -426,7 +426,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=21.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=21.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_button_changes_signal_by_one_step_down-driver.webp" data-caption="test_button_changes_signal_by_one_step [down-driver] · 태블릿 (Mock) · 통과 · 3.4초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_button_changes_signal_by_one_step_down-driver.webp" alt="태블릿 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
@@ -440,7 +440,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=21.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=21.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_button_changes_signal_by_one_step_down-passenger.webp" data-caption="test_button_changes_signal_by_one_step [down-passenger] · 태블릿 (Mock) · 통과 · 3.7초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_button_changes_signal_by_one_step_down-passenger.webp" alt="태블릿 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
@@ -496,7 +496,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">8초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=28.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=28.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_step_reaches_limit_and_disables_driver.webp" data-caption="test_step_reaches_limit_and_disables [driver] · 태블릿 (Mock) · 통과 · 8.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_step_reaches_limit_and_disables_driver.webp" alt="태블릿 (Mock)에서 test_step_reaches_limit_and_disables 판정 직후 화면" loading="lazy" decoding="async">
@@ -510,7 +510,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">8.3초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=28.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=28.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_step_reaches_limit_and_disables_passenger.webp" data-caption="test_step_reaches_limit_and_disables [passenger] · 태블릿 (Mock) · 통과 · 9.1초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_step_reaches_limit_and_disables_passenger.webp" alt="태블릿 (Mock)에서 test_step_reaches_limit_and_disables 판정 직후 화면" loading="lazy" decoding="async">
@@ -523,7 +523,7 @@
 <article class="rtest" id="test_out_of_range_signal_is_shown_safely" data-markers="regression" data-reqs="services" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_out_of_range_signal_is_shown_safely"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a><span class="mark-chip">regression</span></header>
-            <p class="rtest-doc">차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고 차량 값을 그대로 보여 줍니다. 범위 밖으로 더 가는 버튼은 꺼지고, 반대 버튼을 한 번 누르면 차량 온도가 16.0~28.0°C 안의 0.5°C 단위 값이 됩니다. AAOS는 VHAL에 값을 바로 넣고, Mock 차량은 받은 값을 범위 안으로 잘라 둡니다.</p>
+            <p class="rtest-doc">차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고, 범위 밖으로 더 가는 버튼은 꺼집니다. 기기마다 기대값이 하나입니다. AAOS는 VHAL에 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주고, ▲를 한 번 누르면 차량 온도가 끝값 16.0°C가 됩니다(28.5°C는 ▼로 28.0°C). 태블릿의 Mock 차량은 받은 값을 끝값 16.0°C로 잘라 두므로, ▲를 누르면 한 칸 안쪽 16.5°C가 됩니다(28.5°C는 28.0°C로 잘린 뒤 ▼로 27.5°C).</p>
           </div>
           <div class="rtest-cases"><div class="case"><p class="case-param"><code>[below_min]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_out_of_range_signal_is_shown_safely_below_min.webp" data-caption="test_out_of_range_signal_is_shown_safely [below_min] · AAOS 에뮬레이터 · 통과 · 3.5초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
@@ -531,7 +531,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=16.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=16.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_out_of_range_signal_is_shown_safely_below_min.webp" data-caption="test_out_of_range_signal_is_shown_safely [below_min] · 태블릿 (Mock) · 통과 · 3.9초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_out_of_range_signal_is_shown_safely_below_min.webp" alt="태블릿 (Mock)에서 test_out_of_range_signal_is_shown_safely 판정 직후 화면" loading="lazy" decoding="async">
@@ -545,7 +545,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=28.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=28.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp" data-caption="test_out_of_range_signal_is_shown_safely [above_max] · 태블릿 (Mock) · 통과 · 3.8초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp" alt="태블릿 (Mock)에서 test_out_of_range_signal_is_shown_safely 판정 직후 화면" loading="lazy" decoding="async">
@@ -566,7 +566,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_off_grid_signal_steps_back_to_grid_up-22.5.webp" data-caption="test_off_grid_signal_steps_back_to_grid [up-22.5] · 태블릿 (Mock) · 통과 · 3.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_off_grid_signal_steps_back_to_grid_up-22.5.webp" alt="태블릿 (Mock)에서 test_off_grid_signal_steps_back_to_grid 판정 직후 화면" loading="lazy" decoding="async">
@@ -580,7 +580,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" data-caption="test_off_grid_signal_steps_back_to_grid [down-22.0] · 태블릿 (Mock) · 통과 · 3.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" alt="태블릿 (Mock)에서 test_off_grid_signal_steps_back_to_grid 판정 직후 화면" loading="lazy" decoding="async">
@@ -601,7 +601,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">5.2초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code><code>HVAC_TEMPERATURE_SET[0x4]=22.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code><code>HVAC_TEMPERATURE_SET[0x4]=22.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_seats_are_independent.webp" data-caption="test_seats_are_independent · 태블릿 (Mock) · 통과 · 5.2초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_seats_are_independent.webp" alt="태블릿 (Mock)에서 test_seats_are_independent 판정 직후 화면" loading="lazy" decoding="async">
@@ -626,7 +626,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_bottom_bar_temperature_drives_vehicle_driver.webp" data-caption="test_bottom_bar_temperature_drives_vehicle [driver] · 태블릿 (Mock) · 통과 · 3.4초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_bottom_bar_temperature_drives_vehicle_driver.webp" alt="태블릿 (Mock)에서 test_bottom_bar_temperature_drives_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -640,7 +640,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=22.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x4]=22.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_bottom_bar_temperature_drives_vehicle_passenger.webp" data-caption="test_bottom_bar_temperature_drives_vehicle [passenger] · 태블릿 (Mock) · 통과 · 3.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_bottom_bar_temperature_drives_vehicle_passenger.webp" alt="태블릿 (Mock)에서 test_bottom_bar_temperature_drives_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -661,7 +661,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=24.5</code><code>HVAC_TEMPERATURE_SET[0x4]=24.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=24.5</code><code>HVAC_TEMPERATURE_SET[0x4]=24.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_sync_mirrors_driver_temperature_to_passenger.webp" data-caption="test_sync_mirrors_driver_temperature_to_passenger · 태블릿 (Mock) · 통과 · 3.8초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_sync_mirrors_driver_temperature_to_passenger.webp" alt="태블릿 (Mock)에서 test_sync_mirrors_driver_temperature_to_passenger 판정 직후 화면" loading="lazy" decoding="async">
@@ -682,7 +682,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code><code>HVAC_TEMPERATURE_SET[0x4]=21.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.5</code><code>HVAC_TEMPERATURE_SET[0x4]=21.5</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_passenger_change_releases_sync.webp" data-caption="test_passenger_change_releases_sync · 태블릿 (Mock) · 통과 · 4.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_passenger_change_releases_sync.webp" alt="태블릿 (Mock)에서 test_passenger_change_releases_sync 판정 직후 화면" loading="lazy" decoding="async">
@@ -1318,7 +1318,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">37.2초</span></div>
               <p class="cell-measure">부팅: 17.8초</p>
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code><code>HVAC_TEMPERATURE_SET[0x4]=22.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code><code>HVAC_TEMPERATURE_SET[0x4]=22.0</code></p>
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0.2초</span></div>
@@ -1632,9 +1632,9 @@
               
             </div></div></div></div>
         </article>
-<article class="rtest" id="test_12_hour_clock_on_tablet" data-markers="regression" data-reqs="services" data-bad="0">
+<article class="rtest" id="test_12_hour_clock_on_tablet" data-markers="regression tablet" data-reqs="services" data-bad="0">
           <div class="rtest-text">
-            <header class="rtest-head"><a class="rtest-name" href="#test_12_hour_clock_on_tablet"><code>test_<wbr>12_<wbr>hour_<wbr>clock_<wbr>on_<wbr>tablet</code></a><span class="mark-chip">regression</span></header>
+            <header class="rtest-head"><a class="rtest-name" href="#test_12_hour_clock_on_tablet"><code>test_<wbr>12_<wbr>hour_<wbr>clock_<wbr>on_<wbr>tablet</code></a><span class="mark-chip">regression</span><span class="mark-chip">태블릿 전용</span></header>
             <p class="rtest-doc">태블릿에는 시스템 바가 없어서 앱이 시계를 직접 그립니다. 24시간 시계를 끄면 오전, 오후가 붙은 12시간 형식으로 바뀝니다.</p>
           </div>
           <div class="rtest-cases"><div class="case"><div class="case-shots"><div class="shot-cell">
@@ -1849,7 +1849,7 @@
 <article class="rtest" id="test_hvac_is_controllable" data-markers="smoke" data-reqs="" data-bad="0">
           <div class="rtest-text">
             <header class="rtest-head"><a class="rtest-name" href="#test_hvac_is_controllable"><code>test_<wbr>hvac_<wbr>is_<wbr>controllable</code></a><span class="mark-chip">smoke</span></header>
-            <p class="rtest-doc">공조를 제어할 수 있는지 봅니다. AAOS에서 실패하면 priv-app 설치와 공조 권한부터 확인합니다.</p>
+            <p class="rtest-doc">공조를 화면과 차량 양쪽에서 제어할 수 있는지 봅니다. 머지 전 게이트(PR smoke)에서 화면↔차량 신호의 핵심 경로를 한 번씩 확인합니다. 화면의 운전석 +를 한 번 누르면 차량 온도가 22.0°C에서 22.5°C가 되고, 차량 쪽에서 25.0°C를 넣으면 화면이 25.0°C가 됩니다. AAOS에서 실패하면 priv-app 설치와 공조 권한(CONTROL_CAR_CLIMATE)부터 확인합니다.</p>
           </div>
           <div class="rtest-cases"><div class="case"><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_hvac_is_controllable.webp" data-caption="test_hvac_is_controllable · AAOS 에뮬레이터 · 통과 · 2.7초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
@@ -1882,7 +1882,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">1.8초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code></p>
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
@@ -1894,7 +1894,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">2.3초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code></p>
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
@@ -1913,7 +1913,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.1초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code><code>HVAC_TEMPERATURE_SET[0x1]=19.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code><code>HVAC_TEMPERATURE_SET[0x1]=19.5</code></p>
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
@@ -1925,7 +1925,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code><code>HVAC_TEMPERATURE_SET[0x4]=20.5</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_DISPLAY_UNITS=48</code><code>HVAC_TEMPERATURE_SET[0x4]=20.5</code></p>
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
@@ -1986,7 +1986,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_AC_ON[0x10]=0</code><code>HVAC_AC_ON[0x40]=0</code><code>HVAC_AC_ON[0x20]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_AC_ON[0x10]=0</code><code>HVAC_AC_ON[0x40]=0</code><code>HVAC_AC_ON[0x20]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_ac_toggle_reaches_every_seat.webp" data-caption="test_ac_toggle_reaches_every_seat · 태블릿 (Mock) · 통과 · 3.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_ac_toggle_reaches_every_seat.webp" alt="태블릿 (Mock)에서 test_ac_toggle_reaches_every_seat 판정 직후 화면" loading="lazy" decoding="async">
@@ -2028,7 +2028,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=4</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=4</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_fan_button_changes_signal_by_one_up-4.webp" data-caption="test_fan_button_changes_signal_by_one [up-4] · 태블릿 (Mock) · 통과 · 3.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_fan_button_changes_signal_by_one_up-4.webp" alt="태블릿 (Mock)에서 test_fan_button_changes_signal_by_one 판정 직후 화면" loading="lazy" decoding="async">
@@ -2042,7 +2042,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=2</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=2</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_fan_button_changes_signal_by_one_down-2.webp" data-caption="test_fan_button_changes_signal_by_one [down-2] · 태블릿 (Mock) · 통과 · 3.5초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_fan_button_changes_signal_by_one_down-2.webp" alt="태블릿 (Mock)에서 test_fan_button_changes_signal_by_one 판정 직후 화면" loading="lazy" decoding="async">
@@ -2063,7 +2063,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=1</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=1</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp" data-caption="test_fan_buttons_disabled_at_limits [1-climate_fan_down] · 태블릿 (Mock) · 통과 · 3.2초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp" alt="태블릿 (Mock)에서 test_fan_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
@@ -2077,7 +2077,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=7</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=7</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" data-caption="test_fan_buttons_disabled_at_limits [7-climate_fan_up] · 태블릿 (Mock) · 통과 · 3.1초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" alt="태블릿 (Mock)에서 test_fan_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
@@ -2098,7 +2098,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_AC_ON[0x1]=1</code><code>HVAC_TEMPERATURE_SET[0x1]=16.0</code><code>HVAC_TEMPERATURE_SET[0x4]=16.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_AC_ON[0x1]=1</code><code>HVAC_TEMPERATURE_SET[0x1]=16.0</code><code>HVAC_TEMPERATURE_SET[0x4]=16.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_max_ac_sets_signal_and_coldest_settings.webp" data-caption="test_max_ac_sets_signal_and_coldest_settings · 태블릿 (Mock) · 통과 · 4.3초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_max_ac_sets_signal_and_coldest_settings.webp" alt="태블릿 (Mock)에서 test_max_ac_sets_signal_and_coldest_settings 판정 직후 화면" loading="lazy" decoding="async">
@@ -2119,7 +2119,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=3</code><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code><code>HVAC_TEMPERATURE_SET[0x4]=22.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=3</code><code>HVAC_TEMPERATURE_SET[0x1]=22.0</code><code>HVAC_TEMPERATURE_SET[0x4]=22.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_max_ac_off_restores_previous_settings.webp" data-caption="test_max_ac_off_restores_previous_settings · 태블릿 (Mock) · 통과 · 4초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_max_ac_off_restores_previous_settings.webp" alt="태블릿 (Mock)에서 test_max_ac_off_restores_previous_settings 판정 직후 화면" loading="lazy" decoding="async">
@@ -2161,7 +2161,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_MAX_AC_ON[0x1]=0</code><code>HVAC_FAN_SPEED[0x1]=6</code><code>HVAC_TEMPERATURE_SET[0x1]=16.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_MAX_AC_ON[0x1]=0</code><code>HVAC_FAN_SPEED[0x1]=6</code><code>HVAC_TEMPERATURE_SET[0x1]=16.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_manual_fan_releases_max_ac.webp" data-caption="test_manual_fan_releases_max_ac · 태블릿 (Mock) · 통과 · 4.3초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_manual_fan_releases_max_ac.webp" alt="태블릿 (Mock)에서 test_manual_fan_releases_max_ac 판정 직후 화면" loading="lazy" decoding="async">
@@ -2182,7 +2182,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_AC_ON[0x1]=0</code><code>HVAC_MAX_AC_ON[0x1]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_AC_ON[0x1]=0</code><code>HVAC_MAX_AC_ON[0x1]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_turning_ac_off_releases_max_ac.webp" data-caption="test_turning_ac_off_releases_max_ac · 태블릿 (Mock) · 통과 · 4.3초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_turning_ac_off_releases_max_ac.webp" alt="태블릿 (Mock)에서 test_turning_ac_off_releases_max_ac 판정 직후 화면" loading="lazy" decoding="async">
@@ -2203,7 +2203,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=4</code><code>HVAC_AUTO_ON[0x1]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_FAN_SPEED[0x1]=4</code><code>HVAC_AUTO_ON[0x1]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_manual_fan_releases_auto.webp" data-caption="test_manual_fan_releases_auto · 태블릿 (Mock) · 통과 · 4.3초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_manual_fan_releases_auto.webp" alt="태블릿 (Mock)에서 test_manual_fan_releases_auto 판정 직후 화면" loading="lazy" decoding="async">
@@ -2224,7 +2224,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_DEFROSTER[0x1]=1</code><code>HVAC_DEFROSTER[0x2]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_DEFROSTER[0x1]=1</code><code>HVAC_DEFROSTER[0x2]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp" data-caption="test_defrost_changes_only_its_window [defrost_front-defrost_front-defrost_rear] · 태블릿 (Mock) · 통과 · 4.2초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp" alt="태블릿 (Mock)에서 test_defrost_changes_only_its_window 판정 직후 화면" loading="lazy" decoding="async">
@@ -2238,7 +2238,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_DEFROSTER[0x2]=1</code><code>HVAC_DEFROSTER[0x1]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_DEFROSTER[0x2]=1</code><code>HVAC_DEFROSTER[0x1]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" data-caption="test_defrost_changes_only_its_window [defrost_rear-defrost_rear-defrost_front] · 태블릿 (Mock) · 통과 · 3.7초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" alt="태블릿 (Mock)에서 test_defrost_changes_only_its_window 판정 직후 화면" loading="lazy" decoding="async">
@@ -2259,7 +2259,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code><code>HVAC_SEAT_TEMPERATURE[0x4]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code><code>HVAC_SEAT_TEMPERATURE[0x4]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_seat_heat_cycles_levels_on_vehicle_driver.webp" data-caption="test_seat_heat_cycles_levels_on_vehicle [driver] · 태블릿 (Mock) · 통과 · 4.4초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_seat_heat_cycles_levels_on_vehicle_driver.webp" alt="태블릿 (Mock)에서 test_seat_heat_cycles_levels_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -2273,7 +2273,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x4]=0</code><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x4]=0</code><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" data-caption="test_seat_heat_cycles_levels_on_vehicle [passenger] · 태블릿 (Mock) · 통과 · 4.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" alt="태블릿 (Mock)에서 test_seat_heat_cycles_levels_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -2315,7 +2315,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x4]=2</code><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x4]=2</code><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_bottom_bar_seat_heat_works_from_any_screen.webp" data-caption="test_bottom_bar_seat_heat_works_from_any_screen · 태블릿 (Mock) · 통과 · 3.4초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_bottom_bar_seat_heat_works_from_any_screen.webp" alt="태블릿 (Mock)에서 test_bottom_bar_seat_heat_works_from_any_screen 판정 직후 화면" loading="lazy" decoding="async">
@@ -2336,7 +2336,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x4]=2</code><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_SEAT_TEMPERATURE[0x4]=2</code><code>HVAC_SEAT_TEMPERATURE[0x1]=0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_assistant_seat_heat_follows_speaker_zone.webp" data-caption="test_assistant_seat_heat_follows_speaker_zone · 태블릿 (Mock) · 통과 · 4.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_assistant_seat_heat_follows_speaker_zone.webp" alt="태블릿 (Mock)에서 test_assistant_seat_heat_follows_speaker_zone 판정 직후 화면" loading="lazy" decoding="async">
@@ -2357,7 +2357,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>DOOR_LOCK[0x4]=1</code><code>DOOR_LOCK[0x10]=1</code><code>DOOR_LOCK[0x40]=1</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>DOOR_LOCK[0x4]=1</code><code>DOOR_LOCK[0x10]=1</code><code>DOOR_LOCK[0x40]=1</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_door_lock_button_drives_every_door.webp" data-caption="test_door_lock_button_drives_every_door · 태블릿 (Mock) · 통과 · 4.1초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_door_lock_button_drives_every_door.webp" alt="태블릿 (Mock)에서 test_door_lock_button_drives_every_door 판정 직후 화면" loading="lazy" decoding="async">
@@ -2557,7 +2557,7 @@
               </button>
               <div class="cell-meta"><span class="cell-device">AAOS 에뮬레이터</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
               
-              <p class="cell-signals" title="판정에 쓴 차량 값 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=24.0</code></p>
+              <p class="cell-signals" title="테스트 중 마지막으로 읽은 차량 값, 최대 3개 (CarService로 읽은 VHAL 값)"><code>HVAC_TEMPERATURE_SET[0x1]=24.0</code></p>
             </div><div class="shot-cell">
               <button type="button" class="shot shot-mock" data-full="../results/img/mock/test_voice_sets_driver_temperature_on_vehicle.webp" data-caption="test_voice_sets_driver_temperature_on_vehicle · 태블릿 (Mock) · 통과 · 3.6초" aria-label="태블릿 (Mock) 화면 크게 보기">
                 <img src="../results/img/mock/test_voice_sets_driver_temperature_on_vehicle.webp" alt="태블릿 (Mock)에서 test_voice_sets_driver_temperature_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -2677,7 +2677,7 @@
   const count = document.getElementById("filter-count");
   const empty = document.getElementById("empty-note");
   const banner = document.getElementById("req-banner");
-  const REQS = {"services":{"eyebrow":"요구 역량 01 · 주요 업무","title":"IVI 서비스별 검증 전략","note":"HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다. 서비스별 위험, 확인 방향, 테스트 수는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.","count":78,"filter":true,"chip":"","onlyBad":false},"gating":{"eyebrow":"요구 역량 02 · 주요 업무","title":"Smoke · Sanity · Regression 게이팅","note":"smoke 13개, sanity 25개, regression 85개를 고르는 기준, 시간, 통과 조건을 정하고 PR, main, Nightly, Release마다 돌리는 범위를 나눴습니다. 빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다. 단계별 기준과 Release 게이트는 <a href=\"portfolio.html#4-1-게이트-단계와-기준\">포트폴리오 4-1</a>에 있습니다.","count":13,"filter":false,"chip":"smoke","onlyBad":false},"e2e":{"eyebrow":"요구 역량 03 · 주요 업무","title":"UI와 CarProperty/VHAL을 잇는 E2E","note":"화면 조작이 차량 신호로, 신호 변화가 화면으로 이어지는지 양쪽을 봤습니다. 좌석과 문은 area마다 확인합니다.","count":31,"filter":true,"chip":"","onlyBad":false},"integration":{"eyebrow":"요구 역량 04 · 주요 업무","title":"터치부터 하위 연동까지 통합 검증","note":"AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(IVI_HvacStatus)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다. CAN 쪽은 PC 안의 가상 버스(python-can, DBC)입니다. 태블릿에서는 같은 테스트가 VHAL 대신 앱 안의 Mock 차량을 거칩니다. 음성과 터치가 차량 신호까지, 거리 부족 신호가 경고와 충전소 안내까지 이어지는 흐름도 함께 봅니다.","count":13,"filter":true,"chip":"","onlyBad":false},"injection":{"eyebrow":"요구 역량 06 · 주요 업무","title":"ADB · shell · CarPropertyManager로 Property Injection","note":"앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.","count":34,"filter":true,"chip":"","onlyBad":false},"android":{"eyebrow":"요구 역량 08 · 자격요건","title":"Android/AAOS 테스트 자동화 구축과 운영","note":"AAOS 에뮬레이터와 태블릿에서 E2E 129개를 돌리고, 테스트마다 판정 직후 화면을 남겼습니다.","count":129,"filter":false,"chip":"","onlyBad":false},"vhal":{"eyebrow":"요구 역량 13 · 우대사항","title":"VHAL · CarService · CarPropertyManager","note":"신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.","count":35,"filter":true,"chip":"","onlyBad":false},"network":{"eyebrow":"요구 역량 14 · 우대사항","title":"차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)","note":"가상 CAN 버스와 DBC로 VCU, BMS, BCM 역할의 가상 ECU를 두고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다. PC 안의 가상 CAN 버스에서 돌린 테스트입니다. 실제 ECU와 CAN 장비, 버스 부하와 타이밍은 다루지 않았습니다.","count":3,"filter":true,"chip":"","onlyBad":false},"rest":{"eyebrow":"요구 역량 15 · 우대사항","title":"REST API 자동화, 원격 전원 제어","note":"Test Bench REST API로 기기, 차량 신호, 전원, 실행 결과를 다루고, 에뮬레이터 전원을 껐다 켜 부팅 시간을 쟀습니다. 실제 전원 장비는 쓰지 않았습니다. API 서버를 띄워 HTTP로 신호를 넣은 테스트와, 에뮬레이터를 원격으로 껐다 켠 테스트입니다. 실제 벤치라면 전원 공급기나 릴레이가 들어갈 자리를 같은 인터페이스로 비워 두었습니다.","count":4,"filter":true,"chip":"","onlyBad":false}};
+  const REQS = {"services":{"eyebrow":"요구 역량 01 · 주요 업무","title":"IVI 서비스별 검증 전략","note":"HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다. 서비스별 위험, 확인 방향, 테스트 수는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.","count":78,"filter":true,"chip":"","onlyBad":false},"gating":{"eyebrow":"요구 역량 02 · 주요 업무","title":"Smoke · Sanity · Regression 게이팅","note":"smoke 13개, sanity 25개, regression 85개를 고르는 기준, 시간, 통과 조건을 정하고 PR, main, Nightly, Release마다 돌리는 범위를 나눴습니다. 빌드를 받아도 되는지 정하는 smoke 테스트입니다. 아래 버튼으로 sanity와 regression 범위도 볼 수 있습니다. Release 게이트는 실패가 0인지만 보지 않고, 두 기기 모두 지금 코드의 테스트를 끝까지 돌렸는지(종료 코드 0, 기기 전용이 아닌 건너뜀 없음)를 먼저 봅니다. 단계별 기준과 여섯 조건은 <a href=\"portfolio.html#4-1-게이트-단계와-기준\">포트폴리오 4-1</a>에 있습니다.","count":13,"filter":false,"chip":"smoke","onlyBad":false},"e2e":{"eyebrow":"요구 역량 03 · 주요 업무","title":"UI와 CarProperty/VHAL을 잇는 E2E","note":"화면 조작이 차량 신호로, 신호 변화가 화면으로 이어지는지 양쪽을 봤습니다. 좌석과 문은 area마다 확인합니다.","count":31,"filter":true,"chip":"","onlyBad":false},"integration":{"eyebrow":"요구 역량 04 · 주요 업무","title":"터치부터 하위 연동까지 통합 검증","note":"AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(IVI_HvacStatus)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다. CAN 쪽은 PC 안의 가상 버스(python-can, DBC)입니다. 태블릿에서는 같은 테스트가 VHAL 대신 앱 안의 Mock 차량을 거칩니다. 음성과 터치가 차량 신호까지, 거리 부족 신호가 경고와 충전소 안내까지 이어지는 흐름도 함께 봅니다.","count":13,"filter":true,"chip":"","onlyBad":false},"injection":{"eyebrow":"요구 역량 06 · 주요 업무","title":"ADB · shell · CarPropertyManager로 Property Injection","note":"앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.","count":34,"filter":true,"chip":"","onlyBad":false},"android":{"eyebrow":"요구 역량 08 · 자격요건","title":"Android/AAOS 테스트 자동화 구축과 운영","note":"AAOS 에뮬레이터와 태블릿에서 E2E 129개를 돌리고, 테스트마다 판정 직후 화면을 남겼습니다.","count":129,"filter":false,"chip":"","onlyBad":false},"vhal":{"eyebrow":"요구 역량 13 · 우대사항","title":"VHAL · CarService · CarPropertyManager","note":"신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.","count":35,"filter":true,"chip":"","onlyBad":false},"network":{"eyebrow":"요구 역량 14 · 우대사항","title":"차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)","note":"가상 CAN 버스와 DBC로 VCU, BMS, BCM 역할의 가상 ECU를 두고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다. PC 안의 가상 CAN 버스에서 돌린 테스트입니다. 실제 ECU와 CAN 장비, 버스 부하와 타이밍은 다루지 않았습니다.","count":3,"filter":true,"chip":"","onlyBad":false},"rest":{"eyebrow":"요구 역량 15 · 우대사항","title":"REST API 자동화, 원격 전원 제어","note":"Test Bench REST API로 기기, 차량 신호, 전원, 실행 결과를 다루고, 에뮬레이터 전원을 껐다 켜 부팅 시간을 쟀습니다. 실제 전원 장비는 쓰지 않았습니다. API 서버를 띄워 HTTP로 신호를 넣은 테스트와, 에뮬레이터를 원격으로 껐다 켠 테스트입니다. 실제 벤치라면 전원 공급기나 릴레이가 들어갈 자리를 같은 인터페이스로 비워 두었습니다.","count":4,"filter":true,"chip":"","onlyBad":false}};
   let filter = "";
   let req = "";
   // 개수는 케이스 단위로 센다 (parametrize 포함, 첫 화면의 'E2E 113개'와 같은 기준)

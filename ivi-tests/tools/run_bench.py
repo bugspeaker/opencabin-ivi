@@ -7,18 +7,43 @@
 
 - 기기마다 pytest 프로세스를 따로 띄운다. 같은 Appium 서버를 쓰므로 UiAutomator2 systemPort 를 기기마다 다르게 준다.
 - 출력은 reports/logs/<run>-<serial>.log, 결과는 reports/runs/<run>-<serial>.json (conftest 의 Recorder).
-- 모든 기기의 게이트가 통과해야 종료 코드 0.
+- 모든 기기에서 pytest 가 종료 코드 0 으로 끝나고, 결과 파일의 게이트가 pass 여야 종료 코드 0.
+  결과 파일만 믿지 않는다: 중간에 멈춘 실행(종료 코드 2)도 그때까지 돈 테스트가 모두 통과면 결과 파일은 깨끗해 보인다.
 """
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from ivi.results import EXIT_CODES  # noqa: E402
+
 REPORTS = ROOT / "reports"
 BASE_SYSTEM_PORT = 8200
+
+
+def judge(code, summary, run_id=None, serial=None):
+    """기기 하나의 실행이 통과인가: (통과 여부, 실패 이유 목록). 종료 코드와 결과 파일을 둘 다 보고,
+    결과 파일이 이번 실행·이 기기의 것인지도 본다 (run_id, serial 을 주면)."""
+    reasons = []
+    failed_tests = summary is not None and summary.get("gate") != "pass"
+    if summary is None:
+        reasons.append("결과 파일 없음 (pytest 가 끝나기 전에 죽었거나 시간 제한에 걸림)")
+    else:
+        for key, expected in (("run_id", run_id), ("serial", serial)):
+            if expected is not None and summary.get(key) != expected:
+                reasons.append(f"결과 파일의 {key} {summary.get(key)!r} 가 이번 실행의 {expected!r} 와 다르다")
+    if summary is not None and failed_tests:
+        reasons += summary.get("problems") or ["결과 파일의 게이트 실패 (failed·error)"]
+    # 종료 코드 1 은 '실패한 테스트 있음'이라 결과 파일의 실패와 겹친다. 그 밖의 0 이 아닌 코드는 따로 알린다
+    if code != 0 and not (code == 1 and failed_tests) and not any("종료 코드" in reason for reason in reasons):
+        reasons.append(f"pytest 종료 코드 {code} ({EXIT_CODES.get(code, '알 수 없음')})")
+    return not reasons, reasons
 
 
 def connected_devices():
@@ -53,26 +78,42 @@ def print_results(run_id, wall, results):
     serial_total = 0.0
     ok = True
     for serial, code, summary, log in results:
+        passed, reasons = judge(code, summary, run_id, serial)
+        ok = ok and passed
         if summary is None:
-            ok = False
-            print(f"  ✗ {serial}: 결과 없음 (종료 코드 {code}). 로그 확인: {log}")
+            print(f"  ✗ {serial}: {'; '.join(reasons)}. 로그 확인: {log}")
             continue
         serial_total += summary["duration"]
         counts = ", ".join(f"{k} {v}" for k, v in sorted(summary["counts"].items()))
-        mark = "✓" if summary["gate"] == "pass" else "✗"
-        ok = ok and summary["gate"] == "pass"
+        mark = "✓" if passed else "✗"
         print(f"  {mark} {summary['kind']:5} {serial:18} {summary['duration']:6.0f}s  {counts}  relaunch {summary['relaunches']}"
               f"  session_restart {summary.get('session_restarts', 0)}")
+        for reason in reasons:
+            print(f"      ✗ {reason}")
     if len(results) > 1 and wall:
         print(f"  기기별로 차례로 돌렸다면 약 {serial_total:.0f}s → 병렬 {wall:.0f}s ({serial_total / wall:.1f}배)")
     return ok
 
 
-def main():
+def positive_int(text):
+    """--repeat 는 1 이상. 0 이면 아무것도 돌리지 않고 종료 코드 0 으로 끝나 '통과'처럼 보였다 (2026-11-20 검토)."""
+    value = int(text)
+    if value < 1:
+        raise argparse.ArgumentTypeError(f"1 이상이어야 한다: {text}")
+    return value
+
+
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--devices", help="쉼표로 구분. 비우면 연결된 모든 기기")
-    parser.add_argument("--repeat", type=int, default=1)
-    args, pytest_args = parser.parse_known_args()
+    parser.add_argument("--repeat", type=positive_int, default=1)
+    return parser.parse_known_args(argv)
+
+
+def main():
+    args, pytest_args = parse_args()
+    # 결과 파일에 '어떤 명령으로 돌렸는지' 남기려고 pytest 에 넘긴다 (conftest 의 launcher)
+    os.environ["IVI_LAUNCHER"] = " ".join(["run_bench.py", *sys.argv[1:]])
 
     devices = args.devices.split(",") if args.devices else connected_devices()
     if not devices:

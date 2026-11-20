@@ -129,7 +129,7 @@ class VehicleController(ABC):
     def __init__(self, adb):
         self.adb = adb
         self.retried = []  # 신호 주입 도구의 일시 오류로 다시 시도한 기록 (conftest 가 테스트 결과에 옮긴다)
-        self.observed = {}  # 테스트가 판정에 쓴 차량 값 (읽은 순서, 같은 property·area 는 마지막 값). AAOS 만 채운다
+        self.observed = {}  # 테스트 중에 읽은 차량 값 (읽은 순서, 같은 property·area 는 마지막 값). AAOS 만 채운다
 
     def take_observed(self, limit=3):
         """마지막으로 읽은 차량 값 limit 개를 'HVAC_TEMPERATURE_SET[0x1]=22.5' 꼴로 돌려주고 비운다.
@@ -214,16 +214,23 @@ class AaosVehicle(VehicleController):
             self.adb.run("wait-for-device", timeout=60)
             wait_until(lambda: self.adb.shell("whoami").strip() == "root", timeout=20, what="adb root")
 
+    _saved = False
+
     def prepare(self):
         self.ensure_root()
         for prop, area in self._restored:
             self.save(prop, area)
+        self._saved = True
         super().prepare()
 
     def cleanup(self):
+        # 정리는 준비가 중간에 실패해도 돈다(conftest). 저장하기 전에 실패했으면 되돌릴 값이 없으니 정차만 한다.
+        # 그대로 restore 하면 앞 테스트가 저장해 둔 값으로 되돌리게 된다
+        saved, self._saved = self._saved, False
         self.park()
-        for prop, area in self._restored:
-            self.restore(prop, area)
+        if saved:
+            for prop, area in self._restored:
+                self.restore(prop, area)
 
     # ---- 저수준: property ----
     def get_property(self, prop, area=Area.GLOBAL):
