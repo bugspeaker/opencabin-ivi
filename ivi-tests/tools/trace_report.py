@@ -3,6 +3,7 @@
     python tools/trace_report.py            # docs/traceability.md
 
   요구사항   docs/requirements.md 의 표 (| ID | 요구사항 | 출처 |)
+  조건       docs/requirements.md 의 복합 요구사항 표 (| ID.n | 내용 | 테스트 | 그 조건을 보는 확인 |)
   테스트     tests/*.py 의 @pytest.mark.req("ID", ...)
   결과       site/results/results.json (publish_results.py 가 만든 최신 결과)
 
@@ -30,6 +31,33 @@ def read_requirements(path=REQUIREMENTS):
         if found:
             rows.append({"id": found.group(1), "text": found.group(2), "source": found.group(3)})
     return rows
+
+
+def read_conditions(path=REQUIREMENTS):
+    """복합 요구사항의 조건 행: [{"id": "HVAC-02.1", "req": "HVAC-02", "text", "tests": [이름...], "how"}].
+    ID 뒤에 '.n' 이 붙어 read_requirements 의 정규식에는 걸리지 않는다. 테스트 칸이 '확인하지 않음'이면 tests 는 빈 목록."""
+    rows = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        found = re.match(r"^\|\s*(([A-Z]+-\d+)\.\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|$", line)
+        if found:
+            rows.append({"id": found.group(1), "req": found.group(2), "text": found.group(3),
+                         "tests": re.findall(r"`(test_\w+)`", found.group(4)), "how": found.group(5),
+                         "cell": found.group(4)})
+    return rows
+
+
+def check_conditions(conditions, tests):
+    """조건 표가 코드와 맞는지: 없는 테스트, 그 요구사항 ID 를 달지 않은 테스트, 테스트도 '확인하지 않음'도 아닌 행."""
+    problems = []
+    for row in conditions:
+        if not row["tests"] and "확인하지 않음" not in row["cell"]:
+            problems.append(f"{row['id']}: 테스트 칸에 테스트 이름도 '확인하지 않음'도 없다")
+        for name in row["tests"]:
+            if name not in tests:
+                problems.append(f"{row['id']}: 없는 테스트 {name}")
+            elif row["req"] not in tests[name][1]:
+                problems.append(f"{row['id']}: {name} 에 @pytest.mark.req(\"{row['req']}\") 가 없다")
+    return problems
 
 
 def read_test_reqs(tests_dir=ROOT / "tests"):
@@ -84,7 +112,7 @@ def verdict(outcome_lists):
     return ", ".join(parts)
 
 
-def markdown(requirements, tests, outcomes, kinds):
+def markdown(requirements, tests, outcomes, kinds, conditions=()):
     untested, untraced, unknown = check(requirements, tests)
     by_req = defaultdict(list)
     for name, (_, reqs) in tests.items():
@@ -115,6 +143,17 @@ def markdown(requirements, tests, outcomes, kinds):
         cells = "<br>".join(f"`{n}`" for n in names) or "없음"
         results = [verdict([outcomes.get(n, {}).get(k, []) for n in names]) for k in kinds]
         lines.append(f"| {r['id']} | {r['text']} | {r['source']} | {cells} | " + " | ".join(results) + " |")
+    if conditions:
+        gaps = sum(not row["tests"] for row in conditions)
+        lines += ["", "## 복합 요구사항: 조건마다 확인하는 곳", "",
+                  f"조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 [요구사항](requirements.md#복합-요구사항-조건마다-확인하는-곳)에 적었습니다. "
+                  f"조건 {len(conditions)}개 가운데 테스트가 없는 조건은 {gaps}개입니다.", "",
+                  "| 조건 | 내용 | 테스트 | 그 조건을 보는 확인 | " + " | ".join(KINDS[k] for k in kinds) + " |",
+                  "|---|---|---|---|" + "---|" * len(kinds)]
+        for row in conditions:
+            results = [verdict([outcomes.get(n, {}).get(k, []) for n in row["tests"]]) if row["tests"] else "확인하지 않음"
+                       for k in kinds]
+            lines.append(f"| {row['id']} | {row['text']} | {row['cell']} | {row['how']} | " + " | ".join(results) + " |")
     lines += ["", "## 테스트에서 요구사항으로", "", "| 테스트 파일 | 테스트 수 | 요구사항 |", "|---|---|---|"]
     by_file = defaultdict(list)
     for name, (file, reqs) in tests.items():
@@ -131,9 +170,11 @@ def markdown(requirements, tests, outcomes, kinds):
 
 
 def main():
-    requirements, tests = read_requirements(), read_test_reqs()
+    requirements, tests, conditions = read_requirements(), read_test_reqs(), read_conditions()
     outcomes, kinds = read_results()
-    OUT.write_text(markdown(requirements, tests, outcomes, kinds or list(KINDS)), encoding="utf-8", newline="\n")
+    OUT.write_text(markdown(requirements, tests, outcomes, kinds or list(KINDS), conditions), encoding="utf-8", newline="\n")
+    for problem in check_conditions(conditions, tests):
+        print(f"조건 표: {problem}")
     untested, untraced, unknown = check(requirements, tests)
     print(f"요구사항 {len(requirements)}개, 테스트 {len(tests)}개 → {OUT}")
     if untested or untraced or unknown:

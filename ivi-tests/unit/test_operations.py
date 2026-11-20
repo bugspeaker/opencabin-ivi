@@ -212,6 +212,32 @@ def test_every_requirement_has_a_test_and_every_test_a_requirement():
     assert unknown == [], f"없는 요구사항 ID: {unknown}"
 
 
+def test_condition_table_matches_test_code():
+    """복합 요구사항의 조건 표: 적힌 테스트가 있고, 그 요구사항 ID 를 달고 있다 (이름이 바뀌면 표가 낡은 것)."""
+    from tools import trace_report
+
+    conditions = trace_report.read_conditions()
+    assert len(conditions) >= 20
+    assert {row["req"] for row in conditions} >= {"HVAC-02", "HVAC-04", "DRIVE-02", "ENERGY-02"}
+    assert trace_report.check_conditions(conditions, trace_report.read_test_reqs()) == []
+
+
+def test_condition_table_check_finds_stale_rows():
+    from tools import trace_report
+
+    tests = {"test_a": ("test_x.py", ["HVAC-02"]), "test_b": ("test_x.py", ["HVAC-01"])}
+    rows = [{"id": "HVAC-02.1", "req": "HVAC-02", "tests": ["test_a"], "cell": "`test_a`"},
+            {"id": "HVAC-02.2", "req": "HVAC-02", "tests": ["test_b"], "cell": "`test_b`"},
+            {"id": "HVAC-02.3", "req": "HVAC-02", "tests": ["test_gone"], "cell": "`test_gone`"},
+            {"id": "HVAC-02.4", "req": "HVAC-02", "tests": [], "cell": "확인하지 않음"},
+            {"id": "HVAC-02.5", "req": "HVAC-02", "tests": [], "cell": "-"}]
+    assert trace_report.check_conditions(rows, tests) == [
+        'HVAC-02.2: test_b 에 @pytest.mark.req("HVAC-02") 가 없다',
+        "HVAC-02.3: 없는 테스트 test_gone",
+        "HVAC-02.5: 테스트 칸에 테스트 이름도 '확인하지 않음'도 없다",
+    ]
+
+
 def test_recorder_keeps_vhal_values_of_last_attempt(recorder):
     """판정에 쓴 차량 값(user_properties 'vhal')은 마지막 시도 것만 남는다. 결과 페이지가 화면 옆에 보여 준다."""
     nodeid = "tests/test_climate.py::test_button_changes_signal_by_one_step[up-driver]"

@@ -43,6 +43,36 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 | BENCH-02 | 전원을 껐다 켜도 기기가 정해진 시간 안에 부팅되고, 앱과 공조 기본값이 돌아온다. | 운영 (모의 환경) | `test_power_cycle_brings_back_app_and_cabin_defaults` | 1/1 통과 | 0/1 통과, 건너뜀 1 |
 | SPIKE-01 | AAOS 기본 SystemUI의 공조 바가 VHAL 신호와 이어지고, 속도와 기어가 주행 상태를 바꾼다. | 기술 검증 (1단계) | `test_driver_temp_up_is_not_covered_by_home`<br>`test_hvac_signal_is_shown_on_ui`<br>`test_hvac_ui_tap_changes_signal`<br>`test_speed_and_gear_change_driving_state` | 5/6 통과, 알려진 결함 1 | 0/6 통과, 건너뜀 6 |
 
+## 복합 요구사항: 조건마다 확인하는 곳
+
+조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 [요구사항](requirements.md#복합-요구사항-조건마다-확인하는-곳)에 적었습니다. 조건 23개 가운데 테스트가 없는 조건은 1개입니다.
+
+| 조건 | 내용 | 테스트 | 그 조건을 보는 확인 | AAOS 에뮬레이터 | 태블릿 |
+|---|---|---|---|---|---|
+| HVAC-02.1 | 버튼 한 번에 0.5°C 바뀐다 | `test_button_changes_signal_by_one_step` | 차량 값 `wait_value(car.temperature(seat), 22.5)`(▼는 21.5)와 화면 `wait_temperature`를 따로 본다. 좌석 2 × 방향 2 | 4/4 통과 | 4/4 통과 |
+| HVAC-02.2 | 끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌린다 | `test_buttons_disabled_at_limits` | `wait_enabled("<좌석>_temp_down", False)`와 `assert climate.can_increase(seat)`. 28.0°C는 반대 | 2/2 통과 | 2/2 통과 |
+| HVAC-02.3 | 버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않는다 | `test_step_reaches_limit_and_disables` | 16.5→16.0°C `wait_value`, `wait_enabled(False)`, 꺼진 버튼을 누른 뒤 1.5초 동안 `stays(car.temperature(seat) == 16.0)`. 28.0°C도 같다 | 2/2 통과 | 2/2 통과 |
+| HVAC-02.4 | 차량 쪽 범위 밖 값(15.5, 28.5°C)을 화면에 보여 주고, 범위 밖으로 더 가는 버튼은 꺼진다 | `test_out_of_range_signal_is_shown_safely` | `wait_temperature(seat, 15.5)`, `wait_enabled("driver_temp_down", False)`. 15.5°C를 그대로 보여 주는 것은 AAOS에서만 확인한다(태블릿 Mock은 16.0°C로 자른다) | 2/2 통과 | 2/2 통과 |
+| HVAC-02.5 | 범위 밖 값에서 버튼을 누르면 범위 안의 값을 차량에 쓴다 | `test_out_of_range_signal_is_shown_safely` | ▲ 뒤 `wait_value(car.temperature(seat), 16.0)`(AAOS), 16.5(태블릿) | 2/2 통과 | 2/2 통과 |
+| HVAC-02.6 | 0.5°C 단위가 아닌 값(22.3°C)에서 버튼을 누르면 0.5°C 단위로 맞춰 쓴다 | `test_off_grid_signal_steps_back_to_grid` | `wait_value(car.temperature(seat), 22.5)`(▲), 22.0(▼). 이 확인에서 앱 결함(22.8°C를 씀)을 찾았다 | 2/2 통과 | 2/2 통과 |
+| HVAC-02.7 | 이상한 값이 와도 앱이 멈추지 않는다 | `test_out_of_range_signal_is_shown_safely`, `test_off_grid_signal_steps_back_to_grid` | 값이 화면에 보이고 그 뒤 버튼이 동작하는 것으로만 본다. 앱 크래시 로그(logcat의 `FATAL EXCEPTION`)를 따로 판정하지는 않는다 | 4/4 통과 | 4/4 통과 |
+| HVAC-04.1 | FULL을 켜면 전 좌석 최대 냉방, 최저 온도, 최대 풍량이 된다 | `test_max_ac_sets_signal_and_coldest_settings` | `wait_until(all(car.signal_all(Signal.MAX_AC)))`, `wait_signal(car, Signal.FAN, 7)`, 좌석마다 `wait_value(car.temperature(seat), 16.0)` | 1/1 통과 | 1/1 통과 |
+| HVAC-04.2 | 끄면 켜기 전 값(22.0°C, 풍량 3)으로 돌아간다 | `test_max_ac_off_restores_previous_settings` | `wait_signal(car, Signal.FAN, 3)`, 좌석마다 `wait_value(car.temperature(seat), 22.0)` | 1/1 통과 | 1/1 통과 |
+| HVAC-04.3 | 풍량을 직접 바꾸면 풀리고, 온도는 되돌리지 않는다 | `test_manual_fan_releases_max_ac` | `wait_signal(car, Signal.MAX_AC, False)`, `wait_signal(car, Signal.FAN, 6)`, `assert car.temperature(Seat.DRIVER) == 16.0` | 1/1 통과 | 1/1 통과 |
+| HVAC-04.4 | A/C를 끄면 최대 냉방도 꺼진다 | `test_turning_ac_off_releases_max_ac` | `wait_signal(car, Signal.AC, False)`, `wait_signal(car, Signal.MAX_AC, False)` | 1/1 통과 | 1/1 통과 |
+| HVAC-04.5 | 온도를 직접 바꾸면 풀린다 | 확인하지 않음 | 요구사항의 '다른 공조 값'에 온도도 들어가지만 테스트가 없다. 풍량과 A/C만 확인했다 | 확인하지 않음 | 확인하지 않음 |
+| HVAC-04.6 | 차량 쪽에서 바뀐 최대 냉방이 화면 토글에 보인다 | `test_max_ac_signal_is_shown_on_toggle` | `wait_checked("max_ac", True)`, 끄면 `False` | 1/1 통과 | 1/1 통과 |
+| DRIVE-02.1 | 주행 중에는 영상 버튼이 꺼지고 안내가 나온다 | `test_video_button_locked_while_driving` | `wait_enabled("open_video", False)`, `assert media.restricted_notice()` | 1/1 통과 | 1/1 통과 |
+| DRIVE-02.2 | 버튼을 거치지 않고 영상 화면을 열어도 주행 중에는 막힌다 | `test_video_is_blocked_while_driving` | `wait_until(device.video_blocked(video))`, `assert not video.playing()` | 1/1 통과 | 1/1 통과 |
+| DRIVE-02.3 | 차를 세우면 다시 볼 수 있다 | `test_video_blocked_screen_follows_parking`, `test_video_button_locked_while_driving`, `test_video_plays_when_parked` | 막힌 화면이 `wait_until(not device.video_blocked(video))` 뒤 `wait_visible("video_player")`, 영상 버튼 `wait_enabled("open_video", True)`, 정차 중 재생 시간이 흐름 | 3/3 통과 | 3/3 통과 |
+| DRIVE-02.4 | 멈춘 자리부터 이어진다. 막힌 동안 재생 시간이 흐르지 않는다 | `test_video_resumes_where_it_stopped` | `assert resumed >= before`(처음부터 다시 재생하지 않음), `assert resumed - before <= wall - 4`(막힌 5초 동안 흐르지 않음). 기기에 영상이 없으면 건너뛰는데, Release 게이트가 이 건너뜀을 막는다 | 1/1 통과 | 1/1 통과 |
+| DRIVE-02.5 | 주행 중에도 음악은 고를 수 있다 | `test_media_stays_usable_while_driving` | 주행 제한 표시(`restriction_banner`)가 뜬 상태에서 곡을 고르고 `wait_text("now_playing_title", title)` | 1/1 통과 | 1/1 통과 |
+| ENERGY-02.1 | 30 km 이하에서 경고와 충전소 카드가 뜨고, 31 km에서는 뜨지 않는다 | `test_low_range_threshold` | 31, 30, 29 km마다 `wait_value(cluster.low_range_warning(), 기대값)`, `assert app.visible("low_range_card") == 기대값` | 3/3 통과 | 3/3 통과 |
+| ENERGY-02.2 | 충전소 카드로 가장 가까운 충전소 안내를 시작한다. 주행 중에도 누를 수 있다 | `test_low_range_card_starts_guidance_to_nearest_charger` | 주행 중 `assert app.text("low_range_charger").startswith("판교 급속 충전소")`, 누른 뒤 `wait_text("nav_dest_name", "판교 급속 충전소")` | 1/1 통과 | 1/1 통과 |
+| ENERGY-02.3 | 알림 센터에 남는다 | `test_low_range_is_recorded_in_notifications` | `assert panel.titles()[0] == "주행 가능 거리 부족"` | 1/1 통과 | 1/1 통과 |
+| ENERGY-02.4 | 충전해서 거리가 늘면 경고와 카드를 거둔다 | `test_range_recovers_after_charging` | `wait_visible("low_range_card", expected=False)`, `wait_until(not cluster.low_range_warning())` | 1/1 통과 | 1/1 통과 |
+| ENERGY-02.5 | Test Bench API와 모의 CAN으로 들어온 거리 값에도 같게 동작한다 | `test_api_low_range_shows_charger_card`, `test_can_battery_and_door_frames_reach_screen` | 25 km를 넣은 뒤 `wait_until(cluster.low_range_warning)`. API 쪽은 카드도 `assert app.visible("low_range_card")` | 2/2 통과 | 2/2 통과 |
+
 ## 테스트에서 요구사항으로
 
 | 테스트 파일 | 테스트 수 | 요구사항 |

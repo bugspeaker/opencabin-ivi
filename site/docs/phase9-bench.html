@@ -321,9 +321,58 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <td>앱과 출처가 다른 기대값으로 일부러 고정했다는 이유와, 다른 차종에서 <code>get-property-config</code>로 먼저 맞춰 볼 것을 코드와 포트폴리오 9장에 적음</td>
 </tr>
 </tbody></table></div>
+<h2 id="8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위"><a class="anchor" href="#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위" aria-hidden="true">#</a>8. 외부 검토 반영 (2026-11-20): 게이트가 보증하는 범위</h2>
+<p>세 번째 외부 검토의 결론은 &#39;기능을 더하기보다 이미 만든 자동화가 무엇을 보증하는지를 닫으라&#39;였습니다. 코드를 다시 읽어 보니 게이트와 실행기가 &#39;실패한 테스트가 없다&#39;만 보고 &#39;정한 검증을 끝까지 했다&#39;는 보지 않는 경로가 있었습니다. 기기에서 돌려 확인하지는 못했고, 막는 사례마다 단위 테스트를 만들어 확인했습니다.</p>
+<div class="table"><table><thead><tr>
+<th>지적</th>
+<th>고친 것</th>
+</tr>
+</thead><tbody><tr>
+<td>Release 게이트가 기기 목록을 결과 파일에서 유추함. 태블릿이 처음부터 연결되지 않았거나 <code>-m smoke</code>로 일부만 돌려도 failed가 0이면 통과</td>
+<td>조건 1 &#39;실행 완전성&#39;을 더해 여섯 조건으로. 회차마다 필수 기기 종류(aaos, mock), 지금 코드에서 수집한 테스트 129개 전부, 종료 코드 0, 기기 전용 마커로 정한 건너뜀만, CI에서는 같은 커밋. 테스트 목록은 <code>tools/collect_tests.py</code>가 기기 없이 모음</td>
+</tr>
+<tr>
+<td>실행기(<code>run_bench.py</code>)가 결과 파일이 있으면 pytest 종료 코드를 보지 않음. 중간에 멈춘 실행도 그때까지 통과면 통과</td>
+<td>종료 코드와 결과 파일을 함께 판정(<code>judge</code>). 결과 파일에 종료 코드, 고른 테스트 수, 커밋을 남기고, 테스트가 0개여도 파일을 씀</td>
+</tr>
+<tr>
+<td>알려진 결함의 <code>xfail</code>에 <code>raises</code>가 없어 버튼을 못 찾은 오류나 세션 끊김까지 &#39;알려진 결함&#39;으로 통과</td>
+<td><code>raises=DefectReproduced</code>. 겹침을 확인한 자리에서만 이 예외를 냄. pytest를 따로 띄워 증상 → XFAIL, 요소 없음 → FAILED, 고쳐짐 → XPASS(strict) 실패를 확인하는 단위 테스트</td>
+</tr>
+<tr>
+<td>준비 단계가 중간에 실패하면 차량 정리가 돌지 않아 다음 테스트가 앞 테스트의 상태로 시작</td>
+<td>정리를 준비보다 먼저 등록(<code>addfinalizer</code>). 실패 자료는 정리 전에 <code>__setup</code> 폴더로. 정리 실패가 준비 단계의 원래 오류 메시지를 덮어쓰지 않게 함</td>
+</tr>
+<tr>
+<td>Appium 세션이 끊겨도 대기가 제한 시간을 다 쓰며 다시 봄 (2026-11-19 실제로 겪음)</td>
+<td>세션 끊김 응답은 <code>SessionLost</code>로 바로 올리고 남은 테스트를 멈춤(종료 코드 2). 다시 붙이는 복구는 하지 않음. pytest-rerunfailures와 같이 쓸 때도 종료 코드 2와 &#39;4개 가운데 2개만 돌았다&#39;가 남는 것을 따로 실험해 확인</td>
+</tr>
+<tr>
+<td><code>wait_value</code>가 값을 한 번 읽은 뒤 생긴 읽기 오류(adb 끊김)를 메시지에서 지움</td>
+<td>마지막 값과 그 뒤 읽기 오류를 함께 남기고, 원래 예외를 원인으로 이음</td>
+</tr>
+<tr>
+<td>추적표에 테스트 이름이 붙었다고 복합 요구사항의 모든 조건을 확인한 것은 아님</td>
+<td>HVAC-02, HVAC-04, DRIVE-02, ENERGY-02를 조건 23개로 나눠 조건마다 그 조건을 보는 확인을 적음(<a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>). 온도를 직접 바꿨을 때 FULL이 풀리는지는 테스트가 없다고 밝힘. 표의 테스트 이름과 요구사항 표시가 코드와 다르면 unit job이 실패</td>
+</tr>
+<tr>
+<td>결과 자료(2026-11-18 실행)와 그 뒤 바뀐 코드의 관계가 한눈에 보이지 않음</td>
+<td>README에 &#39;결과 자료와 검증 시점&#39; 표. 결과 페이지 설명이 지금 테스트 코드와 어긋나 있던 것도 <code>publish_results.py --refresh-docs</code>로 다시 읽어 맞춤(결과 수치는 그대로)</td>
+</tr>
+<tr>
+<td>첫 화면에서 경력과 본인 역할이 늦게 보임</td>
+<td>README 첫머리에 경력, 역할, &#39;테스트 엔지니어로서 한 일&#39; 다섯 가지</td>
+</tr>
+<tr>
+<td>소개 사이트의 주 버튼에 마우스를 올리면 흰 글씨 대비 2.9:1, 결과 페이지의 필터와 이동 버튼이 휴대폰에서 32px</td>
+<td>마우스를 올린 바탕을 더 어둡게(6.2:1), 820px 이하에서 44px</td>
+</tr>
+</tbody></table></div>
+<p>프레임워크 단위 테스트는 94개에서 129개가 됐습니다. 2026-11-18 반복 5회와 2026-11-19 재실행 원자료(결과 파일 12개)에 새 게이트를 돌리면 여섯 조건 모두 통과합니다. 두 원자료에는 종료 코드와 커밋이 없어 조건 1은 테스트 목록 대조로만 보고, 그 사실을 &#39;참고&#39;로 출력합니다.</p>
+<p>이번 변경(conftest, 대기, 차량 어댑터, 알려진 결함 테스트, 태블릿 전용 마커)은 아직 기기에서 돌리지 않았습니다. 다음 Bench 실행에서 두 기기 전체를 반복하고 <code>release_gate.py --commit HEAD</code>로 확인하려고 합니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a><a class="l3" href="#2차-반영-같은-날">2차 반영 (같은 날)</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a><a class="l3" href="#2차-반영-같은-날">2차 반영 (같은 날)</a><a class="l2" href="#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위">8. 외부 검토 반영 (2026-11-20): 게이트가 보증하는 범위</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

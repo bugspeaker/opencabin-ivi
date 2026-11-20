@@ -1,19 +1,20 @@
 # 테스트 결과
 
 기기마다 E2E 전체를 돌린 결과와 판정 직후 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다. 두 기기에서 5회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다.
-AAOS 칸 아래의 `PROPERTY[area]=값`은 그 테스트가 판정에 쓴 VHAL 값(CarService로 읽은 마지막 값)입니다.
+AAOS 칸 아래의 `PROPERTY[area]=값`은 테스트 중에 CarService로 마지막으로 읽은 차량 값(최대 3개)입니다. 판정 직전에 읽은 값이 맨 뒤에 옵니다.
 소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.
+이 결과가 어느 코드로 돈 것인지, 그 뒤에 바뀐 코드는 무엇으로 확인했는지는 [README의 '결과 자료와 검증 시점'](../README.md#결과-자료와-검증-시점)에 있습니다.
 
-| 기기 | 실행 | 결과 | 시간 |
-|---|---|---|---|
-| AAOS 에뮬레이터 (Car on x86_64 emulator) | 2026-11-18 20:36:17 | 통과 127, 건너뜀 1, 알려진 결함 1 | 9분 45초 |
-| 태블릿 (Mock) (DBY-W09) | 2026-11-18 20:36:18 | 통과 122, 건너뜀 7 | 10분 15초 |
+| 기기 | 실행 | 코드 | 결과 | 시간 |
+|---|---|---|---|---|
+| AAOS 에뮬레이터 (Car on x86_64 emulator) | 2026-11-18 20:36:17 | 기록 없음 (커밋을 남기기 전 형식) | 통과 127, 건너뜀 1, 알려진 결함 1 | 9분 45초 |
+| 태블릿 (Mock) (DBY-W09) | 2026-11-18 20:36:18 | 기록 없음 (커밋을 남기기 전 형식) | 통과 122, 건너뜀 7 | 10분 15초 |
 
-태블릿 열은 화면 동작과 실기기에서만 나는 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. 차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다.
+태블릿 열은 화면 동작과 실기기에서만 나는 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. 차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다. 건너뜀은 그 기기에 해당하지 않는 테스트입니다(태블릿은 AAOS 전용, AAOS는 태블릿 전용 시계). Release 게이트는 이 밖의 건너뜀을 막습니다.
 
 ## test_assistant.py
 
-AI 어시스턴트에 한 말이 실제 차량 신호까지 이어지는지 확인합니다.
+AI 어시스턴트에 한 말이 차량 값까지 이어지는지 확인합니다(AAOS는 CarService/VHAL 값, 태블릿은 Mock 차량 값).
 
 | 테스트 | AAOS 에뮬레이터 | 태블릿 (Mock) |
 |---|---|---|
@@ -60,7 +61,7 @@ Test Bench REST API로 차량 신호를 넣고 읽으면서 앱 화면이 따라
 | `test_buttons_disabled_at_limits` `[passenger]` | 통과, 3.1초, [화면](../site/results/img/aaos/test_buttons_disabled_at_limits_passenger.webp) | 통과, 3.7초, [화면](../site/results/img/mock/test_buttons_disabled_at_limits_passenger.webp) |
 | <a id="test_step_reaches_limit_and_disables"></a>`test_step_reaches_limit_and_disables` `[driver]`<br>16.5°C에서 -를 한 번 누르면 차량 온도가 16.0°C가 되고 - 버튼이 꺼집니다. 27.5°C에서 +도 같습니다. 끝에 닿은 뒤 꺼진 버튼을 눌러도 차량 온도는 범위를 넘지 않습니다. | 통과, 8.0초, [화면](../site/results/img/aaos/test_step_reaches_limit_and_disables_driver.webp)<br>`HVAC_TEMPERATURE_SET[0x1]=28.0` | 통과, 8.6초, [화면](../site/results/img/mock/test_step_reaches_limit_and_disables_driver.webp) |
 | `test_step_reaches_limit_and_disables` `[passenger]` | 통과, 8.3초, [화면](../site/results/img/aaos/test_step_reaches_limit_and_disables_passenger.webp)<br>`HVAC_TEMPERATURE_SET[0x4]=28.0` | 통과, 9.1초, [화면](../site/results/img/mock/test_step_reaches_limit_and_disables_passenger.webp) |
-| <a id="test_out_of_range_signal_is_shown_safely"></a>`test_out_of_range_signal_is_shown_safely` `[below_min]`<br>차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고 차량 값을 그대로 보여 줍니다. 범위 밖으로 더 가는 버튼은 꺼지고, 반대 버튼을 한 번 누르면 차량 온도가 16.0~28.0°C 안의 0.5°C 단위 값이 됩니다. AAOS는 VHAL에 값을 바로 넣고, Mock 차량은 받은 값을 범위 안으로 잘라 둡니다. | 통과, 3.5초, [화면](../site/results/img/aaos/test_out_of_range_signal_is_shown_safely_below_min.webp)<br>`HVAC_TEMPERATURE_SET[0x1]=16.0` | 통과, 3.9초, [화면](../site/results/img/mock/test_out_of_range_signal_is_shown_safely_below_min.webp) |
+| <a id="test_out_of_range_signal_is_shown_safely"></a>`test_out_of_range_signal_is_shown_safely` `[below_min]`<br>차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고, 범위 밖으로 더 가는 버튼은 꺼집니다. 기기마다 기대값이 하나입니다. AAOS는 VHAL에 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주고, ▲를 한 번 누르면 차량 온도가 끝값 16.0°C가 됩니다(28.5°C는 ▼로 28.0°C). 태블릿의 Mock 차량은 받은 값을 끝값 16.0°C로 잘라 두므로, ▲를 누르면 한 칸 안쪽 16.5°C가 됩니다(28.5°C는 28.0°C로 잘린 뒤 ▼로 27.5°C). | 통과, 3.5초, [화면](../site/results/img/aaos/test_out_of_range_signal_is_shown_safely_below_min.webp)<br>`HVAC_TEMPERATURE_SET[0x1]=16.0` | 통과, 3.9초, [화면](../site/results/img/mock/test_out_of_range_signal_is_shown_safely_below_min.webp) |
 | `test_out_of_range_signal_is_shown_safely` `[above_max]` | 통과, 3.5초, [화면](../site/results/img/aaos/test_out_of_range_signal_is_shown_safely_above_max.webp)<br>`HVAC_TEMPERATURE_SET[0x1]=28.0` | 통과, 3.8초, [화면](../site/results/img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp) |
 | <a id="test_off_grid_signal_steps_back_to_grid"></a>`test_off_grid_signal_steps_back_to_grid` `[up-22.5]`<br>차량 쪽에서 0.5°C 단위가 아닌 온도(22.3°C)가 와도, 버튼을 한 번 누르면 차량 온도가 0.5°C 단위(+는 22.5°C, -는 22.0°C)로 맞춰집니다. | 통과, 3.4초, [화면](../site/results/img/aaos/test_off_grid_signal_steps_back_to_grid_up-22.5.webp)<br>`HVAC_TEMPERATURE_SET[0x1]=22.5` | 통과, 3.5초, [화면](../site/results/img/mock/test_off_grid_signal_steps_back_to_grid_up-22.5.webp) |
 | `test_off_grid_signal_steps_back_to_grid` `[down-22.0]` | 통과, 3.4초, [화면](../site/results/img/aaos/test_off_grid_signal_steps_back_to_grid_down-22.0.webp)<br>`HVAC_TEMPERATURE_SET[0x1]=22.0` | 통과, 3.5초, [화면](../site/results/img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp) |
@@ -196,7 +197,7 @@ Test Bench REST API로 차량 신호를 넣고 읽으면서 앱 화면이 따라
 | `test_each_tab_opens` `[assistant]` | 통과, 2.6초, [화면](../site/results/img/aaos/test_each_tab_opens_assistant.webp) | 통과, 2.5초, [화면](../site/results/img/mock/test_each_tab_opens_assistant.webp) |
 | `test_each_tab_opens` `[vehicle_controls]` | 통과, 2.5초, [화면](../site/results/img/aaos/test_each_tab_opens_vehicle_controls.webp) | 통과, 2.5초, [화면](../site/results/img/mock/test_each_tab_opens_vehicle_controls.webp) |
 | `test_each_tab_opens` `[apps]` | 통과, 2.7초, [화면](../site/results/img/aaos/test_each_tab_opens_apps.webp) | 통과, 2.5초, [화면](../site/results/img/mock/test_each_tab_opens_apps.webp) |
-| <a id="test_hvac_is_controllable"></a>`test_hvac_is_controllable`<br>공조를 제어할 수 있는지 봅니다. AAOS에서 실패하면 priv-app 설치와 공조 권한부터 확인합니다. | 통과, 2.7초, [화면](../site/results/img/aaos/test_hvac_is_controllable.webp) | 통과, 2.7초, [화면](../site/results/img/mock/test_hvac_is_controllable.webp) |
+| <a id="test_hvac_is_controllable"></a>`test_hvac_is_controllable`<br>공조를 화면과 차량 양쪽에서 제어할 수 있는지 봅니다. 머지 전 게이트(PR smoke)에서 화면↔차량 신호의 핵심 경로를 한 번씩 확인합니다. 화면의 운전석 +를 한 번 누르면 차량 온도가 22.0°C에서 22.5°C가 되고, 차량 쪽에서 25.0°C를 넣으면 화면이 25.0°C가 됩니다. AAOS에서 실패하면 priv-app 설치와 공조 권한(CONTROL_CAR_CLIMATE)부터 확인합니다. | 통과, 2.7초, [화면](../site/results/img/aaos/test_hvac_is_controllable.webp) | 통과, 2.7초, [화면](../site/results/img/mock/test_hvac_is_controllable.webp) |
 
 ## test_spike_aaos.py
 
