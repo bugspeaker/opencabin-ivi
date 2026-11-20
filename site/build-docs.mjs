@@ -136,6 +136,7 @@ ${body}
   ${tocHtml}
 </div>
 ${scripts}
+<script src="../glossary.js" defer></script>
 </body>
 </html>
 `;

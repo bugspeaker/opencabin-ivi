@@ -22,6 +22,8 @@ body {
 }
 a { color: inherit; }
 :focus-visible { outline: 2px solid rgb(94 105 209 / 0.6); outline-offset: 2px; }
+/* 용어 풀이 (glossary.js): 링크와 구분되게 글자색은 그대로, 점선 밑줄만. 마우스를 올리면 뜻이 뜬다 */
+abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--ink-subtle); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; }
 .skip { position: absolute; left: 16px; top: -100px; z-index: 50; background: var(--primary); color: #fff; padding: 8px 12px; border-radius: var(--r-md); }
 .skip:focus { top: 12px; }
 
