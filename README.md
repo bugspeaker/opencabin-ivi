@@ -23,7 +23,7 @@
 | | 결과 (2026-11-18) |
 |---|---|
 | E2E | 129개. AAOS 에뮬레이터 127 통과, 1 건너뜀, 1 알려진 결함 / 태블릿 122 통과, 7 건너뜀(차량 값은 앱 안 Mock이라 VHAL 경로는 AAOS에서만 확인). 두 기기에서 5회 반복해 1,250건(AAOS 640, 태블릿 610), flaky 0, 실패 0 ([통계와 원자료](docs/flaky-report.md)) |
-| 게이트와 CI | PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 뒤 [Release 게이트](docs/portfolio.md#4-1-게이트-단계와-기준) 다섯 조건. GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 94개를 돌리고, 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 129개) 추적이 빠지면 실패합니다. E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다 |
+| 게이트와 CI | PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 뒤 [Release 게이트](docs/portfolio.md#4-1-게이트-단계와-기준) 다섯 조건. GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 106개를 돌리고, 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 129개) 추적이 빠지면 실패합니다. E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다 |
 
 ## 구조
 
@@ -67,7 +67,7 @@ site/                 소개 사이트
 
 ## 찾은 결함과 알려진 결함
 
-앱 결함, 실기기 문제, 플랫폼 결함, 테스트 코드의 경쟁 조건까지 찾은 결함의 증상, 원인, 조치는 [포트폴리오 3장](docs/portfolio.md#3-결함과-원인-분석)의 표(8개 항목)에 있습니다.
+앱 결함, 실기기 문제, 플랫폼 결함, 테스트 코드의 경쟁 조건까지 찾은 결함의 증상, 원인, 조치는 [포트폴리오 3장](docs/portfolio.md#3-결함과-원인-분석)의 표(9개 항목)에 있습니다.
 
 알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼 쪽 문제라 `xfail(strict=True)`로 걸어 두었고, Release 게이트가 [알려진 결함 목록](ivi-tests/known_defects.txt)과 맞춰 봅니다. 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.
 

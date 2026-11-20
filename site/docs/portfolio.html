@@ -67,7 +67,7 @@
 </tr>
 <tr>
 <td>단위 테스트</td>
-<td>프레임워크 94개, 앱 22개 모두 통과</td>
+<td>프레임워크 106개, 앱 22개 모두 통과</td>
 </tr>
 <tr>
 <td>테스트별 결과</td>
@@ -160,7 +160,7 @@
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
-<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 94개 있습니다.</td>
+<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 106개 있습니다.</td>
 </tr>
 <tr>
 <td>Appium 등 UI 자동화 도구</td>
@@ -274,6 +274,12 @@
 <td>버튼이 &#39;지금 값 ± 0.5&#39;로 계산</td>
 <td>0.5 단위에 맞춘 다음 값으로 계산하게 고침. 경계값 E2E 6개가 두 기기에서 통과</td>
 </tr>
+<tr>
+<td>9</td>
+<td>막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류</td>
+<td>UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있음. 계측 프로세스가 죽는 원인은 확인하지 못함</td>
+<td>테스트를 시작할 때 세션을 확인하고 끊겼으면 다시 붙임(<code>session_restart</code>로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">확인 기록</a>)</td>
+</tr>
 </tbody></table></div>
 <details>
 <summary>1번. 탭 한 번에 10초</summary>
@@ -370,7 +376,7 @@
 </thead><tbody><tr>
 <td>unit</td>
 <td>테스트 도구 자체가 맞는지 (기기 없음)</td>
-<td>94</td>
+<td>106</td>
 <td>약 11초</td>
 <td>모든 PR, push</td>
 <td>실패 0</td>
@@ -699,6 +705,10 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <td>사유, 등록일, 해제 조건 가운데 하나라도 빠진 줄은 받지 않습니다. 격리한 테스트도 계속 돌려서 데이터를 모읍니다.</td>
 </tr>
 <tr>
+<td>Appium 세션</td>
+<td>실행 전체에서 세션 하나를 쓰고, 테스트를 시작할 때마다 UiAutomator2 서버까지 가는 가벼운 요청으로 확인합니다. 끊겼으면 닫고 다시 붙이며(서버가 다시 뜨는 중이면 3초 간격으로 3번까지), 그 일을 <code>session_restart</code>로 기록해 flaky 통계에 &#39;세션 재연결&#39;로 보여 줍니다. 테스트 도중에 끊긴 시도는 실패로 남고 재시도에서 다시 붙습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">확인 기록</a>).</td>
+</tr>
+<tr>
 <td>병렬 실행</td>
 <td>기기마다 pytest 프로세스를 따로 띄웁니다. Appium 서버는 하나만 두고 UiAutomator2 <code>systemPort</code>만 기기별로 다르게 줍니다.</td>
 </tr>
@@ -813,7 +823,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <li>앱의 온도 범위(16.0~28.0°C)와 0.5°C 증분은 앱 코드(<code>HvacSpec</code>)에 고정했습니다. 좌석 area는 <code>CarPropertyConfig</code>에서 읽지만 범위와 증분은 읽지 않습니다. 차종마다 다르면 area별 최소·최대 값과 <code>HVAC_TEMPERATURE_SET</code>의 <code>configArray</code>에서 읽어야 합니다.</li>
 <li>반복 실행은 하루(2026-11-18) 5회입니다. 기간에 걸친 flaky 추세는 아직 없습니다.</li>
 <li>2026-11-19에 테스트 코드의 대기 방식(고정 sleep → <code>stays</code>, 값 대기 → <code>wait_value</code>)과 범위 밖 온도 테스트의 기대값을 바꿨습니다. 위 E2E 결과와 반복 실행 5회는 바꾸기 전 코드로 돌린 것입니다. 바꾼 코드로는 두 기기 전체를 1회 다시 돌려 AAOS 127 통과, 1 건너뜀, 1 알려진 결함, 태블릿 122 통과, 7 건너뜀, 재시도 0이었습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-19-after-review/README.md">원자료</a>). 반복 실행은 아직 다시 하지 않았습니다.</li>
-<li>Appium 세션은 실행 전체에서 하나입니다. 중간에 UiAutomator2 서버가 죽으면 그 뒤 테스트가 모두 오류가 됩니다. 2026-11-19 막 켠 에뮬레이터에서 실제로 일어났고, 세션을 다시 붙이는 처리는 아직 없습니다.</li>
+<li>막 켠 AAOS 에뮬레이터에서 UiAutomator2 계측 프로세스가 스스로 죽는 원인은 확인하지 못했습니다(2026-11-19, 11-20 두 번). 세션을 다시 붙여 그 뒤 테스트는 이어지지만, 그때 돌던 테스트는 재시도에서야 통과합니다.</li>
 <li>사이드 미러, 트렁크, 차일드 락, 실내등, 전조등은 차량 신호에 연결하지 않은 화면 상태입니다.</li>
 </ul>
 <h3 id="다음-단계"><a class="anchor" href="#다음-단계" aria-hidden="true">#</a>다음 단계</h3>

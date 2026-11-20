@@ -61,7 +61,8 @@ def print_results(run_id, wall, results):
         counts = ", ".join(f"{k} {v}" for k, v in sorted(summary["counts"].items()))
         mark = "✓" if summary["gate"] == "pass" else "✗"
         ok = ok and summary["gate"] == "pass"
-        print(f"  {mark} {summary['kind']:5} {serial:18} {summary['duration']:6.0f}s  {counts}  relaunch {summary['relaunches']}")
+        print(f"  {mark} {summary['kind']:5} {serial:18} {summary['duration']:6.0f}s  {counts}  relaunch {summary['relaunches']}"
+              f"  session_restart {summary.get('session_restarts', 0)}")
     if len(results) > 1 and wall:
         print(f"  기기별로 차례로 돌렸다면 약 {serial_total:.0f}s → 병렬 {wall:.0f}s ({serial_total / wall:.1f}배)")
     return ok
