@@ -27,7 +27,7 @@ SESSION_LOST_MESSAGES = (
 
 class SessionLost(Exception):
     """Appium 세션이 끊겼다. RETRY_ERRORS 에 들지 않으므로 대기가 다시 보지 않는다.
-    conftest 는 이 실패가 나면 남은 테스트를 돌리지 않고 실행을 멈춘다(모두 같은 이유로 오류가 되므로)."""
+    이 시도는 실패로 남고, 다음 시도를 시작할 때 conftest 의 _appium_session_alive 가 세션을 다시 붙인다(ivi/session.py)."""
 
 
 def session_lost(err):

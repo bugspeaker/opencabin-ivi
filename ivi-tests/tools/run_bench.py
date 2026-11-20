@@ -80,7 +80,8 @@ def print_results(run_id, wall, results):
         serial_total += summary["duration"]
         counts = ", ".join(f"{k} {v}" for k, v in sorted(summary["counts"].items()))
         mark = "✓" if passed else "✗"
-        print(f"  {mark} {summary['kind']:5} {serial:18} {summary['duration']:6.0f}s  {counts}  relaunch {summary['relaunches']}")
+        print(f"  {mark} {summary['kind']:5} {serial:18} {summary['duration']:6.0f}s  {counts}  relaunch {summary['relaunches']}"
+              f"  session_restart {summary.get('session_restarts', 0)}")
         for reason in reasons:
             print(f"      ✗ {reason}")
     if len(results) > 1 and wall:

@@ -156,10 +156,10 @@ def check_completeness(check, runs, inventory, expected_rounds, kinds, commit):
     if len(commits) > 1:
         check.problems.append("회차·기기마다 다른 커밋에서 돈 결과가 섞였다: " + ", ".join(sorted(c[:7] for c in commits)))
     if legacy_exit:
-        check.notes.append(f"종료 코드가 없는 결과 파일 {legacy_exit}개 (2026-11-19 이전 형식). "
+        check.notes.append(f"종료 코드가 없는 결과 파일 {legacy_exit}개 (커밋·종료 코드를 남기기 전 형식). "
                            "지금 코드의 테스트 목록과 하나씩 맞춰 끝까지 돌았는지 본다")
     if legacy_commit:
-        message = f"커밋이 적히지 않은 결과 파일 {legacy_commit}개 (2026-11-19 이전 형식)"
+        message = f"커밋이 적히지 않은 결과 파일 {legacy_commit}개 (커밋·종료 코드를 남기기 전 형식)"
         if commit:
             check.problems.append(message + f". 커밋 {commit[:7]} 에서 돈 결과인지 확인할 수 없다")
         else:

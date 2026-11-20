@@ -73,6 +73,7 @@ class Recorder:
             "reruns": 0,
             "relaunches": 0,
             "infra_retries": 0,
+            "session_restarts": 0,
             "duration": 0.0,
             "message": "",
             "first_error": "",
@@ -91,6 +92,10 @@ class Recorder:
         rec["relaunches"] = max(rec["relaunches"], relaunches)
         retries = sum(1 for key, _ in report.user_properties if key == "vhal_retry")
         rec["infra_retries"] = max(rec["infra_retries"], retries)
+        restarts = [value for key, value in report.user_properties if key == "session_restart"]
+        if restarts:  # Appium 세션을 다시 붙인 일 (ivi/session.py). 이유는 마지막 것
+            rec["session_restarts"] = max(rec["session_restarts"], len(restarts))
+            rec["session_restart_reason"] = restarts[-1]
         signals = [value for key, value in report.user_properties if key == "vhal"]
         if signals:  # 판정에 쓴 차량 값. 재시도면 마지막 시도 것
             rec["signals"] = signals
@@ -164,6 +169,7 @@ class Recorder:
             "counts": counts,
             "relaunches": sum(rec["relaunches"] for rec in self.records.values()),
             "infra_retries": sum(rec["infra_retries"] for rec in self.records.values()),
+            "session_restarts": sum(rec["session_restarts"] for rec in self.records.values()),
             **({"exitstatus": exitstatus} if exitstatus is not None else {}),
             **({"collected": collected} if collected is not None else {}),
             "gate": "fail" if problems else "pass",

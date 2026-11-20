@@ -68,10 +68,11 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
     for row in sorted(rows, key=lambda r: (r["time"], r["run_id"])):
         tests[(row["kind"], row["nodeid"])].append(row)
         run = runs[row["kind"]].setdefault((row["run_id"], row["serial"]), {"gate": "pass", "duration": 0.0, "executed": 0,
-                                                                             "flaky": 0, "failed": 0})
+                                                                             "flaky": 0, "failed": 0, "session_restarts": 0})
         run["duration"] += row["duration"]
         run["executed"] += row["outcome"] != "skipped"  # 알려진 결함(xfailed)도 실행한 것으로 센다
         run["flaky"] += row["outcome"] == "flaky"
+        run["session_restarts"] += row.get("session_restarts", 0)  # Appium 세션을 다시 붙인 횟수 (ivi/session.py)
         if row["outcome"] in ("failed", "error"):
             run["gate"] = "fail"
             run["failed"] += 1
@@ -103,6 +104,7 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
             "p95": p95(durations),
             "relaunches": sum(r.get("relaunches", 0) for r in counted),
             "infra_retries": sum(r.get("infra_retries", 0) for r in counted),
+            "session_restarts": sum(r.get("session_restarts", 0) for r in history),
             "streak": streak,
             "quarantined": is_quarantined,
             "last_error": next((r.get("first_error") or r.get("message") for r in reversed(counted)
@@ -119,6 +121,7 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
             "executed": sum(r["executed"] for r in items.values()),
             "flaky": sum(r["flaky"] for r in items.values()),
             "failed": sum(r["failed"] for r in items.values()),
+            "session_restarts": sum(r["session_restarts"] for r in items.values()),
         }
         for kind, items in runs.items()
     }
@@ -128,25 +131,27 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
 def render(run_summary, stats, candidates, releases, threshold, min_runs, release_streak):
     lines = ["# Flaky 리포트", ""]
     lines += ["## 실행 요약", "",
-              "| 기기 | 실행 | 게이트 통과 | 실행한 테스트 (건너뜀 제외) | flaky | 실패 | 평균 테스트 시간 합 |",
-              "|---|---|---|---|---|---|---|"]
+              "| 기기 | 실행 | 게이트 통과 | 실행한 테스트 (건너뜀 제외) | flaky | 실패 | 세션 재연결 | 평균 테스트 시간 합 |",
+              "|---|---|---|---|---|---|---|---|"]
     for kind, s in sorted(run_summary.items()):
         lines.append(f"| {kind} | {s['runs']} | {s['gate_pass']}/{s['runs']} ({s['gate_pass'] / s['runs']:.0%}) | "
-                     f"{s['executed']:,} | {s['flaky']} | {s['failed']} | {s['avg_duration']:.0f}s |")
+                     f"{s['executed']:,} | {s['flaky']} | {s['failed']} | {s['session_restarts']} | {s['avg_duration']:.0f}s |")
     if len(run_summary) > 1:
-        total = {key: sum(s[key] for s in run_summary.values()) for key in ("runs", "gate_pass", "executed", "flaky", "failed")}
+        keys = ("runs", "gate_pass", "executed", "flaky", "failed", "session_restarts")
+        total = {key: sum(s[key] for s in run_summary.values()) for key in keys}
         lines.append(f"| 합계 | {total['runs']} | {total['gate_pass']}/{total['runs']} | {total['executed']:,} | "
-                     f"{total['flaky']} | {total['failed']} | |")
+                     f"{total['flaky']} | {total['failed']} | {total['session_restarts']} | |")
 
-    unstable = sorted((s for s in stats if s["unstable_rate"] > 0 or s["relaunches"] or s["infra_retries"]),
+    unstable = sorted((s for s in stats if s["unstable_rate"] > 0 or s["relaunches"] or s["infra_retries"] or s["session_restarts"]),
                       key=lambda s: (-s["unstable_rate"], -s["relaunches"], s["nodeid"]))
     lines += ["", "## 불안정 테스트", ""]
     if unstable:
-        lines += ["| 기기 | 테스트 | 실행 | flaky | 실패 | 불안정 | 앱 재실행 | 신호 재시도 | 평균/p95 | 마지막 원인 |", "|---|---|---|---|---|---|---|---|---|---|"]
+        lines += ["| 기기 | 테스트 | 실행 | flaky | 실패 | 불안정 | 앱 재실행 | 신호 재시도 | 세션 재연결 | 평균/p95 | 마지막 원인 |",
+                  "|---|---|---|---|---|---|---|---|---|---|---|"]
         for s in unstable:
             reason = s["last_error"].splitlines()[0][:80] if s["last_error"] else ""
             lines.append(f"| {s['kind']} | `{s['nodeid']}` | {s['runs']} | {s['flaky']} | {s['failed']} | {s['unstable_rate']:.0%} | "
-                         f"{s['relaunches']} | {s['infra_retries']} | {s['avg']:.1f}/{s['p95']:.1f}s | {reason} |")
+                         f"{s['relaunches']} | {s['infra_retries']} | {s['session_restarts']} | {s['avg']:.1f}/{s['p95']:.1f}s | {reason} |")
     else:
         lines.append("없음 (모든 테스트가 매번 한 번에 통과)")
 

@@ -274,7 +274,7 @@ def _passing_run(recorder, *nodeids):
 
 def test_summary_fails_when_pytest_did_not_finish(recorder):
     """돈 테스트가 모두 통과해도, 고른 테스트보다 판정이 적거나 종료 코드가 0 이 아니면 게이트 실패다
-    (Appium 세션이 끊겨 conftest 가 실행을 멈춘 경우: 종료 코드 2)."""
+    (예: 사람이 Ctrl+C 로 멈춘 실행, 내부 오류로 중단된 실행: 종료 코드 2·3)."""
     _passing_run(recorder, "t::a", "t::b")
     assert recorder.summary(exitstatus=0, collected=2)["gate"] == "pass"
     stopped = recorder.summary(exitstatus=2, collected=5)
