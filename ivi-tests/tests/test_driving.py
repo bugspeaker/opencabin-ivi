@@ -9,7 +9,7 @@ import time
 import pytest
 
 from ivi.device import VIDEO
-from ivi.waits import wait_until
+from ivi.waits import stays, wait_until
 
 
 @pytest.mark.req("DRIVE-01")
@@ -119,7 +119,7 @@ def test_video_resumes_where_it_stopped(app, car, device, driver):
     car.drive(50.0)
     car.wait_restricted(True)
     wait_until(lambda: device.video_blocked(video), what="주행 중 영상 차단")
-    time.sleep(5)  # 막힌 채로 둔다
+    stays(lambda: device.video_blocked(video), duration=5, interval=0.5, what="주행 중 영상 차단 유지")  # 막힌 채로 5초
 
     car.park()
     car.wait_restricted(False)

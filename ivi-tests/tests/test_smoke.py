@@ -1,6 +1,9 @@
 """빌드가 나오면 가장 먼저 돌리는 최소 확인입니다. 여기서 실패하면 나머지 테스트는 돌려도 의미가 없습니다."""
 import pytest
 
+from ivi.vehicle import Seat
+from ivi.waits import wait_value
+
 pytestmark = pytest.mark.smoke
 
 
@@ -34,9 +37,17 @@ def test_each_tab_opens(app, tab):
 
 
 @pytest.mark.req("SYS-01", "HVAC-01")
-def test_hvac_is_controllable(app):
-    """공조를 제어할 수 있는지 봅니다.
-    AAOS에서 실패하면 priv-app 설치와 공조 권한부터 확인합니다.
+def test_hvac_is_controllable(app, car):
+    """공조를 화면과 차량 양쪽에서 제어할 수 있는지 봅니다. 머지 전 게이트(PR smoke)에서 화면↔차량 신호의 핵심 경로를 한 번씩 확인합니다.
+    화면의 운전석 +를 한 번 누르면 차량 온도가 22.0°C에서 22.5°C가 되고, 차량 쪽에서 25.0°C를 넣으면 화면이 25.0°C가 됩니다.
+    AAOS에서 실패하면 priv-app 설치와 공조 권한(CONTROL_CAR_CLIMATE)부터 확인합니다.
     """
     climate = app.climate()
     assert not climate.unavailable(), "공조 제어 불가 화면. AAOS 면 ivi-app/privileged/install_priv_app.py 로 설치했는지 확인"
+    climate.wait_temperature(Seat.DRIVER, 22.0)
+
+    climate.increase(Seat.DRIVER)  # 화면 → 차량 (AAOS: CarService → VHAL)
+    wait_value(lambda: car.temperature(Seat.DRIVER), 22.5, what="차량 운전석 온도")
+
+    car.inject_temperature(Seat.DRIVER, 25.0)  # 차량 → 화면 (AAOS: VHAL 에 바로)
+    climate.wait_temperature(Seat.DRIVER, 25.0)

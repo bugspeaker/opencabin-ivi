@@ -6,7 +6,7 @@
   테스트     tests/*.py 의 @pytest.mark.req("ID", ...)
   결과       site/results/results.json (publish_results.py 가 만든 최신 결과)
 
-A-SPICE 의 검증 단계가 요구하는 '요구사항과 시험 사이의 양방향 추적'을 흉내 낸 것이다.
+A-SPICE 가 요구하는 요구사항–시험 양방향 추적을 개인 프로젝트 규모로 적용해 본 것이다.
 unit/test_operations.py 가 '테스트가 없는 요구사항'과 '요구사항이 없는 테스트'가 없는지 CI 에서 확인한다.
 """
 import ast
@@ -94,7 +94,7 @@ def markdown(requirements, tests, outcomes, kinds):
         "# 요구사항 추적표",
         "",
         "[요구사항](requirements.md)마다 그것을 확인하는 테스트와 최신 결과를 이었습니다. 테스트 코드의 `@pytest.mark.req`를 읽어 `ivi-tests/tools/trace_report.py`가 만듭니다.",
-        "A-SPICE의 검증 단계에서 요구하는 요구사항과 시험 사이의 양방향 추적을 흉내 낸 것이고, 표준 인증이나 심사를 받은 것은 아닙니다.",
+        "A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로젝트 규모로 적용해 본 것이고, 표준 인증이나 심사를 받은 것은 아닙니다.",
         "",
         "| 항목 | 개수 |",
         "|---|---|",

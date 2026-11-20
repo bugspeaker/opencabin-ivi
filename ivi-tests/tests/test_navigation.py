@@ -1,9 +1,8 @@
 """경로 안내가 차량 속도에 맞춰 진행되는지, 주행 중에 검색 입력이 막히는지 확인합니다."""
-import time
 
 import pytest
 
-from ivi.waits import wait_until
+from ivi.waits import stays, wait_until, wait_value
 
 
 @pytest.mark.req("NAV-01")
@@ -33,8 +32,8 @@ def test_parked_vehicle_does_not_advance_route(app, car):
     nav.pick(1)  # 회사 8.7 km
     nav.start()
     assert nav.remaining_km() == pytest.approx(8.7)
-    time.sleep(3)  # 일부러 기다린다: 정차 중에는 시간이 지나도 줄면 안 된다 (조건 대기로 바꿀 수 없는 '변하지 않음' 확인)
-    assert nav.remaining_km() == pytest.approx(8.7)
+    # 정차 중에는 시간이 지나도 줄면 안 된다: 3초 동안 계속 읽어 한 번이라도 바뀌면 실패
+    stays(lambda: nav.remaining_km() == pytest.approx(8.7), duration=3, what="정차 중 남은 거리 8.7 km 유지")
 
 
 @pytest.mark.req("DRIVE-03")
@@ -58,7 +57,7 @@ def test_search_filters_destinations(app):
     """'역'으로 검색하면 판교역과 서울역만 남습니다."""
     nav = app.navigation()
     nav.search("역")
-    wait_until(lambda: nav.results() == ["판교역", "서울역"], what="'역' 검색 결과")
+    wait_value(lambda: nav.results(), ["판교역", "서울역"], what="'역' 검색 결과")
 
 
 @pytest.mark.req("NAV-01")
@@ -67,7 +66,7 @@ def test_arrival(app, car):
     """0.1 km 떨어진 편의점으로 안내를 시작하고 120 km/h로 달리면 도착 화면이 뜹니다."""
     nav = app.navigation()
     nav.search("편의점")
-    wait_until(lambda: nav.results() == ["편의점"], what="'편의점' 검색 결과")
+    wait_value(lambda: nav.results(), ["편의점"], what="'편의점' 검색 결과")
     nav.pick(5)  # 0.1 km
     nav.start()
     car.drive(120.0)

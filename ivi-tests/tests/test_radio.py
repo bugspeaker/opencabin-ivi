@@ -1,7 +1,7 @@
 """라디오의 켜기, 주파수 조정, 방송국 찾기, 대역 전환, 프리셋을 확인합니다."""
 import pytest
 
-from ivi.waits import wait_until
+from ivi.waits import wait_value
 
 
 @pytest.mark.req("MEDIA-02")
@@ -86,4 +86,4 @@ def test_radio_and_media_play_one_at_a_time(app):
 
     media = app.media()
     media.wait_text("playback_state", "일시 정지")
-    wait_until(lambda: app.radio().state() == "재생 중", what="라디오 계속 재생")
+    wait_value(lambda: app.radio().state(), "재생 중", what="라디오 상태")

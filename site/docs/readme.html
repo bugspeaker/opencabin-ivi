@@ -42,11 +42,20 @@
   <main id="content" class="doc">
 <h1 id="opencabin-ivi-aaos-인포테인먼트-테스트-자동화"><a class="anchor" href="#opencabin-ivi-aaos-인포테인먼트-테스트-자동화" aria-hidden="true">#</a>OpenCabin IVI: AAOS 인포테인먼트 테스트 자동화</h1>
 <p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다.
-테스트 대상은 직접 만든 가상 IVI 앱입니다. 같은 테스트를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.
+테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱입니다. 같은 테스트를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.
 실제 차량, HIL, CAN 장비는 쓰지 않았습니다. CAN과 원격 전원은 PC 안의 모의 환경입니다.</p>
+<h2 id="테스트로-찾은-문제"><a class="anchor" href="#테스트로-찾은-문제" aria-hidden="true">#</a>테스트로 찾은 문제</h2>
+<ul>
+<li><strong>경계값 테스트에서 앱 결함 1건.</strong> 차량 온도가 22.3°C일 때 + 버튼이 22.8°C를 차량(VHAL)에 썼습니다. 버튼 계산을 고쳤고, 실패 당시 자료(화면, UI 계층, 차량 값, logcat)를 그대로 남겼습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/tree/main/docs/samples/off-grid-temperature-aaos">실패 자료</a> · <a href="portfolio.html#3-결함과-원인-분석">원인 분석</a></li>
+<li><strong>화웨이 태블릿에서 탭 한 번에 10초.</strong> 누르는 방법 네 가지를 재서 UiAutomator 터치 자체가 원인임을 좁혔습니다. 누르기만 adb로 바꿔 10,377 ms → 117 ms, 당시 31개 전체 7분 22초 → 1분 32초. <a href="decisions.html#2-화웨이-태블릿에서는-누르기만-adb로">결정 기록 2번</a></li>
+<li><strong>21번째 테스트마다 앱이 사라짐.</strong> logcat의 <code>iAwareF[CrashClean]</code>에서 OS가 반복 재시작을 크래시로 본 것을 찾고, 프로세스 종료를 세션당 한 번으로 바꿨습니다. 바꾼 뒤 3회 연속 앱 재실행 0회. <a href="decisions.html#6-앱-프로세스-종료는-세션-시작-때-한-번만">결정 기록 6번</a></li>
+</ul>
+<img src="../../docs/images/demo-ui-vhal.gif" width="560" alt="운전석 + 를 누르면 VHAL 값이 22.0에서 22.5로, VHAL에 25.0을 넣으면 화면이 25.0으로 바뀌는 모습 (AAOS 에뮬레이터)">
+
+<p>화면 + → VHAL 22.0→22.5, VHAL에 25.0 주입 → 화면 25.0 (AAOS 에뮬레이터)</p>
 <blockquote class="callout callout-tip"><p class="callout-title">안내</p>
 <p><strong>공고 항목별 근거는 <a href="https://bugspeaker.github.io/opencabin-ivi/" target="_blank" rel="noopener">소개 사이트</a>에서 한눈에 볼 수 있습니다.</strong></p>
-<p>공고의 주요 업무, 자격요건, 우대사항마다 이 프로젝트에서 한 일을 적었고, 항목을 누르면 근거가 되는 테스트 결과와 테스트가 끝난 화면으로 바로 이동합니다.
+<p>공고의 주요 업무, 자격요건, 우대사항마다 이 프로젝트에서 한 일을 적었고, 항목을 누르면 근거가 되는 테스트 결과와 판정 직후 화면으로 바로 이동합니다.
 문서로 보려면 <a href="portfolio.html#1-공고-요구사항과-한-일">포트폴리오 1장</a>, 판단의 이유와 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</p>
 </blockquote>
 <div class="table"><table><thead><tr>
@@ -55,21 +64,14 @@
 </tr>
 </thead><tbody><tr>
 <td>E2E</td>
-<td>129개. AAOS 127 통과, 1 건너뜀, 1 알려진 결함 / 태블릿 122 통과, 7 건너뜀. 두 기기에서 5회 반복해 테스트 1,250건, flaky 0건, 실패 0건 (<a href="flaky-report.html">통계</a>)</td>
+<td>129개. AAOS 에뮬레이터 127 통과, 1 건너뜀, 1 알려진 결함 / 태블릿 122 통과, 7 건너뜀(차량 값은 앱 안 Mock이라 VHAL 경로는 AAOS에서만 확인). 두 기기에서 5회 반복해 1,250건(AAOS 640, 태블릿 610), flaky 0, 실패 0 (<a href="flaky-report.html">통계와 원자료</a>)</td>
 </tr>
 <tr>
-<td>게이트</td>
-<td>PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 (<a href="portfolio.html#4-1-게이트-단계와-기준">기준과 시간</a>)</td>
-</tr>
-<tr>
-<td>CI</td>
-<td>PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 71개 (GitHub Actions). E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다</td>
-</tr>
-<tr>
-<td>추적</td>
-<td>요구사항 26개 ↔ 테스트 함수 101개. 빠진 곳이 있으면 unit job이 실패합니다</td>
+<td>게이트와 CI</td>
+<td>PR smoke 13 / main push +sanity 25 / Nightly 전체 / Release 전체 반복 뒤 <a href="portfolio.html#4-1-게이트-단계와-기준">Release 게이트</a> 다섯 조건. GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트 94개를 돌리고, 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 129개) 추적이 빠지면 실패합니다. E2E job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다</td>
 </tr>
 </tbody></table></div>
+<h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
 <pre class="mermaid">flowchart LR
     T[pytest] --&gt; S[화면 객체]
     T --&gt; V[차량 어댑터]
@@ -86,8 +88,6 @@
     subgraph TAB[태블릿]
         B1[IVI 앱] &lt;--&gt; B2[Mock 차량]
     end</pre>
-<p><img data-md src="../../docs/images/demo-ui-vhal.gif" alt="화면의 온도를 올리면 VHAL 값이 바뀌고, VHAL 값을 바꾸면 화면이 따라오는 모습 (AAOS 에뮬레이터)" loading="lazy"></p>
-<h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
 <pre class="code"><code>ivi-app/              IVI 앱 (Kotlin, Compose). privileged/ 는 priv-app 설치 스크립트
 ivi-tests/
   ivi/                adb, 대기, 차량 어댑터, 기기, 화면 객체, 결과 기록, 격리 목록, Test Bench API, 전원 제어, CAN 게이트웨이
@@ -100,10 +100,11 @@ docs/                 포트폴리오, 단계별 기록, 요구사항과 추적�
 site/                 소개 사이트</code></pre>
 <h2 id="실행"><a class="anchor" href="#실행" aria-hidden="true">#</a>실행</h2>
 <p>에뮬레이터를 <code>-writable-system</code>으로 켜고 Appium 서버를 띄운 뒤, <code>ivi-tests</code>에서 <code>pytest -m smoke</code> 또는 두 기기 병렬 실행 <code>tools\run_bench.py</code>를 돌립니다.
-테스트마다 끝난 화면과 판정은 <a href="test-results.html">docs/test-results.md</a>에서 볼 수 있습니다.
+테스트마다 판정과 판정 직후 화면은 <a href="test-results.html">docs/test-results.md</a>에서 볼 수 있습니다.
 자세한 방법과 환경 변수는 <a href="run.html">docs/run.md</a>에 있습니다.</p>
-<h2 id="알려진-결함과-건너뛴-테스트"><a class="anchor" href="#알려진-결함과-건너뛴-테스트" aria-hidden="true">#</a>알려진 결함과 건너뛴 테스트</h2>
-<p>알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_1024p_landscape</code>)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼 쪽 문제라 <code>xfail(strict=True)</code>로 걸어 두었습니다. 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.</p>
+<h2 id="찾은-결함과-알려진-결함"><a class="anchor" href="#찾은-결함과-알려진-결함" aria-hidden="true">#</a>찾은 결함과 알려진 결함</h2>
+<p>앱 결함, 실기기 문제, 플랫폼 결함, 테스트 코드의 경쟁 조건까지 찾은 결함의 증상, 원인, 조치는 <a href="portfolio.html#3-결함과-원인-분석">포트폴리오 3장</a>의 표(8개 항목)에 있습니다.</p>
+<p>알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_1024p_landscape</code>)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼 쪽 문제라 <code>xfail(strict=True)</code>로 걸어 두었고, Release 게이트가 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/known_defects.txt">알려진 결함 목록</a>과 맞춰 봅니다. 건너뛴 테스트는 AAOS에서만 의미가 있는 테스트입니다.</p>
 <details>
 <summary>단계별 진행 (1~9단계)</summary>
 
@@ -174,7 +175,12 @@ site/                 소개 사이트</code></pre>
 <td>116개 통과, 7개 건너뜀 (9분 44초)</td>
 </tr>
 <tr>
-<td>8단계 (2026-11-16, 108개)</td>
+<td>8단계 끝 (2026-11-18 아침, 115개)</td>
+<td>113개 통과, 1개 건너뜀, 1개 알려진 결함 (9분 35초)</td>
+<td>109개 통과, 6개 건너뜀 (9분 11초)</td>
+</tr>
+<tr>
+<td>8단계 중간 (2026-11-16, 108개)</td>
 <td>106개 통과, 1개 건너뜀, 1개 알려진 결함 (6분 40초)</td>
 <td>102개 통과, 6개 건너뜀 (7분 6초)</td>
 </tr>
@@ -191,10 +197,16 @@ site/                 소개 사이트</code></pre>
 </tbody></table></div>
 </details>
 
-<p>코드는 AI 코딩 도구(Claude Code)와 함께 작성했습니다. 기기 구성, 신호 주입 방식, 판정과 재시도 규칙, 결함 원인 분석에서 무엇을 고르고 무엇을 버렸는지, 그 근거가 된 측정값은 <a href="decisions.html">결정 기록</a>에 적었습니다.</p>
+<h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
+<ul>
+<li>기간: 2026-11-13 ~ 2026-11-18, 혼자 진행했습니다.</li>
+<li>배경: 게임 QA 약 8년. 웹 BVT를 Playwright와 pytest로 만든 경험이 있고, 모바일과 AAOS 테스트 자동화는 이 프로젝트가 처음입니다.</li>
+<li>AI 사용: 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 PR마다 실행 결과와 변경 내용을 확인하고 병합했습니다.</li>
+<li>기기 구성, 신호 주입 방식, 판정과 재시도 규칙, 결함 원인 분석에서 무엇을 고르고 무엇을 버렸는지와 그 근거가 된 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
+</ul>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#구조">구조</a><a class="l2" href="#실행">실행</a><a class="l2" href="#알려진-결함과-건너뛴-테스트">알려진 결함과 건너뛴 테스트</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#테스트로-찾은-문제">테스트로 찾은 문제</a><a class="l2" href="#구조">구조</a><a class="l2" href="#실행">실행</a><a class="l2" href="#찾은-결함과-알려진-결함">찾은 결함과 알려진 결함</a><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

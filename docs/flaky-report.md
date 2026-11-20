@@ -4,18 +4,29 @@
 
 ```powershell
 .venv\Scripts\python tools\run_bench.py --repeat 5 --reruns 1 --shots
-.venv\Scripts\python tools\flaky_report.py --last 5
 ```
 
 ## 요약
 
 | 항목 | 값 |
 |---|---|
-| 실행한 테스트 | 1,250건 (건너뜀 제외, 두 기기 × 5회) |
+| 실행한 테스트 | 1,250건 (건너뜀 제외, 두 기기 × 5회). AAOS 에뮬레이터 640건(알려진 결함 5건 포함), 태블릿 610건 |
 | 재시도로 통과 (flaky) | 0건 |
 | 재시도까지 실패 | 0건 |
 | 재시도 횟수 | 0번 |
 | 전에 한 번 흔들렸던 `test_video_blocked_screen_follows_parking` | 10번 실행해 10번 한 번에 통과 |
+| Release 게이트 다섯 조건 ([포트폴리오 4-1](portfolio.md#4-1-게이트-단계와-기준)) | 모두 통과 |
+
+태블릿의 차량 값은 앱 안의 Mock이라, 태블릿 610건은 화면 동작과 실기기에서만 나는 문제(터치 지연, OS의 백그라운드 종료)를 본 것입니다. VHAL 경로는 AAOS 640건에서만 확인합니다.
+
+## 원자료와 다시 세는 방법
+
+5회 × 2기기의 실행별 결과 파일 10개를 [evidence/2026-11-18-repeat5](evidence/2026-11-18-repeat5/README.md)에 그대로 남겼습니다. `ivi-tests`에서 아래 두 명령을 돌리면 이 문서의 수치와 Release 게이트 판정이 다시 나옵니다.
+
+```powershell
+.venv\Scripts\python tools\flaky_report.py --runs-dir ..\docs\evidence\2026-11-18-repeat5\runs
+.venv\Scripts\python tools\release_gate.py --runs-dir ..\docs\evidence\2026-11-18-repeat5\runs
+```
 
 ## 회차별 결과
 
@@ -33,16 +44,17 @@
 - 아래 flaky_report.py 출력의 '평균 테스트 시간 합'은 테스트별 시간의 합이라, 세션 전체 시간(Appium 연결, 앱 시작 포함)인 위 표보다 짧습니다.
 - 같은 PC, 같은 날 저녁의 5회입니다. 기간에 걸친 추세, 다른 PC나 다른 기기 상태에서의 흔들림은 이 표에 없습니다.
 - 마지막 회차의 판정과 화면은 [테스트 결과](test-results.md)에 있습니다. 실패가 나면 저장되는 자료의 예시는 [실패 자료 한 묶음](samples/off-grid-temperature-aaos/)입니다.
+- 2026-11-19 정정: 처음 올린 아래 절은 `--last 5`로 누적 기록을 읽어, 5회차 뒤에 따로 돌린 15개짜리 실행(`20261118-204700`)이 1회차 대신 섞여 있었습니다(평균 테스트 시간 합 458초, 432초). 원자료 10개만 읽도록 다시 만들었습니다. flaky 0, 실패 0은 그대로입니다.
 
-## flaky_report.py 출력 (최근 5회)
-
+## flaky_report.py 출력 (원자료 5회)
 
 ### 실행 요약
 
-| 기기 | 실행 | 게이트 통과 | 평균 테스트 시간 합 |
-|---|---|---|---|
-| aaos | 5 | 5/5 (100%) | 458s |
-| mock | 5 | 5/5 (100%) | 432s |
+| 기기 | 실행 | 게이트 통과 | 실행한 테스트 (건너뜀 제외) | flaky | 실패 | 평균 테스트 시간 합 |
+|---|---|---|---|---|---|---|
+| aaos | 5 | 5/5 (100%) | 640 | 0 | 0 | 560s |
+| mock | 5 | 5/5 (100%) | 610 | 0 | 0 | 522s |
+| 합계 | 10 | 10/10 | 1,250 | 0 | 0 | |
 
 ### 불안정 테스트
 
@@ -60,9 +72,8 @@
 
 | 기기 | 테스트 | 평균 | p95 |
 |---|---|---|---|
-| aaos | `tests/test_power.py::test_power_cycle_brings_back_app_and_cabin_defaults` | 37.4s | 42.2s |
+| aaos | `tests/test_power.py::test_power_cycle_brings_back_app_and_cabin_defaults` | 38.4s | 42.3s |
 | mock | `tests/test_driving.py::test_video_resumes_where_it_stopped` | 12.8s | 13.2s |
-| aaos | `tests/test_driving.py::test_video_resumes_where_it_stopped` | 12.8s | 13.0s |
-| mock | `tests/test_settings.py::test_settings_survive_app_restart` | 10.8s | 10.9s |
+| aaos | `tests/test_driving.py::test_video_resumes_where_it_stopped` | 12.7s | 13.0s |
+| mock | `tests/test_settings.py::test_settings_survive_app_restart` | 10.7s | 10.9s |
 | aaos | `tests/test_settings.py::test_settings_survive_app_restart` | 10.1s | 10.5s |
-

@@ -9,7 +9,7 @@ ivi-app 의 JVM 단위 테스트(CabinAssistantTest)가 보고, 여기서는 화
 import pytest
 
 from ivi.vehicle import Seat
-from ivi.waits import wait_until
+from ivi.waits import wait_value
 
 
 @pytest.mark.req("VOICE-01", "HVAC-01")
@@ -22,7 +22,7 @@ def test_zone_applies_command_to_speaking_seat(app, car):
     assistant.zone(Seat.PASSENGER)
     reply = assistant.chip(1)
     assert "조수석" in reply
-    wait_until(lambda: car.temperature(Seat.PASSENGER) == 21.0, what="차량 조수석 21.0")
+    wait_value(lambda: car.temperature(Seat.PASSENGER), 21.0, what="차량 조수석 온도")
     assert car.temperature(Seat.DRIVER) == 22.0
     app.bar().wait_temperature(Seat.PASSENGER, 21.0)
 
@@ -34,7 +34,7 @@ def test_typed_command_sets_vehicle_temperature(app, car):
     assistant = app.assistant()
     reply = assistant.say("운전석 25.5도로 맞춰줘")
     assert "25.5" in reply
-    wait_until(lambda: car.temperature(Seat.DRIVER) == 25.5, what="차량 운전석 25.5")
+    wait_value(lambda: car.temperature(Seat.DRIVER), 25.5, what="차량 운전석 온도")
 
 
 @pytest.mark.req("VOICE-01")

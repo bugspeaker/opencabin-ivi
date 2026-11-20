@@ -28,7 +28,7 @@ from appium import webdriver
 
 from ivi import quarantine
 from ivi.device import Device
-from ivi.results import QUARANTINE_KEYWORD, Recorder
+from ivi.results import QUARANTINE_KEYWORD, Recorder, junit_name
 from ivi.screens import IviApp
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -68,7 +68,7 @@ def pytest_configure(config):
     config.ivi_recorder = Recorder(run_id, {"serial": serial, "kind": device.kind, "model": device.model})
     config.pluginmanager.register(config.ivi_recorder, "ivi_recorder")  # pytest_runtest_logreport 를 받는다
     if not config.option.xmlpath:
-        config.option.xmlpath = str(REPORT_DIR / f"junit-{device.kind}-{serial}.xml")
+        config.option.xmlpath = str(REPORT_DIR / junit_name(run_id, device.kind, serial))
 
 
 def pytest_report_header(config):
@@ -94,7 +94,9 @@ def pytest_collection_modifyitems(config, items):
 def pytest_runtest_setup(item):
     device = getattr(item.config, "ivi_device", None)
     if device:
-        device.adb.logcat_clear()  # 실패 때 이 테스트의 로그만 남도록
+        # 실패 때 이 테스트의 로그만 남도록 시작 시각을 찍어 둔다. 버퍼를 지우지(logcat -c) 않는다:
+        # 같은 기기를 쓰는 다른 도구나 사람의 로그까지 지우기 때문 (재시도하면 그 시도의 시작 시각으로 바뀐다)
+        item.ivi_log_since = device.adb.log_mark()
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -271,5 +273,5 @@ def _save_artifacts(item, suffix=""):
         save("page_source.xml", lambda: driver.page_source)
     save("vehicle.txt", device.vehicle.dump)
     save("activities.txt", lambda: "\n".join(device.adb.resumed_activities()))
-    save("logcat.txt", device.adb.logcat_dump)
+    save("logcat.txt", lambda: device.adb.logcat_dump(since=getattr(item, "ivi_log_since", None)))
     return folder

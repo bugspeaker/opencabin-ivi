@@ -42,7 +42,7 @@
   <main id="content" class="doc">
 <h1 id="9단계-test-bench-확장-rest-api-원격-전원-가상-can-요구사항-추적"><a class="anchor" href="#9단계-test-bench-확장-rest-api-원격-전원-가상-can-요구사항-추적" aria-hidden="true">#</a>9단계 Test Bench 확장: REST API, 원격 전원, 가상 CAN, 요구사항 추적</h1>
 <p>2026-11-18에 정리했습니다. 벤치를 사람 없이 돌리려면 다른 도구가 HTTP로 기기와 신호를 다루고, 전원을 껐다 켜고, 차량 네트워크 신호를 받을 수 있어야 합니다. 이 세 가지를 PC 안의 모의 환경으로 만들고, 요구사항과 테스트를 잇는 추적표를 더했습니다.</p>
-<p>실제 ECU나 CAN 장비, 전원 공급기, 기능 안전 인증 경험은 없습니다. 이번 단계는 PC 안에서 흉내 낸 모의 환경과, 개념을 이 프로젝트에 적용해 본 결과입니다. 그래서 첫 화면 목차에서도 &#39;CAN만 모의&#39;, &#39;모의 장비&#39;, &#39;개념 적용&#39;으로 따로 표시했습니다.</p>
+<p>실제 ECU나 CAN 장비, 전원 공급기, 기능 안전 인증 경험은 없습니다. 이번 단계는 PC 안의 모의 환경과, 개념을 이 프로젝트에 적용해 본 결과입니다. 그래서 첫 화면 목차에서도 &#39;CAN만 모의&#39;, &#39;모의 장비&#39;, &#39;개념 적용&#39;으로 따로 표시했습니다.</p>
 <h2 id="1-test-bench-rest-api-ivibench_apipy"><a class="anchor" href="#1-test-bench-rest-api-ivibench_apipy" aria-hidden="true">#</a>1. Test Bench REST API (<code>ivi/bench_api.py</code>)</h2>
 <p>벤치에 붙은 기기를 HTTP로 다루는 API입니다. 다른 팀의 도구나 CI가 adb 명령을 몰라도 기기 상태를 보고, 차량 신호를 넣고, 전원을 껐다 켜고, 테스트를 돌리고, 결과를 가져갈 수 있게 하려고 만들었습니다. 의존성을 늘리지 않으려고 표준 라이브러리(<code>http.server</code>)만 썼습니다.</p>
 <div class="table"><table><thead><tr>
@@ -105,7 +105,7 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <p><a class="test-link" href="test-results.html#test_power_cycle_brings_back_app_and_cabin_defaults" title="테스트 결과와 화면 보기"><code>test_power_cycle_brings_back_app_and_cabin_defaults</code></a>는 에뮬레이터 전원을 껐다 켠 뒤 세 가지를 봅니다. 3분 안에 부팅이 끝나는지, 앱이 다시 CarService에 붙는지, 공조가 기본값 22.0°C로 시작하는지입니다. 마지막 것은 7단계에서 넣은 VHAL 초기값 덮어쓰기가 재부팅 뒤에도 살아 있는지를 확인하는 것입니다. 부팅에 걸린 시간은 단독으로 돌렸을 때 24.3초, 전체 실행의 마지막에 돌렸을 때 32.2초였습니다.</p>
 <p>전원을 껐다 켜면 Appium 세션이 끊깁니다. 그래서 conftest가 이 테스트를 실행 순서의 맨 끝으로 보내고, 테스트 안에서 새 세션을 만들어 화면을 확인합니다.</p>
 <h2 id="3-가상-can-버스와-게이트웨이-ivican_gatewaypy"><a class="anchor" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy" aria-hidden="true">#</a>3. 가상 CAN 버스와 게이트웨이 (<code>ivi/can_gateway.py</code>)</h2>
-<p>실제 차에서는 VCU, BMS, BCM 같은 ECU가 CAN으로 신호를 보내고, 차량 쪽 서비스가 그 값을 VHAL property로 올려 줍니다. 이 자리를 PC 안에서 흉내 냈습니다.</p>
+<p>실제 차에서는 VCU, BMS, BCM 같은 ECU가 CAN으로 신호를 보내고, 차량 쪽 서비스가 그 값을 VHAL property로 올려 줍니다. 이 자리를 PC 안의 가상 ECU와 가상 CAN 버스로 채웠습니다.</p>
 <pre class="mermaid">flowchart LR
     E[시험용 ECU&lt;br&gt;VCU, BMS, BCM] --&gt;|CAN 프레임| B((가상 CAN 버스))
     B --&gt; G[게이트웨이]
@@ -141,7 +141,7 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <h2 id="4-요구사항-추적표와-후방-카메라-2초"><a class="anchor" href="#4-요구사항-추적표와-후방-카메라-2초" aria-hidden="true">#</a>4. 요구사항 추적표와 후방 카메라 2초</h2>
 <h3 id="요구사항과-테스트를-양쪽으로-잇기"><a class="anchor" href="#요구사항과-테스트를-양쪽으로-잇기" aria-hidden="true">#</a>요구사항과 테스트를 양쪽으로 잇기</h3>
 <p><a href="requirements.html">요구사항</a> 26개에 ID를 붙이고, 모든 테스트 함수에 <code>@pytest.mark.req(&quot;ID&quot;)</code>를 달았습니다. <code>tools/trace_report.py</code>가 둘을 이어 <a href="traceability.html">요구사항 추적표</a>를 만듭니다. 요구사항마다 확인하는 테스트와 기기별 최신 결과가 나오고, 반대로 테스트 파일마다 어떤 요구사항을 확인하는지도 나옵니다.</p>
-<p>프레임워크 단위 테스트 <code>test_every_requirement_has_a_test_and_every_test_a_requirement</code>가 CI에서 세 가지를 막습니다. 테스트가 없는 요구사항, 요구사항이 없는 테스트, 없는 ID를 가리키는 테스트입니다. A-SPICE 검증 단계에서 요구하는 양방향 추적을 이 규모에 맞게 흉내 낸 것이고, 표준 심사를 받은 것은 아닙니다.</p>
+<p>프레임워크 단위 테스트 <code>test_every_requirement_has_a_test_and_every_test_a_requirement</code>가 CI에서 세 가지를 막습니다. 테스트가 없는 요구사항, 요구사항이 없는 테스트, 없는 ID를 가리키는 테스트입니다. A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로젝트 규모로 적용해 본 것이고, 표준 심사를 받은 것은 아닙니다.</p>
 <h3 id="후방-카메라가-2초-안에-뜨는지"><a class="anchor" href="#후방-카메라가-2초-안에-뜨는지" aria-hidden="true">#</a>후방 카메라가 2초 안에 뜨는지</h3>
 <p>미국 기준 FMVSS 111은 후진을 시작하고 2.0초 안에 후방 영상을 보여 주라고 정해 두었습니다. <a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_rear_camera_appears_within_two_seconds</code></a>는 기어를 R로 바꾼 순간부터 카메라 화면이 보일 때까지를 다섯 번 재고, 가장 느린 값으로 판정합니다. 신호를 넣는 adb 시간까지 포함한 값이라 실제보다 느리게 잡힙니다. 법규의 2초 기준을 빌려 온 시험이고, 재는 것은 앱의 후방 카메라 화면 요소가 나타날 때까지입니다. 실제 카메라 영상이나 실차에서 잰 값은 아닙니다.</p>
 <div class="table"><table><thead><tr>
@@ -232,9 +232,98 @@ curl -X POST http://127.0.0.1:8770/api/devices/emulator-5554/signals -d &quot;{\
 <td>끝까지 10분 16초. 차례로 돌렸다면 약 20분 0초</td>
 </tr>
 </tbody></table></div>
+<h2 id="7-외부-검토-반영-2026-11-19"><a class="anchor" href="#7-외부-검토-반영-2026-11-19" aria-hidden="true">#</a>7. 외부 검토 반영 (2026-11-19)</h2>
+<p>공고 기준 외부 검토에서 &#39;문서에는 있는데 코드에는 없는 것&#39;을 짚어 받았습니다. 그 가운데 코드로 고칠 수 있는 것을 고쳤습니다.</p>
+<div class="table"><table><thead><tr>
+<th>지적</th>
+<th>고친 것</th>
+</tr>
+</thead><tbody><tr>
+<td>Release 게이트 다섯 조건 가운데 2, 3, 5는 검사하는 코드가 없었음</td>
+<td><code>tools/release_gate.py</code>가 실행 결과 파일로 다섯 조건을 모두 확인하고, 어기면 종료 코드 1. 격리 목록은 사유, 등록일, 해제 조건 칸이 빠진 줄을 거절. 알려진 결함 목록 <code>known_defects.txt</code>. ivi-ci.yml의 Release 후보 실행 뒤에 붙임. 단위 테스트는 게이트 16개, 격리 목록 형식 5개</td>
+</tr>
+<tr>
+<td>&#39;고정 sleep은 쓰지 않습니다&#39;라고 썼는데 3곳에 있었고, <code>wait_value</code>는 2곳에만 적용</td>
+<td>sleep 3곳을 <code>stays</code>(정한 시간 동안 계속 읽어 한 번이라도 바뀌면 실패)로, 값 대기 47곳을 <code>wait_value</code>로</td>
+</tr>
+<tr>
+<td>테스트마다 <code>logcat -c</code>로 버퍼를 지움 (같은 기기를 쓰는 다른 도구의 로그까지 지움)</td>
+<td>테스트 시작 시각을 찍어 두고 실패 때 <code>logcat -T</code>로 그 뒤만 모음</td>
+</tr>
+<tr>
+<td>반복 실행 원자료가 저장소에 없음. <code>--repeat</code>이면 JUnit 파일이 회차마다 덮어써짐</td>
+<td>5회 × 2기기 결과 파일 10개를 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-18-repeat5/README.md">evidence</a>에 남김. JUnit 이름에 run id. 다시 세 보니 <a href="flaky-report.html">반복 실행 통계</a>의 flaky_report 출력 절이 r5 뒤의 다른 실행을 섞어 센 것이었음(1,250건, flaky 0, 실패 0은 그대로) → 원자료 기준으로 다시 만듦</td>
+</tr>
+<tr>
+<td>범위 밖 온도 테스트가 &#39;값 A 또는 끝값&#39;처럼 넓게 판정</td>
+<td>기기마다 기대값 하나(AAOS 15.5 → 16.0, Mock 16.0 → 16.5)</td>
+</tr>
+<tr>
+<td>태블릿 숫자가 VHAL 경로까지 증명하는 것처럼 읽힘</td>
+<td>숫자 옆에 &#39;차량 값은 앱 안 Mock&#39;과 기기별 건수(AAOS 640, 태블릿 610)</td>
+</tr>
+</tbody></table></div>
+<p>프레임워크 단위 테스트는 71개에서 94개가 됐습니다.</p>
+<p>바꾼 테스트 코드로 두 기기 전체를 1회 다시 돌렸습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-19-after-review/README.md">원자료</a>). 위 6절의 결과 표와 반복 실행 5회는 바꾸기 전 코드 기준입니다.</p>
+<div class="table"><table><thead><tr>
+<th>항목</th>
+<th>결과 (2026-11-19, <code>20261119-104613</code>)</th>
+</tr>
+</thead><tbody><tr>
+<td>AAOS 에뮬레이터</td>
+<td>127개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (11분 43초)</td>
+</tr>
+<tr>
+<td>화웨이 태블릿 (Mock)</td>
+<td>122개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (8분 48초)</td>
+</tr>
+<tr>
+<td>범위 밖 온도 (AAOS)</td>
+<td>마지막 VHAL 값 16.0, 28.0 (새 기대값과 같음)</td>
+</tr>
+<tr>
+<td>Release 게이트 (1회분)</td>
+<td>다섯 조건 통과</td>
+</tr>
+</tbody></table></div>
+<p>이 실행 전에 한 번은 AAOS 쪽이 모두 오류였습니다. 막 켠 에뮬레이터에서 UiAutomator2 서버의 화면 캡처가 계속 실패하다 계측 프로세스가 죽었고(<code>UiAutomation returned null</code>, <code>instrumentation process is not running</code>), Appium 세션이 실행 전체에서 하나라 그 뒤 테스트가 모두 준비 단계 오류가 됐습니다. 검토에서 짚은 &#39;세션이 끊기면 전체 실패로 번짐&#39;이 실제로 일어난 것입니다. smoke로 안정된 것을 확인하고 다시 돌렸습니다. 세션 복구는 아직 없습니다.</p>
+<h3 id="2차-반영-같은-날"><a class="anchor" href="#2차-반영-같은-날" aria-hidden="true">#</a>2차 반영 (같은 날)</h3>
+<div class="table"><table><thead><tr>
+<th>지적</th>
+<th>고친 것</th>
+</tr>
+</thead><tbody><tr>
+<td>PR smoke에 화면↔VHAL 왕복이 없어 핵심 경로가 깨져도 머지 전 게이트를 통과함</td>
+<td><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_hvac_is_controllable</code></a>이 화면 + 한 번(차량 22.0 → 22.5°C)과 차량 쪽 25.0°C(화면 25.0°C)를 확인. 테스트 수는 그대로 129개. 두 기기 smoke 13개 통과(AAOS 42초, 태블릿 45초)</td>
+</tr>
+<tr>
+<td>소개 사이트 첫 화면에 큰 제목이 두 번 나오고, 화면↔VHAL 데모가 없음</td>
+<td>첫 화면 오른쪽에 데모 GIF, h1 56 → 44px, 목차 제목 48 → 28px, 숫자 카드는 목차 아래로. 반복 실행 카드에 조건(날짜, 같은 PC)과 &#39;재시도 0 / 1,250건&#39;. 1440×900에서 GIF 전체와 목차 01이 스크롤 없이 보임</td>
+</tr>
+<tr>
+<td>목차 01(서비스별 전략), 02(게이팅)가 테스트 목록으로만 이어짐</td>
+<td>포트폴리오 4-2, 4-1 표로 바로 가고, 테스트 목록은 결과 페이지 <code>?req=</code>로 그대로 볼 수 있음</td>
+</tr>
+<tr>
+<td>결과 페이지 칩이 게이트 순서와 반대, 좁은 화면에서 테스트 이름이 글자 중간에서 끊김</td>
+<td>smoke → sanity → regression → spike → AAOS 전용 순서, 이름은 <code>_</code> 뒤에서 줄바꿈</td>
+</tr>
+<tr>
+<td>같은 대상을 다른 숫자로 적음, 손으로 적은 Actions 횟수가 PR마다 낡음</td>
+<td>8단계 108 → 115개를 구분해 적고, &#39;테스트 함수 101개(매개변수 조합까지 129개)&#39;, Actions 횟수는 실행 기록 링크로</td>
+</tr>
+<tr>
+<td>업계 용어를 피한 표현</td>
+<td>&#39;주요 위험&#39;, &#39;판정 직후 화면&#39;, &#39;A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로젝트 규모로 적용&#39;, &#39;가상 ECU&#39;</td>
+</tr>
+<tr>
+<td>테스트 어댑터의 좌석 area 고정</td>
+<td>앱과 출처가 다른 기대값으로 일부러 고정했다는 이유와, 다른 차종에서 <code>get-property-config</code>로 먼저 맞춰 볼 것을 코드와 포트폴리오 9장에 적음</td>
+</tr>
+</tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-test-bench-rest-api-ivibench_apipy">1. Test Bench REST API (ivi/bench_api.py)</a><a class="l2" href="#2-원격-전원-제어-ivipowerpy">2. 원격 전원 제어 (ivi/power.py)</a><a class="l2" href="#3-가상-can-버스와-게이트웨이-ivican_gatewaypy">3. 가상 CAN 버스와 게이트웨이 (ivi/can_gateway.py)</a><a class="l2" href="#4-요구사항-추적표와-후방-카메라-2초">4. 요구사항 추적표와 후방 카메라 2초</a><a class="l3" href="#요구사항과-테스트를-양쪽으로-잇기">요구사항과 테스트를 양쪽으로 잇기</a><a class="l3" href="#후방-카메라가-2초-안에-뜨는지">후방 카메라가 2초 안에 뜨는지</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-검토-뒤-보강-2026-11-18-저녁">6. 검토 뒤 보강 (2026-11-18 저녁)</a><a class="l2" href="#7-외부-검토-반영-2026-11-19">7. 외부 검토 반영 (2026-11-19)</a><a class="l3" href="#2차-반영-같은-날">2차 반영 (같은 날)</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

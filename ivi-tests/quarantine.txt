@@ -1,3 +1,4 @@
 # 격리 목록: 원인 분석 중인 flaky 테스트. 돌리기는 하지만 실패해도 게이트를 막지 않는다 (ivi/quarantine.py).
-# 형식: <nodeid 또는 앞부분> | <이유> | <등록일>
-# 해제 기준: 원인을 고친 뒤 연속 20회 통과 (tools/flaky_report.py 로 확인)
+# 형식: <nodeid 또는 앞부분> | <이유> | <등록일 YYYY-MM-DD> | <해제 조건>   (네 칸 모두 필요)
+# 해제 조건의 기본값: 원인을 고친 뒤 연속 20회 통과 (tools/flaky_report.py 로 확인)
+# Release 게이트(tools/release_gate.py)는 이 목록이 2줄을 넘으면 막는다.

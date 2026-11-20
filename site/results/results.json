@@ -4398,6 +4398,10 @@
    "20261118-203617-r5"
   ],
   "executions": 1250,
+  "executions_by_kind": {
+   "aaos": 640,
+   "mock": 610
+  },
   "flaky": 0,
   "failed": 0,
   "reruns": 0,

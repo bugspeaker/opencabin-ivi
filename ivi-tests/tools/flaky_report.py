@@ -3,6 +3,7 @@
     python tools/flaky_report.py                      # 전체 기록
     python tools/flaky_report.py --last 10            # 기기별 최근 10회 실행만
     python tools/flaky_report.py --out reports/flaky-report.md
+    python tools/flaky_report.py --runs-dir ../docs/evidence/2026-11-18-repeat5/runs   # 저장소에 남긴 원자료로 다시 세기
 
 불안정 = flaky(재시도에서 통과) + failed/error. 판단 기준
   격리 후보: 최근 실행 중 불안정 비율이 --threshold 이상 (실행 --min-runs 회 이상)
@@ -33,6 +34,14 @@ def load(path):
     return rows
 
 
+def load_runs_dir(path):
+    """reports/runs/<run>-<serial>.json 들의 테스트별 결과. 누적 기록(results.jsonl)의 한 줄과 같은 모양이다."""
+    rows = []
+    for run_file in sorted(Path(path).glob("*.json")):
+        rows += json.loads(run_file.read_text(encoding="utf-8"))["tests"]
+    return rows
+
+
 def keep_last_runs(rows, last):
     """기기 종류별로 최근 last 번의 실행만 남긴다."""
     if not last:
@@ -58,10 +67,14 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
     runs = defaultdict(dict)
     for row in sorted(rows, key=lambda r: (r["time"], r["run_id"])):
         tests[(row["kind"], row["nodeid"])].append(row)
-        run = runs[row["kind"]].setdefault((row["run_id"], row["serial"]), {"gate": "pass", "duration": 0.0})
+        run = runs[row["kind"]].setdefault((row["run_id"], row["serial"]), {"gate": "pass", "duration": 0.0, "executed": 0,
+                                                                             "flaky": 0, "failed": 0})
         run["duration"] += row["duration"]
+        run["executed"] += row["outcome"] != "skipped"  # 알려진 결함(xfailed)도 실행한 것으로 센다
+        run["flaky"] += row["outcome"] == "flaky"
         if row["outcome"] in ("failed", "error"):
             run["gate"] = "fail"
+            run["failed"] += 1
 
     stats = []
     for (kind, nodeid), history in tests.items():
@@ -103,6 +116,9 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
             "runs": len(items),
             "gate_pass": sum(1 for r in items.values() if r["gate"] == "pass"),
             "avg_duration": sum(r["duration"] for r in items.values()) / len(items),
+            "executed": sum(r["executed"] for r in items.values()),
+            "flaky": sum(r["flaky"] for r in items.values()),
+            "failed": sum(r["failed"] for r in items.values()),
         }
         for kind, items in runs.items()
     }
@@ -111,9 +127,16 @@ def analyze(rows, threshold=0.1, min_runs=5, release_streak=20, quarantined=()):
 
 def render(run_summary, stats, candidates, releases, threshold, min_runs, release_streak):
     lines = ["# Flaky 리포트", ""]
-    lines += ["## 실행 요약", "", "| 기기 | 실행 | 게이트 통과 | 평균 테스트 시간 합 |", "|---|---|---|---|"]
+    lines += ["## 실행 요약", "",
+              "| 기기 | 실행 | 게이트 통과 | 실행한 테스트 (건너뜀 제외) | flaky | 실패 | 평균 테스트 시간 합 |",
+              "|---|---|---|---|---|---|---|"]
     for kind, s in sorted(run_summary.items()):
-        lines.append(f"| {kind} | {s['runs']} | {s['gate_pass']}/{s['runs']} ({s['gate_pass'] / s['runs']:.0%}) | {s['avg_duration']:.0f}s |")
+        lines.append(f"| {kind} | {s['runs']} | {s['gate_pass']}/{s['runs']} ({s['gate_pass'] / s['runs']:.0%}) | "
+                     f"{s['executed']:,} | {s['flaky']} | {s['failed']} | {s['avg_duration']:.0f}s |")
+    if len(run_summary) > 1:
+        total = {key: sum(s[key] for s in run_summary.values()) for key in ("runs", "gate_pass", "executed", "flaky", "failed")}
+        lines.append(f"| 합계 | {total['runs']} | {total['gate_pass']}/{total['runs']} | {total['executed']:,} | "
+                     f"{total['flaky']} | {total['failed']} | |")
 
     unstable = sorted((s for s in stats if s["unstable_rate"] > 0 or s["relaunches"] or s["infra_retries"]),
                       key=lambda s: (-s["unstable_rate"], -s["relaunches"], s["nodeid"]))
@@ -141,6 +164,7 @@ def render(run_summary, stats, candidates, releases, threshold, min_runs, releas
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--history", default=str(ROOT / "reports" / "history" / "results.jsonl"))
+    parser.add_argument("--runs-dir", help="누적 기록 대신 실행별 결과 파일(<run>-<serial>.json)이 든 폴더를 읽는다")
     parser.add_argument("--last", type=int, default=0, help="기기 종류별 최근 N회 실행만")
     parser.add_argument("--threshold", type=float, default=0.1)
     parser.add_argument("--min-runs", type=int, default=5)
@@ -148,7 +172,7 @@ def main(argv=None):
     parser.add_argument("--out", help="마크다운 파일로 저장")
     args = parser.parse_args(argv)
 
-    rows = keep_last_runs(load(args.history), args.last)
+    rows = keep_last_runs(load_runs_dir(args.runs_dir) if args.runs_dir else load(args.history), args.last)
     result = analyze(rows, args.threshold, args.min_runs, args.release_streak, quarantine.load(ROOT / "quarantine.txt"))
     text = render(*result, args.threshold, args.min_runs, args.release_streak)
     if args.out:

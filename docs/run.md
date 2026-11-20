@@ -51,7 +51,7 @@ API를 띄우면 다른 도구가 HTTP로 기기와 신호, 전원, 실행 결�
 
 ## 5. 결과 사이트 만들기
 
-`--shots`를 붙이면 테스트마다 끝난 화면을 남기고, 아래 명령이 그 결과를 소개 사이트로 옮깁니다.
+`--shots`를 붙이면 테스트마다 판정 직후 화면을 남기고, 아래 명령이 그 결과를 소개 사이트로 옮깁니다.
 
 ```powershell
 .venv\Scripts\python tools\run_bench.py --repeat 5 --reruns 1 --shots

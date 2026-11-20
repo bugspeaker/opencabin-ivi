@@ -128,6 +128,10 @@ def stability(paths):
     if not runs:
         return None
     tests = [t for run in runs for t in run["tests"] if t["outcome"] != "skipped"]
+    by_kind = {}
+    for run in runs:
+        kind = run["summary"]["kind"]
+        by_kind[kind] = by_kind.get(kind, 0) + sum(1 for t in run["tests"] if t["outcome"] != "skipped")
     flaky = sorted({t["nodeid"].split("::", 1)[-1] for t in tests if t["outcome"] == "flaky"})
     failed = sorted({t["nodeid"].split("::", 1)[-1] for t in tests if t["outcome"] in ("failed", "error")})
     return {
@@ -135,6 +139,7 @@ def stability(paths):
         "devices": len({r["summary"]["serial"] for r in runs}),
         "run_ids": sorted({r["summary"]["run_id"] for r in runs}),
         "executions": len(tests),
+        "executions_by_kind": dict(sorted(by_kind.items())),  # 태블릿(Mock)은 VHAL 경로를 보지 않으므로 기기별로 따로 보여 준다
         "flaky": sum(1 for t in tests if t["outcome"] == "flaky"),
         "failed": sum(1 for t in tests if t["outcome"] in ("failed", "error")),
         "reruns": sum(t.get("reruns", 0) for t in tests),
@@ -202,7 +207,7 @@ def markdown(data):
     lines = [
         "# 테스트 결과",
         "",
-        "기기마다 E2E 전체를 돌린 결과와, 테스트가 끝난 순간의 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다."
+        "기기마다 E2E 전체를 돌린 결과와 판정 직후 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다."
         + (f" 두 기기에서 {data['stability']['rounds']}회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다."
            if data.get("stability") else ""),
         "AAOS 칸 아래의 `PROPERTY[area]=값`은 그 테스트가 판정에 쓴 VHAL 값(CarService로 읽은 마지막 값)입니다.",
@@ -214,6 +219,7 @@ def markdown(data):
     for d in data["devices"]:
         counts = ", ".join(f"{OUTCOME_LABEL.get(k, k)} {v}" for k, v in sorted(d["counts"].items()))
         lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {counts} | {fmt_time(d['duration'])} |")
+    lines += ["", DEVICE_NOTE]
     kinds = [d["kind"] for d in data["devices"]]
     for f in data["files"]:
         lines += ["", f"## {f['file']}", "", f["title"], ""]
@@ -238,6 +244,10 @@ def markdown(data):
                     cells.append(cell)
                 lines.append(f"| {anchor}{name}{desc} | " + " | ".join(cells) + " |")
     return "\n".join(lines) + "\n"
+
+
+DEVICE_NOTE = ("태블릿 열은 화면 동작과 실기기에서만 나는 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. "
+               "차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다.")
 
 
 def fmt_time(seconds):

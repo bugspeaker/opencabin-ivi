@@ -2,7 +2,7 @@
 import pytest
 
 from ivi.vehicle import Seat
-from ivi.waits import stays, wait_until, wait_value
+from ivi.waits import stays, wait_value
 
 STEP = 0.5
 MIN_C, MAX_C = 16.0, 28.0
@@ -18,7 +18,7 @@ def test_signal_is_shown_on_climate_and_home(app, car, seat):
     climate.wait_temperature(seat, 25.0)
 
     home = app.home()
-    wait_until(lambda: home.summary_temperature(seat) == 25.0, what=f"홈 {seat.tag} 온도 25.0")
+    wait_value(lambda: home.summary_temperature(seat), 25.0, what=f"홈 {seat.tag} 온도")
 
 
 @pytest.mark.req("HVAC-01", "HVAC-02")
@@ -33,7 +33,7 @@ def test_button_changes_signal_by_one_step(app, car, seat, direction):
     (climate.increase if direction == "up" else climate.decrease)(seat)
 
     expected = 22.0 + (STEP if direction == "up" else -STEP)
-    wait_until(lambda: car.temperature(seat) == expected, what=f"차량 {seat.tag} 온도 {expected}")
+    wait_value(lambda: car.temperature(seat), expected, what=f"차량 {seat.tag} 온도")
     climate.wait_temperature(seat, expected)
 
 
@@ -78,26 +78,26 @@ def test_step_reaches_limit_and_disables(app, car, seat):
 
 @pytest.mark.req("HVAC-02")
 @pytest.mark.regression
-@pytest.mark.parametrize("value, away, back", [(MIN_C - STEP, "down", "up"), (MAX_C + STEP, "up", "down")],
-                         ids=["below_min", "above_max"])
-def test_out_of_range_signal_is_shown_safely(app, car, value, away, back):
-    """차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고 차량 값을 그대로 보여 줍니다. 범위 밖으로 더 가는 버튼은 꺼지고, 반대 버튼을 한 번 누르면 차량 온도가 16.0~28.0°C 안의 0.5°C 단위 값이 됩니다. AAOS는 VHAL에 값을 바로 넣고, Mock 차량은 받은 값을 범위 안으로 잘라 둡니다."""
+@pytest.mark.parametrize("value, away, back, expected", [
+    # 기기별 (주입한 뒤 차량·화면 값, 반대 버튼을 한 번 누른 뒤 차량·화면 값). 버튼 값은 앱의 HvacSpec.stepUp/stepDown 과 같다
+    (MIN_C - STEP, "down", "up", {"aaos": (15.5, 16.0), "mock": (16.0, 16.5)}),
+    (MAX_C + STEP, "up", "down", {"aaos": (28.5, 28.0), "mock": (28.0, 27.5)}),
+], ids=["below_min", "above_max"])
+def test_out_of_range_signal_is_shown_safely(app, car, device, value, away, back, expected):
+    """차량 쪽에서 범위 밖 온도(15.5°C, 28.5°C)가 와도 앱은 멈추지 않고, 범위 밖으로 더 가는 버튼은 꺼집니다. 기기마다 기대값이 하나입니다.
+    AAOS는 VHAL에 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주고, ▲를 한 번 누르면 차량 온도가 끝값 16.0°C가 됩니다(28.5°C는 ▼로 28.0°C).
+    태블릿의 Mock 차량은 받은 값을 끝값 16.0°C로 잘라 두므로, ▲를 누르면 한 칸 안쪽 16.5°C가 됩니다(28.5°C는 28.0°C로 잘린 뒤 ▼로 27.5°C)."""
     seat = Seat.DRIVER
+    shown, after = expected[device.kind]
     climate = app.climate()
     car.inject_temperature(seat, value)
-    held = wait_until(lambda: car.temperature(seat) in (value, min(max(value, MIN_C), MAX_C)) and car.temperature(seat),
-                      what=f"차량 {seat.tag} 온도가 {value} 또는 끝값")
-    climate.wait_temperature(seat, held)
+    wait_value(lambda: car.temperature(seat), shown, what=f"주입한 뒤 차량 {seat.tag} 온도")
+    climate.wait_temperature(seat, shown)
     climate.wait_enabled(f"{seat.tag}_temp_{away}", False)
 
     (climate.increase if back == "up" else climate.decrease)(seat)
-
-    def moved_inside():
-        celsius = car.temperature(seat)
-        return MIN_C <= celsius <= MAX_C and celsius % STEP == 0 and celsius != held and celsius
-
-    inside = wait_until(moved_inside, what=f"차량 {seat.tag} 온도가 범위 안 0.5°C 단위")
-    climate.wait_temperature(seat, inside)
+    wait_value(lambda: car.temperature(seat), after, what=f"버튼을 누른 뒤 차량 {seat.tag} 온도")
+    climate.wait_temperature(seat, after)
 
 
 @pytest.mark.req("HVAC-02")
@@ -123,7 +123,7 @@ def test_seats_are_independent(app, car):
     """
     climate = app.climate()
     climate.increase(Seat.DRIVER)
-    wait_until(lambda: car.temperature(Seat.DRIVER) == 22.5, what="운전석 22.5")
+    wait_value(lambda: car.temperature(Seat.DRIVER), 22.5, what="차량 운전석 온도")
     climate.wait_temperature(Seat.DRIVER, 22.5)
     # 한 번만 보면 늦게 도착하는 잘못된 쓰기(조수석 area 에 쓰기)를 놓친다 → 1.5초 동안 계속 본다
     stays(lambda: car.temperature(Seat.PASSENGER) == 22.0 and climate.temperature(Seat.PASSENGER) == 22.0,

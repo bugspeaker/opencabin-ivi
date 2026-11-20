@@ -1,10 +1,9 @@
 """화면 틀을 확인합니다. 아래 바 공조, 온도 동기화, 주행 정보, 분할 화면, 빠른 제어, 알림이 대상입니다."""
-import time
 
 import pytest
 
 from ivi.vehicle import Seat
-from ivi.waits import wait_until
+from ivi.waits import stays, wait_until, wait_value
 
 
 @pytest.mark.req("HVAC-01", "UI-01")
@@ -18,7 +17,7 @@ def test_bottom_bar_temperature_drives_vehicle(app, car, seat):
     bar = app.bar()
     bar.wait_temperature(seat, 22.0)
     bar.increase(seat)
-    wait_until(lambda: car.temperature(seat) == 22.5, what=f"차량 {seat.tag} 22.5")
+    wait_value(lambda: car.temperature(seat), 22.5, what=f"차량 {seat.tag} 온도")
 
     car.set_temperature(seat, 18.0)
     bar.wait_temperature(seat, 18.0)
@@ -32,10 +31,11 @@ def test_sync_mirrors_driver_temperature_to_passenger(app, car):
     climate = app.climate()
     climate.wait_temperature(Seat.DRIVER, 24.0)
     climate.tap("climate_sync")
-    wait_until(lambda: car.temperature(Seat.PASSENGER) == 24.0, what="동기화: 조수석 24.0")
+    wait_value(lambda: car.temperature(Seat.PASSENGER), 24.0, what="동기화: 차량 조수석 온도")
 
     climate.increase(Seat.DRIVER)
-    wait_until(lambda: car.temperature(Seat.DRIVER) == 24.5 and car.temperature(Seat.PASSENGER) == 24.5, what="두 좌석 24.5")
+    wait_value(lambda: (car.temperature(Seat.DRIVER), car.temperature(Seat.PASSENGER)), (24.5, 24.5),
+               what="차량 온도 (운전석, 조수석)")
 
 
 @pytest.mark.req("HVAC-06")
@@ -47,9 +47,9 @@ def test_passenger_change_releases_sync(app, car):
     climate = app.climate()
     climate.tap("climate_sync")
     climate.decrease(Seat.PASSENGER)
-    wait_until(lambda: car.temperature(Seat.PASSENGER) == 21.5, what="조수석 21.5")
+    wait_value(lambda: car.temperature(Seat.PASSENGER), 21.5, what="차량 조수석 온도")
     climate.increase(Seat.DRIVER)
-    wait_until(lambda: car.temperature(Seat.DRIVER) == 22.5, what="운전석 22.5")
+    wait_value(lambda: car.temperature(Seat.DRIVER), 22.5, what="차량 운전석 온도")
     assert car.temperature(Seat.PASSENGER) == 21.5
 
 
@@ -66,8 +66,7 @@ def test_trip_distance_follows_speed_signal(app, car):
     car.park()
     car.wait_restricted(False)
     parked = cluster.trip_km()
-    time.sleep(3)  # '변하지 않음' 확인이라 조건 대기로 바꿀 수 없다
-    assert cluster.trip_km() == parked
+    stays(lambda: cluster.trip_km() == parked, duration=3, what=f"정차 중 주행 거리 {parked} km 유지")
 
 
 @pytest.mark.req("DRIVE-01")

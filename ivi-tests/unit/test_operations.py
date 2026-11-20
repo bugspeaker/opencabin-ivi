@@ -69,8 +69,8 @@ def test_relaunch_is_counted_once_per_test(recorder):
 def test_quarantine_parse_and_match():
     entries = quarantine.parse("""
         # 주석
-        tests/test_media.py::test_play | 화웨이 간헐 실패 | 2026-11-13
-        tests/test_climate.py::test_limits[passenger] | 한 조합만 | 2026-11-13   # 줄 끝 주석
+        tests/test_media.py::test_play | 화웨이 간헐 실패 | 2026-11-13 | 원인 수정 뒤 20회 연속 통과
+        tests/test_climate.py::test_limits[passenger] | 한 조합만 | 2026-11-13 | 20회 연속 통과   # 줄 끝 주석
     """)
     assert len(entries) == 2
     assert quarantine.find(entries, "tests/test_media.py::test_play")
@@ -80,9 +80,20 @@ def test_quarantine_parse_and_match():
     assert not quarantine.find(entries, "tests/test_climate.py::test_limits[driver]")
 
 
-def test_quarantine_rejects_entry_without_reason():
+@pytest.mark.parametrize("line", [
+    "tests/test_x.py::test_y",                                  # 이유 없음
+    "tests/test_x.py::test_y | 간헐 실패",                       # 등록일, 해제 조건 없음
+    "tests/test_x.py::test_y | 간헐 실패 | 2026-11-13",          # 해제 조건 없음
+    "tests/test_x.py::test_y | 간헐 실패 |  | 20회 연속 통과",    # 등록일 빈 칸
+], ids=["no_reason", "no_date", "no_release", "empty_date"])
+def test_quarantine_rejects_entry_without_every_field(line):
     with pytest.raises(ValueError, match="형식"):
-        quarantine.parse("tests/test_x.py::test_y")
+        quarantine.parse(line)
+
+
+def test_quarantine_rejects_bad_date():
+    with pytest.raises(ValueError, match="YYYY-MM-DD"):
+        quarantine.parse("tests/test_x.py::test_y | 간헐 실패 | 11월 13일 | 20회 연속 통과")
 
 
 def _rows(kind, nodeid, outcomes, start=0):
@@ -96,7 +107,7 @@ def test_flaky_report_finds_candidates_and_releases():
     rows = (_rows("mock", "t::stable", ["passed"] * 10)
             + _rows("mock", "t::shaky", ["passed", "flaky", "passed", "passed", "failed", "passed", "passed", "passed", "passed", "passed"])
             + _rows("aaos", "t::fixed", ["quarantined"] * 20))
-    entries = quarantine.parse("t::fixed | 고침 | 2026-11-01")
+    entries = quarantine.parse("t::fixed | 고침 | 2026-11-01 | 20회 연속 통과")
     run_summary, stats, candidates, releases = flaky_report.analyze(rows, threshold=0.1, min_runs=5, release_streak=20,
                                                                     quarantined=entries)
     assert [s["nodeid"] for s in candidates] == ["t::shaky"]
@@ -208,3 +219,21 @@ def test_recorder_keeps_vhal_values_of_last_attempt(recorder):
         ("call", "rerun", {"props": [("vhal", "HVAC_TEMPERATURE_SET[0x1]=22.0")]}),
         ("call", "passed", {"props": [("vhal", "HVAC_TEMPERATURE_SET[0x1]=22.5")]}))
     assert recorder.records[nodeid]["signals"] == ["HVAC_TEMPERATURE_SET[0x1]=22.5"]
+
+
+def test_junit_file_name_has_run_id_so_repeats_do_not_overwrite():
+    from ivi.results import junit_name
+
+    names = {junit_name(f"20261119-0300{n}0-r{n}", "aaos", "emulator-5554") for n in (1, 2, 3)}
+    assert len(names) == 3  # --repeat 3 이면 회차마다 다른 파일
+    assert all(name.startswith("junit-") and name.endswith(".xml") for name in names)  # ivi-ci.yml 업로드 패턴 junit-*.xml
+
+
+def test_flaky_report_counts_executions_from_run_files(tmp_path):
+    rows = _rows("aaos", "t::a", ["passed", "xfailed", "skipped", "flaky"])
+    for row in rows:
+        (tmp_path / f"{row['run_id']}-s.json").write_text(json.dumps({"summary": {}, "tests": [row]}), encoding="utf-8")
+    out = tmp_path / "report.md"
+    flaky_report.main(["--runs-dir", str(tmp_path), "--out", str(out)])
+    # 건너뜀만 빼고 센다 (알려진 결함은 실행한 것). flaky 1, 실패 0
+    assert "| aaos | 4 | 4/4 (100%) | 3 | 1 | 0 |" in out.read_text(encoding="utf-8")

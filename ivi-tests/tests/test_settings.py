@@ -1,7 +1,7 @@
 """설정의 속도 단위, 볼륨, 저장 유지, 초기화, 시계 형식을 확인합니다."""
 import pytest
 
-from ivi.waits import wait_until
+from ivi.waits import wait_until, wait_value
 
 
 @pytest.mark.req("SET-01", "DRIVE-01")
@@ -13,7 +13,7 @@ def test_mph_setting_converts_vehicle_speed(app, car):
     settings.toggle("unit_mph")
 
     car.drive(50.0)
-    wait_until(lambda: app.speed() == ("31", "mph"), what="31 mph")
+    wait_value(lambda: app.speed(), ("31", "mph"), what="속도 표시")
 
 
 @pytest.mark.req("SET-01")
@@ -56,7 +56,7 @@ def test_reset_restores_defaults(app):
     settings.toggle("autolock")
     settings.up("volume")
     settings.reset()
-    wait_until(lambda: settings.value("volume") == 15, what="볼륨 기본값")
+    wait_value(lambda: settings.value("volume"), 15, what="볼륨 기본값")
     assert settings.checked("autolock")
 
 
