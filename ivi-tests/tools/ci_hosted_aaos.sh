@@ -17,6 +17,10 @@ mkdir -p "$OUT"
 SDK="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
 BIN="$SDK/cmdline-tools/latest/bin"
 export PATH="$SDK/platform-tools:$SDK/emulator:$PATH"
+# AVD 위치를 고정한다. 호스트 러너의 avdmanager 는 ~/.android/avd 가 아닌 곳에 만들어 설정 파일을 찾지 못했다 (2026-11-21 첫 시도)
+export ANDROID_USER_HOME="$HOME/.android"
+export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+mkdir -p "$ANDROID_AVD_HOME"
 
 wait_for() {  # wait_for <초> <설명> <명령...>: 명령이 성공할 때까지 5초 간격
   local limit=$1 what=$2; shift 2
@@ -35,7 +39,7 @@ echo "::group::시스템 이미지와 AVD"
 yes | "$BIN/sdkmanager" --licenses > /dev/null || true
 "$BIN/sdkmanager" "emulator" "platform-tools" "$IMAGE" > "$OUT/sdkmanager.log"
 echo "no" | "$BIN/avdmanager" create avd -n aaos -k "$IMAGE" -d automotive_1024p_landscape --force
-printf 'hw.ramSize=4096\nhw.cpu.ncore=4\ndisk.dataPartition.size=6G\n' >> "$HOME/.android/avd/aaos.avd/config.ini"
+printf 'hw.ramSize=4096\nhw.cpu.ncore=4\ndisk.dataPartition.size=6G\n' >> "$ANDROID_AVD_HOME/aaos.avd/config.ini"
 echo "::endgroup::"
 
 echo "::group::에뮬레이터 부팅"
