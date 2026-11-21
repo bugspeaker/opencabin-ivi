@@ -6,7 +6,8 @@
 // 결과: site/docs/*.html (커밋한다. 문서를 고치면 다시 실행)
 // 테스트 결과 페이지(test-results.html)는 site/results/results.json 으로 만든다
 // (ivi-tests/tools/publish_results.py 가 실행 기록과 끝 화면에서 만든다).
-// 소개 페이지(site/index.html)의 요구 역량 목차, 결과 수치, 기기 카드도 같은 자료로 다시 쓴다 (<!-- fit:… -->, <!-- stats:… -->, <!-- devices:… -->).
+// 소개 페이지(site/index.html)의 숫자 띠와 기기별 결과(<!-- stats:… -->, <!-- devices:… -->),
+// 공고 항목별 근거 페이지(site/fit.html)의 목차(<!-- fit:… -->)도 같은 자료로 다시 쓴다.
 // 숫자를 손으로 쓰지 않는다: 같은 페이지 안에서 시간이 1초씩 달랐던 일이 있다 (2026-11-18 검토).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "node:fs";
 import path from "node:path";
@@ -19,6 +20,7 @@ const ROOT = path.resolve(SITE, "..");
 const OUT = path.join(SITE, "docs");
 const RESULTS_JSON = path.join(SITE, "results", "results.json");
 const INDEX = path.join(SITE, "index.html");
+const FIT = path.join(SITE, "fit.html");
 // 사이트(GitHub Pages)에는 site/ 와 docs/images/ 만 올린다. 소스 코드와 원문 .md 는 GitHub 화면으로 잇는다.
 const REPO = "https://github.com/bugspeaker/opencabin-ivi";
 const IMAGE = /\.(png|jpe?g|webp|gif|svg)$/i;
@@ -111,10 +113,8 @@ function shell(page, { title, body, toc = [], head = "", scripts = "", mainClass
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)} · OpenCabin IVI</title>
-<meta name="theme-color" content="#010102">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="doc.css">${head}
 </head>
 <body>
@@ -122,6 +122,7 @@ function shell(page, { title, body, toc = [], head = "", scripts = "", mainClass
 <header class="top">
   <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
   <span class="crumb">문서 · ${esc(page.nav)}</span>
+  <a class="home" href="../index.html">포트폴리오</a>
   <a class="src" href="${esc(githubUrl(page.src))}">원문 .md</a>
 </header>
 <div class="layout${/results|wide-doc/.test(mainClass) ? " wide" : ""}">
@@ -181,10 +182,10 @@ function render(page) {
   const scripts = body.includes('class="mermaid"') ? `<script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
 mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
-  darkMode: true, background: "#0f1011", primaryColor: "#18191a", primaryTextColor: "#f7f8f8",
-  primaryBorderColor: "#5e6ad2", lineColor: "#8a8f98", secondaryColor: "#141516", tertiaryColor: "#141516",
-  clusterBkg: "#0f1011", clusterBorder: "#34343a", edgeLabelBackground: "#0f1011",
-  fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px" } });
+  background: "#ffffff", primaryColor: "#ecf2ff", primaryTextColor: "#191f28",
+  primaryBorderColor: "#1b5be6", lineColor: "#6b7684", secondaryColor: "#f4f6f9", tertiaryColor: "#f4f6f9",
+  clusterBkg: "#f9fafb", clusterBorder: "#d1d6db", edgeLabelBackground: "#ffffff",
+  fontFamily: "Pretendard Variable, Pretendard, system-ui, sans-serif", fontSize: "14px" } });
 </script>` : "";
   // 넓은 표가 있는 문서(추적표)는 오른쪽 목차 없이 본문을 넓게 쓴다
   return shell(page, { title, body, toc: page.wide ? [] : toc, scripts, mainClass: page.wide ? "doc wide-doc" : "doc" });
@@ -327,7 +328,7 @@ function renderResults(page) {
         <p class="req-note" id="req-note"></p>
       </div>
       <div class="req-actions">
-        <a class="req-btn" href="../index.html#fit">요구 역량 목차</a>
+        <a class="req-btn" href="../fit.html">공고 항목 목록</a>
         <button type="button" class="req-btn" id="req-clear">전체 테스트 보기</button>
       </div>
     </section>
@@ -466,115 +467,109 @@ function renderFit({ reqs }) {
   const group = (g) => {
     const items = reqs.filter((r) => r.group === g.id);
     return `<div class="fit-group">
-          <h3 class="fit-group-title">${esc(g.label)} <span>${items.length}개</span></h3>
+          <h2 class="fit-group-title">${esc(g.label)} <span>${items.length}개</span></h2>
           <ol class="fit-list">
             ${items.map(row).join("\n            ")}
           </ol>
         </div>`;
   };
   const [duty, ...rest] = GROUPS;
-  return `<section id="fit" class="fit" aria-labelledby="fit-title">
-      <div class="fit-head">
-        <div class="fit-head-copy">
-          <p class="eyebrow">요구 역량</p>
-          <h2 id="fit-title" class="headline">42dot Test Automation Engineer, IVI System</h2>
-          <p class="body-lg muted">채용 공고의 항목마다 이 프로젝트에서 한 일과 근거입니다. 항목을 누르면 근거가 되는 테스트 결과나 기록으로 이동합니다.</p>
-        </div>
-      </div>
-      <div class="fit-cols">
-        <div class="fit-col">
+  // 제목과 설명은 fit.html 에 직접 쓴다. 여기서는 목록만 만든다
+  return `<section id="fit" class="fit" aria-label="공고 항목">
+    <div class="wrap fit-cols">
+      <div class="fit-col">
         ${group(duty)}
-        </div>
-        <div class="fit-col">
-        ${rest.map(group).join("\n        ")}
-        </div>
       </div>
-    </section>`;
+      <div class="fit-col">
+        ${rest.map(group).join("\n        ")}
+      </div>
+    </div>
+  </section>`;
 }
 
 // 반복 실행한 날짜 (run id 앞 YYYYMMDD): "11-18"
 const runDate = (st) => [...new Set(st.run_ids.map((id) => `${id.slice(4, 6)}-${id.slice(6, 8)}`))].join(", ");
-// 반복 실행 건수를 기기별로: "(AAOS 640, 태블릿 610)"
-const byKind = (st) => st.executions_by_kind
-  ? ` (${Object.entries(st.executions_by_kind).map(([k, n]) => `${k === "aaos" ? "AAOS" : "태블릿"} ${n.toLocaleString("en-US")}`).join(", ")})`
-  : "";
 
-function renderStats({ stats }, data) {
-  const dev = (kind) => data.devices.find((d) => d.kind === kind);
-  const KO = { skipped: "건너뜀", xfailed: "알려진 결함", flaky: "재시도 후 통과", failed: "실패", error: "오류", xpassed: "알려진 결함 통과", quarantined: "격리" };
-  const other = (d) => Object.entries(d.counts).filter(([k]) => k !== "passed").map(([k, v]) => `${KO[k] ?? k} ${v}`);
-  const card = (eyebrow, headline, sub, href) => `<a class="card stat" href="${href}">
-          <p class="eyebrow">${eyebrow}</p>
-          <p class="headline">${headline}</p>
-          <p class="body-sm subtle">${sub}</p>
-        </a>`;
-  const cards = [card("E2E 테스트", `${stats.total}개`, "두 기기에서 같은 테스트 코드", "docs/test-results.html")];
-  for (const d of data.devices) {
-    const note = d.kind === "mock" ? other(d).map((s) => s.replace("건너뜀", "AAOS 전용 건너뜀")) : other(d);
-    // 태블릿 숫자가 VHAL 경로까지 증명하는 것처럼 읽히지 않게, 차량 값의 출처를 숫자 바로 옆에 둔다
-    const source = d.kind === "mock" ? " · 차량 값은 앱 안 Mock" : "";
-    cards.push(card(esc(d.label), `${d.counts.passed ?? 0}개 통과`, [...note, fmtTime(d.duration)].join(", ") + source, "docs/test-results.html"));
-  }
-  const st = stats.stability;
-  cards.push(st
-    // 조건(언제, 어디서)을 숫자 옆에: 'flaky 0'만 크게 쓰면 조건 없는 주장처럼 읽힌다 (2026-11-19 검토)
-    // 제목 줄은 한 줄에 들어가게 짧게, 날짜와 장소는 아래 설명 줄로 (2026-11-21 검토)
-    ? card(`반복 ${st.rounds}회 × ${st.devices}기기`,
-        `재시도 ${st.reruns} / ${st.executions.toLocaleString("en-US")}건`,
-        `${runDate(st)}, 같은 PC. 테스트 ${st.executions.toLocaleString("en-US")}건${byKind(st)}, flaky ${st.flaky}건, 실패 ${st.failed}건`, "docs/flaky-report.html")
-    : card("실패와 재시도", `${stats.bad}건`, `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번 (기기마다 1회 실행)`, "docs/test-results.html"));
-  return `<section class="stats-section" aria-label="최근 결과">
-      <div class="stats">
-        ${cards.join("\n        ")}
-      </div>
-    </section>`;
-}
+// 테스트에서 나온 문제 수: docs/portfolio.md 3장의 표와 GitHub 이슈 #19~#29 (결과 자료에는 없는 숫자라 여기 적는다)
+const DEFECTS_RECORDED = 11;
 
-function renderDevices(data) {
-  const KO = { passed: "통과", skipped: "건너뜀", xfailed: "알려진 결함", flaky: "재시도 후 통과", failed: "실패", error: "오류", xpassed: "알려진 결함 통과", quarantined: "격리" };
-  const ABOUT = {
-    aaos: { title: "AAOS 에뮬레이터", text: "CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거칩니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.", source: "CarPropertyManager" },
-    mock: { title: "Android 태블릿", text: "화웨이 태블릿에서는 앱 안의 Mock 차량 서비스를 씁니다. AAOS 전용 테스트는 건너뜁니다. 터치 지연, 백그라운드 강제 종료 같은 실기기 문제는 이 기기에서 나왔습니다.", source: "MockVehicleDataSource" },
-  };
-  const date = (t) => t.slice(0, 10);
-  const cards = data.devices.map((d) => {
-    const a = ABOUT[d.kind] ?? { title: d.label, text: "", source: "" };
-    const counts = Object.entries(d.counts).map(([k, v]) => `${KO[k] ?? k} ${v}`).join(", ");
-    return `<article class="card device">
-          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>${esc(date(d.time))} 전체 실행</span>
-          <h3 class="card-title">${esc(a.title)}</h3>
-          <p class="body-sm muted">${esc(a.text)}</p>
-          <div>
-            <div class="device-row body-sm"><span class="subtle">결과</span><span>${esc(counts)}</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>${fmtTime(d.duration)}</span></div>
-            <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">${esc(a.source)}</span></div>
-          </div>
-        </article>`;
-  });
-  // 두 기기를 같은 run id 로 동시에 시작했으면 병렬 실행이다. 끝까지 걸린 시간 = 가장 늦게 끝난 기기
+// 두 기기를 같은 run id 로 동시에 시작했으면 병렬 실행이다. 끝까지 걸린 시간 = 가장 늦게 끝난 기기
+function parallelTimes(data) {
   const sameRun = new Set(data.devices.map((d) => d.run_id)).size === 1 && data.devices.length > 1;
   const start = Math.min(...data.devices.map((d) => Date.parse(d.time)));
   const wall = Math.max(...data.devices.map((d) => Date.parse(d.time) / 1000 + d.duration)) - start / 1000;
   const serial = data.devices.reduce((n, d) => n + d.duration, 0);
-  const note = sameRun
-    ? `<p class="body-sm subtle device-note">두 기기를 같은 시각에 병렬로 시작해 끝까지 ${fmtTime(wall)} 걸렸습니다. 차례로 돌렸다면 약 ${fmtTime(serial)}입니다.</p>`
-    : "";
-  return `<div class="grid-2">
-        ${cards.join("\n        ")}
+  return { sameRun, wall, serial };
+}
+// 첫 화면에는 분 단위로만 적는다. 실행기가 잰 벽시계 시간(10분 51초)과 pytest 시간 합(10분 49초)이 초 단위로 달라서다
+const aboutMin = (s) => `약 ${Math.round(s / 60)}`;
+
+function renderStats({ stats }, data) {
+  const item = (label, num, unit, note, href) => `<a class="stat" href="${href}">
+          <p class="stat-label">${label}</p>
+          <p class="stat-num">${num}${unit ? `<small>${unit}</small>` : ""}</p>
+          <p class="stat-note">${note}</p>
+        </a>`;
+  const items = [item("E2E 테스트", stats.total, "개", "두 기기에서 같은 테스트 코드", "docs/test-results.html")];
+  const st = stats.stability;
+  // 조건(언제, 몇 번)을 숫자 옆에: '실패 0'만 크게 쓰면 조건 없는 주장처럼 읽힌다 (2026-11-19 검토)
+  items.push(st
+    ? item(`반복 실행 ${st.executions.toLocaleString("en-US")}건`, `실패 ${st.failed}`, "",
+        `두 기기 × ${st.rounds}회 (${runDate(st)}). 재시도로 통과한 것도 ${st.flaky}건`, "docs/flaky-report.html")
+    : item("실패와 재시도", stats.bad, "건", `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번`, "docs/test-results.html"));
+  const { sameRun, wall, serial } = parallelTimes(data);
+  if (sameRun) items.push(item("두 기기 병렬 실행", aboutMin(wall), "분", `차례로 돌리면 ${aboutMin(serial)}분`, "#results"));
+  items.push(item("테스트에서 나온 문제", DEFECTS_RECORDED, "건", "원인과 조치를 GitHub 이슈로 기록", "#defects"));
+  return `<section class="stats-band" aria-label="주요 수치" data-no-glossary>
+      <div class="wrap stats">
+        ${items.join("\n        ")}
       </div>
-      ${note}`;
+    </section>`;
+}
+
+// 기기별 결과를 가로 막대(통과, 건너뜀, 알려진 결함 …)로
+function renderDevices(data) {
+  const KO = { passed: "통과", skipped: "건너뜀", xfailed: "알려진 결함", flaky: "재시도 후 통과", failed: "실패", error: "오류", xpassed: "알려진 결함 통과", quarantined: "격리" };
+  const ORDER = ["passed", "flaky", "xfailed", "xpassed", "quarantined", "failed", "error", "skipped"];
+  // 태블릿 숫자가 VHAL 경로까지 증명하는 것처럼 읽히지 않게, 차량 값의 출처를 이름 바로 아래에 둔다
+  const ABOUT = {
+    aaos: { title: "AAOS 에뮬레이터", text: "CarService와 가상 VHAL을 거침" },
+    mock: { title: "Android 태블릿", text: "앱 안 Mock 차량. AAOS 전용 테스트는 건너뜀" },
+  };
+  const rows = data.devices.map((d) => {
+    const a = ABOUT[d.kind] ?? { title: d.label, text: "" };
+    const parts = ORDER.filter((k) => d.counts[k]).map((k) => [k, d.counts[k]]);
+    const said = parts.map(([k, v]) => `${KO[k]} ${v}`).join(", ");
+    return `<div class="card run">
+          <div class="run-name"><b>${esc(a.title)}</b><span>${esc(a.text)}</span></div>
+          <div>
+            <div class="stack" role="img" aria-label="${esc(said)}">${parts.map(([k, v]) => `<span class="s-${k}" style="--n: ${v}"></span>`).join("")}</div>
+            <ul class="stack-legend">${parts.map(([k, v]) => `<li><i class="s-${k}"></i>${KO[k]} ${v}</li>`).join("")}</ul>
+          </div>
+          <p class="run-time">${fmtTime(d.duration)}<span>${data.stability ? `${data.stability.rounds}회차` : esc(d.time.slice(0, 10))}</span></p>
+        </div>`;
+  });
+  return `<div class="runs">
+        ${rows.join("\n        ")}
+      </div>`;
+}
+
+// <!-- 이름:start --> ~ <!-- 이름:end --> 사이를 새로 만든 것으로 바꾼다
+function fillBlocks(file, blocks) {
+  let html = readFileSync(file, "utf8");
+  for (const [name, block] of blocks) {
+    const re = new RegExp(`(<!-- ${name}:start[^>]*-->)[\\s\\S]*?(\\s*<!-- ${name}:end -->)`);
+    if (!re.test(html)) { console.warn(`건너뜀: ${path.basename(file)} 에 <!-- ${name}:start --> 표시가 없다`); continue; }
+    html = html.replace(re, (m, a, b) => `${a}\n  ${block}${b}`);
+  }
+  writeFileSync(file, html, "utf8");
 }
 
 function writeIndex() {
   const idx = reqIndex(RESULTS);
-  let html = readFileSync(INDEX, "utf8");
-  for (const [name, block] of [["fit", renderFit(idx)], ["stats", renderStats(idx, RESULTS)], ["devices", renderDevices(RESULTS)]]) {
-    const re = new RegExp(`(<!-- ${name}:start[^>]*-->)[\\s\\S]*?(\\s*<!-- ${name}:end -->)`);
-    if (!re.test(html)) { console.warn(`건너뜀: index.html 에 <!-- ${name}:start --> 표시가 없다`); continue; }
-    html = html.replace(re, (m, a, b) => `${a}\n    ${block}${b}`);
-  }
-  writeFileSync(INDEX, html, "utf8");
-  console.log("site/results/results.json + site/requirements.mjs → site/index.html (요구 역량 목차, 결과 수치, 기기 카드)");
+  fillBlocks(INDEX, [["stats", renderStats(idx, RESULTS)], ["devices", renderDevices(RESULTS)]]);
+  fillBlocks(FIT, [["fit", renderFit(idx)]]);
+  console.log("site/results/results.json + site/requirements.mjs → site/index.html (숫자 띠, 기기별 결과), site/fit.html (공고 항목별 근거)");
 }
 
 mkdirSync(OUT, { recursive: true });

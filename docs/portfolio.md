@@ -1,5 +1,8 @@
 # OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오
 
+> [!TIP]
+> 짧게 보려면 [포트폴리오 첫 화면](https://bugspeaker.github.io/opencabin-ivi/)을 먼저 보세요. 이 문서는 근거를 모두 적은 상세 문서입니다.
+
 지원 직무: 42dot Test Automation Engineer (IVI System)  
 결과 기준: 2026-11-21 실행(커밋 `d54741b`, 두 기기 × 3회). 이전 실행과 그때의 코드 시점은 [README의 '결과 자료와 검증 시점'](../README.md#결과-자료와-검증-시점)에 있습니다.
 
@@ -308,19 +311,7 @@ sanity는 처음에 55개(전체의 45%)까지 늘어 regression과 크기가 �
 
 ### 5-1. 양방향 검증과 area 단위 판정
 
-```python
-@pytest.mark.sanity
-def test_ac_toggle_reaches_every_seat(app, car):
-    """A/C를 끄면 전 좌석 area의 HVAC_AC_ON이 꺼진다 (운전석만 꺼지면 결함)."""
-    climate = app.climate()
-    climate.wait_checked("ac", True)
-
-    climate.toggle("ac")
-    wait_until(lambda: not any(car.signal_all(Signal.AC)), what="전 좌석 A/C 꺼짐")
-    climate.wait_checked("ac", False)
-```
-
-A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 값을 써도 화면은 정상으로 보입니다. 화면만 보는 테스트로는 이 결함을 잡을 수 없어서, `signal_all`로 area별 값을 전부 읽어 확인합니다. 김서림 제거는 반대로 누른 유리의 신호만 켜지는지 봅니다.
+A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 값을 써도 화면은 정상으로 보입니다. 화면만 보는 테스트로는 이 결함을 잡을 수 없어서, area별 값을 전부 읽어 확인합니다. 김서림 제거는 반대로 누른 유리의 신호만 켜지는지 봅니다.
 
 차량 쪽에서 값이 바뀌었을 때 화면이 따라오는지 보는 반대 방향 테스트는 기능마다 따로 있습니다. 결과 페이지에는 AAOS에서 테스트 중 마지막으로 읽은 차량 값(예: `HVAC_TEMPERATURE_SET[0x1]=22.5`, 최대 3개)을 화면과 함께 보여 줍니다.
 
@@ -341,18 +332,6 @@ A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 �
 차량 신호는 앱을 다시 띄워도 남습니다. 앞 테스트가 문을 열어 둔 채 끝나면 다음 테스트의 "누르면 열림" 확인이 거꾸로 됩니다. 그래서 테스트마다 차량 신호 12종을 기준 값으로 되돌립니다.
 
 AAOS에서는 신호에 area를 곱하면 `--set`이 31번입니다. 하나씩 보내면 테스트마다 adb 왕복이 31번이라, adb shell 한 번에 묶어 보내고 성공 응답 31개를 세어 다 들어갔는지 확인합니다. 8단계 기준(당시 신호 11개, 26번)으로 테스트가 84개에서 108개로 늘었는데 테스트당 시간은 4.1초에서 3.7초로 줄었습니다.
-
-<details>
-<summary>코드 (AaosVehicle.set_signals 요약)</summary>
-
-```python
-commands = [f"dumpsys {VHAL} --set {prop} {kind} {raw} -a {area}" for ... in areas]
-out = self.adb.shell("; ".join(commands))
-if out.count("Set property") == len(commands):   # 31개가 모두 들어갔는지 센다
-    return                                        # 모자라면 한 번 더, 재시도 사실은 기록
-```
-
-</details>
 
 태블릿의 Mock 차량은 값을 받으면 받은 이름 목록(`applied=...`)을 돌려줍니다. 앱이 꺼져 있어 브로드캐스트가 전달되지 않으면(화웨이) 그 자리에서 실패하므로, 주입이 빠진 채 뒤의 대기에서 엉뚱하게 실패하지 않습니다.
 

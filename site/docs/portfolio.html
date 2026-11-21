@@ -4,10 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오 · OpenCabin IVI</title>
-<meta name="theme-color" content="#010102">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="doc.css">
 </head>
 <body>
@@ -15,6 +13,7 @@
 <header class="top">
   <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
   <span class="crumb">문서 · 포트폴리오</span>
+  <a class="home" href="../index.html">포트폴리오</a>
   <a class="src" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/portfolio.md">원문 .md</a>
 </header>
 <div class="layout">
@@ -41,6 +40,9 @@
   </aside>
   <main id="content" class="doc">
 <h1 id="opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오"><a class="anchor" href="#opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오" aria-hidden="true">#</a>OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오</h1>
+<blockquote class="callout callout-tip"><p class="callout-title">안내</p>
+<p>짧게 보려면 <a href="https://bugspeaker.github.io/opencabin-ivi/" target="_blank" rel="noopener">포트폴리오 첫 화면</a>을 먼저 보세요. 이 문서는 근거를 모두 적은 상세 문서입니다.</p>
+</blockquote>
 <p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>결과 기준: 2026-11-21 실행(커밋 <code>d54741b</code>, 두 기기 × 3회). 이전 실행과 그때의 코드 시점은 <a href="readme.html#결과-자료와-검증-시점">README의 &#39;결과 자료와 검증 시점&#39;</a>에 있습니다.</p>
 <p><img data-md src="../../docs/images/p9-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
 <p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트 129개를 AAOS 에뮬레이터와 화웨이 태블릿에서 돌립니다. 에뮬레이터에서는 CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다. 실제 차량, HIL, CAN 장비는 쓰지 않았습니다.</p>
@@ -702,16 +704,7 @@
 <hr>
 <h2 id="5-e2e-테스트-설계"><a class="anchor" href="#5-e2e-테스트-설계" aria-hidden="true">#</a>5. E2E 테스트 설계</h2>
 <h3 id="5-1-양방향-검증과-area-단위-판정"><a class="anchor" href="#5-1-양방향-검증과-area-단위-판정" aria-hidden="true">#</a>5-1. 양방향 검증과 area 단위 판정</h3>
-<pre class="code"><code data-lang="python">@pytest.mark.sanity
-def test_ac_toggle_reaches_every_seat(app, car):
-    &quot;&quot;&quot;A/C를 끄면 전 좌석 area의 HVAC_AC_ON이 꺼진다 (운전석만 꺼지면 결함).&quot;&quot;&quot;
-    climate = app.climate()
-    climate.wait_checked(&quot;ac&quot;, True)
-
-    climate.toggle(&quot;ac&quot;)
-    wait_until(lambda: not any(car.signal_all(Signal.AC)), what=&quot;전 좌석 A/C 꺼짐&quot;)
-    climate.wait_checked(&quot;ac&quot;, False)</code></pre>
-<p>A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 값을 써도 화면은 정상으로 보입니다. 화면만 보는 테스트로는 이 결함을 잡을 수 없어서, <code>signal_all</code>로 area별 값을 전부 읽어 확인합니다. 김서림 제거는 반대로 누른 유리의 신호만 켜지는지 봅니다.</p>
+<p>A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 값을 써도 화면은 정상으로 보입니다. 화면만 보는 테스트로는 이 결함을 잡을 수 없어서, area별 값을 전부 읽어 확인합니다. 김서림 제거는 반대로 누른 유리의 신호만 켜지는지 봅니다.</p>
 <p>차량 쪽에서 값이 바뀌었을 때 화면이 따라오는지 보는 반대 방향 테스트는 기능마다 따로 있습니다. 결과 페이지에는 AAOS에서 테스트 중 마지막으로 읽은 차량 값(예: <code>HVAC_TEMPERATURE_SET[0x1]=22.5</code>, 최대 3개)을 화면과 함께 보여 줍니다.</p>
 <h3 id="5-2-설계-기법"><a class="anchor" href="#5-2-설계-기법" aria-hidden="true">#</a>5-2. 설계 기법</h3>
 <div class="table"><table><thead><tr>
@@ -750,15 +743,6 @@ def test_ac_toggle_reaches_every_seat(app, car):
 <h3 id="5-3-테스트-격리"><a class="anchor" href="#5-3-테스트-격리" aria-hidden="true">#</a>5-3. 테스트 격리</h3>
 <p>차량 신호는 앱을 다시 띄워도 남습니다. 앞 테스트가 문을 열어 둔 채 끝나면 다음 테스트의 &quot;누르면 열림&quot; 확인이 거꾸로 됩니다. 그래서 테스트마다 차량 신호 12종을 기준 값으로 되돌립니다.</p>
 <p>AAOS에서는 신호에 area를 곱하면 <code>--set</code>이 31번입니다. 하나씩 보내면 테스트마다 adb 왕복이 31번이라, adb shell 한 번에 묶어 보내고 성공 응답 31개를 세어 다 들어갔는지 확인합니다. 8단계 기준(당시 신호 11개, 26번)으로 테스트가 84개에서 108개로 늘었는데 테스트당 시간은 4.1초에서 3.7초로 줄었습니다.</p>
-<details>
-<summary>코드 (AaosVehicle.set_signals 요약)</summary>
-
-<pre class="code"><code data-lang="python">commands = [f&quot;dumpsys {VHAL} --set {prop} {kind} {raw} -a {area}&quot; for ... in areas]
-out = self.adb.shell(&quot;; &quot;.join(commands))
-if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들어갔는지 센다
-    return                                        # 모자라면 한 번 더, 재시도 사실은 기록</code></pre>
-</details>
-
 <p>태블릿의 Mock 차량은 값을 받으면 받은 이름 목록(<code>applied=...</code>)을 돌려줍니다. 앱이 꺼져 있어 브로드캐스트가 전달되지 않으면(화웨이) 그 자리에서 실패하므로, 주입이 빠진 채 뒤의 대기에서 엉뚱하게 실패하지 않습니다.</p>
 <h3 id="5-4-신호-주입-명령"><a class="anchor" href="#5-4-신호-주입-명령" aria-hidden="true">#</a>5-4. 신호 주입 명령</h3>
 <p>1단계에서 세 가지 명령을 비교했고, 두 가지만 씁니다.</p>
@@ -1098,10 +1082,10 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
 mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
-  darkMode: true, background: "#0f1011", primaryColor: "#18191a", primaryTextColor: "#f7f8f8",
-  primaryBorderColor: "#5e6ad2", lineColor: "#8a8f98", secondaryColor: "#141516", tertiaryColor: "#141516",
-  clusterBkg: "#0f1011", clusterBorder: "#34343a", edgeLabelBackground: "#0f1011",
-  fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px" } });
+  background: "#ffffff", primaryColor: "#ecf2ff", primaryTextColor: "#191f28",
+  primaryBorderColor: "#1b5be6", lineColor: "#6b7684", secondaryColor: "#f4f6f9", tertiaryColor: "#f4f6f9",
+  clusterBkg: "#f9fafb", clusterBorder: "#d1d6db", edgeLabelBackground: "#ffffff",
+  fontFamily: "Pretendard Variable, Pretendard, system-ui, sans-serif", fontSize: "14px" } });
 </script>
 <script src="../glossary.js" defer></script>
 </body>
