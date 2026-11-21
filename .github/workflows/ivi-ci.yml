@@ -2,6 +2,7 @@
 #
 #  build  (GitHub 호스트)   앱 컴파일 확인 (assembleDebug)
 #  unit   (GitHub 호스트)   테스트 프레임워크 자체 검증 (기기 없음)
+#  e2e-hosted (GitHub 호스트)  AAOS 에뮬레이터를 새로 띄워 smoke (태블릿 없음, 매 이벤트)
 #  e2e    (self-hosted Test Bench)  AAOS 에뮬레이터 + 태블릿에 같은 테스트를 병렬 실행
 #
 # 이벤트별 범위 (Shift-left: 빠른 것부터, 넓은 것은 Nightly). 단계별 기준과 Release 게이트: docs/portfolio.md 4-1
@@ -101,6 +102,52 @@ jobs:
           name: junit-unit
           path: ivi-tests/reports/junit-unit.xml
           retention-days: 7
+
+  # GitHub 호스트 러너(ubuntu)의 AAOS 에뮬레이터에서 smoke 를 무인으로 돌린다. 모든 이벤트(PR, main push, Nightly, 수동)
+  # 매번 새 에뮬레이터에 build job 의 APK 를 priv-app 으로 넣는다 (tools/ci_hosted_aaos.sh). 태블릿과 전체 회귀는 e2e job(Test Bench) 몫
+  e2e-hosted:
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/download-artifact@v4
+        with:
+          name: apk-ci
+          path: apk
+      - name: KVM (에뮬레이터 하드웨어 가속)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Python 패키지, Appium (작업 PC 와 같은 버전)
+        run: |
+          pip install -r ivi-tests/requirements.txt
+          npm install -g appium@2.17.0
+          appium driver install uiautomator2@4.1.1
+      - name: AAOS 에뮬레이터, priv-app 설치, smoke
+        run: bash ivi-tests/tools/ci_hosted_aaos.sh apk/app-debug.apk
+      - name: 실행 요약 (AAOS smoke 수)
+        if: always()
+        working-directory: ivi-tests
+        run: python tools/ci_summary.py junit "AAOS smoke (GitHub 호스트 에뮬레이터)" reports/junit-smoke-hosted.xml >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-hosted-aaos
+          path: |
+            ivi-tests/reports/runs/
+            ivi-tests/reports/artifacts/
+            ivi-tests/reports/junit-smoke-hosted.xml
+            ivi-tests/reports/hosted/
+          retention-days: 14
+          if-no-files-found: ignore
 
   e2e:
     needs: [build, unit]
