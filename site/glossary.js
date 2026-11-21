@@ -1,4 +1,5 @@
 /* 용어 풀이: 약어와 전문 용어에 마우스를 올리면 뜻이 보이게 한다 (<abbr title>, 점선 밑줄. 링크처럼 파랗게 하지 않는다).
+ * 휴대폰과 키보드에서는 용어를 누르거나 Tab 으로 가면 풀이 상자가 뜬다 (enableTips).
  *
  * - 소개 사이트: 이 파일을 읽은 페이지에서 본문의 용어를 절(h2, section)마다 처음 나올 때 한 번씩 감싼다.
  *   코드, 링크, 제목, 버튼, 그림 안의 글자는 건드리지 않는다.
@@ -104,9 +105,88 @@
     });
   }
 
+  // 마우스가 없는 화면(휴대폰)과 키보드에서도 뜻을 볼 수 있게: 용어를 누르거나 Tab 으로 가면 아래에 풀이 상자가 뜬다.
+  // title 은 그대로 둔다 (마우스를 올리면 브라우저가 보여 주고, 스크립트가 없어도 남는다). Esc, 바깥 누르기, 다른 곳으로 Tab 하면 닫힌다
+  var TIP_STYLE = ".gloss-tip{position:absolute;z-index:60;max-width:min(320px,calc(100vw - 32px));padding:8px 12px;" +
+    "border:1px solid var(--hairline-strong,#34343a);border-radius:var(--r-md,8px);background:var(--surface-3,#18191a);" +
+    "color:var(--ink,#f7f8f8);font:13px/1.5 var(--font-text,system-ui,sans-serif);box-shadow:0 8px 24px rgba(0,0,0,.4)}" +
+    ".gloss-tip strong{display:block;font-weight:600;margin-bottom:2px}" +
+    "abbr[data-gloss]:focus-visible{outline:2px solid var(--primary,#5e6ad2);outline-offset:2px;border-radius:2px}";
+  var tip = null, owner = null;
+
+  function hideTip() {
+    if (!tip || tip.hidden) return;
+    tip.hidden = true;
+    if (owner) { owner.removeAttribute("aria-describedby"); owner.setAttribute("aria-expanded", "false"); }
+    owner = null;
+  }
+
+  function showTip(abbr) {
+    if (owner === abbr && !tip.hidden) return;
+    tip.innerHTML = "";
+    var name = document.createElement("strong");
+    name.textContent = abbr.textContent;
+    tip.appendChild(name);
+    tip.appendChild(document.createTextNode(abbr.getAttribute("data-gloss")));
+    tip.hidden = false;
+    if (owner) owner.removeAttribute("aria-describedby");
+    owner = abbr;
+    abbr.setAttribute("aria-describedby", "gloss-tip");
+    abbr.setAttribute("aria-expanded", "true");
+    var box = abbr.getBoundingClientRect(), width = tip.offsetWidth;
+    var left = Math.min(Math.max(window.scrollX + box.left, window.scrollX + 16), window.scrollX + document.documentElement.clientWidth - width - 16);
+    tip.style.left = left + "px";
+    tip.style.top = (window.scrollY + box.bottom + 6) + "px";
+  }
+
+  function enableTips(container) {
+    // 링크·버튼 안의 용어는 누르면 이동해야 하므로 풀이 상자를 붙이지 않는다 (title 만)
+    var terms = Array.prototype.filter.call(container.querySelectorAll("abbr[title]"), function (a) { return !a.closest("a, button"); });
+    if (!terms.length) return;
+    var style = document.createElement("style");
+    style.textContent = TIP_STYLE;
+    document.head.appendChild(style);
+    tip = document.createElement("div");
+    tip.id = "gloss-tip";
+    tip.className = "gloss-tip";
+    tip.setAttribute("role", "tooltip");
+    tip.hidden = true;
+    document.body.appendChild(tip);
+    terms.forEach(function (abbr) {
+      abbr.setAttribute("data-gloss", abbr.title);
+      abbr.tabIndex = 0;
+      abbr.setAttribute("role", "button");
+      abbr.setAttribute("aria-expanded", "false");
+    });
+    container.addEventListener("click", function (e) {
+      var abbr = e.target.closest && e.target.closest("abbr[data-gloss]");
+      // 누르면 열기만 한다. 누를 때 포커스가 먼저 열어 두므로, 여기서 다시 누르기로 닫으면 바로 닫혀 버린다
+      if (abbr) showTip(abbr);
+    });
+    container.addEventListener("focusin", function (e) {
+      if (e.target.matches && e.target.matches("abbr[data-gloss]")) showTip(e.target);
+    });
+    container.addEventListener("focusout", function (e) {
+      if (e.target === owner) hideTip();
+    });
+    container.addEventListener("keydown", function (e) {
+      if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("abbr[data-gloss]")) {
+        e.preventDefault();
+        showTip(e.target);
+      }
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hideTip(); });
+    document.addEventListener("click", function (e) {
+      if (!(e.target.closest && e.target.closest("abbr[data-gloss], #gloss-tip"))) hideTip();
+    });
+    window.addEventListener("resize", hideTip);
+  }
+
   function run() {
     var container = document.querySelector("main");
-    if (container) annotate(container);
+    if (!container) return;
+    annotate(container);
+    enableTips(container);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
   else run();
