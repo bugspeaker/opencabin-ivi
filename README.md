@@ -52,12 +52,12 @@ IVI는 화면이 맞아도 차량에는 틀린 값이 갈 수 있습니다. A/C�
 
 ## 결과 자료와 검증 시점
 
-| 자료 | 실행 | 테스트 코드 | 결과 |
-|---|---|---|---|
-| [반복 실행 3회](docs/evidence/2026-11-21-main/README.md) | 2026-11-21 | `d54741b` (커밋하지 않은 변경 없음) | 129개 × 두 기기 × 3회, 750건에서 실패 0, flaky 0, Release 게이트 통과 |
-| [GitHub 호스트 러너 smoke](docs/evidence/2026-11-21-main/README.md#github-호스트-러너의-aaos-smoke) | 2026-11-21, Actions 3회 | `8bb3a33` | AAOS smoke 13개 3회 연속 통과 |
+| 자료 | 결과 |
+|---|---|
+| [반복 실행 3회](docs/evidence/2026-11-21-main/README.md)<br>2026-11-21, 코드 `d54741b` | 129개 × 두 기기 × 3회, 750건에서 실패 0, flaky 0, Release 게이트 통과 |
+| [GitHub 호스트 러너 smoke](docs/evidence/2026-11-21-main/README.md#github-호스트-러너의-aaos-smoke)<br>2026-11-21, 코드 `8bb3a33` | AAOS smoke 13개, Actions 3회 연속 통과 |
 
-이 실행 뒤에 바뀐 것은 문서, 소개 사이트, 단위 테스트, CI 설정입니다. E2E 테스트 코드와 앱은 `d54741b`와 같습니다. 이전 실행과 그때의 코드 시점은 [결과 원자료 목록](docs/evidence/README.md)에 있습니다.
+반복 실행은 커밋하지 않은 변경 없이 돌렸습니다. 이 실행 뒤에 바뀐 것은 문서, 소개 사이트, 단위 테스트, CI 설정, 에뮬레이터 설치 스크립트(`adb root` 재시도)입니다. E2E 테스트 코드와 앱 코드는 `d54741b`와 같습니다. 이전 실행과 그때의 코드 시점은 [결과 원자료 목록](docs/evidence/README.md)에 있습니다.
 
 ## 한계
 
@@ -89,8 +89,10 @@ site/                 소개 사이트 (GitHub Pages)
 | [테스트 결과](docs/test-results.md) | 테스트 129개의 판정과 판정 직후 화면 |
 | [반복 실행 통계](docs/flaky-report.md) | 두 기기 × 3회, 테스트별 불안정률 |
 | [결정 기록](docs/decisions.md) | 고른 것과 버린 것, 근거가 된 측정값 |
-| [요구사항](docs/requirements.md), [추적표](docs/traceability.md) | 요구사항 26개와 테스트의 연결 |
-| 단계별 기록 | [1 기술 검증](docs/phase1-spike.md) · [2 앱](docs/phase2-app.md) · [3 프레임워크](docs/phase3-framework.md) · [4 운영](docs/phase4-operations.md) · [5 재점검](docs/phase5-design.md) · [6 기능 확장](docs/phase6-features.md) · [7 화면 개편](docs/phase7-layout.md) · [8 차량 신호](docs/phase8-signals.md) · [9 Test Bench](docs/phase9-bench.md) |
+| [요구사항](docs/requirements.md) | 요구사항 26개 |
+| [추적표](docs/traceability.md) | 요구사항과 테스트의 연결 |
+
+단계별 기록: [1 기술 검증](docs/phase1-spike.md) · [2 앱](docs/phase2-app.md) · [3 프레임워크](docs/phase3-framework.md) · [4 운영](docs/phase4-operations.md) · [5 재점검](docs/phase5-design.md) · [6 기능 확장](docs/phase6-features.md) · [7 화면 개편](docs/phase7-layout.md) · [8 차량 신호](docs/phase8-signals.md) · [9 Test Bench](docs/phase9-bench.md)
 
 <details>
 <summary>용어 풀이</summary>

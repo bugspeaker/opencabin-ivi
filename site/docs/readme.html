@@ -118,24 +118,18 @@
 <h2 id="결과-자료와-검증-시점"><a class="anchor" href="#결과-자료와-검증-시점" aria-hidden="true">#</a>결과 자료와 검증 시점</h2>
 <div class="table"><table><thead><tr>
 <th>자료</th>
-<th>실행</th>
-<th>테스트 코드</th>
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">반복 실행 3회</a></td>
-<td>2026-11-21</td>
-<td><code>d54741b</code> (커밋하지 않은 변경 없음)</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">반복 실행 3회</a><br>2026-11-21, 코드 <code>d54741b</code></td>
 <td>129개 × 두 기기 × 3회, 750건에서 실패 0, flaky 0, Release 게이트 통과</td>
 </tr>
 <tr>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md#github-호스트-러너의-aaos-smoke">GitHub 호스트 러너 smoke</a></td>
-<td>2026-11-21, Actions 3회</td>
-<td><code>8bb3a33</code></td>
-<td>AAOS smoke 13개 3회 연속 통과</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md#github-호스트-러너의-aaos-smoke">GitHub 호스트 러너 smoke</a><br>2026-11-21, 코드 <code>8bb3a33</code></td>
+<td>AAOS smoke 13개, Actions 3회 연속 통과</td>
 </tr>
 </tbody></table></div>
-<p>이 실행 뒤에 바뀐 것은 문서, 소개 사이트, 단위 테스트, CI 설정입니다. E2E 테스트 코드와 앱은 <code>d54741b</code>와 같습니다. 이전 실행과 그때의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">결과 원자료 목록</a>에 있습니다.</p>
+<p>반복 실행은 커밋하지 않은 변경 없이 돌렸습니다. 이 실행 뒤에 바뀐 것은 문서, 소개 사이트, 단위 테스트, CI 설정, 에뮬레이터 설치 스크립트(<code>adb root</code> 재시도)입니다. E2E 테스트 코드와 앱 코드는 <code>d54741b</code>와 같습니다. 이전 실행과 그때의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">결과 원자료 목록</a>에 있습니다.</p>
 <h2 id="한계"><a class="anchor" href="#한계" aria-hidden="true">#</a>한계</h2>
 <ul>
 <li>실제 차량, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</li>
@@ -175,14 +169,15 @@ site/                 소개 사이트 (GitHub Pages)</code></pre>
 <td>고른 것과 버린 것, 근거가 된 측정값</td>
 </tr>
 <tr>
-<td><a href="requirements.html">요구사항</a>, <a href="traceability.html">추적표</a></td>
-<td>요구사항 26개와 테스트의 연결</td>
+<td><a href="requirements.html">요구사항</a></td>
+<td>요구사항 26개</td>
 </tr>
 <tr>
-<td>단계별 기록</td>
-<td><a href="phase1-spike.html">1 기술 검증</a> · <a href="phase2-app.html">2 앱</a> · <a href="phase3-framework.html">3 프레임워크</a> · <a href="phase4-operations.html">4 운영</a> · <a href="phase5-design.html">5 재점검</a> · <a href="phase6-features.html">6 기능 확장</a> · <a href="phase7-layout.html">7 화면 개편</a> · <a href="phase8-signals.html">8 차량 신호</a> · <a href="phase9-bench.html">9 Test Bench</a></td>
+<td><a href="traceability.html">추적표</a></td>
+<td>요구사항과 테스트의 연결</td>
 </tr>
 </tbody></table></div>
+<p>단계별 기록: <a href="phase1-spike.html">1 기술 검증</a> · <a href="phase2-app.html">2 앱</a> · <a href="phase3-framework.html">3 프레임워크</a> · <a href="phase4-operations.html">4 운영</a> · <a href="phase5-design.html">5 재점검</a> · <a href="phase6-features.html">6 기능 확장</a> · <a href="phase7-layout.html">7 화면 개편</a> · <a href="phase8-signals.html">8 차량 신호</a> · <a href="phase9-bench.html">9 Test Bench</a></p>
 <details>
 <summary>용어 풀이</summary>
 
