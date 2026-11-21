@@ -46,7 +46,7 @@
 <p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트 129개를 AAOS 에뮬레이터와 화웨이 태블릿에서 돌립니다. 에뮬레이터에서는 CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다. 실제 차량, HIL, CAN 장비는 쓰지 않았습니다.</p>
 <h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
 <ul>
-<li>경력: 게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&amp;D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩(코드는 AI가 작성)으로 만들었습니다. 게임 QA에서 쓰던 BVT 문서 양식을 바탕으로 엑셀 BVT 문서를 브랜치·플랫폼별로 관리하는 대시보드에 Playwright·pytest UI 자동화를 붙여, 공개 웹 서비스(타입캐스트)의 BVT 70개 중 47개를 Chrome에서 한 번에 약 6분에 돌리고, 실패하면 화면·녹화·메시지를 남깁니다(2026-11-03 실행). Jira 처리량 캘린더와 Claude로 검수 리포트·이슈 초안을 만드는 TC 관리 도구(Bugspeaker Zone)도 바이브 코딩으로 만들어 업무에 씁니다. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다.</li>
+<li>경력: 게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&amp;D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩(코드는 AI가 작성)으로 만들었습니다. 게임 QA에서 쓰던 BVT 문서 양식을 바탕으로 엑셀 BVT 문서를 브랜치·플랫폼별로 관리하는 대시보드에 Playwright·pytest UI 자동화를 붙여, 공개 웹 서비스(타입캐스트)의 BVT 70개 중 47개를 Chrome에서 한 번에 약 6분에 돌리고, 실패하면 화면·녹화·메시지를 남깁니다(2026-11-03 실행). Jira 처리량 캘린더와 Claude로 검수 리포트·이슈 초안을 만드는 TC 관리 도구(Bugspeaker Zone)도 바이브 코딩으로 만들어 업무에 씁니다. 모바일 자동화는 Appium으로 실습해 본 경험이 있고, 이 프로젝트에서 AAOS까지 넓혀 게이트, 반복 실행, CI를 갖춘 업무 수준으로 적용했습니다.</li>
 <li>기간: 2026-11-13부터, 혼자 진행했습니다.</li>
 <li>역할: 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 Claude가 제안한 변경과 외부 검토 항목을 확인해 반영 여부를 확정했고, PR을 병합했습니다. E2E 테스트 설계는 Claude와 함께 정했습니다.</li>
 <li>기기 구성, 신호 주입 방식, 판정과 재시도 규칙, 결함 원인 분석에서 무엇을 고르고 무엇을 버렸는지와 그 근거가 된 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
@@ -54,6 +54,54 @@
 <p>이전에 만든 웹 BVT 도구(바이브 코딩, 개인 포트폴리오)의 실행 모습입니다. BVT 문서에서 자동화를 실행하면 Playwright가 타입캐스트 웹을 돌리며 표에 결과를 채우고(빨리 감기), 끝나면 실패한 No.64의 실패 순간 화면, 녹화, 메시지를 보여 줍니다. 타입캐스트 계정 정보는 흐리게 했습니다.</p>
 <img src="../../docs/images/web-bvt-demo.gif" width="760" alt="웹 BVT 도구에서 자동화를 실행해 타입캐스트 웹을 Playwright로 돌리고, 47건 중 실패한 1건의 화면과 녹화, 오류 메시지를 확인하는 모습">
 
+<h2 id="ai-결과를-어떻게-검증했나"><a class="anchor" href="#ai-결과를-어떻게-검증했나" aria-hidden="true">#</a>AI 결과를 어떻게 검증했나</h2>
+<p>AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 지적마다 반영할지는 제가 정했습니다.</p>
+<p><strong>원칙</strong></p>
+<ol>
+<li><strong>&#39;통과&#39;는 기기 실행 결과 파일로만 받아들입니다.</strong> 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK sha256, 종료 코드가 남고, Release 게이트가 <code>--commit</code>으로 그 커밋의 결과인지 확인합니다. 단위 테스트 통과는 기기 실행을 대신하지 않습니다.</li>
+<li><strong>&#39;실패 0&#39;과 &#39;정한 범위를 끝까지 돌렸다&#39;를 따로 봅니다.</strong> 범위가 줄었거나 중간에 멈춘 실행이 통과로 보이지 않도록 Release 게이트에 실행 완전성 조건을 두었습니다(<a href="#4-1-게이트-단계와-기준">4-1</a>).</li>
+<li><strong>문서의 주장은 코드와 검사로 확인합니다.</strong> 요구사항↔테스트 연결이나 문서·사이트의 내부 링크가 끊기면 CI의 unit job이 실패합니다. 문서에는 코드에서 찾아 확인할 수 있는 문장만 씁니다.</li>
+<li><strong>수치는 원자료에서 다시 셉니다.</strong> 실행 결과 파일을 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">evidence</a>에 남기고, 다시 세는 명령을 함께 적습니다.</li>
+</ol>
+<p><strong>검증에서 잡혀 고친 사례</strong></p>
+<div class="table"><table><thead><tr>
+<th>무엇이 틀렸나</th>
+<th>어떻게 드러났나</th>
+<th>고친 것</th>
+<th>기록</th>
+</tr>
+</thead><tbody><tr>
+<td>문서에는 &#39;Release 게이트 다섯 조건&#39;, &#39;고정 sleep은 쓰지 않습니다&#39;라고 썼는데, 조건 셋은 검사하는 코드가 없었고 sleep이 3곳 있었음</td>
+<td>외부 검토가 문서와 코드를 대조 (2026-11-19)</td>
+<td>게이트가 결과 파일로 조건을 모두 확인, sleep 3곳을 <code>stays</code>로</td>
+<td><a href="phase9-bench.html#7-외부-검토-반영-2026-11-19">9단계 기록 7절</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/9870972" target="_blank" rel="noopener"><code>9870972</code></a></td>
+</tr>
+<tr>
+<td>반복 실행 통계가 5회 원자료가 아니라 누적 기록을 읽어, 따로 돌린 15개짜리 실행이 섞임</td>
+<td>원자료를 저장소에 남기고 다시 세다가 발견</td>
+<td>원자료 10개만 읽게 다시 만들고 정정 기록을 남김</td>
+<td><a href="flaky-report.html#읽는-법과-한계">반복 실행 통계의 정정</a></td>
+</tr>
+<tr>
+<td><code>run_bench.py --repeat 0</code>이 아무것도 돌리지 않고 종료 코드 0. 게이트는 실패 수만 보고 실행이 끝까지 됐는지는 보지 않음. 알려진 결함의 xfail이 어떤 오류든 &#39;알려진 결함&#39;으로 받음</td>
+<td>외부 검토 (2026-11-20)</td>
+<td>실행 완전성 조건, 반복 횟수 1 이상, <code>raises=DefectReproduced</code>로 증상일 때만 xfail</td>
+<td><a href="phase9-bench.html#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위">9단계 기록 8절</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/de733dd" target="_blank" rel="noopener"><code>de733dd</code></a></td>
+</tr>
+<tr>
+<td>README에 &quot;&#39;바뀌지 않아야 함&#39;은 1.5초 동안 계속 본다&quot;고 썼지만 10곳은 한 번만 읽음</td>
+<td>외부 검토가 코드에서 해당 줄을 찾아 대조 (2026-11-21)</td>
+<td>10곳을 <code>stays</code>로</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/d41337a" target="_blank" rel="noopener"><code>d41337a</code></a></td>
+</tr>
+<tr>
+<td>게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었음. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈춤</td>
+<td>두 기기 전체 재실행 (2026-11-21)</td>
+<td>창 없이 다시 켜게 고치고 처음부터 3회, 750건 통과</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
+</tr>
+</tbody></table></div>
+<p>지적은 대부분 외부 검토(AI 검토 포함)와 기기 실행에서 나왔습니다. 지적마다 반영할지는 제가 정했고, 반영한 것은 위처럼 코드와 기록으로 남겼습니다. 같은 종류의 실수가 다시 들어오지 않도록 링크 검사, 추적 검사, 게이트 조건을 CI와 게이트에 넣었습니다.</p>
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
 <th>항목</th>
@@ -1000,7 +1048,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
