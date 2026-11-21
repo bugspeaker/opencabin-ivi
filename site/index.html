@@ -313,7 +313,7 @@ footer a:hover { color: var(--ink); }
           <a class="btn btn-secondary" href="docs/portfolio.html">포트폴리오 문서</a>
         </div>
         <p class="limits"><strong>한계</strong><span>실차, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</span></p>
-        <p class="limits"><strong>만든 사람</strong><span>게임 QA 약 8년과 Playwright·pytest 기반 웹 BVT 구축 경험을 바탕으로 AAOS 테스트 자동화로 영역을 넓혔습니다. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다. 2026-11-13부터 혼자 진행했습니다. 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했고, 저는 Test Bench에서 E2E를 직접 돌려 결과와 실패 자료를 확인하고, 외부 검토에서 반영할 항목을 고르고, PR마다 변경 내용과 실행 결과를 보고 병합했습니다. <a href="docs/decisions.html">결정 기록</a></span></p>
+        <p class="limits"><strong>만든 사람</strong><span>게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. Playwright·pytest 기반 웹 BVT 구축 경험이 있고, 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다. 2026-11-13부터 혼자 진행했습니다. 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 Claude가 제안한 변경과 외부 검토 항목을 확인해 반영 여부를 확정했고, PR을 병합했습니다. E2E 테스트 설계는 Claude와 함께 정했습니다. <a href="docs/decisions.html">결정 기록</a></span></p>
       </div>
       <figure class="shot-card hero-demo">
         <a class="hero-demo-link" href="../docs/images/demo-ui-vhal.gif" aria-label="데모 원본 크기로 보기"><img src="../docs/images/demo-ui-vhal.gif" width="800" height="776" alt="운전석 + 를 누르면 VHAL 값이 22.0에서 22.5로, VHAL에 25.0을 넣으면 화면이 25.0으로 바뀌는 모습 (AAOS 에뮬레이터)"></a>
@@ -402,30 +402,35 @@ footer a:hover { color: var(--ink); }
         </div>
         <div class="fit-col">
         <div class="fit-group">
-          <h3 class="fit-group-title">자격요건 <span>5개</span></h3>
+          <h3 class="fit-group-title">자격요건 <span>6개</span></h3>
           <ol class="fit-list">
-            <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=android">
+            <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#만든-사람과-만든-방식">
               <span class="fit-num">08</span>
+              <span class="fit-body"><span class="fit-title">테스트 자동화나 QA 3년 이상</span><span class="fit-done">게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트와 BM, 글로벌 현지화 검수, AI R&amp;D 연계 테스트 대시보드 구축. ISTQB CTFL. 자동화는 Playwright·pytest 웹 BVT 구축 경험과 이 프로젝트입니다.</span></span>
+              <span class="fit-side"><span class="fit-dest">경력<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+            </a></li>
+            <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=android">
+              <span class="fit-num">09</span>
               <span class="fit-body"><span class="fit-title">Android/AAOS 테스트 자동화 구축과 운영</span><span class="fit-done">AAOS 에뮬레이터와 태블릿에서 E2E 129개를 돌리고, 테스트마다 판정 직후 화면을 남겼습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">테스트 129개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase3-framework.html#구조">
-              <span class="fit-num">09</span>
+              <span class="fit-num">10</span>
               <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 168개 있습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase1-spike.html#appium을-aaos에-붙일-때-필요한-것">
-              <span class="fit-num">10</span>
+              <span class="fit-num">11</span>
               <span class="fit-body"><span class="fit-title">Appium 등 UI 자동화 도구</span><span class="fit-done">Appium(UiAutomator2)을 AAOS의 다중 사용자 환경(user 10)에 붙여 썼습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">1단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#3-결함과-원인-분석">
-              <span class="fit-num">11</span>
+              <span class="fit-num">12</span>
               <span class="fit-body"><span class="fit-title">ADB · Logcat · Shell</span><span class="fit-done">테스트 도중 앱 크래시나 ANR이 logcat에 남으면 화면 판정이 통과해도 실패로 합니다. 실패하면 logcat을 자동으로 저장하고, 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">결함 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#8-3-github-실행-기록">
-              <span class="fit-num">12</span>
+              <span class="fit-num">13</span>
               <span class="fit-body"><span class="fit-title">Git · CI/CD</span><span class="fit-done">PR 단위로 작업했고, GitHub Actions가 PR마다 빌드, 단위 테스트, 호스트 러너의 AAOS 에뮬레이터 smoke 13개를 무인으로 돌립니다. 태블릿과 전체 회귀는 작업 PC에서 돌렸습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">실행 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
@@ -435,22 +440,22 @@ footer a:hover { color: var(--ink); }
           <h3 class="fit-group-title">우대사항 <span>4개</span></h3>
           <ol class="fit-list">
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=vhal">
-              <span class="fit-num">13</span>
+              <span class="fit-num">14</span>
               <span class="fit-body"><span class="fit-title">VHAL · CarService · CarPropertyManager</span><span class="fit-done">신호 12종을 연결하면서 area 구성, 권한 등급, priv-app 허용 목록을 다뤘습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">테스트 35개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=network">
-              <span class="fit-num">14</span>
+              <span class="fit-num">15</span>
               <span class="fit-body"><span class="fit-title">차량 네트워크 (Ethernet, DDS, SOME/IP, CAN)</span><span class="fit-done">가상 CAN 버스와 DBC로 VCU, BMS, BCM 역할의 가상 ECU를 두고, 게이트웨이가 VHAL에 넣은 값이 화면까지 오는지 확인했습니다. Ethernet, DDS, SOME/IP는 아직 해 보지 않았습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-partial">CAN만 모의</span><span class="fit-dest">테스트 3개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/test-results.html?req=rest">
-              <span class="fit-num">15</span>
+              <span class="fit-num">16</span>
               <span class="fit-body"><span class="fit-title">REST API 자동화, 원격 전원 제어</span><span class="fit-done">Test Bench REST API로 기기, 차량 신호, 전원, 실행 결과를 다루고, 에뮬레이터 전원을 껐다 켜 부팅 시간을 쟀습니다. 실제 전원 장비는 쓰지 않았습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-partial">모의 장비</span><span class="fit-dest">테스트 4개<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/traceability.html">
-              <span class="fit-num">16</span>
+              <span class="fit-num">17</span>
               <span class="fit-body"><span class="fit-title">ISO 26262, A-SPICE</span><span class="fit-done">요구사항 26개와 테스트를 양방향으로 잇는 추적표를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 연결 누락 0은 조건별 검증이 충분하다는 뜻이 아니라서, 조건이 여럿인 요구사항은 조건마다 확인하는 곳을 따로 적고 테스트가 없는 조건을 밝혔습니다. 인증이나 심사 경험은 없습니다.</span></span>
               <span class="fit-side"><span class="fit-state is-partial">개념 적용</span><span class="fit-dest">추적표<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>

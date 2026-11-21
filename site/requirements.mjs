@@ -100,6 +100,11 @@ export const REQUIREMENTS = [
     link: { href: "docs/flaky-report.html", label: "반복 실행 통계" },
   },
   {
+    id: "experience", group: "must", title: "테스트 자동화나 QA 3년 이상",
+    done: "게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트와 BM, 글로벌 현지화 검수, AI R&D 연계 테스트 대시보드 구축. ISTQB CTFL. 자동화는 Playwright·pytest 웹 BVT 구축 경험과 이 프로젝트입니다.",
+    link: { href: "docs/portfolio.html#만든-사람과-만든-방식", label: "경력" },
+  },
+  {
     id: "android", group: "must", title: "Android/AAOS 테스트 자동화 구축과 운영",
     done: (s) => `AAOS 에뮬레이터와 태블릿에서 E2E ${s.total}개를 돌리고, 테스트마다 판정 직후 화면을 남겼습니다.`,
     all: true,
