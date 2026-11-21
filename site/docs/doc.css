@@ -1,27 +1,28 @@
-/* 문서 페이지 스타일. 색 · 글꼴 · 간격 · 모서리는 site/design-tokens.md 토큰 (소개 페이지와 같음). 작은 글씨는 --ink-subtle 이상 (대비 4.5:1 이상) */
+/* 문서 페이지 스타일. 색 · 글꼴 · 간격 · 모서리는 site/design-tokens.md 토큰 (소개 페이지 site.css 와 같은 밝은 바탕, 파란색 한 가지).
+   작은 글씨는 --ink-subtle 이상 (흰 바탕 대비 4.5:1 이상) */
 :root {
-  --primary: #5e6ad2; --primary-hover: #828fff;
-  --ink: #f7f8f8; --ink-muted: #d0d6e0; --ink-subtle: #8a8f98; --ink-tertiary: #62666d;
-  --canvas: #010102; --surface-1: #0f1011; --surface-2: #141516; --surface-3: #18191a;
-  --hairline: #23252a; --hairline-strong: #34343a;
-  --success: #27a644; --danger: #e5484d;
-  --font-display: Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-text: Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --primary: #1b5be6; --primary-hover: #1447bd;   /* --primary-hover 는 링크 글자색 (흰 바탕 대비 7.6:1) */
+  --ink: #191f28; --ink-muted: #333d4b; --ink-subtle: #5b6573; --ink-tertiary: #b0b8c1;
+  --canvas: #ffffff; --surface-1: #f9fafb; --surface-2: #f2f4f6; --surface-3: #e9ecef;
+  --hairline: #e5e8eb; --hairline-strong: #d1d6db;
+  --success: #0b7d43; --danger: #d92d33;
+  --font-display: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-text: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --r-sm: 6px; --r-md: 8px; --r-lg: 12px;
   --nav-h: 56px;
 }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; } /* .rtest { display: grid } 등이 hidden 속성을 덮지 않게 */
-html { color-scheme: dark; scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
+html { color-scheme: light; scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--canvas); color: var(--ink-muted);
   font-family: var(--font-text); font-size: 16px; line-height: 1.75; letter-spacing: -0.05px;
   -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: break-word;
 }
 a { color: inherit; }
-:focus-visible { outline: 2px solid rgb(94 105 209 / 0.6); outline-offset: 2px; }
+:focus-visible { outline: 2px solid rgb(27 91 230 / 0.55); outline-offset: 2px; }
 /* 용어 풀이 (glossary.js): 링크와 구분되게 글자색은 그대로, 점선 밑줄만. 마우스를 올리면 뜻이 뜬다 */
 abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--ink-subtle); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; }
 .skip { position: absolute; left: 16px; top: -100px; z-index: 50; background: var(--primary); color: #fff; padding: 8px 12px; border-radius: var(--r-md); }
@@ -31,12 +32,15 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .top {
   position: sticky; top: 0; z-index: 20; height: var(--nav-h);
   display: flex; align-items: center; gap: 16px; padding: 0 24px;
-  background: rgb(1 1 2 / 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hairline);
+  background: rgb(255 255 255 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hairline);
 }
 .brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; }
-.mark { width: 20px; height: 20px; border-radius: var(--r-sm); background: var(--primary); }
+.mark { position: relative; width: 22px; height: 22px; border-radius: 7px; background: var(--primary); }
+.mark::after { content: ""; position: absolute; inset: 6px 5px; border: 2px solid #fff; border-top-width: 3px; border-radius: 3px 3px 6px 6px; }
 .crumb { font-size: 13px; color: var(--ink-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.src { margin-left: auto; font-size: 13px; color: var(--ink-subtle); text-decoration: none; border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 4px 10px; white-space: nowrap; }
+.home { margin-left: auto; font-size: 13px; color: var(--ink-subtle); text-decoration: none; padding: 4px 10px; border-radius: var(--r-md); white-space: nowrap; }
+.home:hover { color: var(--ink); background: var(--surface-2); }
+.src { font-size: 13px; color: var(--ink-subtle); text-decoration: none; border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 4px 10px; white-space: nowrap; }
 .src:hover { color: var(--ink); border-color: var(--hairline-strong); }
 
 /* 3단: 문서 목록 · 본문 · 이 문서 목차 */
@@ -64,7 +68,7 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .doc h1:hover .anchor, .doc h2:hover .anchor, .doc h3:hover .anchor { opacity: 1; }
 .doc p { margin: 0 0 16px; }
 .doc strong { color: var(--ink); font-weight: 600; }
-.doc a { color: var(--primary-hover); text-decoration: underline; text-decoration-color: rgb(130 143 255 / 0.35); text-underline-offset: 3px; }
+.doc a { color: var(--primary-hover); text-decoration: underline; text-decoration-color: rgb(20 71 189 / 0.3); text-underline-offset: 3px; }
 .doc a:hover { text-decoration-color: currentColor; }
 .doc a.anchor { color: var(--ink-tertiary); text-decoration: none; }
 .doc ul, .doc ol { margin: 0 0 16px; padding-left: 22px; }
@@ -72,14 +76,16 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .doc li::marker { color: var(--ink-tertiary); }
 .doc hr { border: 0; border-top: 1px solid var(--hairline); margin: 40px 0; }
 .doc img { display: block; max-width: 100%; height: auto; margin: 16px 0; border: 1px solid var(--hairline); border-radius: var(--r-lg); background: var(--surface-1); }
+/* README 첫머리의 버튼 그림(docs/images/readme/btn-*.svg)은 GitHub 처럼 한 줄에 나란히 */
+.doc a > img[src*="readme/btn-"] { display: inline-block; margin: 4px 2px; border: 0; border-radius: 0; background: none; }
 
 .doc blockquote { margin: 0 0 20px; padding: 14px 18px; background: var(--surface-1); border: 1px solid var(--hairline); border-left: 3px solid var(--primary); border-radius: var(--r-md); color: var(--ink-muted); }
 .doc blockquote p:last-child { margin-bottom: 0; }
 .doc blockquote.callout { border-left-width: 4px; }
-.doc blockquote.callout-tip { border-color: rgb(39 166 68 / 0.45); border-left-color: var(--success); background: rgb(39 166 68 / 0.07); }
+.doc blockquote.callout-tip { border-color: #c7d8ff; border-left-color: var(--primary); background: #f3f7ff; }
 .doc blockquote.callout strong { color: var(--ink); }
 .doc .callout-title { margin: 0 0 6px; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; color: var(--ink-subtle); }
-.doc .callout-tip .callout-title { color: var(--success); }
+.doc .callout-tip .callout-title { color: var(--primary-hover); }
 
 /* 코드 */
 .doc code { font-family: var(--font-mono); font-size: 0.86em; background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 4px; padding: 1px 5px; color: var(--ink); word-break: break-all; }
@@ -91,7 +97,13 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 /* 표: 가로로 넘치면 표만 스크롤 */
 .doc .table { margin: 0 0 24px; overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--r-lg); }
 .doc table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.55; }
-.doc th { text-align: left; font-weight: 600; color: var(--ink); background: var(--surface-2); white-space: nowrap; }
+/* 머리글도 줄을 바꾼다: 긴 머리글(예: '테스트 (smoke / sanity / regression)')을 한 줄로 두면 그 칸만 넓어지고
+   나머지 칸이 한두 단어씩 끊긴다 (2026-11-21, 포트폴리오 4-2 표). 한글은 낱말 단위로만 바꾼다 */
+.doc th { text-align: left; font-weight: 600; color: var(--ink); background: var(--surface-2); }
+/* 두 칸짜리 표(이름 | 설명)는 설명이 길어 첫 칸이 눌린다. 이름이 한 줄에 들어가게 첫 칸에 최소 폭 (8-1 표) */
+.doc table:has(thead th:nth-child(2):last-child) td:first-child { min-width: 8.5em; }
+/* 표 안의 긴 코드 이름(HVAC_TEMPERATURE_SET)은 글자 중간에서 자르지 않는다 */
+.doc td code { word-break: normal; overflow-wrap: break-word; }
 .doc th, .doc td { padding: 10px 14px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
 .doc tbody tr:last-child td { border-bottom: 0; }
 .doc tbody tr:hover td { background: var(--surface-1); }
@@ -127,8 +139,8 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 
 /* ---------------- 문서 → 테스트 결과 링크 ---------------- */
 .doc a.test-link { text-decoration: none; }
-.doc a.test-link code { border-color: rgb(94 106 210 / 0.45); color: var(--primary-hover); }
-.doc a.test-link:hover code { background: rgb(94 106 210 / 0.16); }
+.doc a.test-link code { border-color: rgb(27 91 230 / 0.35); color: var(--primary-hover); }
+.doc a.test-link:hover code { background: rgb(27 91 230 / 0.1); }
 
 /* ---------------- 테스트 결과 페이지 ---------------- */
 .layout.wide { grid-template-columns: 220px minmax(0, 1fr); }
@@ -152,16 +164,16 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 
 .pill { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 9999px; font-size: 12px; font-weight: 500; white-space: nowrap;
   background: var(--surface-3); color: var(--ink-muted); border: 1px solid var(--hairline-strong); }
-.pill.p-passed { background: rgb(39 166 68 / 0.14); color: #5fd47c; border-color: rgb(39 166 68 / 0.35); }
-.pill.p-flaky, .pill.p-xpassed { background: rgb(240 160 60 / 0.14); color: #f0b25a; border-color: rgb(240 160 60 / 0.35); }
-.pill.p-failed, .pill.p-error { background: rgb(229 72 77 / 0.14); color: #ff8589; border-color: rgb(229 72 77 / 0.4); }
-.pill.p-xfailed { background: rgb(94 106 210 / 0.14); color: var(--primary-hover); border-color: rgb(94 106 210 / 0.4); }
+.pill.p-passed { background: #e7f6ed; color: #0b7d43; border-color: #b9e3c9; }
+.pill.p-flaky, .pill.p-xpassed { background: #fff3df; color: #8a5000; border-color: #f5d49a; }
+.pill.p-failed, .pill.p-error { background: #fdeeee; color: #c42127; border-color: #f5c2c4; }
+.pill.p-xfailed { background: #ecf2ff; color: var(--primary-hover); border-color: #c7d8ff; }
 
 .filters { position: sticky; top: var(--nav-h); z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-  margin: 0 0 8px; padding: 12px 0; background: rgb(1 1 2 / 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hairline); }
+  margin: 0 0 8px; padding: 12px 0; background: rgb(255 255 255 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hairline); }
 .chip { height: 32px; padding: 0 12px; border-radius: 9999px; border: 1px solid var(--hairline-strong); background: var(--surface-1);
   color: var(--ink-muted); font: 500 13px var(--font-text); cursor: pointer; }
-.chip:hover { color: var(--ink); border-color: var(--hairline-tertiary, #3e3e44); }
+.chip:hover { color: var(--ink); border-color: var(--ink-subtle); }
 .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
 .only-bad { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; font-size: 13px; color: var(--ink-muted); cursor: pointer; }
 .only-bad input { accent-color: var(--primary); width: 16px; height: 16px; }
@@ -170,7 +182,7 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 
 /* 첫 화면 요구 역량 목차에서 ?req= 로 들어왔을 때 */
 .req-banner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 24px; margin: 0 0 12px; padding: 18px 20px;
-  border: 1px solid rgb(94 106 210 / 0.45); border-radius: var(--r-lg); background: rgb(94 106 210 / 0.08); scroll-margin-top: calc(var(--nav-h) + 16px); }
+  border: 1px solid #c7d8ff; border-radius: var(--r-lg); background: #ecf2ff; scroll-margin-top: calc(var(--nav-h) + 16px); }
 .req-copy { flex: 1 1 420px; min-width: 0; }
 .doc .req-eyebrow { margin: 0; font-size: 12px; font-weight: 500; letter-spacing: 0.4px; color: var(--primary-hover); }
 .doc .req-title { margin: 2px 0 6px; font-family: var(--font-display); font-size: 20px; font-weight: 600; line-height: 1.3; color: var(--ink); }
@@ -190,7 +202,7 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .rtest { scroll-margin-top: calc(var(--nav-h) + 64px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: 12px 28px; padding: 20px 0 22px; border-top: 1px solid var(--hairline); }
 .rtest-text { min-width: 0; }
 .rtest.is-target { animation: target-flash 2.4s ease-out; border-radius: var(--r-lg); }
-@keyframes target-flash { 0%, 30% { background: rgb(94 106 210 / 0.12); box-shadow: 0 0 0 12px rgb(94 106 210 / 0.12); } 100% { background: transparent; box-shadow: 0 0 0 12px transparent; } }
+@keyframes target-flash { 0%, 30% { background: rgb(27 91 230 / 0.08); box-shadow: 0 0 0 12px rgb(27 91 230 / 0.08); } 100% { background: transparent; box-shadow: 0 0 0 12px transparent; } }
 .rtest-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .doc .rtest-name { text-decoration: none; }
 .doc .rtest-name code { font-size: 14px; color: var(--ink); background: none; border: 0; padding: 0; }
