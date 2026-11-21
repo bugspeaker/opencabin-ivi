@@ -60,6 +60,16 @@ jobs:
       # AI 어시스턴트 '말 → 동작' 규칙 (JVM 단위 테스트, 기기 없음)
       - name: App unit tests
         run: ./gradlew testDebugUnitTest --no-daemon
+      # 실행 화면에서 바로 보이게: 통과 수를 이 실행의 JUnit 결과에서 세어 요약에 쓰고, 결과 파일을 올린다
+      - name: 실행 요약 (앱 단위 테스트 수)
+        if: always()
+        run: python3 ../ivi-tests/tools/ci_summary.py junit "app unit" "app/build/test-results/testDebugUnitTest/*.xml" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-app-unit
+          path: ivi-app/app/build/test-results/testDebugUnitTest/
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         with:
           name: apk-ci
@@ -77,7 +87,20 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      # 프레임워크 단위 테스트. 요구사항 추적 누락(test_operations)과 문서·사이트의 끊긴 내부 링크(test_links)도 여기서 실패한다
       - run: python -m pytest unit --junitxml=reports/junit-unit.xml
+      - name: 실행 요약 (단위 테스트 수, 추적, 링크)
+        if: always()
+        run: |
+          python tools/ci_summary.py junit unit reports/junit-unit.xml >> "$GITHUB_STEP_SUMMARY"
+          python tools/ci_summary.py trace >> "$GITHUB_STEP_SUMMARY"
+          python tools/ci_summary.py links >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-unit
+          path: ivi-tests/reports/junit-unit.xml
+          retention-days: 7
 
   e2e:
     needs: [build, unit]

@@ -18,7 +18,7 @@
 ```
 ivi-tests/
   ivi/adb.py        adb 명령, 맨 위 액티비티, logcat
-  ivi/waits.py      wait_until. 조건이 맞을 때까지 기다림 (고정 sleep은 쓰지 않음)
+  ivi/waits.py      wait_until. 조건이 맞을 때까지 기다림 (테스트의 대기에 고정 sleep을 쓰지 않음)
   ivi/vehicle.py    VehicleController
                       AaosVehicle  VHAL --set, car_service set-property-value, 값 저장과 복원
                       MockVehicle  am broadcast mock.SET, mock.GET
