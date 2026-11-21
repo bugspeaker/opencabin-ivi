@@ -74,11 +74,14 @@ class EmulatorPower(PowerController):
     """AAOS 에뮬레이터를 끄고 같은 AVD 와 같은 포트로 다시 켠다 (콜드 부트, 스냅숏 없이).
 
     다시 켤 때 -writable-system 을 준다. priv-app 으로 넣은 앱과 VHAL 초기값 덮어쓰기가 시스템 이미지에 남아 있어야 하기 때문이다.
+    창 없이(-no-window) 켠다. 2026-11-21 무인 반복 실행 중 PC 화면이 꺼진 상태에서 창 모드로 다시 켠 에뮬레이터가
+    'Found systemPath' 다음에서 멈춰(adb 에 나타나지 않고 CPU 도 거의 쓰지 않음) 전원 테스트가 부팅 대기 240초를 넘겼다.
+    같은 명령으로 재현했고, -no-window 로는 부팅됐다. 벤치의 재시작이 데스크톱 화면 상태에 기대면 안 된다.
     AVD 이름은 끄기 전에 `adb emu avd name` 으로 읽어 둔다.
     """
     name = "AAOS 에뮬레이터"
 
-    def __init__(self, serial, sdk_root=None, avd_home=None, extra_args=("-writable-system", "-no-snapshot", "-no-boot-anim"),
+    def __init__(self, serial, sdk_root=None, avd_home=None, extra_args=("-writable-system", "-no-snapshot", "-no-boot-anim", "-no-window"),
                  log_dir=None):
         if not serial.startswith("emulator-"):
             raise PowerError(f"에뮬레이터가 아니다: {serial}")
