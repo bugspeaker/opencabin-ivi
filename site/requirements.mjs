@@ -101,7 +101,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "experience", group: "must", title: "테스트 자동화나 QA 3년 이상",
-    done: "게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트와 BM, 글로벌 현지화 검수, AI R&D 연계 테스트 대시보드 구축. ISTQB CTFL. 자동화는 Playwright·pytest 웹 BVT 구축 경험과 이 프로젝트입니다.",
+    done: "게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트와 BM, 글로벌 현지화 검수, AI R&D 연계 테스트 대시보드 구축. ISTQB CTFL. 자동화는 웹 BVT 도구(엑셀 BVT 대시보드 + Playwright·pytest, 공개 웹 서비스 BVT 70개 중 47개 자동화)와 이 프로젝트입니다.",
     link: { href: "docs/portfolio.html#만든-사람과-만든-방식", label: "경력" },
   },
   {
