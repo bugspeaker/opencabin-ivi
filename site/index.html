@@ -103,7 +103,10 @@ section { padding: var(--s-section) 0 0; }
 .nav-cta { display: flex; gap: var(--s-xs); }
 
 /* hero: 왼쪽 소개, 오른쪽 화면↔VHAL 데모. 1024px 아래에서는 데모가 글 아래로 */
-.hero { padding: 40px 0 0; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--s-xxl); align-items: center; }
+.hero { padding: 40px 0 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(420px, 520px); gap: var(--s-xxl); align-items: center; }
+/* 데모 GIF 안의 adb 명령과 값이 읽히는 너비(420px 이상)를 지킨다. 그보다 좁은 화면에서는 글 아래로 내린다 */
+@media (max-width: 1200px) { .hero { grid-template-columns: minmax(0, 1fr); } .hero .hero-demo { max-width: 560px; } }
+.hero-demo-link { display: block; cursor: zoom-in; }
 .hero-copy .limits { margin: 0; font-size: 13px; }
 .hero .hero-demo { margin: 0; padding: var(--s-sm); }
 .hero-demo img { display: block; height: auto; }
@@ -302,7 +305,7 @@ footer a:hover { color: var(--ink); }
 
     <div class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">AAOS 인포테인먼트 테스트 자동화</p>
+        <p class="eyebrow">42dot Test Automation Engineer 지원 포트폴리오</p>
         <h1 class="display-xl">AAOS IVI 앱<br>E2E 테스트 자동화</h1>
         <p class="body-lg muted">화면 표시와 차량 값(CarProperty/VHAL)을 따로 읽어 판정하는 E2E 프레임워크입니다. 경계값 테스트로 앱 결함을 찾았고, Release 게이트는 실패가 0인지와 두 기기에서 정한 테스트를 끝까지 돌렸는지를 나눠 봅니다. 대상은 직접 만든 가상 IVI 앱이고, 같은 테스트를 AAOS 에뮬레이터와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다.</p>
         <div class="hero-actions">
@@ -313,10 +316,37 @@ footer a:hover { color: var(--ink); }
         <p class="limits"><strong>만든 사람</strong><span>게임 QA 약 8년과 Playwright·pytest 기반 웹 BVT 구축 경험을 바탕으로 AAOS 테스트 자동화로 영역을 넓혔습니다. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다. 2026-11-13부터 혼자 진행했습니다. 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했고, 저는 Test Bench에서 E2E를 직접 돌려 결과와 실패 자료를 확인하고, 외부 검토에서 반영할 항목을 고르고, PR마다 변경 내용과 실행 결과를 보고 병합했습니다. <a href="docs/decisions.html">결정 기록</a></span></p>
       </div>
       <figure class="shot-card hero-demo">
-        <img src="../docs/images/demo-ui-vhal.gif" width="800" height="776" alt="운전석 + 를 누르면 VHAL 값이 22.0에서 22.5로, VHAL에 25.0을 넣으면 화면이 25.0으로 바뀌는 모습 (AAOS 에뮬레이터)">
+        <a class="hero-demo-link" href="../docs/images/demo-ui-vhal.gif" aria-label="데모 원본 크기로 보기"><img src="../docs/images/demo-ui-vhal.gif" width="800" height="776" alt="운전석 + 를 누르면 VHAL 값이 22.0에서 22.5로, VHAL에 25.0을 넣으면 화면이 25.0으로 바뀌는 모습 (AAOS 에뮬레이터)"></a>
         <figcaption>화면 + → VHAL 22.0→22.5, VHAL에 25.0 주입 → 화면 25.0 (AAOS 에뮬레이터)</figcaption>
       </figure>
     </div>
+
+    <!-- stats:start (build-docs.mjs 가 results.json 으로 채운다) -->
+    <section class="stats-section" aria-label="최근 결과">
+      <div class="stats">
+        <a class="card stat" href="docs/test-results.html">
+          <p class="eyebrow">E2E 테스트</p>
+          <p class="headline">129개</p>
+          <p class="body-sm subtle">두 기기에서 같은 테스트 코드</p>
+        </a>
+        <a class="card stat" href="docs/test-results.html">
+          <p class="eyebrow">AAOS 에뮬레이터</p>
+          <p class="headline">127개 통과</p>
+          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 9분 45초</p>
+        </a>
+        <a class="card stat" href="docs/test-results.html">
+          <p class="eyebrow">태블릿 (Mock)</p>
+          <p class="headline">122개 통과</p>
+          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 15초 · 차량 값은 앱 안 Mock</p>
+        </a>
+        <a class="card stat" href="docs/flaky-report.html">
+          <p class="eyebrow">반복 5회 × 2기기</p>
+          <p class="headline">재시도 0 / 1,250건</p>
+          <p class="body-sm subtle">11-18, 같은 PC. 테스트 1,250건 (AAOS 640, 태블릿 610), flaky 0건, 실패 0건</p>
+        </a>
+      </div>
+    </section>
+    <!-- stats:end -->
 
     <!-- fit:start (build-docs.mjs 가 requirements.mjs 와 results.json 으로 채운다. 직접 고치지 않는다) -->
     <section id="fit" class="fit" aria-labelledby="fit-title">
@@ -431,32 +461,6 @@ footer a:hover { color: var(--ink); }
     </section>
     <!-- fit:end -->
 
-    <!-- stats:start (build-docs.mjs 가 results.json 으로 채운다) -->
-    <section class="stats-section" aria-label="최근 결과">
-      <div class="stats">
-        <a class="card stat" href="docs/test-results.html">
-          <p class="eyebrow">E2E 테스트</p>
-          <p class="headline">129개</p>
-          <p class="body-sm subtle">두 기기에서 같은 테스트 코드</p>
-        </a>
-        <a class="card stat" href="docs/test-results.html">
-          <p class="eyebrow">AAOS 에뮬레이터</p>
-          <p class="headline">127개 통과</p>
-          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 9분 45초</p>
-        </a>
-        <a class="card stat" href="docs/test-results.html">
-          <p class="eyebrow">태블릿 (Mock)</p>
-          <p class="headline">122개 통과</p>
-          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 15초 · 차량 값은 앱 안 Mock</p>
-        </a>
-        <a class="card stat" href="docs/flaky-report.html">
-          <p class="eyebrow">반복 실행 5회 × 기기 2대 (11-18, 같은 PC)</p>
-          <p class="headline">재시도 0 / 1,250건</p>
-          <p class="body-sm subtle">테스트 1,250건 (AAOS 640, 태블릿 610), flaky 0건, 실패 0건</p>
-        </a>
-      </div>
-    </section>
-    <!-- stats:end -->
 
     <section id="arch">
       <div class="section-head">

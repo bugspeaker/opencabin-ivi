@@ -336,7 +336,7 @@
 <summary>3번부터 7번까지</summary>
 
 <p><strong>3번. SystemUI 버튼 겹침.</strong> AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_1024p_landscape</code>)에서 운전석 온도 ▲ <code>[192,682][268,758]</code>와 홈 버튼 <code>[188,682][264,758]</code>이 겹치고, 홈이 위에 있어서 탭을 가져갑니다. 다른 해상도나 다른 AAOS 이미지에서도 나오는지는 확인하지 않았습니다. <code>strict=True</code>로 걸어 두었기 때문에 결함이 고쳐지면 XPASS가 실패로 바뀌어 알 수 있습니다. <code>raises=DefectReproduced</code>도 주어, 겹침을 확인한 자리에서 낸 예외일 때만 xfailed가 됩니다. 처음에는 <code>raises</code>가 없어서 버튼을 못 찾은 오류나 Appium 세션 끊김까지 &#39;알려진 결함&#39;으로 통과했습니다(2026-11-20 검토에서 고침).</p>
-<p><strong>4번. 테스트 코드의 경쟁 조건.</strong> <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a>이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 <code>wait_until</code>로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 고정 sleep은 쓰지 않습니다.</p>
+<p><strong>4번. 테스트 코드의 경쟁 조건.</strong> <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a>이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 <code>wait_until</code>로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 테스트의 대기에는 고정 sleep을 쓰지 않습니다.</p>
 <p><strong>5번. 표시 단위 가정.</strong> 1단계에 쓴 테스트가 SystemUI 온도를 화씨로 가정하고 있었습니다. <code>HVAC_TEMPERATURE_DISPLAY_UNITS</code>를 읽어 기대 글자를 계산하도록 바꿨고, 섭씨와 화씨 양쪽에서 통과하는 것을 확인했습니다.</p>
 <p><strong>6번. 회귀 테스트로 찾은 앱 결함.</strong></p>
 <ul>
@@ -737,7 +737,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tr>
 <tr>
 <td>대기</td>
-<td>고정 sleep은 쓰지 않습니다. 바뀌기를 기다릴 때는 조건 대기(<code>wait_until</code>, 값이 같아지기를 기다릴 때는 <code>wait_value</code>), &#39;바뀌지 않아야 함&#39;은 정한 시간 동안 계속 읽어 한 번이라도 바뀌면 실패하는 <code>stays</code>를 씁니다. 요소가 아직 없음, adb 실패, 숫자로 아직 못 바꾸는 글자처럼 다시 볼 예외만 &#39;아직 아님&#39;으로 보고, 오타 같은 코드 오류는 기다리지 않고 바로 올립니다. 대기 안에서 부른 화면 객체는 따로 기다리지 않아 제한 시간이 겹치지 않습니다. Appium 세션이 끊긴 응답(<code>instrumentation process is not running</code> 등)은 다시 봐도 살아나지 않으므로 기다리지 않고 바로 실패로 올립니다. 세션은 다음 시도를 시작할 때 다시 붙습니다(아래 &#39;Appium 세션&#39; 행). 시간을 넘기면 마지막으로 읽은 값과 마지막 오류를 함께 남깁니다.</td>
+<td>테스트의 대기에는 고정 sleep을 쓰지 않습니다. 바뀌기를 기다릴 때는 조건 대기(<code>wait_until</code>, 값이 같아지기를 기다릴 때는 <code>wait_value</code>), &#39;바뀌지 않아야 함&#39;은 정한 시간 동안 계속 읽어 한 번이라도 바뀌면 실패하는 <code>stays</code>를 씁니다. 요소가 아직 없음, adb 실패, 숫자로 아직 못 바꾸는 글자처럼 다시 볼 예외만 &#39;아직 아님&#39;으로 보고, 오타 같은 코드 오류는 기다리지 않고 바로 올립니다. 대기 안에서 부른 화면 객체는 따로 기다리지 않아 제한 시간이 겹치지 않습니다. Appium 세션이 끊긴 응답(<code>instrumentation process is not running</code> 등)은 다시 봐도 살아나지 않으므로 기다리지 않고 바로 실패로 올립니다. 세션은 다음 시도를 시작할 때 다시 붙습니다(아래 &#39;Appium 세션&#39; 행). 시간을 넘기면 마지막으로 읽은 값과 마지막 오류를 함께 남깁니다. 도구 쪽에는 고정 간격이 있습니다. 신호 주입 재시도 간격(0.3초), 세션 재연결 간격(3초), 원격 전원을 끈 뒤 기다리는 시간(2초)입니다.</td>
 </tr>
 </tbody></table></div>
 <p>격리 후보는 불안정률이 10% 이상이고 5회 이상 실행된 테스트, 해제 후보는 격리 중에 20회 연속 통과한 테스트입니다. 후보가 올라와도 자동으로 격리하지는 않고 원인을 확인한 뒤 정합니다.</p>
@@ -828,7 +828,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tr>
 </tbody></table></div>
 <p>소개 사이트는 pages 워크플로가 <code>site/</code>나 <code>docs/images/</code>가 바뀐 main push마다 올립니다.</p>
-<p>취소한 1회는 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 두 번째 실행부터는 그 수정이 들어간 실행입니다.</p>
+<p>Actions 기록에 취소된 실행이 1회 있습니다. 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 두 번째 실행부터는 그 수정이 들어간 실행입니다.</p>
 <p>앱 단위 테스트는 CI에서 처음으로 Gradle로 돌았습니다. 작업 PC는 사용자 폴더가 한글 경로라 Gradle 테스트 실행기가 죽어서, 그동안은 <code>java</code>로 직접 돌려 확인했습니다.</p>
 <p><img data-md src="../../docs/images/ci-runs.png" alt="GitHub Actions 실행 목록 (2026-11-16에 찍은 처음 4회)" loading="lazy"></p>
 <hr>

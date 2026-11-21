@@ -5,6 +5,7 @@
 //
 // select 는 합집합이다: files(테스트 파일) · tests(함수 이름) · doc(설명 정규식) 중 하나라도 맞으면 넣는다.
 // doc 은 설명 문구가 바뀌면 조용히 빠지므로, 되도록 files 와 tests 로 적는다.
+// lead 는 결과 페이지에서 파일 목록보다 먼저 보여 줄 대표 근거 2~3개다 (select 로 고른 테스트 안에서).
 // select 대신 chip(마커 칩을 미리 고름) · onlyBad(실패·재시도만) · all(전체) 을 쓸 수 있다.
 // 테스트로 보일 수 없는 항목은 link 로 문서의 해당 절에 잇는다. 근거가 표인 항목은 link 와 select/chip 을 함께 둔다:
 // 목차는 문서의 표로 가고, 결과 페이지 ?req=<id> 로 그 항목의 테스트도 볼 수 있다.
@@ -35,6 +36,8 @@ export const REQUIREMENTS = [
   {
     id: "e2e", group: "duty", title: "UI와 CarProperty/VHAL을 잇는 E2E",
     done: "화면 조작이 차량 신호로, 신호 변화가 화면으로 이어지는지 양쪽을 봤습니다. 좌석과 문은 area마다 확인합니다.",
+    // 결과 페이지에서 먼저 보여 줄 대표 근거: 버튼 → VHAL, VHAL → 화면, 전 좌석 area
+    lead: ["test_button_changes_signal_by_one_step", "test_signal_is_shown_on_climate_and_home", "test_ac_toggle_reaches_every_seat"],
     select: {
       files: ["test_spike_aaos.py"],
       tests: [
@@ -54,6 +57,7 @@ export const REQUIREMENTS = [
   {
     id: "integration", group: "duty", title: "터치부터 하위 연동까지 통합 검증",
     done: "AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(IVI_HvacStatus)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다.",
+    lead: ["test_climate_button_goes_out_on_can", "test_zone_applies_command_to_speaking_seat", "test_low_range_card_starts_guidance_to_nearest_charger"],
     note: "CAN 쪽은 PC 안의 가상 버스(python-can, DBC)입니다. 태블릿에서는 같은 테스트가 VHAL 대신 앱 안의 Mock 차량을 거칩니다. 음성과 터치가 차량 신호까지, 거리 부족 신호가 경고와 충전소 안내까지 이어지는 흐름도 함께 봅니다.",
     select: {
       files: ["test_can_gateway.py"],
@@ -74,6 +78,7 @@ export const REQUIREMENTS = [
   {
     id: "injection", group: "duty", title: "ADB · shell · CarPropertyManager로 Property Injection",
     done: "앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.",
+    lead: ["test_signal_is_shown_on_climate_and_home", "test_guidance_counts_down_with_vehicle_speed", "test_door_lock_signal_is_shown"],
     select: {
       files: ["test_driving.py", "test_rear_camera.py", "test_spike_aaos.py"],
       tests: [
