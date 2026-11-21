@@ -4,3 +4,6 @@
 *.ps1 text eol=crlf
 *.jar binary
 *.png binary
+
+# GitHub 언어 막대: site/docs/*.html 은 docs/*.md 로 만든 파일이라 언어 통계에서 뺀다 (site/build-docs.mjs)
+site/docs/*.html linguist-generated=true
