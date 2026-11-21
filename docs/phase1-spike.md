@@ -44,6 +44,8 @@ VHAL에는 테스트용 `--save-prop`과 `--restore-prop`이 있습니다. 픽�
 
 `test_driver_temp_up_is_not_covered_by_home`을 `xfail(strict=True)`로 두었습니다. 나중에 결함이 고쳐지면 이 테스트가 통과하게 되고, strict 설정 때문에 그 결과가 실패로 바뀌어서 바로 알 수 있습니다.
 
+이 결함은 GitHub 이슈 [#21](https://github.com/bugspeaker/opencabin-ivi/issues/21)로 열어 두었습니다.
+
 ## 환경에서 막혔던 것
 
 | 문제 | 해결 |

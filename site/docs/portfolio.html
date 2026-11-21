@@ -220,65 +220,76 @@
 <p>기기를 두 종류로 잡은 이유는 각각 볼 수 있는 것이 달라서입니다. 에뮬레이터로는 CarService와 에뮬레이터 VHAL을 거치는 경로를 검증할 수 있고, 태블릿에서는 터치 지연, 백그라운드 강제 종료, 설치 승인 같은 실기기 문제가 나옵니다. 실제로 원인을 찾는 데 가장 오래 걸린 두 건(3장의 1번, 2번)이 모두 태블릿에서 나왔습니다.</p>
 <hr>
 <h2 id="3-결함과-원인-분석"><a class="anchor" href="#3-결함과-원인-분석" aria-hidden="true">#</a>3. 결함과 원인 분석</h2>
+<p>각 항목은 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated" target="_blank" rel="noopener">GitHub 이슈</a>로도 옮겨 두었습니다(라벨 <code>migrated</code>, 6번은 세 건으로 나눔). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 열린 이슈는 알려진 결함(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a>)과 원인을 모르는 흔들림(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/27" target="_blank" rel="noopener">#27</a>) 두 건입니다.</p>
 <div class="table"><table><thead><tr>
 <th>번호</th>
 <th>증상</th>
 <th>원인</th>
 <th>조치와 결과</th>
+<th>이슈</th>
 </tr>
 </thead><tbody><tr>
 <td>1</td>
 <td>태블릿에서 탭 한 번에 10초가 걸림</td>
 <td>이 기기에서는 UiAutomator 터치 자체가 느림</td>
 <td>누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었음</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/19" target="_blank" rel="noopener">#19</a></td>
 </tr>
 <tr>
 <td>2</td>
 <td>실행할 때마다 21번째 테스트에서 앱이 사라짐</td>
 <td>화웨이 OS(iAware)가 반복 재시작을 크래시로 판단</td>
 <td>프로세스는 그대로 두고 화면만 초기화. 3회 연속 재실행 0회</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/20" target="_blank" rel="noopener">#20</a></td>
 </tr>
 <tr>
 <td>3</td>
 <td>AAOS 에뮬레이터 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 눌리지 않음</td>
 <td>홈 버튼과 72×76 px 겹침</td>
 <td>플랫폼 쪽 문제라 <code>xfail(strict=True)</code>로 걸어 둠</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a></td>
 </tr>
 <tr>
 <td>4</td>
 <td>전체 실행에서만 실패</td>
 <td>테스트 코드의 경쟁 조건 (제 실수)</td>
 <td>조건 대기로 고침</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/22" target="_blank" rel="noopener">#22</a></td>
 </tr>
 <tr>
 <td>5</td>
 <td>표시 단위를 섭씨로 바꾸자 실패</td>
 <td>테스트가 화씨 표시를 가정함</td>
 <td>표시 단위 신호를 읽어 기대 값을 계산</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/23" target="_blank" rel="noopener">#23</a></td>
 </tr>
 <tr>
 <td>6</td>
 <td>회귀 테스트에서 앱 결함 3건</td>
 <td>패널 겹침, 낮은 화면, 공백 한 칸</td>
 <td>앱을 고치고 회귀 테스트를 더함</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/24" target="_blank" rel="noopener">#24</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/issues/25" target="_blank" rel="noopener">#25</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/issues/26" target="_blank" rel="noopener">#26</a></td>
 </tr>
 <tr>
 <td>7</td>
 <td>영상 차단 테스트가 한 번 흔들림</td>
 <td>재현되지 않음</td>
 <td>반복 실행 5회 × 2기기(10번)에서 재현 0. 격리하지 않고 계속 기록</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/27" target="_blank" rel="noopener">#27</a></td>
 </tr>
 <tr>
 <td>8</td>
 <td>차량 온도가 0.5°C 단위가 아니면 온도 버튼이 어긋난 값을 차량에 씀</td>
 <td>버튼이 &#39;지금 값 ± 0.5&#39;로 계산</td>
 <td>0.5 단위에 맞춘 다음 값으로 계산하게 고침. 경계값 E2E 6개가 두 기기에서 통과</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/28" target="_blank" rel="noopener">#28</a></td>
 </tr>
 <tr>
 <td>9</td>
 <td>막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류</td>
 <td>UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있음. 계측 프로세스가 죽는 원인은 확인하지 못함</td>
 <td>테스트를 시작할 때 세션을 확인하고 끊겼으면 다시 붙임(<code>session_restart</code>로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">확인 기록</a>)</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/29" target="_blank" rel="noopener">#29</a></td>
 </tr>
 </tbody></table></div>
 <details>
