@@ -18,11 +18,11 @@ export const GROUPS = [
 
 export const REQUIREMENTS = [
   {
-    id: "services", group: "duty", title: "IVI 서비스별 검증 전략",
-    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다.",
+    id: "services", group: "duty", title: "IVI 서비스별·단계별 검증 전략", partial: "클러스터 제외",
+    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다. 단계는 앱 단위 테스트, 프레임워크 단위 테스트, 에뮬레이터·태블릿 E2E까지이고 HIL과 실차는 하지 않았습니다.",
     // 근거는 테스트 목록이 아니라 서비스별 전략 표다. 테스트 목록은 결과 페이지 ?req=services 로 그대로 볼 수 있다
-    link: { href: "docs/portfolio.html#4-2-서비스별-검증", label: "서비스별 전략 표" },
-    note: "서비스별 위험, 확인 방향, 테스트 수는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.",
+    link: { href: "docs/portfolio.html#4-2-서비스별-검증", label: "서비스별·단계별 표" },
+    note: "서비스별 위험, 확인 방향, 테스트 수와 검증 단계는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.",
     select: { files: ["test_climate.py", "test_vehicle_signals.py", "test_settings.py", "test_cockpit.py", "test_driving.py", "test_media.py", "test_radio.py"] },
   },
   {
@@ -76,8 +76,8 @@ export const REQUIREMENTS = [
     link: { href: "docs/phase7-layout.html#5-테스트", label: "7단계 기록" },
   },
   {
-    id: "injection", group: "duty", title: "ADB · shell · CarPropertyManager로 Property Injection",
-    done: "앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.",
+    id: "injection", group: "duty", title: "ADB · shell · CarPropertyManager로 Property Injection과 이벤트 검증",
+    done: "앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다. 이벤트는 값을 넣은 뒤 앱 화면이 바뀌는 것으로 확인합니다(앱이 onChangeEvent로 받은 값). 이벤트 횟수, 순서, 시각, onErrorEvent는 따로 판정하지 않습니다.",
     lead: ["test_signal_is_shown_on_climate_and_home", "test_guidance_counts_down_with_vehicle_speed", "test_door_lock_signal_is_shown"],
     select: {
       files: ["test_driving.py", "test_rear_camera.py", "test_spike_aaos.py"],
@@ -106,7 +106,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 167개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
@@ -116,7 +116,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "adb", group: "must", title: "ADB · Logcat · Shell",
-    done: "실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.",
+    done: "테스트 도중 앱 크래시나 ANR이 logcat에 남으면 화면 판정이 통과해도 실패로 합니다. 실패하면 logcat을 자동으로 저장하고, 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.",
     link: { href: "docs/portfolio.html#3-결함과-원인-분석", label: "결함 기록" },
   },
   {

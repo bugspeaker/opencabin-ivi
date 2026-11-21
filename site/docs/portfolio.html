@@ -74,7 +74,7 @@
 </tr>
 <tr>
 <td>단위 테스트</td>
-<td>프레임워크 156개, 앱 22개 모두 통과</td>
+<td>프레임워크 167개, 앱 22개 모두 통과</td>
 </tr>
 <tr>
 <td>테스트별 결과</td>
@@ -114,8 +114,8 @@
 <th>자세히</th>
 </tr>
 </thead><tbody><tr>
-<td>IVI 서비스별 검증 전략</td>
-<td>HVAC, 차량 설정(도어), 주행 정보 패널, 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트를 배치했습니다.</td>
+<td>IVI 서비스별·단계별 검증 전략</td>
+<td>HVAC, 차량 설정(도어), 주행 정보 패널, 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트를 배치했습니다. 단계는 앱 단위 테스트, 프레임워크 단위 테스트, 에뮬레이터·태블릿 E2E까지입니다. AAOS 클러스터 디스플레이와의 연동, HIL과 실차 단계는 하지 않았습니다.</td>
 <td><a href="#4-2-서비스별-검증">4-2</a></td>
 </tr>
 <tr>
@@ -139,8 +139,8 @@
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/ivi/screens.py">screens.py</a></td>
 </tr>
 <tr>
-<td>ADB, CarPropertyManager로 Property Injection</td>
-<td>앱과 같은 경로가 필요한 설정 온도는 <code>cmd car_service</code>로, 차량(ECU) 쪽에서 바뀐 값은 <code>dumpsys VHAL --set</code>으로 넣습니다.</td>
+<td>ADB, CarPropertyManager로 Property Injection과 이벤트 검증</td>
+<td>앱과 같은 경로가 필요한 설정 온도는 <code>cmd car_service</code>로, 차량(ECU) 쪽에서 바뀐 값은 <code>dumpsys VHAL --set</code>으로 넣습니다. 이벤트는 값을 넣은 뒤 앱 화면이 바뀌는 것으로 확인합니다(앱이 <code>onChangeEvent</code>로 받은 값). 이벤트 횟수, 순서, 시각, <code>onErrorEvent</code>는 따로 판정하지 않습니다.</td>
 <td><a href="#5-4-신호-주입-명령">5-4</a></td>
 </tr>
 <tr>
@@ -160,7 +160,7 @@
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
-<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.</td>
+<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 167개 있습니다.</td>
 </tr>
 <tr>
 <td>Appium 등 UI 자동화 도구</td>
@@ -168,7 +168,7 @@
 </tr>
 <tr>
 <td>ADB, Logcat, Shell</td>
-<td>adb 어댑터를 만들고, 실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다.</td>
+<td>adb 어댑터를 만들고, 테스트 도중 앱 크래시나 ANR이 logcat에 남으면 화면 판정이 통과해도 그 테스트를 실패로 합니다. 실패하면 logcat을 자동으로 저장하고, 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다.</td>
 </tr>
 <tr>
 <td>Git, CI/CD</td>
@@ -387,8 +387,8 @@
 </thead><tbody><tr>
 <td>unit</td>
 <td>테스트 도구 자체가 맞는지 (기기 없음)</td>
-<td>156</td>
-<td>약 13초</td>
+<td>167</td>
+<td>약 20초</td>
 <td>모든 PR, push</td>
 <td>실패 0</td>
 </tr>
@@ -510,6 +510,44 @@
 </tr>
 </tbody></table></div>
 <p>테스트 수는 요구사항 표시(<code>@pytest.mark.req</code>)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 <a href="traceability.html">추적표</a>에 있습니다.</p>
+<p><strong>검증 단계.</strong> 앞 단계일수록 빠르고 기기가 필요 없으며, 뒤 단계일수록 실제 차량에 가깝습니다. 이 프로젝트는 3단계까지 했습니다.</p>
+<div class="table"><table><thead><tr>
+<th>단계</th>
+<th>무엇으로</th>
+<th>보는 것</th>
+<th>언제</th>
+<th>이 프로젝트</th>
+</tr>
+</thead><tbody><tr>
+<td>1. 앱 단위 테스트</td>
+<td>JVM 테스트 (<code>HvacSpecTest</code>, <code>CabinAssistantTest</code>)</td>
+<td>공조 값의 범위와 단계 규칙, 말 → 동작 규칙</td>
+<td>PR마다 GitHub에서</td>
+<td>22개</td>
+</tr>
+<tr>
+<td>2. 프레임워크 단위 테스트</td>
+<td>기기 없이 pytest (<code>ivi-tests/unit</code>)</td>
+<td>어댑터 명령 조립, 대기와 판정, 크래시 판정, Release 게이트 규칙, 요구사항 추적, 문서 링크</td>
+<td>PR마다 GitHub에서</td>
+<td>167개</td>
+</tr>
+<tr>
+<td>3. 에뮬레이터·태블릿 E2E</td>
+<td>AAOS 에뮬레이터(CarService, 가상 VHAL)와 태블릿(앱 안 Mock 차량)</td>
+<td>화면 ↔ 차량 신호, 위 표의 서비스별 위험</td>
+<td>Test Bench(작업 PC)에서</td>
+<td>129개 × 2기기</td>
+</tr>
+<tr>
+<td>4. HIL, 실차</td>
+<td>실제 ECU와 헤드 유닛, 차량</td>
+<td>위 표 &#39;이 프로젝트에서 보지 못하는 것&#39; 열: ECU의 응답 지연과 거절, 실차 area 구성, 클러스터 디스플레이 연동, 스피커 출력</td>
+<td></td>
+<td>하지 않음 (경험 없음)</td>
+</tr>
+</tbody></table></div>
+<p>3단계는 실제 하드웨어 없이 소프트웨어만으로 도는 단계라 SIL에 가깝습니다. 4단계로 넘길 항목은 위 표의 마지막 열에 적었습니다.</p>
 <h3 id="4-3-판정-기준"><a class="anchor" href="#4-3-판정-기준" aria-hidden="true">#</a>4-3. 판정 기준</h3>
 <div class="table"><table><thead><tr>
 <th>판정</th>
@@ -726,6 +764,10 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <tr>
 <td>격리 목록</td>
 <td>사유, 등록일, 해제 조건 가운데 하나라도 빠진 줄은 받지 않습니다. 격리한 테스트도 계속 돌려서 데이터를 모읍니다.</td>
+</tr>
+<tr>
+<td>앱 크래시</td>
+<td>앱이 죽었다가 다음 테스트의 <code>am start</code>로 다시 뜨면 화면만 봐서는 알 수 없습니다. 테스트마다 시작 시각 이후의 crash·system 버퍼에서 이 앱의 <code>FATAL EXCEPTION</code>, <code>Fatal signal</code>, <code>ANR in</code>을 찾아, 있으면 화면 판정이 통과해도 그 테스트를 실패로 하고 실패 자료에 <code>app_crash.txt</code>를 남깁니다(<code>ivi/crashes.py</code>). 다른 앱(Appium 서버)의 크래시는 보지 않고, 알려진 결함 xfail로 받지 않습니다. 두 기기에서 테스트 도중 <code>am crash</code>로 앱을 일부러 죽여 실패로 잡히는 것을 확인했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md#앱-크래시-판정-확인">확인 기록</a>). 시작 시각이 초 단위라 앞 테스트의 마지막 1초 안에 난 크래시는 다음 테스트에 잡힐 수 있습니다.</td>
 </tr>
 <tr>
 <td>Appium 세션</td>
