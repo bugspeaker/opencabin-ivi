@@ -1,0 +1,48 @@
+{
+  "summary": {
+    "run_id": "20261121-probe2",
+    "serial": "emulator-5554",
+    "kind": "aaos",
+    "model": "Car on x86_64 emulator",
+    "commit": "d41337a5f3bc668a6a5ef223560da1514421b13a",
+    "dirty": false,
+    "app": {
+      "version": "0.4.0 (4)",
+      "apk_sha256": "7109e4bd03c811555f8168d08d5ae251ab2186eded77fb98bd0b68ec4f22a5f9"
+    },
+    "command": "pytest tests/test_zz_crash_probe.py --serial emulator-5554 --run-id 20261121-probe2",
+    "launcher": "",
+    "duration": 11.9,
+    "counts": {
+      "failed": 1
+    },
+    "relaunches": 0,
+    "infra_retries": 0,
+    "session_restarts": 0,
+    "exitstatus": 1,
+    "collected": 1,
+    "gate": "fail",
+    "problems": [
+      "failed 1, error 0"
+    ]
+  },
+  "tests": [
+    {
+      "run_id": "20261121-probe2",
+      "time": "2026-11-21T11:48:41",
+      "serial": "emulator-5554",
+      "kind": "aaos",
+      "model": "Car on x86_64 emulator",
+      "nodeid": "tests/test_zz_crash_probe.py::test_probe_app_killed_midtest",
+      "outcome": "failed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 10.342,
+      "message": "ivi.crashes.AppCrashed: 테스트 도중 앱이 죽었거나 응답하지 않았다 (logcat 1건, 전체는 실패 자료의 app_crash.txt):\n11-21 02:48:47.226  4710  4710 E AndroidRuntime: FATAL EXCEPTIO\n…\n android.os.Handler.dispatchMessage(Handler.java:106)\n11-21 02:48:47.226  4710  4710 E AndroidRuntime: \tat android.os.Looper.loopOnce(Looper.java:205)",
+      "first_error": "",
+      "quarantined": false
+    }
+  ]
+}

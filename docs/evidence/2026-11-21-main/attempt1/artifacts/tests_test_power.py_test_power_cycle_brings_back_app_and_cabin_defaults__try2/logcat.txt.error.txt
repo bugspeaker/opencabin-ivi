@@ -1,0 +1,1 @@
+TimeoutExpired: Command '['adb', '-s', 'emulator-5554', 'logcat', '-d', '-v', 'threadtime', '-T', '.000']' timed out after 60 seconds

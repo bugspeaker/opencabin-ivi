@@ -332,17 +332,17 @@ footer a:hover { color: var(--ink); }
         <a class="card stat" href="docs/test-results.html">
           <p class="eyebrow">AAOS 에뮬레이터</p>
           <p class="headline">127개 통과</p>
-          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 9분 45초</p>
+          <p class="body-sm subtle">건너뜀 1, 알려진 결함 1, 10분 4초</p>
         </a>
         <a class="card stat" href="docs/test-results.html">
           <p class="eyebrow">태블릿 (Mock)</p>
           <p class="headline">122개 통과</p>
-          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 15초 · 차량 값은 앱 안 Mock</p>
+          <p class="body-sm subtle">AAOS 전용 건너뜀 7, 10분 49초 · 차량 값은 앱 안 Mock</p>
         </a>
         <a class="card stat" href="docs/flaky-report.html">
-          <p class="eyebrow">반복 5회 × 2기기</p>
-          <p class="headline">재시도 0 / 1,250건</p>
-          <p class="body-sm subtle">11-18, 같은 PC. 테스트 1,250건 (AAOS 640, 태블릿 610), flaky 0건, 실패 0건</p>
+          <p class="eyebrow">반복 3회 × 2기기</p>
+          <p class="headline">재시도 0 / 750건</p>
+          <p class="body-sm subtle">11-21, 같은 PC. 테스트 750건 (AAOS 384, 태블릿 366), flaky 0건, 실패 0건</p>
         </a>
       </div>
     </section>
@@ -394,7 +394,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/flaky-report.html">
               <span class="fit-num">07</span>
-              <span class="fit-body"><span class="fit-title">Flaky 최소화 · 병렬 실행</span><span class="fit-done">두 기기를 병렬로 5번 반복해 테스트 1,250건을 돌렸고, 재시도로 통과한 것(flaky)은 0건입니다. 재시도 기록, 격리 목록, flaky 통계와 Release 게이트를 만들었습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Flaky 최소화 · 병렬 실행</span><span class="fit-done">두 기기를 병렬로 3번 반복해 테스트 750건을 돌렸고, 재시도로 통과한 것(flaky)은 0건입니다. 재시도 기록, 격리 목록, flaky 통계와 Release 게이트를 만들었습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">반복 실행 통계<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>
@@ -411,7 +411,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase3-framework.html#구조">
               <span class="fit-num">09</span>
-              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 167개 있습니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Python 테스트 프레임워크 (pytest)</span><span class="fit-done">훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 168개 있습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">3단계 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/phase1-spike.html#appium을-aaos에-붙일-때-필요한-것">
@@ -426,7 +426,7 @@ footer a:hover { color: var(--ink); }
             </a></li>
             <li class="fit-item"><a class="fit-row" href="docs/portfolio.html#8-3-github-실행-기록">
               <span class="fit-num">12</span>
-              <span class="fit-body"><span class="fit-title">Git · CI/CD</span><span class="fit-done">PR 단위로 작업했고, GitHub Actions가 PR마다 빌드와 단위 테스트를 돌립니다.</span></span>
+              <span class="fit-body"><span class="fit-title">Git · CI/CD</span><span class="fit-done">PR 단위로 작업했고, GitHub Actions가 PR마다 빌드, 단위 테스트, 호스트 러너의 AAOS 에뮬레이터 smoke 13개를 무인으로 돌립니다. 태블릿과 전체 회귀는 작업 PC에서 돌렸습니다.</span></span>
               <span class="fit-side"><span class="fit-dest">실행 기록<svg class="fit-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
             </a></li>
           </ol>
@@ -547,27 +547,27 @@ footer a:hover { color: var(--ink); }
       <!-- devices:start (build-docs.mjs 가 results.json 으로 채운다) -->
     <div class="grid-2">
         <article class="card device">
-          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-21 전체 실행</span>
           <h3 class="card-title">AAOS 에뮬레이터</h3>
           <p class="body-sm muted">CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거칩니다. 신호를 넣고 화면을 보는 방향과, 화면을 누르고 신호를 읽는 방향을 모두 테스트합니다.</p>
           <div>
             <div class="device-row body-sm"><span class="subtle">결과</span><span>통과 127, 건너뜀 1, 알려진 결함 1</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>9분 45초</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>10분 4초</span></div>
             <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">CarPropertyManager</span></div>
           </div>
         </article>
         <article class="card device">
-          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-18 전체 실행</span>
+          <span class="status-badge"><span class="status-dot" aria-hidden="true"></span>2026-11-21 전체 실행</span>
           <h3 class="card-title">Android 태블릿</h3>
           <p class="body-sm muted">화웨이 태블릿에서는 앱 안의 Mock 차량 서비스를 씁니다. AAOS 전용 테스트는 건너뜁니다. 터치 지연, 백그라운드 강제 종료 같은 실기기 문제는 이 기기에서 나왔습니다.</p>
           <div>
             <div class="device-row body-sm"><span class="subtle">결과</span><span>통과 122, 건너뜀 7</span></div>
-            <div class="device-row body-sm"><span class="subtle">시간</span><span>10분 15초</span></div>
+            <div class="device-row body-sm"><span class="subtle">시간</span><span>10분 49초</span></div>
             <div class="device-row body-sm"><span class="subtle">차량 서비스</span><span class="mono">MockVehicleDataSource</span></div>
           </div>
         </article>
       </div>
-      <p class="body-sm subtle device-note">두 기기를 같은 시각에 병렬로 시작해 끝까지 10분 16초 걸렸습니다. 차례로 돌렸다면 약 20분 0초입니다.</p>
+      <p class="body-sm subtle device-note">두 기기를 같은 시각에 병렬로 시작해 끝까지 10분 49초 걸렸습니다. 차례로 돌렸다면 약 20분 53초입니다.</p>
       <!-- devices:end -->
     </section>
 

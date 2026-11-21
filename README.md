@@ -1,43 +1,43 @@
 # OpenCabin IVI: AAOS 인포테인먼트 테스트 자동화
 
-42dot Test Automation Engineer (IVI System) 지원 포트폴리오입니다.
+42dot Test Automation Engineer (<abbr title="In-Vehicle Infotainment. 내비, 미디어, 공조 화면 같은 차량 인포테인먼트">IVI</abbr> System) 지원 포트폴리오입니다.
 
 | 항목 | 내용 |
 |---|---|
-| 대상 | 이 프로젝트에서 만든 가상 IVI 앱. 같은 E2E 129개를 AAOS 에뮬레이터(CarService와 에뮬레이터 VHAL)와 화웨이 태블릿(앱 안 Mock 차량)에서 돌립니다 |
-| 결과 | {{RESULT}} |
-| 한계 | 실제 차량, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다. GitHub Actions에서 무인으로 도는 E2E는 AAOS 에뮬레이터 smoke 13개이고, 태블릿과 전체 회귀는 작업 PC에서 돌렸습니다 |
-| 만든 사람 | 게임 QA 약 8년, Playwright·pytest 기반 웹 BVT 구축 경험. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다(2026-11-13부터, 혼자). 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 Test Bench(PC, AAOS 에뮬레이터, 태블릿)에서 E2E를 직접 돌려 결과와 실패 자료를 확인했고, 외부 검토를 받아 반영할 항목을 골랐고, PR마다 변경 내용과 실행 결과를 보고 병합했습니다. 무엇을 고르고 버렸는지는 [결정 기록](docs/decisions.md)에 있습니다 |
+| 대상 | 이 프로젝트에서 만든 가상 IVI 앱. 같은 <abbr title="End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트">E2E</abbr> 129개를 <abbr title="Android Automotive OS. 차량에 직접 들어가는 안드로이드">AAOS</abbr> 에뮬레이터(<abbr title="AAOS에서 앱과 VHAL 사이에서 차량 값을 주고받는 시스템 서비스">CarService</abbr>, 가상 <abbr title="Vehicle HAL. 차량 신호를 안드로이드에 넘겨 주는 층. 여기서는 에뮬레이터의 가상 값">VHAL</abbr>)와 화웨이 태블릿(앱 안 <abbr title="실제 대신 쓰는 가짜 구현. 태블릿에서는 앱 안의 가짜 차량 서비스">Mock</abbr> 차량)에서 돌립니다 |
+| 결과 | 2026-11-21, 커밋 `d54741b`: 두 기기 × 3회, 750건에서 실패 0, <abbr title="같은 코드인데 실행마다 통과와 실패가 바뀌는 테스트. 여기서는 실패 뒤 재시도에서 통과한 경우">flaky</abbr> 0, <abbr title="릴리스 후보를 내보내도 되는지 정하는 자동 판정 (여섯 조건)">Release 게이트</abbr> 통과. GitHub 호스트 러너에서 AAOS <abbr title="이 빌드를 받아도 되는지 보는 가장 짧은 확인 (13개, PR마다)">smoke</abbr> 13개 3회 연속 통과 ([원자료](docs/evidence/2026-11-21-main/README.md)) |
+| 한계 | 실제 차량, <abbr title="Hardware-in-the-Loop. 실제 제어 장치를 붙여 하는 시험. 이 프로젝트에서는 쓰지 않음">HIL</abbr>, <abbr title="차량 안의 제어 장치끼리 신호를 주고받는 통신 버스. 여기서는 PC 안의 가상 버스">CAN</abbr> 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다. 태블릿과 전체 회귀는 작업 PC에서 돌렸습니다 |
+| 만든 사람 | 게임 QA 약 8년, <abbr title="웹 브라우저 자동화 도구">Playwright</abbr>·<abbr title="파이썬 테스트 프레임워크">pytest</abbr> 기반 웹 <abbr title="Build Verification Test. 새 빌드가 기본 동작을 하는지 보는 테스트">BVT</abbr> 구축 경험. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다(2026-11-13부터, 혼자). 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 <abbr title="테스트 기기와 PC를 묶은 시험 환경. 여기서는 PC 한 대, AAOS 에뮬레이터, 태블릿">Test Bench</abbr>(PC, AAOS 에뮬레이터, 태블릿)에서 E2E를 직접 돌려 결과와 실패 자료를 확인했고, 외부 검토를 받아 반영할 항목을 골랐고, <abbr title="Pull Request. 변경을 main에 합치기 전에 올리는 검토 요청">PR</abbr>마다 변경 내용과 실행 결과를 보고 병합했습니다. 무엇을 고르고 버렸는지는 [결정 기록](docs/decisions.md)에 있습니다 |
 
 <img src="docs/images/demo-ui-vhal.gif" width="560" alt="운전석 + 를 누르면 VHAL 값이 22.0에서 22.5로, VHAL에 25.0을 넣으면 화면이 25.0으로 바뀌는 모습 (AAOS 에뮬레이터)">
 
 화면 + → VHAL 22.0→22.5, VHAL에 25.0 주입 → 화면 25.0 (AAOS 에뮬레이터)
 
 > [!TIP]
-> **공고 항목별 근거는 [소개 사이트](https://bugspeaker.github.io/opencabin-ivi/)에서 한눈에 볼 수 있습니다.** 항목을 누르면 근거 테스트 결과와 판정 직후 화면으로 이동합니다. 문서로는 [공고 항목별 대응표](docs/portfolio.md#1-공고-요구사항과-한-일)에 있습니다.
+> **공고 항목별 근거는 [소개 사이트](https://bugspeaker.github.io/opencabin-ivi/)에서** 항목을 누르면 근거 테스트와 판정 직후 화면으로 이동합니다. 문서: [공고 항목별 대응표](docs/portfolio.md#1-공고-요구사항과-한-일)
 
 ## 이 프로젝트에서 한 일
 
-1. **화면과 차량 값을 따로 판정합니다.** A/C를 끄면 전 좌석 area 값을 모두 읽고, 다른 좌석의 차량 값처럼 '바뀌지 않아야 함'은 1.5초 동안 계속 봅니다. [양방향 검증](docs/portfolio.md#5-1-양방향-검증과-area-단위-판정)
+1. **화면과 차량 값을 따로 판정합니다.** A/C를 끄면 전 좌석 <abbr title="같은 차량 신호의 위치 구분 (운전석, 조수석, 문 하나하나)">area</abbr> 값을 모두 읽고, 다른 좌석의 차량 값처럼 '바뀌지 않아야 함'은 1.5초 동안 계속 봅니다. [양방향 검증](docs/portfolio.md#5-1-양방향-검증과-area-단위-판정)
 2. **경계값 테스트로 앱 결함을 찾았습니다.** 차량 온도 22.3°C에서 + 버튼이 22.8°C를 차량에 썼습니다. [원인 분석](docs/portfolio.md#3-결함과-원인-분석) · [실패 자료](docs/samples/off-grid-temperature-aaos/)
-3. **원인은 측정으로 좁혔습니다.** 태블릿 탭 한 번 10,377 ms → adb 탭 117 ms. [결정 기록 2번](docs/decisions.md#2-화웨이-태블릿에서는-누르기만-adb로)
-4. **Release 게이트는 실패 0과 실행 완전성을 따로 확인합니다.** 두 기기, 129개 전부, 종료 코드 0, 같은 커밋과 같은 APK. [게이트 기준](docs/portfolio.md#4-1-게이트-단계와-기준)
-5. **재시도로 통과한 테스트는 flaky로 따로 셉니다.** {{FLAKY}} [반복 실행 통계](docs/flaky-report.md)
+3. **원인은 측정으로 좁혔습니다.** 태블릿 탭 한 번 10,377 ms → <abbr title="Android Debug Bridge. PC에서 안드로이드 기기를 명령으로 다루는 도구">adb</abbr> 탭 117 ms. [결정 기록 2번](docs/decisions.md#2-화웨이-태블릿에서는-누르기만-adb로)
+4. **<abbr title="릴리스 후보를 내보내도 되는지 정하는 자동 판정 (여섯 조건)">Release 게이트</abbr>는 실패 0과 실행 완전성을 따로 확인합니다.** 두 기기, 129개 전부, 종료 코드 0, 같은 커밋과 같은 <abbr title="안드로이드 앱 설치 파일">APK</abbr>. [게이트 기준](docs/portfolio.md#4-1-게이트-단계와-기준)
+5. **재시도로 통과한 테스트는 <abbr title="같은 코드인데 실행마다 통과와 실패가 바뀌는 테스트. 여기서는 실패 뒤 재시도에서 통과한 경우">flaky</abbr>로 따로 셉니다.** 두 기기 × 3회, 750건에서 flaky 0건(2026-11-21). 2026-11-18의 5회 1,250건에서도 0건이었습니다. [반복 실행 통계](docs/flaky-report.md)
 
 <details>
 <summary>용어 풀이 (주요 10개)</summary>
 
 | 용어 | 뜻 |
 |---|---|
-| AAOS | Android Automotive OS. 차량에 직접 들어가는 안드로이드 |
-| IVI | In-Vehicle Infotainment. 내비, 미디어, 공조 화면 같은 차량 인포테인먼트 |
-| CarProperty | 온도, 속도처럼 차량 값 하나를 가리키는 AAOS의 단위 |
-| VHAL | Vehicle HAL. 차량 신호를 안드로이드에 넘겨 주는 층. 여기서는 에뮬레이터의 가상 값 |
-| CarService | AAOS에서 앱과 VHAL 사이에서 차량 값을 주고받는 시스템 서비스 |
-| E2E | End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트 |
-| Mock | 실제 대신 쓰는 가짜 구현. 태블릿에서는 앱 안의 가짜 차량 서비스 |
+| <abbr title="Android Automotive OS. 차량에 직접 들어가는 안드로이드">AAOS</abbr> | Android Automotive OS. 차량에 직접 들어가는 안드로이드 |
+| <abbr title="In-Vehicle Infotainment. 내비, 미디어, 공조 화면 같은 차량 인포테인먼트">IVI</abbr> | In-Vehicle Infotainment. 내비, 미디어, 공조 화면 같은 차량 인포테인먼트 |
+| <abbr title="온도, 속도처럼 차량 값 하나를 가리키는 AAOS의 단위">CarProperty</abbr> | 온도, 속도처럼 차량 값 하나를 가리키는 AAOS의 단위 |
+| <abbr title="Vehicle HAL. 차량 신호를 안드로이드에 넘겨 주는 층. 여기서는 에뮬레이터의 가상 값">VHAL</abbr> | Vehicle HAL. 차량 신호를 안드로이드에 넘겨 주는 층. 여기서는 에뮬레이터의 가상 값 |
+| <abbr title="AAOS에서 앱과 VHAL 사이에서 차량 값을 주고받는 시스템 서비스">CarService</abbr> | AAOS에서 앱과 VHAL 사이에서 차량 값을 주고받는 시스템 서비스 |
+| <abbr title="End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트">E2E</abbr> | End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트 |
+| <abbr title="실제 대신 쓰는 가짜 구현. 태블릿에서는 앱 안의 가짜 차량 서비스">Mock</abbr> | 실제 대신 쓰는 가짜 구현. 태블릿에서는 앱 안의 가짜 차량 서비스 |
 | flaky | 같은 코드인데 실행마다 통과와 실패가 바뀌는 테스트. 여기서는 실패 뒤 재시도에서 통과한 경우 |
-| xfail | 실패할 것을 알고 있는 테스트 표시 (pytest). 알려진 결함에 쓴다 |
+| <abbr title="실패할 것을 알고 있는 테스트 표시 (pytest). 알려진 결함에 쓴다">xfail</abbr> | 실패할 것을 알고 있는 테스트 표시 (<abbr title="파이썬 테스트 프레임워크">pytest</abbr>). 알려진 결함에 쓴다 |
 | Release 게이트 | 릴리스 후보를 내보내도 되는지 정하는 자동 판정 (여섯 조건) |
 
 그 밖의 용어는 본문에서 점선 밑줄이 있는 낱말에 마우스를 올리면 보입니다.
@@ -46,15 +46,23 @@
 
 ## 결과 자료와 검증 시점
 
-{{RUNTABLE}}
+| 자료 | 실행 | 테스트 코드 | 결과 |
+|---|---|---|---|
+| [반복 실행 3회](docs/evidence/2026-11-21-main/README.md) | 2026-11-21<br>`20261121-121421-r1`<br>~ `20261121-123610-r3` | `d54741b`<br>(결과 파일에 기록,<br>커밋하지 않은 변경 없음) | 129개 × 두 기기 × 3회<br>750건, <abbr title="같은 코드인데 실행마다 통과와 실패가 바뀌는 테스트. 여기서는 실패 뒤 재시도에서 통과한 경우">flaky</abbr> 0, 실패 0<br><abbr title="릴리스 후보를 내보내도 되는지 정하는 자동 판정 (여섯 조건)">Release 게이트</abbr> `--commit` 통과 |
+| [GitHub 호스트 러너 smoke](docs/evidence/2026-11-21-main/README.md#github-호스트-러너의-aaos-smoke) | 2026-11-21<br>Actions 수동 실행 3회 | `8bb3a33` | <abbr title="Android Automotive OS. 차량에 직접 들어가는 안드로이드">AAOS</abbr> <abbr title="이 빌드를 받아도 되는지 보는 가장 짧은 확인 (13개, PR마다)">smoke</abbr> 13개<br>3회 연속 통과 |
+
+- 이 실행 뒤에 바뀐 것은 문서, 소개 사이트, 단위 테스트, <abbr title="Continuous Integration. 변경을 올릴 때마다 자동으로 빌드하고 테스트하는 것. 여기서는 GitHub Actions">CI</abbr> 설정입니다. <abbr title="End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트">E2E</abbr> 테스트 코드(`ivi-tests/tests`, `ivi-tests/ivi`)와 앱은 `d54741b`와 같습니다(`git diff --stat d54741b HEAD -- ivi-tests/tests ivi-tests/ivi ivi-app`).
+- 같은 날 첫 시도는 전원 테스트에서 다시 켠 에뮬레이터가 멈춰 실패했습니다. 원인을 고친 뒤 처음부터 다시 돌렸고, 그 기록도 [원자료](docs/evidence/2026-11-21-main/README.md#첫-시도-전원-테스트가-멈춘-에뮬레이터를-기다리다-실패)에 남겼습니다.
+- [결과 페이지](docs/test-results.md)의 판정과 화면은 3회차입니다.
+- 2026-11-18 ~ 11-20의 이전 실행과 그때의 코드 시점은 [결과 원자료와 검증 시점](docs/evidence/README.md)에 있습니다.
 
 ## 게이트와 CI
 
-아래 범위는 워크플로에 정의한 것입니다. GitHub에서 실제로 도는 것은 build, unit, e2e-hosted(호스트 러너의 AAOS 에뮬레이터 smoke 13개) job이고, 태블릿과 sanity 이상은 self-hosted Bench용 e2e job이라 GitHub에서는 돌리지 않았습니다.
+아래 범위는 워크플로에 정의한 것입니다. GitHub에서 실제로 도는 것은 build, unit, e2e-hosted(호스트 러너의 <abbr title="Android Automotive OS. 차량에 직접 들어가는 안드로이드">AAOS</abbr> 에뮬레이터 <abbr title="이 빌드를 받아도 되는지 보는 가장 짧은 확인 (13개, PR마다)">smoke</abbr> 13개) job이고, 태블릿과 <abbr title="서비스마다 대표 경로를 하나씩 보는 확인 (25개, main에 합칠 때)">sanity</abbr> 이상은 self-hosted Bench용 e2e job이라 GitHub에서는 돌리지 않았습니다.
 
 <abbr title="Pull Request. 변경을 main에 합치기 전에 올리는 검토 요청">PR</abbr> <abbr title="이 빌드를 받아도 되는지 보는 가장 짧은 확인 (13개, PR마다)">smoke</abbr> 13 / main push +<abbr title="서비스마다 대표 경로를 하나씩 보는 확인 (25개, main에 합칠 때)">sanity</abbr> 25 / <abbr title="매일 밤 자동으로 도는 전체 테스트">Nightly</abbr> 전체 / Release는 전체를 반복한 뒤 [Release 게이트](docs/portfolio.md#4-1-게이트-단계와-기준) 여섯 조건을 봅니다. smoke는 개수보다 실패했을 때의 결정이 기준입니다. smoke가 하나라도 실패하면 그 빌드는 머지하지 않고 다음 단계(sanity, <abbr title="경계값, 조합, 예전 결함 재발까지 보는 전체 회귀 테스트">regression</abbr>)로 넘기지 않습니다.
-GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트(기기 없음) 167개를 돌리고(통과 수는 실행 요약에 나옵니다), 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 <abbr title="End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트">E2E</abbr> 129개) 추적이 빠지면 실패합니다.
-e2e-hosted는 매번 새 AAOS 에뮬레이터에 build job의 APK를 priv-app으로 넣고 smoke를 돌립니다([`ci_hosted_aaos.sh`](ivi-tests/tools/ci_hosted_aaos.sh)). 위 결과(두 기기 × 3회)는 같은 명령(`tools\run_bench.py`, `tools\release_gate.py`)을 작업 PC에서 돌린 것입니다.
+GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트 22개, 프레임워크 단위 테스트(기기 없음) 168개를 돌리고(통과 수는 실행 요약에 나옵니다), 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 <abbr title="End-to-End. 화면 조작부터 차량 값까지 실제 경로 전체를 거치는 테스트">E2E</abbr> 129개) 추적이 빠지면 실패합니다.
+e2e-hosted는 매번 새 AAOS 에뮬레이터에 build job의 <abbr title="안드로이드 앱 설치 파일">APK</abbr>를 <abbr title="시스템 권한을 받는 앱 설치 위치. 공조 제어 권한에 필요">priv-app</abbr>으로 넣고 smoke를 돌립니다([`ci_hosted_aaos.sh`](ivi-tests/tools/ci_hosted_aaos.sh)). 위 결과(두 기기 × 3회)는 같은 명령(`tools\run_bench.py`, `tools\release_gate.py`)을 작업 PC에서 돌린 것입니다.
 
 ## 구조
 

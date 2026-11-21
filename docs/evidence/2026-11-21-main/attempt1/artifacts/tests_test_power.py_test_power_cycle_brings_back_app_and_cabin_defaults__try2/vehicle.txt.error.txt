@@ -1,0 +1,1 @@
+AdbError: adb shell cmd car_service get-property-value 0x11600207 0x0 실패 (1): adb.exe: device 'emulator-5554' not found
