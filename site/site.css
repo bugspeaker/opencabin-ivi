@@ -274,6 +274,19 @@ a.stat:hover { background: var(--bg-soft); }
 .role.both h3 { justify-content: center; color: var(--brand-dark); }
 .role.me { border-radius: 0 var(--r) var(--r) 0; background: #fff; border: 1px solid var(--line); border-left: 0; }
 .role.me h3 { color: var(--brand-dark); }
+/* 앱 첫 화면 변천 (4단계) */
+.evo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; margin-bottom: 20px; }
+.evo-step { position: relative; margin: 0; }
+.evo-step + .evo-step::before { content: "→"; position: absolute; left: -22px; top: calc(37.5% - 12px); color: var(--brand); font-weight: 800; }
+.evo-step img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; background: #0c0f14; border: 1px solid var(--line); }
+.evo-step figcaption { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; font-size: 14px; color: var(--ink-2); }
+.evo-step figcaption b { font-size: 13px; color: var(--brand-dark); }
+/* 전/후 사진 한 쌍 */
+.ba { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ba figure { position: relative; margin: 0; }
+.ba img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; background: #0c0f14; }
+.ba figcaption { position: absolute; left: 8px; top: 8px; padding: 2px 8px; border-radius: 999px; background: rgb(255 255 255 / 0.92); font-size: 12px; font-weight: 700; color: var(--ink); }
+.ba figure + figure figcaption { background: var(--brand); color: #fff; }
 .fqa { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .fqa .card { display: grid; gap: 10px; padding: 22px 24px; }
 .fqa-top { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink-3); }
@@ -374,6 +387,8 @@ a.fit-row:hover { border-color: var(--brand); transform: translateY(-2px); }
   .lead { font-size: 16px; }
   .stat-num { font-size: 30px; }
   .grid-2, .grid-3, .fqa, .facts { grid-template-columns: 1fr; }
+  .evo { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
+  .evo-step:nth-child(3)::before { content: none; }
   .compare-body { grid-template-columns: 1fr; }
   .car { justify-self: center; }
   .flow-grid { grid-template-columns: 1fr; gap: 0; }

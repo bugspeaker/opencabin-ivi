@@ -22,11 +22,16 @@ TARGET_DIR = "/system/priv-app/OpenCabinIvi"
 TARGET_XML = f"/system/etc/permissions/{PERMISSIONS_XML.name}"
 
 
-def adb(serial, *args, check=True, timeout=120):
+def run_adb(serial, *args, timeout=120):
+    """adb 를 돌려 (종료 코드, 출력) 을 돌려준다."""
     done = subprocess.run(["adb", "-s", serial, *args], capture_output=True, text=True,
                           encoding="utf-8", errors="replace", timeout=timeout)
-    out = (done.stdout + done.stderr).replace("\r", "").strip()
-    if check and done.returncode != 0:
+    return done.returncode, (done.stdout + done.stderr).replace("\r", "").strip()
+
+
+def adb(serial, *args, check=True, timeout=120):
+    code, out = run_adb(serial, *args, timeout=timeout)
+    if check and code != 0:
         sys.exit(f"adb {' '.join(args)} 실패:\n{out}")
     return out
 
@@ -41,16 +46,36 @@ def wait_boot(serial, timeout=240):
     sys.exit("부팅이 끝나지 않았다")
 
 
+def adb_root(serial, tries=3, pause=5):
+    """adb root 뒤 부팅 완료와 root 셸까지 기다린다.
+
+    재부팅 직후에는 부팅 완료 신호가 와도 adbd 가 아직 다시 붙는 중이라
+    'adb: unable to connect for root: closed' 로 끊길 때가 있다 (2026-11-21 GitHub 호스트 러너, PR #33).
+    그때는 잠깐 기다렸다가 다시 한다. tries 번 모두 실패하면 멈춘다.
+    """
+    out = ""
+    for attempt in range(1, tries + 1):
+        code, out = run_adb(serial, "root")
+        if code == 0:
+            wait_boot(serial)
+            if adb(serial, "shell", "whoami", check=False) == "root":
+                return
+            out = f"root 셸이 아니다: {out}"
+        if attempt < tries:
+            print(f"   adb root 다시 시도 ({attempt}/{tries}): {out}")
+            time.sleep(pause)
+            adb(serial, "wait-for-device", timeout=120)
+    sys.exit(f"adb root 실패 ({tries}번 시도):\n{out}")
+
+
 def root_and_remount(serial):
-    adb(serial, "root")
-    wait_boot(serial)
+    adb_root(serial)
     out = adb(serial, "remount", check=False)
     if "reboot" in out.lower():  # 처음 한 번은 overlayfs 를 켜려고 재부팅이 필요하다
         print("remount 를 위해 재부팅합니다")
         adb(serial, "reboot")
         wait_boot(serial)
-        adb(serial, "root")
-        wait_boot(serial)
+        adb_root(serial)
         out = adb(serial, "remount", check=False)
     if "remount succeeded" not in out.lower():
         sys.exit(f"/system 을 쓰기 가능하게 만들지 못했다. 에뮬레이터를 -writable-system 으로 띄웠는지 확인:\n{out}")
@@ -66,6 +91,8 @@ def main():
         sys.exit(f"APK 가 없다: {apk} (먼저 ./gradlew assembleDebug)")
 
     s = args.serial
+    # CI 로그에서 단계 안내가 오류보다 늦게 찍히지 않게 (파이프로 나갈 때는 출력이 모였다가 끝에 나온다)
+    sys.stdout.reconfigure(line_buffering=True)
     print("1) root + /system 쓰기 가능하게")
     root_and_remount(s)
 
@@ -81,8 +108,7 @@ def main():
     print("4) 재부팅 (시스템 앱은 부팅 때 스캔된다)")
     adb(s, "reboot")
     wait_boot(s)
-    adb(s, "root")
-    wait_boot(s)
+    adb_root(s)
 
     print("5) 확인")
     dump = adb(s, "shell", "dumpsys", "package", PACKAGE)

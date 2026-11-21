@@ -71,8 +71,7 @@ def persist(serial):
     print("4) 재부팅 후 확인")
     adb(serial, "reboot")
     priv.wait_boot(serial)
-    adb(serial, "root")
-    priv.wait_boot(serial)
+    priv.adb_root(serial)   # 재부팅 직후 adb root 가 끊기면 다시 한다
     temps = {name: vhal_get(serial, HVAC_TEMPERATURE_SET, area) for name, area in SEATS.items()}
     unit = vhal_get(serial, HVAC_TEMPERATURE_DISPLAY_UNITS)
     print(f"  {', '.join(f'{n} {t}°C' for n, t in temps.items())}, 표시 단위 {'섭씨' if unit == CELSIUS else unit}")

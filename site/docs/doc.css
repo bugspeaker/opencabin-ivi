@@ -97,7 +97,13 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 /* 표: 가로로 넘치면 표만 스크롤 */
 .doc .table { margin: 0 0 24px; overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--r-lg); }
 .doc table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.55; }
-.doc th { text-align: left; font-weight: 600; color: var(--ink); background: var(--surface-2); white-space: nowrap; }
+/* 머리글도 줄을 바꾼다: 긴 머리글(예: '테스트 (smoke / sanity / regression)')을 한 줄로 두면 그 칸만 넓어지고
+   나머지 칸이 한두 단어씩 끊긴다 (2026-11-21, 포트폴리오 4-2 표). 한글은 낱말 단위로만 바꾼다 */
+.doc th { text-align: left; font-weight: 600; color: var(--ink); background: var(--surface-2); }
+/* 두 칸짜리 표(이름 | 설명)는 설명이 길어 첫 칸이 눌린다. 이름이 한 줄에 들어가게 첫 칸에 최소 폭 (8-1 표) */
+.doc table:has(thead th:nth-child(2):last-child) td:first-child { min-width: 8.5em; }
+/* 표 안의 긴 코드 이름(HVAC_TEMPERATURE_SET)은 글자 중간에서 자르지 않는다 */
+.doc td code { word-break: normal; overflow-wrap: break-word; }
 .doc th, .doc td { padding: 10px 14px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
 .doc tbody tr:last-child td { border-bottom: 0; }
 .doc tbody tr:hover td { background: var(--surface-1); }

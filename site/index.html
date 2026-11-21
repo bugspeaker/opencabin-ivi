@@ -353,12 +353,35 @@
       </div>
 
       <h3 class="small-title">직접 써 보며 찾은 것</h3>
+      <div class="evo" role="list" aria-label="앱 첫 화면이 바뀐 과정">
+        <figure class="evo-step" role="listitem"><img src="../docs/images/before-home.png" width="1024" height="768" loading="lazy" alt="재점검 전 홈 화면"><figcaption><b>11-13</b>재점검 전</figcaption></figure>
+        <figure class="evo-step" role="listitem"><img src="../docs/images/home-driving.png" width="1024" height="768" loading="lazy" alt="재점검 뒤 홈 화면 (주행 중)"><figcaption><b>11-13</b>재점검 뒤</figcaption></figure>
+        <figure class="evo-step" role="listitem"><img src="../docs/images/p7-home.png" width="1024" height="768" loading="lazy" alt="3영역으로 바꾼 홈 화면"><figcaption><b>11-14</b>3영역 개편</figcaption></figure>
+        <figure class="evo-step" role="listitem"><img src="../docs/images/p9-home.png" width="1024" height="768" loading="lazy" alt="지금 홈 화면 (목적지 검색)"><figcaption><b>11-18</b>지금</figcaption></figure>
+      </div>
       <div class="fqa">
-        <div class="card"><p class="fqa-top"><span class="chip">11-14</span>에뮬레이터</p><p class="fqa-seen">공조 온도가 태블릿과 달리 화씨 61°로 보임</p><p class="fqa-done"><span>섭씨 22.0°C로 맞추고, 화씨를 가정하던 테스트 4개를 고침</span></p></div>
+        <div class="card">
+          <p class="fqa-top"><span class="chip">11-14</span>에뮬레이터 공조 화면</p>
+          <div class="ba">
+            <figure><img src="../docs/images/fqa/1114-climate-before.png" width="1024" height="768" loading="lazy" alt="앱은 16.0°C, 아래 시스템 바는 화씨 61°로 보이는 공조 화면"><figcaption>전</figcaption></figure>
+            <figure><img src="../docs/images/p7-climate.png" width="1024" height="768" loading="lazy" alt="모두 22.0°C로 보이는 공조 화면"><figcaption>후</figcaption></figure>
+          </div>
+          <p class="fqa-seen">공조 온도가 태블릿과 달리 화씨 61°로 보임</p>
+          <p class="fqa-done"><span>섭씨 22.0°C로 맞추고, 화씨를 가정하던 테스트 4개를 고침</span></p>
+        </div>
+        <div class="card">
+          <p class="fqa-top"><span class="chip">11-16</span>공조 화면</p>
+          <div class="ba">
+            <figure><img src="../docs/images/p8-climate.png" width="1024" height="768" loading="lazy" alt="FULL 버튼이 없는 공조 화면"><figcaption>전</figcaption></figure>
+            <figure><img src="../docs/images/p9-climate-full.png" width="1024" height="768" loading="lazy" alt="FULL을 켠 공조 화면: 16.0°C, 풍량 7"><figcaption>후</figcaption></figure>
+          </div>
+          <p class="fqa-seen">최대 냉방(FULL) 기능이 없음</p>
+          <p class="fqa-done"><span>FULL 기능과 E2E 테스트 4개 추가</span></p>
+        </div>
         <div class="card"><p class="fqa-top"><span class="chip">11-16</span>에뮬레이터</p><p class="fqa-seen">고쳤던 온도가 재부팅 뒤 다시 63°로 돌아옴</p><p class="fqa-done"><span>초기값부터 바꿔 재부팅 뒤에도 유지</span></p></div>
-        <div class="card"><p class="fqa-top"><span class="chip">11-16</span>공조 화면</p><p class="fqa-seen">최대 냉방(FULL) 기능이 없음</p><p class="fqa-done"><span>FULL 기능과 E2E 테스트 4개 추가</span></p></div>
         <div class="card"><p class="fqa-top"><span class="chip">11-18</span>공고 우대사항</p><p class="fqa-seen">차량 네트워크, 원격 전원, 기능 안전 항목이 비어 있음</p><p class="fqa-done"><span>모의 Test Bench API, 원격 전원, 가상 CAN, 요구사항 추적표 추가</span></p></div>
       </div>
+      <div class="btn-row more"><a class="btn line" href="docs/portfolio.html#직접-써-보며-준-피드백-fqa">화면 변화 전체 보기</a></div>
 
       <h3 class="small-title">AI 결과에서 잡아낸 것</h3>
       <ul class="checklist">

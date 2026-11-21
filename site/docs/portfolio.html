@@ -58,14 +58,14 @@
 
 <h2 id="ai-결과를-어떻게-검증했나"><a class="anchor" href="#ai-결과를-어떻게-검증했나" aria-hidden="true">#</a>AI 결과를 어떻게 검증했나</h2>
 <p>AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 &#39;직접 써 보며 준 피드백&#39;). 지적마다 반영할지는 제가 정했습니다.</p>
-<p><strong>원칙</strong></p>
+<h3 id="원칙"><a class="anchor" href="#원칙" aria-hidden="true">#</a>원칙</h3>
 <ol>
 <li><strong>&#39;통과&#39;는 기기 실행 결과 파일로만 받아들입니다.</strong> 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK sha256, 종료 코드가 남고, Release 게이트가 <code>--commit</code>으로 그 커밋의 결과인지 확인합니다. 단위 테스트 통과는 기기 실행을 대신하지 않습니다.</li>
 <li><strong>&#39;실패 0&#39;과 &#39;정한 범위를 끝까지 돌렸다&#39;를 따로 봅니다.</strong> 범위가 줄었거나 중간에 멈춘 실행이 통과로 보이지 않도록 Release 게이트에 실행 완전성 조건을 두었습니다(<a href="#4-1-게이트-단계와-기준">4-1</a>).</li>
 <li><strong>문서의 주장은 코드와 검사로 확인합니다.</strong> 요구사항↔테스트 연결이나 문서·사이트의 내부 링크가 끊기면 CI의 unit job이 실패합니다. 문서에는 코드에서 찾아 확인할 수 있는 문장만 씁니다.</li>
 <li><strong>수치는 원자료에서 다시 셉니다.</strong> 실행 결과 파일을 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">evidence</a>에 남기고, 다시 세는 명령을 함께 적습니다.</li>
 </ol>
-<p><strong>검증에서 잡혀 고친 사례</strong></p>
+<h3 id="검증에서-잡혀-고친-사례"><a class="anchor" href="#검증에서-잡혀-고친-사례" aria-hidden="true">#</a>검증에서 잡혀 고친 사례</h3>
 <div class="table"><table><thead><tr>
 <th>무엇이 틀렸나</th>
 <th>어떻게 드러났나</th>
@@ -103,51 +103,66 @@
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
 </tr>
 </tbody></table></div>
-<p><strong>직접 써 보며 준 피드백 (FQA)</strong></p>
-<p>초기 버전부터 앱을 태블릿과 에뮬레이터에서 직접 써 보며, 새로 필요한 기능과 지금 기능이 제대로 도는지, 사용자로서 어색한 곳이 없는지 보고 고칠 것을 정했습니다. 아래는 작업 기록에 남은 것입니다(날짜는 2026년).</p>
+<h3 id="직접-써-보며-준-피드백-fqa"><a class="anchor" href="#직접-써-보며-준-피드백-fqa" aria-hidden="true">#</a>직접 써 보며 준 피드백 (FQA)</h3>
+<p>초기 버전부터 앱을 태블릿과 에뮬레이터에서 직접 써 보며, 새로 필요한 기능과 지금 기능이 제대로 도는지, 사용자로서 어색한 곳이 없는지 보고 고칠 것을 정했습니다. 아래는 작업 기록에 남은 것과 그때의 화면입니다(날짜는 2026년).</p>
+<p><strong>앱 첫 화면이 바뀐 과정</strong> (AAOS 에뮬레이터)</p>
 <div class="table"><table><thead><tr>
-<th>날짜</th>
-<th>써 보며 본 것</th>
-<th>바뀐 것</th>
-<th>기록</th>
+<th>11-13 재점검 전 (2~4단계)</th>
+<th>11-13 재점검 뒤 (5단계, 주행 중)</th>
+<th>11-14 3영역 개편 (7단계)</th>
+<th>11-18 지금 (9단계)</th>
 </tr>
 </thead><tbody><tr>
-<td>11-14</td>
-<td>에뮬레이터의 공조 온도가 태블릿과 다르게 보임(화씨 61°)</td>
-<td>운전석·조수석 22.0°C, 섭씨로 맞춤. 이 변경으로 화씨를 가정하던 1단계 테스트 4개가 실패해, 표시 단위를 읽어 기대값을 계산하게 고침</td>
-<td><a href="phase7-layout.html#에뮬레이터-공조-값을-태블릿과-같게">7단계 기록</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/7590d42" target="_blank" rel="noopener"><code>7590d42</code></a></td>
-</tr>
-<tr>
-<td>11-16</td>
-<td>고쳤다던 온도가 에뮬레이터를 다시 켜자 다시 63°로 나옴(같은 지적을 다시 함)</td>
-<td>지금 값만 바꾸던 방식을 VHAL 초기값 덮어쓰기로 바꿔 재부팅 뒤에도 유지</td>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/5d95212" target="_blank" rel="noopener"><code>5d95212</code></a></td>
-</tr>
-<tr>
-<td>11-16</td>
-<td>공조에 최대 냉방(FULL)이 없음</td>
-<td>FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍량을 바꾸면 풀림)</td>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/3c60f2d" target="_blank" rel="noopener"><code>3c60f2d</code></a></td>
-</tr>
-<tr>
-<td>11-16</td>
-<td>영상 화면 아래에 블랙박스 제품 이름이 보임</td>
-<td>아래 줄을 잘라 내고 재생</td>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/9b36711" target="_blank" rel="noopener"><code>9b36711</code></a></td>
-</tr>
-<tr>
-<td>11-16, 11-18</td>
-<td>테스트 결과를 글자로만 확인할 수 있음</td>
-<td>테스트마다 판정 직후 화면을 남기고, 결과 페이지에서 바로 보이게</td>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/0aa184f" target="_blank" rel="noopener"><code>0aa184f</code></a>, <a href="test-results.html">테스트 결과</a></td>
-</tr>
-<tr>
-<td>11-18</td>
-<td>우대사항 3개(차량 네트워크, REST·원격 전원, 기능 안전)가 비어 있음. 지금 방법으로는 정말 안 되는지 물음</td>
-<td>Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 &#39;일부&#39;로 표시</td>
-<td><a href="phase9-bench.html">9단계 기록</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6" target="_blank" rel="noopener"><code>84b63d6</code></a></td>
+<td><img src="../../docs/images/before-home.png" width="230" alt="재점검 전 홈 화면: 속도와 기어 카드, 비어 있는 공조 카드, 아래 시스템 바는 화씨 70°와 61°"></td>
+<td><img src="../../docs/images/home-driving.png" width="230" alt="재점검 뒤 홈 화면: 속도 게이지, 미디어 카드, 공조 카드"></td>
+<td><img src="../../docs/images/p7-home.png" width="230" alt="3영역으로 바꾼 홈 화면: 왼쪽 주행 정보, 가운데 지도, 오른쪽 미디어, 아래 공조 바"></td>
+<td><img src="../../docs/images/p9-home.png" width="230" alt="지금 홈 화면: 목적지 검색, 아래 시스템 바 대신 앱의 공조 바"></td>
 </tr>
 </tbody></table></div>
+<h4 id="11-14-공조-온도가-태블릿과-다르게-보임"><a class="anchor" href="#11-14-공조-온도가-태블릿과-다르게-보임" aria-hidden="true">#</a>11-14 공조 온도가 태블릿과 다르게 보임</h4>
+<p>에뮬레이터에서는 앱이 16.0°C, 아래 시스템 바가 화씨 61°로 보였습니다. 운전석·조수석을 22.0°C, 섭씨로 맞췄습니다. 이 변경으로 화씨를 가정하던 1단계 테스트 4개가 실패해, 표시 단위를 읽어 기대값을 계산하게 고쳤습니다. <a href="phase7-layout.html#에뮬레이터-공조-값을-태블릿과-같게">7단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/7590d42" target="_blank" rel="noopener"><code>7590d42</code></a></p>
+<div class="table"><table><thead><tr>
+<th>전</th>
+<th>후</th>
+</tr>
+</thead><tbody><tr>
+<td><img src="../../docs/images/fqa/1114-climate-before.png" width="400" alt="앱은 16.0°C, 아래 시스템 바는 화씨 61°로 보이는 공조 화면"></td>
+<td><img src="../../docs/images/p7-climate.png" width="400" alt="운전석, 조수석, 아래 시스템 바가 모두 22.0°C로 보이는 공조 화면"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-16-고쳤던-온도가-재부팅-뒤-다시-63"><a class="anchor" href="#11-16-고쳤던-온도가-재부팅-뒤-다시-63" aria-hidden="true">#</a>11-16 고쳤던 온도가 재부팅 뒤 다시 63°</h4>
+<p>같은 지적을 다시 했습니다. 지금 값만 바꾸던 방식을 VHAL 초기값 덮어쓰기로 바꿔, 에뮬레이터를 다시 켜도 22.0°C가 유지되게 했습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/5d95212" target="_blank" rel="noopener"><code>5d95212</code></a></p>
+<h4 id="11-16-공조에-최대-냉방full이-없음"><a class="anchor" href="#11-16-공조에-최대-냉방full이-없음" aria-hidden="true">#</a>11-16 공조에 최대 냉방(FULL)이 없음</h4>
+<p>FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍량을 바꾸면 풀림)를 더했습니다. FULL을 켜면 온도는 16.0°C, 풍량은 7이 됩니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/3c60f2d" target="_blank" rel="noopener"><code>3c60f2d</code></a></p>
+<div class="table"><table><thead><tr>
+<th>전</th>
+<th>후 (FULL 켬)</th>
+</tr>
+</thead><tbody><tr>
+<td><img src="../../docs/images/p8-climate.png" width="400" alt="FULL 버튼이 없는 공조 화면: A/C, AUTO, SYNC"></td>
+<td><img src="../../docs/images/p9-climate-full.png" width="400" alt="FULL을 켠 공조 화면: 16.0°C, 풍량 7"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-16-영상-화면-아래에-블랙박스-제품-이름이-보임"><a class="anchor" href="#11-16-영상-화면-아래에-블랙박스-제품-이름이-보임" aria-hidden="true">#</a>11-16 영상 화면 아래에 블랙박스 제품 이름이 보임</h4>
+<p>영상 아래 줄을 잘라 내고 재생하게 했습니다. 영상은 직접 찍은 블랙박스 주행 영상입니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/9b36711" target="_blank" rel="noopener"><code>9b36711</code></a></p>
+<div class="table"><table><thead><tr>
+<th>후</th>
+</tr>
+</thead><tbody><tr>
+<td><img src="../../docs/images/p9-video.png" width="400" alt="아래 줄을 잘라 낸 블랙박스 주행 영상 화면"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-16-11-18-테스트-결과를-글자로만-확인할-수-있음"><a class="anchor" href="#11-16-11-18-테스트-결과를-글자로만-확인할-수-있음" aria-hidden="true">#</a>11-16, 11-18 테스트 결과를 글자로만 확인할 수 있음</h4>
+<p>테스트마다 판정 직후 화면을 남기고, 결과 페이지에서 두 기기의 화면을 나란히 보게 했습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/0aa184f" target="_blank" rel="noopener"><code>0aa184f</code></a> · <a href="test-results.html">테스트 결과</a></p>
+<div class="table"><table><thead><tr>
+<th>후 (지금 결과 페이지)</th>
+</tr>
+</thead><tbody><tr>
+<td><img src="../../docs/images/fqa/results-page.png" width="640" alt="테스트 결과 페이지: 기기별 요약과, 테스트마다 AAOS와 태블릿의 판정 직후 화면"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-18-우대사항-3개가-비어-있음"><a class="anchor" href="#11-18-우대사항-3개가-비어-있음" aria-hidden="true">#</a>11-18 우대사항 3개가 비어 있음</h4>
+<p>차량 네트워크, REST·원격 전원, 기능 안전 항목이 비어 있어 지금 방법으로는 정말 안 되는지 물었습니다. Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 &#39;일부&#39;로 표시했습니다. <a href="phase9-bench.html">9단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6" target="_blank" rel="noopener"><code>84b63d6</code></a></p>
 <p>지적은 대부분 외부 검토(AI 검토 포함)와 기기 실행에서 나왔습니다. 지적마다 반영할지는 제가 정했고, 반영한 것은 위처럼 코드와 기록으로 남겼습니다. 같은 종류의 실수가 다시 들어오지 않도록 링크 검사, 추적 검사, 게이트 조건을 CI와 게이트에 넣었습니다.</p>
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
@@ -574,44 +589,39 @@
 <th>서비스</th>
 <th>주요 위험</th>
 <th>확인 방향</th>
-<th>요구사항</th>
-<th>테스트 (smoke / sanity / regression)</th>
+<th>테스트 수<br>smoke / sanity / regression</th>
 <th>이 프로젝트에서 보지 못하는 것</th>
 </tr>
 </thead><tbody><tr>
-<td>HVAC</td>
+<td><strong>HVAC</strong><br>HVAC-01~06</td>
 <td>다른 좌석 area에 쓰기, 범위 밖이나 단위가 어긋난 값 쓰기, 화면과 신호 불일치</td>
-<td>화면→신호: 버튼, 아래 바, 음성이 <code>HVAC_TEMPERATURE_SET</code>과 A/C 전 좌석 area를 바꾸는지. 신호→화면: VHAL 값이 공조 화면, 홈, 아래 바에 같은 값으로 보이는지</td>
-<td>HVAC-01~06</td>
+<td><strong>화면→신호</strong> 버튼, 아래 바, 음성이 <code>HVAC_TEMPERATURE_SET</code>과 A/C 전 좌석 area를 바꾸는지<br><strong>신호→화면</strong> VHAL 값이 공조 화면, 홈, 아래 바에 같은 값으로 보이는지</td>
 <td>1 / 11 / 31</td>
 <td>실제 공조 ECU의 응답 지연과 거절, 실차의 area 구성</td>
 </tr>
 <tr>
-<td>차량 설정</td>
+<td><strong>차량 설정</strong><br>BODY-01, SET-01</td>
 <td>일부 문만 잠김, 설정이 재시작 뒤 사라짐</td>
-<td>화면→신호: 도어 버튼이 모든 문 area의 <code>DOOR_LOCK</code>을 바꾸는지. 신호→화면: 차량 쪽 문 열림이 화면에 보이는지. 속도 단위 설정이 차량 정보 표시에 반영되는지</td>
-<td>BODY-01, SET-01</td>
+<td><strong>화면→신호</strong> 도어 버튼이 모든 문 area의 <code>DOOR_LOCK</code>을 바꾸는지<br><strong>신호→화면</strong> 차량 쪽 문 열림이 화면에 보이는지. 속도 단위 설정이 차량 정보 표시에 반영되는지</td>
 <td>0 / 3 / 7</td>
 <td>실제 BCM. 사이드 미러, 트렁크 같은 항목은 신호에 연결하지 않은 화면 상태</td>
 </tr>
 <tr>
-<td>주행 정보 패널 (앱 왼쪽, 계기판 역할)</td>
+<td><strong>주행 정보 패널</strong><br>(앱 왼쪽, 계기판 역할)<br>DRIVE-01, ENERGY-01, ENERGY-02</td>
 <td>잘못된 속도와 기어 표시, 거리 부족 경고 누락</td>
-<td>신호→화면: 속도, 기어, 주행 가능 거리, 배터리, 외기 온도. 거리 30, 29 km에서 경고와 충전소 안내</td>
-<td>DRIVE-01, ENERGY-01, ENERGY-02</td>
+<td><strong>신호→화면</strong> 속도, 기어, 주행 가능 거리, 배터리, 외기 온도. 거리 30, 29 km에서 경고와 충전소 안내</td>
 <td>1 / 6 / 11</td>
 <td>AAOS 클러스터 디스플레이(보조 화면)와의 연동, 실제 계기판</td>
 </tr>
 <tr>
-<td>미디어</td>
+<td><strong>미디어</strong><br>MEDIA-01, MEDIA-02, DRIVE-02</td>
 <td>주행 중 영상 재생(운전자 주의 분산), 소리 겹침</td>
-<td>신호→화면: 주행 중 영상 차단, 정차하면 이어 보기. 앱 안: 음악, 라디오, 통화가 한 번에 하나만 소리 냄</td>
-<td>MEDIA-01, MEDIA-02, DRIVE-02</td>
+<td><strong>신호→화면</strong> 주행 중 영상 차단, 정차하면 이어 보기<br><strong>앱 안</strong> 음악, 라디오, 통화가 한 번에 하나만 소리 냄</td>
 <td>0 / 4 / 15</td>
 <td>실제 스피커 출력, 블루투스 기기, 차량 오디오 시스템</td>
 </tr>
 </tbody></table></div>
-<p>테스트 수는 요구사항 표시(<code>@pytest.mark.req</code>)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 <a href="traceability.html">추적표</a>에 있습니다.</p>
+<p>서비스 이름 아래는 <a href="requirements.html">요구사항</a> 번호입니다. 테스트 수는 요구사항 표시(<code>@pytest.mark.req</code>)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 <a href="traceability.html">추적표</a>에 있습니다.</p>
 <p><strong>검증 단계.</strong> 앞 단계일수록 빠르고 기기가 필요 없으며, 뒤 단계일수록 실제 차량에 가깝습니다. 이 프로젝트는 3단계까지 했습니다.</p>
 <div class="table"><table><thead><tr>
 <th>단계</th>
@@ -1077,7 +1087,7 @@
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
