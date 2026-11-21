@@ -121,7 +121,7 @@ export const REQUIREMENTS = [
   },
   {
     id: "ci", group: "must", title: "Git · CI/CD",
-    done: "PR 단위로 작업했고, GitHub Actions가 PR마다 빌드와 단위 테스트를 돌립니다.",
+    done: "PR 단위로 작업했고, GitHub Actions가 PR마다 빌드, 단위 테스트, 호스트 러너의 AAOS 에뮬레이터 smoke 13개를 무인으로 돌립니다. 태블릿과 전체 회귀는 작업 PC에서 돌렸습니다.",
     link: { href: "docs/portfolio.html#8-3-github-실행-기록", label: "실행 기록" },
   },
   {

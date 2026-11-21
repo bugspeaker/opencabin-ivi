@@ -25,7 +25,7 @@
 | 단위 테스트 | 프레임워크 167개, 앱 22개 모두 통과 |
 | 테스트별 결과 | 기기마다 판정, 판정 직후 화면, AAOS는 테스트 중 마지막으로 읽은 차량 값까지: [테스트 결과](test-results.md) |
 | 요구사항 추적 | 요구사항 26개 ↔ 테스트 함수 101개(매개변수 조합까지 129개). 빠진 곳이 있으면 CI의 unit job이 실패합니다: [추적표](traceability.md) |
-| GitHub Actions | build와 unit job은 PR, main push, Nightly마다 GitHub에서 돕니다([실행 기록](https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml)). GitHub에서 돈 것은 build와 unit job뿐이고, e2e job은 아직 GitHub에서 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 ([8-3](#8-3-github-실행-기록)) |
+| GitHub Actions | build, unit, e2e-hosted job이 PR, main push, Nightly마다 GitHub에서 돕니다([실행 기록](https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml)). e2e-hosted는 GitHub 호스트 러너에 AAOS 에뮬레이터를 새로 띄워 smoke 13개를 무인으로 돌립니다(2026-11-21부터). 태블릿과 sanity 이상의 E2E는 self-hosted Bench용 e2e job으로 작성했고 GitHub에서는 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 ([8-3](#8-3-github-실행-기록)) |
 
 알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼(SystemUI) 쪽 문제라 앱에서 고칠 수 없어 `xfail(strict=True, raises=DefectReproduced)`로 걸어 두었습니다. 두 버튼이 겹치는 증상일 때만 xfailed가 되고, 버튼을 못 찾는 등 다른 이유의 실패는 그대로 실패입니다. 고쳐지면 이 테스트가 실패로 바뀌어 바로 알 수 있습니다. 건너뛴 테스트는 그 기기에 해당하지 않는 테스트입니다(태블릿: AAOS 전용 7개, AAOS: 태블릿 전용 시계 1개). Release 게이트는 이 밖의 건너뜀을 막습니다.
 
@@ -70,7 +70,7 @@
 | Python 테스트 프레임워크 (Pytest) | 훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 167개 있습니다. |
 | Appium 등 UI 자동화 도구 | Appium(UiAutomator2)을 썼고, AAOS의 다중 사용자 환경(user 10)에 맞춰 설정했습니다. |
 | ADB, Logcat, Shell | adb 어댑터를 만들고, 테스트 도중 앱 크래시나 ANR이 logcat에 남으면 화면 판정이 통과해도 그 테스트를 실패로 합니다. 실패하면 logcat을 자동으로 저장하고, 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다. |
-| Git, CI/CD | PR 단위로 작업했고, GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트, 프레임워크 단위 테스트를 돌립니다. e2e job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다 ([8-3](#8-3-github-실행-기록)). |
+| Git, CI/CD | PR 단위로 작업했고, GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트, 프레임워크 단위 테스트, 호스트 러너의 AAOS 에뮬레이터 smoke 13개를 돌립니다. 태블릿과 전체 회귀를 돌리는 e2e job은 self-hosted Bench용으로 작성했고 GitHub에서는 돌리지 않았습니다 ([8-3](#8-3-github-실행-기록)). |
 
 ### 우대사항
 
@@ -379,6 +379,7 @@ if out.count("Set property") == len(commands):   # 31개가 모두 들어갔는�
 flowchart LR
     E[PR / push / Nightly / Release] --> B[build]
     E --> U[unit]
+    B --> H[e2e-hosted: AAOS smoke]
     B --> X{Bench 켜짐?}
     U --> X
     X -->|예| R[e2e]
@@ -389,6 +390,7 @@ flowchart LR
 |---|---|---|
 | build | GitHub 호스트 | 앱을 빌드하고 앱 단위 테스트를 돌린 뒤 APK를 보관합니다. |
 | unit | GitHub 호스트 | 기기 없이 프레임워크 단위 테스트를 돌립니다. 요구사항 추적 누락도 여기서 막습니다. |
+| e2e-hosted | GitHub 호스트 (ubuntu, KVM) | 매번 AAOS 에뮬레이터를 새로 띄우고(작업 PC와 같은 이미지와 화면, 창 없음) build job의 APK를 priv-app으로 넣은 뒤 smoke 13개를 돌립니다. 태블릿은 없습니다. 결과 파일, 실패 자료, 에뮬레이터·Appium 로그를 올리고 통과 수를 실행 요약에 씁니다([`ci_hosted_aaos.sh`](../ivi-tests/tools/ci_hosted_aaos.sh)). |
 | e2e | self-hosted Test Bench | 두 기기에서 병렬로 돌리고 flaky 리포트를 냅니다. 저장소 변수 `IVI_BENCH=online`일 때만 돕니다. |
 
 | 이벤트 | e2e 범위 |
@@ -400,7 +402,7 @@ flowchart LR
 
 워크플로를 짜면서 정한 것들입니다.
 
-- e2e는 Bench에서 APK를 다시 빌드합니다. AAOS에 priv-app으로 넣어 둔 앱과 서명 키가 같아야 덮어쓸 수 있는데, GitHub 호스트에서 만든 APK는 키가 다릅니다.
+- e2e는 Bench에서 APK를 다시 빌드합니다. AAOS에 priv-app으로 넣어 둔 앱과 서명 키가 같아야 덮어쓸 수 있는데, GitHub 호스트에서 만든 APK는 키가 다릅니다. e2e-hosted는 매번 새 에뮬레이터에 처음 넣으므로 build job의 APK를 그대로 씁니다.
 - 기기에 있는 APK와 해시가 같으면 설치를 건너뜁니다. 화웨이는 adb 설치마다 기기 화면에서 승인해야 해서, 매번 설치하면 무인 실행이 멈춥니다.
 - Bench가 한 대라 e2e job은 한 번에 하나만 돌게 했습니다. build와 unit에는 이 제한을 걸지 않았습니다.
 - checkout 때 누적 기록 폴더를 지우지 않습니다. flaky 통계가 실행을 넘어 쌓여야 하기 때문입니다.
@@ -408,17 +410,19 @@ flowchart LR
 
 ### 8-3. GitHub 실행 기록
 
-ivi-ci 워크플로의 build와 unit job은 PR, main push, Nightly(매일 03:00 KST)마다 GitHub에서 돕니다. e2e job은 Test Bench(self-hosted 러너)를 켜 두지 않아서 건너뜁니다. 실행 횟수와 결과는 [Actions 실행 기록](https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml)에 있습니다. 횟수를 문서에 적으면 PR마다 낡아서 링크로 둡니다.
+ivi-ci 워크플로의 build, unit, e2e-hosted job은 PR, main push, Nightly(매일 03:00 KST)마다 GitHub에서 돕니다. e2e job은 Test Bench(self-hosted 러너)를 켜 두지 않아서 건너뜁니다. 실행 횟수와 결과는 [Actions 실행 기록](https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml)에 있습니다. 횟수를 문서에 적으면 PR마다 낡아서 링크로 둡니다.
 
-| 이벤트 | build | unit | e2e |
-|---|---|---|---|
-| PR 생성, 갱신 | 앱 빌드와 앱 단위 테스트 (4~5분) | 프레임워크 단위 테스트 (15~30초) | 건너뜀 |
-| main push (병합) | 같음 | 같음 | 건너뜀 |
-| Nightly | 같음 | 같음 | 건너뜀 |
+| 이벤트 | build | unit | e2e-hosted | e2e |
+|---|---|---|---|---|
+| PR 생성, 갱신 | 앱 빌드와 앱 단위 테스트 (4~5분) | 프레임워크 단위 테스트 (15~30초) | AAOS 에뮬레이터 smoke 13개 (job 약 4~5분, smoke 약 1분) | 건너뜀 |
+| main push (병합) | 같음 | 같음 | 같음 | 건너뜀 |
+| Nightly | 같음 | 같음 | 같음 | 건너뜀 |
 
 소개 사이트는 pages 워크플로가 `site/`나 `docs/images/`가 바뀐 main push마다 올립니다.
 
-Actions 기록에 취소된 실행이 1회 있습니다. 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 두 번째 실행부터는 그 수정이 들어간 실행입니다.
+Actions 기록의 취소된 실행은 2회입니다. 하나는 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 다른 하나는 2026-11-21 e2e-hosted를 만들면서 고치기 전 커밋으로 잘못 시작한 수동 실행입니다.
+
+e2e-hosted를 처음 만든 2026-11-21에는 브랜치에서 수동 실행(`workflow_dispatch`)으로 시험했습니다. 첫 실행은 호스트 러너의 avdmanager가 AVD를 `~/.android/avd`가 아닌 곳에 만들어 실패했고, 위치를 고정한 뒤 smoke 13개가 통과했습니다(부팅 25초, smoke 58초). 같은 날 시험 실행들의 unit job 실패는 아직 넣지 않은 원자료 문서를 가리키는 링크 때문이었습니다(끊긴 링크 검사가 막은 것).
 
 앱 단위 테스트는 CI에서 처음으로 Gradle로 돌았습니다. 작업 PC는 사용자 폴더가 한글 경로라 Gradle 테스트 실행기가 죽어서, 그동안은 `java`로 직접 돌려 확인했습니다.
 
@@ -435,7 +439,7 @@ Actions 기록에 취소된 실행이 1회 있습니다. 첫 실행입니다. se
 - AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다. 이 문서의 '주행 정보 패널'은 앱 왼쪽의 화면입니다.
 - 앱은 가상 IVI입니다. 지도, 라디오, 통화는 가상 데이터이고, AI 어시스턴트는 LLM이 아니라 규칙 기반입니다. 운전자 보조 표시와 주변 차량은 연출입니다. 화면 구조는 공개 자료를 참고했고 타사 로고, 이미지, 코드는 쓰지 않았습니다.
 - 앱도 이 프로젝트에서 만들어서 테스트에 필요한 testTag와 테스트 훅을 마음대로 넣을 수 있었습니다. 다른 팀이 만든 앱을 테스트하는 실제 환경과 다릅니다.
-- CI에서 e2e는 아직 GitHub로 돌리지 않았습니다. build와 unit만 GitHub에서 통과했고, e2e는 같은 명령(`run_bench.py`)을 작업 PC에서 실행해 확인했습니다. 공개 저장소라 개인 PC를 self-hosted 러너로 붙이지 않기로 했습니다.
+- GitHub에서 무인으로 도는 E2E는 호스트 러너의 AAOS 에뮬레이터 smoke 13개뿐입니다. 태블릿과 sanity 이상은 같은 명령(`run_bench.py`)을 작업 PC에서 실행해 확인했습니다. 공개 저장소라 개인 PC를 self-hosted 러너로 붙이지 않기로 했습니다.
 - `test_out_of_range_signal_is_shown_safely`는 기기마다 기대값이 다릅니다. AAOS는 VHAL에 범위 밖 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주는지, ▲ 한 번에 차량 값이 16.0°C가 되는지 봅니다. 태블릿의 Mock 차량은 받은 값을 16.0~28.0°C로 잘라 두므로 15.5°C는 16.0°C가 되고, ▲ 한 번에 16.5°C가 되는지만 봅니다. 범위 밖 값 표시는 AAOS에서만 확인한 것입니다.
 - 테스트 쪽 차량 어댑터는 좌석 area를 에뮬레이터 값으로 고정했습니다(`SEAT_AREAS`, [`ivi/vehicle.py`](../ivi-tests/ivi/vehicle.py)). 앱이 `CarPropertyConfig`에서 읽은 area와 출처가 다른 기대값으로 두어, 설정이 틀렸을 때 앱과 테스트가 같이 틀리지 않게 하려는 것입니다. 다른 차종에서는 `cmd car_service get-property-config`로 읽은 area와 이 목록을 먼저 맞춰 봐야 합니다.
 - 앱의 온도 범위(16.0~28.0°C)와 0.5°C 증분은 앱 코드(`HvacSpec`)에 고정했습니다. 좌석 area는 `CarPropertyConfig`에서 읽지만 범위와 증분은 읽지 않습니다. 차종마다 다르면 area별 최소·최대 값과 `HVAC_TEMPERATURE_SET`의 `configArray`에서 읽어야 합니다.
@@ -446,7 +450,7 @@ Actions 기록에 취소된 실행이 1회 있습니다. 첫 실행입니다. se
 
 ### 다음 단계
 
-1. Bench 전용 PC나 비공개 저장소의 self-hosted 러너로 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.
+1. 호스트 러너의 AAOS 에뮬레이터로 sanity까지 넓히고, 태블릿은 Bench 전용 PC나 비공개 저장소의 self-hosted 러너로 붙여 Nightly 기록을 남기려고 합니다.
 2. 반복 실행을 Nightly로 쌓아 기간별 flaky 추세를 보려고 합니다.
 3. 차량 네트워크는 SOME/IP와 DDS도 같은 방식의 모의 환경으로 해 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.
 
