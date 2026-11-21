@@ -144,6 +144,7 @@
 <p>1024x768 화면(<code>automotive_1024p_landscape</code>)의 하단 시스템 바에서 운전석 온도 ▲를 눌러도 온도가 바뀌지 않았습니다. Appium으로 눌러도, <code>adb shell input tap</code>으로 눌러도 같았습니다.</p>
 <p>원인은 버튼 영역이 겹친 것이었습니다. ▲는 <code>[192,682][268,758]</code>, 홈 버튼은 <code>[188,682][264,758]</code>이라 72x76px가 겹치고, 홈 버튼이 위에 있어서 탭을 가져갑니다. 운전석 ▼와 조수석 ▲, ▼는 정상이었습니다.</p>
 <p><a class="test-link" href="test-results.html#test_driver_temp_up_is_not_covered_by_home" title="테스트 결과와 화면 보기"><code>test_driver_temp_up_is_not_covered_by_home</code></a>을 <code>xfail(strict=True)</code>로 두었습니다. 나중에 결함이 고쳐지면 이 테스트가 통과하게 되고, strict 설정 때문에 그 결과가 실패로 바뀌어서 바로 알 수 있습니다.</p>
+<p>이 결함은 GitHub 이슈 <a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a>로 열어 두었습니다.</p>
 <h2 id="환경에서-막혔던-것"><a class="anchor" href="#환경에서-막혔던-것" aria-hidden="true">#</a>환경에서 막혔던 것</h2>
 <div class="table"><table><thead><tr>
 <th>문제</th>

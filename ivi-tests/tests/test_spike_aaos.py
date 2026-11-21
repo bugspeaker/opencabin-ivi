@@ -84,7 +84,7 @@ def test_hvac_ui_tap_changes_signal(driver, vehicle, side, button, delta):
 # raises=DefectReproduced: 이 결함의 증상(두 버튼이 겹침)일 때만 xfailed 로 본다. 버튼을 못 찾거나 Appium 세션이 끊기는 등
 # 다른 이유의 실패는 그대로 failed 가 되어 게이트를 막는다. raises 가 없으면 어떤 예외든 '알려진 결함'으로 삼켜진다
 @pytest.mark.xfail(strict=True, raises=DefectReproduced,
-                   reason="알려진 결함 3: 1024x768 에서 운전석 온도 ▲ 가 홈 버튼에 가려 탭이 홈으로 간다 (docs/phase1-spike.md)")
+                   reason="알려진 결함 3 (이슈 #21): 1024x768 에서 운전석 온도 ▲ 가 홈 버튼에 가려 탭이 홈으로 간다 (docs/phase1-spike.md)")
 def test_driver_temp_up_is_not_covered_by_home(driver):
     """운전석 온도 ▲ 버튼이 홈 버튼에 가려지지 않는지 봅니다.
     1단계에서 찾은 SystemUI 결함이라 알려진 결함으로 남겨 두었습니다.

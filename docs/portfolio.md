@@ -114,17 +114,19 @@ flowchart LR
 
 ## 3. 결함과 원인 분석
 
-| 번호 | 증상 | 원인 | 조치와 결과 |
-|---|---|---|---|
-| 1 | 태블릿에서 탭 한 번에 10초가 걸림 | 이 기기에서는 UiAutomator 터치 자체가 느림 | 누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었음 |
-| 2 | 실행할 때마다 21번째 테스트에서 앱이 사라짐 | 화웨이 OS(iAware)가 반복 재시작을 크래시로 판단 | 프로세스는 그대로 두고 화면만 초기화. 3회 연속 재실행 0회 |
-| 3 | AAOS 에뮬레이터 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 눌리지 않음 | 홈 버튼과 72×76 px 겹침 | 플랫폼 쪽 문제라 `xfail(strict=True)`로 걸어 둠 |
-| 4 | 전체 실행에서만 실패 | 테스트 코드의 경쟁 조건 (제 실수) | 조건 대기로 고침 |
-| 5 | 표시 단위를 섭씨로 바꾸자 실패 | 테스트가 화씨 표시를 가정함 | 표시 단위 신호를 읽어 기대 값을 계산 |
-| 6 | 회귀 테스트에서 앱 결함 3건 | 패널 겹침, 낮은 화면, 공백 한 칸 | 앱을 고치고 회귀 테스트를 더함 |
-| 7 | 영상 차단 테스트가 한 번 흔들림 | 재현되지 않음 | 반복 실행 5회 × 2기기(10번)에서 재현 0. 격리하지 않고 계속 기록 |
-| 8 | 차량 온도가 0.5°C 단위가 아니면 온도 버튼이 어긋난 값을 차량에 씀 | 버튼이 '지금 값 ± 0.5'로 계산 | 0.5 단위에 맞춘 다음 값으로 계산하게 고침. 경계값 E2E 6개가 두 기기에서 통과 |
-| 9 | 막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류 | UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있음. 계측 프로세스가 죽는 원인은 확인하지 못함 | 테스트를 시작할 때 세션을 확인하고 끊겼으면 다시 붙임(`session_restart`로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과([확인 기록](evidence/2026-11-20-session-recovery/README.md)) |
+각 항목은 [GitHub 이슈](https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated)로도 옮겨 두었습니다(라벨 `migrated`, 6번은 세 건으로 나눔). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 열린 이슈는 알려진 결함([#21](https://github.com/bugspeaker/opencabin-ivi/issues/21))과 원인을 모르는 흔들림([#27](https://github.com/bugspeaker/opencabin-ivi/issues/27)) 두 건입니다.
+
+| 번호 | 증상 | 원인 | 조치와 결과 | 이슈 |
+|---|---|---|---|---|
+| 1 | 태블릿에서 탭 한 번에 10초가 걸림 | 이 기기에서는 UiAutomator 터치 자체가 느림 | 누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었음 | [#19](https://github.com/bugspeaker/opencabin-ivi/issues/19) |
+| 2 | 실행할 때마다 21번째 테스트에서 앱이 사라짐 | 화웨이 OS(iAware)가 반복 재시작을 크래시로 판단 | 프로세스는 그대로 두고 화면만 초기화. 3회 연속 재실행 0회 | [#20](https://github.com/bugspeaker/opencabin-ivi/issues/20) |
+| 3 | AAOS 에뮬레이터 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 눌리지 않음 | 홈 버튼과 72×76 px 겹침 | 플랫폼 쪽 문제라 `xfail(strict=True)`로 걸어 둠 | [#21](https://github.com/bugspeaker/opencabin-ivi/issues/21) |
+| 4 | 전체 실행에서만 실패 | 테스트 코드의 경쟁 조건 (제 실수) | 조건 대기로 고침 | [#22](https://github.com/bugspeaker/opencabin-ivi/issues/22) |
+| 5 | 표시 단위를 섭씨로 바꾸자 실패 | 테스트가 화씨 표시를 가정함 | 표시 단위 신호를 읽어 기대 값을 계산 | [#23](https://github.com/bugspeaker/opencabin-ivi/issues/23) |
+| 6 | 회귀 테스트에서 앱 결함 3건 | 패널 겹침, 낮은 화면, 공백 한 칸 | 앱을 고치고 회귀 테스트를 더함 | [#24](https://github.com/bugspeaker/opencabin-ivi/issues/24), [#25](https://github.com/bugspeaker/opencabin-ivi/issues/25), [#26](https://github.com/bugspeaker/opencabin-ivi/issues/26) |
+| 7 | 영상 차단 테스트가 한 번 흔들림 | 재현되지 않음 | 반복 실행 5회 × 2기기(10번)에서 재현 0. 격리하지 않고 계속 기록 | [#27](https://github.com/bugspeaker/opencabin-ivi/issues/27) |
+| 8 | 차량 온도가 0.5°C 단위가 아니면 온도 버튼이 어긋난 값을 차량에 씀 | 버튼이 '지금 값 ± 0.5'로 계산 | 0.5 단위에 맞춘 다음 값으로 계산하게 고침. 경계값 E2E 6개가 두 기기에서 통과 | [#28](https://github.com/bugspeaker/opencabin-ivi/issues/28) |
+| 9 | 막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류 | UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있음. 계측 프로세스가 죽는 원인은 확인하지 못함 | 테스트를 시작할 때 세션을 확인하고 끊겼으면 다시 붙임(`session_restart`로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과([확인 기록](evidence/2026-11-20-session-recovery/README.md)) | [#29](https://github.com/bugspeaker/opencabin-ivi/issues/29) |
 
 <details>
 <summary>1번. 탭 한 번에 10초</summary>

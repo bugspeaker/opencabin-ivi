@@ -2,4 +2,5 @@
 #   - 목록에 없는 테스트가 xfailed 이면 막는다 (새 결함을 xfail 로 숨긴 것)
 #   - 목록에 있는 테스트가 xfailed 가 아니거나 실행되지 않았으면 막는다 (고쳐졌거나 이름이 바뀌어 목록이 낡은 것)
 # 형식: <nodeid 또는 앞부분> | <결함 번호 (docs/portfolio.md 3장)> | <사유>
-tests/test_spike_aaos.py::test_driver_temp_up_is_not_covered_by_home | 3 | AAOS 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 홈 버튼과 72×76px 겹침 (플랫폼 결함)
+# 결함마다 GitHub 이슈(라벨 known-defect)가 있고, 사유 끝에 이슈 번호를 적는다. 줄을 지울 때는 이슈도 닫는다.
+tests/test_spike_aaos.py::test_driver_temp_up_is_not_covered_by_home | 3 | AAOS 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 홈 버튼과 72×76px 겹침 (플랫폼 결함, 이슈 #21)

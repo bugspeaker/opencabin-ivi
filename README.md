@@ -94,9 +94,9 @@ site/                 소개 사이트
 
 ## 찾은 결함과 알려진 결함
 
-앱 결함, 실기기 문제, 플랫폼 결함, 테스트 코드의 경쟁 조건까지 찾은 결함의 증상, 원인, 조치는 [포트폴리오 3장](docs/portfolio.md#3-결함과-원인-분석)의 표(9개 항목)에 있습니다.
+앱 결함, 실기기 문제, 플랫폼 결함, 테스트 코드의 경쟁 조건까지 찾은 결함의 증상, 원인, 조치는 [포트폴리오 3장](docs/portfolio.md#3-결함과-원인-분석)의 표(9개 항목)에 있고, 같은 기록을 [GitHub 이슈](https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated)로도 옮겨 두었습니다(이슈 생성일은 옮긴 날, 실제 발견일은 본문 첫 줄). 새로 찾는 결함은 이슈의 결함 양식으로 남깁니다.
 
-알려진 결함 1건은 <abbr title="Android Automotive OS. 차량에 직접 들어가는 안드로이드">AAOS</abbr> 에뮬레이터 기본 <abbr title="안드로이드의 상태 표시줄, 홈 버튼 같은 시스템 화면">SystemUI</abbr>(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼 쪽 문제라 `xfail(strict=True, raises=DefectReproduced)`로 걸어 두었습니다. 두 버튼이 겹치는 증상일 때만 '알려진 결함'이 되고, 버튼을 못 찾는 등 다른 이유의 실패는 그대로 실패입니다. <abbr title="릴리스 후보를 내보내도 되는지 정하는 자동 판정 (여섯 조건)">Release 게이트</abbr>가 [알려진 결함 목록](ivi-tests/known_defects.txt)과 맞춰 봅니다.
+알려진 결함 1건은 <abbr title="Android Automotive OS. 차량에 직접 들어가는 안드로이드">AAOS</abbr> 에뮬레이터 기본 <abbr title="안드로이드의 상태 표시줄, 홈 버튼 같은 시스템 화면">SystemUI</abbr>(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다([#21](https://github.com/bugspeaker/opencabin-ivi/issues/21)). 플랫폼 쪽 문제라 `xfail(strict=True, raises=DefectReproduced)`로 걸어 두었습니다. 두 버튼이 겹치는 증상일 때만 '알려진 결함'이 되고, 버튼을 못 찾는 등 다른 이유의 실패는 그대로 실패입니다. <abbr title="릴리스 후보를 내보내도 되는지 정하는 자동 판정 (여섯 조건)">Release 게이트</abbr>가 [알려진 결함 목록](ivi-tests/known_defects.txt)과 맞춰 봅니다.
 
 건너뛴 테스트는 그 기기에 해당하지 않는 테스트입니다(태블릿: AAOS 전용 7개, AAOS: 태블릿 전용 시계 1개). 사유는 결과에 남고, Release 게이트는 이 밖의 건너뜀(예: 기기에 주행 영상이 없어 건너뛴 영상 테스트)을 막습니다.
 

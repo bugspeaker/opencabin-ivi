@@ -1,0 +1,83 @@
+name: 결함
+description: 테스트나 화면 확인에서 찾은 결함을 남깁니다. 앱, 플랫폼(AAOS), 테스트 코드, 기기 환경 어느 쪽인지도 적습니다.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        재현 단계와 실패 자료가 있으면 원인을 다시 볼 수 있습니다. 실패 자료는 `ivi-tests/reports/artifacts/<실행>-<기기>/<테스트>/`에 저장됩니다.
+        알려진 결함으로 `xfail(strict=True)`를 걸 때는 `ivi-tests/known_defects.txt`에도 한 줄 넣고 `known-defect` 라벨을 붙입니다.
+
+  - type: checkboxes
+    id: devices
+    attributes:
+      label: 기기
+      description: 재현한 기기를 모두 고릅니다.
+      options:
+        - label: AAOS 에뮬레이터 (CarService, 에뮬레이터 VHAL)
+        - label: 화웨이 태블릿 (Mock 차량)
+
+  - type: dropdown
+    id: verdict
+    attributes:
+      label: 판정
+      description: 원인이 어느 쪽에 있는지입니다. 아직 모르면 '모름'을 고르고 나중에 고칩니다.
+      options:
+        - 앱 결함
+        - 플랫폼(AAOS) 결함
+        - 테스트 코드 결함
+        - 기기·도구 환경
+        - 모름
+    validations:
+      required: true
+
+  - type: input
+    id: test
+    attributes:
+      label: 관련 테스트
+      placeholder: tests/test_climate.py::test_off_grid_signal_steps_back_to_grid
+
+  - type: input
+    id: run
+    attributes:
+      label: 발견한 실행
+      description: run id 와 기기. 사람이 화면을 보다 찾았으면 날짜를 적습니다.
+      placeholder: 20261118-195509-r1, emulator-5554
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 단계
+      placeholder: |
+        1. 차량 쪽(VHAL)에 운전석 온도 22.3°C를 넣는다 (`dumpsys VHAL --set`)
+        2. 아래 바의 운전석 온도 + 를 누른다
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 결과
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 결과
+      description: 화면과 차량 신호를 함께 적습니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: signals
+    attributes:
+      label: 차량 신호 값
+      description: 판정에 쓴 VHAL 또는 Mock 값. 실패 자료의 vehicle.txt 를 붙여도 됩니다.
+      placeholder: HVAC_TEMPERATURE_SET[0x1]=22.8
+      render: text
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 실패 자료와 메모
+      description: 스크린샷, UI 계층, logcat 일부, 원인으로 짐작하는 것.
