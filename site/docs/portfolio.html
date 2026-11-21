@@ -55,7 +55,7 @@
 <img src="../../docs/images/web-bvt-demo.gif" width="760" alt="웹 BVT 도구에서 자동화를 실행해 타입캐스트 웹을 Playwright로 돌리고, 47건 중 실패한 1건의 화면과 녹화, 오류 메시지를 확인하는 모습">
 
 <h2 id="ai-결과를-어떻게-검증했나"><a class="anchor" href="#ai-결과를-어떻게-검증했나" aria-hidden="true">#</a>AI 결과를 어떻게 검증했나</h2>
-<p>AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 지적마다 반영할지는 제가 정했습니다.</p>
+<p>AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 &#39;직접 써 보며 준 피드백&#39;). 지적마다 반영할지는 제가 정했습니다.</p>
 <p><strong>원칙</strong></p>
 <ol>
 <li><strong>&#39;통과&#39;는 기기 실행 결과 파일로만 받아들입니다.</strong> 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK sha256, 종료 코드가 남고, Release 게이트가 <code>--commit</code>으로 그 커밋의 결과인지 확인합니다. 단위 테스트 통과는 기기 실행을 대신하지 않습니다.</li>
@@ -99,6 +99,51 @@
 <td>두 기기 전체 재실행 (2026-11-21)</td>
 <td>창 없이 다시 켜게 고치고 처음부터 3회, 750건 통과</td>
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
+</tr>
+</tbody></table></div>
+<p><strong>직접 써 보며 준 피드백 (FQA)</strong></p>
+<p>초기 버전부터 앱을 태블릿과 에뮬레이터에서 직접 써 보며, 새로 필요한 기능과 지금 기능이 제대로 도는지, 사용자로서 어색한 곳이 없는지 보고 고칠 것을 정했습니다. 아래는 작업 기록에 남은 것입니다(날짜는 2026년).</p>
+<div class="table"><table><thead><tr>
+<th>날짜</th>
+<th>써 보며 본 것</th>
+<th>바뀐 것</th>
+<th>기록</th>
+</tr>
+</thead><tbody><tr>
+<td>11-14</td>
+<td>에뮬레이터의 공조 온도가 태블릿과 다르게 보임(화씨 61°)</td>
+<td>운전석·조수석 22.0°C, 섭씨로 맞춤. 이 변경으로 화씨를 가정하던 1단계 테스트 4개가 실패해, 표시 단위를 읽어 기대값을 계산하게 고침</td>
+<td><a href="phase7-layout.html#에뮬레이터-공조-값을-태블릿과-같게">7단계 기록</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/7590d42" target="_blank" rel="noopener"><code>7590d42</code></a></td>
+</tr>
+<tr>
+<td>11-16</td>
+<td>고쳤다던 온도가 에뮬레이터를 다시 켜자 다시 63°로 나옴(같은 지적을 다시 함)</td>
+<td>지금 값만 바꾸던 방식을 VHAL 초기값 덮어쓰기로 바꿔 재부팅 뒤에도 유지</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/5d95212" target="_blank" rel="noopener"><code>5d95212</code></a></td>
+</tr>
+<tr>
+<td>11-16</td>
+<td>공조에 최대 냉방(FULL)이 없음</td>
+<td>FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍량을 바꾸면 풀림)</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/3c60f2d" target="_blank" rel="noopener"><code>3c60f2d</code></a></td>
+</tr>
+<tr>
+<td>11-16</td>
+<td>영상 화면 아래에 블랙박스 제품 이름이 보임</td>
+<td>아래 줄을 잘라 내고 재생</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/9b36711" target="_blank" rel="noopener"><code>9b36711</code></a></td>
+</tr>
+<tr>
+<td>11-16, 11-18</td>
+<td>테스트 결과를 글자로만 확인할 수 있음</td>
+<td>테스트마다 판정 직후 화면을 남기고, 결과 페이지에서 바로 보이게</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/commit/0aa184f" target="_blank" rel="noopener"><code>0aa184f</code></a>, <a href="test-results.html">테스트 결과</a></td>
+</tr>
+<tr>
+<td>11-18</td>
+<td>우대사항 3개(차량 네트워크, REST·원격 전원, 기능 안전)가 비어 있음. 지금 방법으로는 정말 안 되는지 물음</td>
+<td>Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 &#39;일부&#39;로 표시</td>
+<td><a href="phase9-bench.html">9단계 기록</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6" target="_blank" rel="noopener"><code>84b63d6</code></a></td>
 </tr>
 </tbody></table></div>
 <p>지적은 대부분 외부 검토(AI 검토 포함)와 기기 실행에서 나왔습니다. 지적마다 반영할지는 제가 정했고, 반영한 것은 위처럼 코드와 기록으로 남겼습니다. 같은 종류의 실수가 다시 들어오지 않도록 링크 검사, 추적 검사, 게이트 조건을 CI와 게이트에 넣었습니다.</p>
