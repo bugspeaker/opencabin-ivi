@@ -39,7 +39,13 @@ python -m venv .venv; .venv\Scripts\python -m pip install -r requirements.txt
 
 게이트 단계(smoke, sanity, regression, Release)의 기준은 [포트폴리오 4-1](portfolio.md#4-1-게이트-단계와-기준)에 있습니다.
 
-앱 단위 테스트는 `ivi-app`에서 `.\gradlew testDebugUnitTest`로 돌립니다. 사용자 폴더가 한글 경로이면 Gradle 테스트 실행기가 실패하므로, 임시 폴더를 영문 경로로 바꿔서 돌립니다(`$env:TMP = "C:\dev\.tmp"; $env:TEMP = $env:TMP`).
+앱 단위 테스트는 `ivi-app`에서 `.\gradlew testDebugUnitTest`로 돌립니다. 사용자 폴더가 한글 경로이면 Gradle 테스트 실행기가 실패하므로, Gradle 캐시(`GRADLE_USER_HOME`)와 임시 폴더를 모두 영문 경로로 바꿔서 돌립니다. 임시 폴더만 바꾸면 `Gradle Test Executor 1`이 종료 코드 1로 끝납니다(2026-11-20 확인). 임시 폴더는 없으면 먼저 만듭니다.
+
+```powershell
+New-Item -ItemType Directory -Force C:\dev\.tmp | Out-Null
+$env:GRADLE_USER_HOME = "C:\dev\.gradle"; $env:TMP = "C:\dev\.tmp"; $env:TEMP = $env:TMP
+.\gradlew testDebugUnitTest
+```
 
 ## 4. Test Bench API
 
