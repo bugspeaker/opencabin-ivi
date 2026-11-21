@@ -58,4 +58,5 @@ def test_api_rejects_invalid_value_and_leaves_vehicle_alone(app, bench, car):
     url, serial = bench
     status, reply = call(url, "POST", f"/api/devices/{serial}/signals", {"fan": 9})
     assert status == 400 and "fan 는 1~7" in reply["error"]
+    # 여기는 한 번 읽기로 충분하다: API 는 값을 모두 검사한 뒤에만 차량에 쓴다(validate_signals). 400 이면 쓰기를 시작하지 않았다
     assert car.signal(Signal.FAN) == CABIN_DEFAULTS[Signal.FAN]

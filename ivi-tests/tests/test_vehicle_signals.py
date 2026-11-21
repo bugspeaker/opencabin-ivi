@@ -11,7 +11,7 @@ AAOS 에서 실패하면 권한부터 본다: 공조 = CONTROL_CAR_CLIMATE, 도�
 import pytest
 
 from ivi.vehicle import Seat, Signal
-from ivi.waits import wait_until, wait_value
+from ivi.waits import stays, wait_until, wait_value
 
 
 def wait_signal(car, name, expected, what=None):
@@ -65,7 +65,8 @@ def test_fan_buttons_disabled_at_limits(app, car, level, blocked):
     wait_value(lambda: climate.fan(), level, what="풍량 표시")
     climate.wait_enabled(blocked, False)
     climate.tap(blocked)
-    assert car.signal(Signal.FAN) == level
+    # 꺼진 버튼이 늦게 쓰는 결함도 잡도록 한 번이 아니라 일정 시간 동안 본다
+    stays(lambda: car.signal(Signal.FAN) == level, what=f"차량 풍량 {level} 유지")
 
 
 @pytest.mark.req("HVAC-04")
@@ -128,7 +129,8 @@ def test_manual_fan_releases_max_ac(app, car):
     wait_signal(car, Signal.MAX_AC, False)
     wait_signal(car, Signal.FAN, 6)
     climate.wait_checked("max_ac", False)
-    assert car.temperature(Seat.DRIVER) == 16.0
+    # FULL 이 풀려도 온도를 FULL 이전 값으로 되돌려 쓰지 않는다. 늦게 오는 되돌리기 쓰기도 잡도록 일정 시간 동안 본다
+    stays(lambda: car.temperature(Seat.DRIVER) == 16.0, what="차량 운전석 온도 16.0 유지")
 
 
 @pytest.mark.req("HVAC-04")
@@ -173,7 +175,7 @@ def test_defrost_changes_only_its_window(app, car, where, signal, other):
     climate = app.climate()
     climate.toggle(where)
     wait_signal(car, signal, True)
-    assert car.signal(other) is False
+    stays(lambda: car.signal(other) is False, what=f"{other} 꺼짐 유지")
     climate.wait_checked(where, True)
 
     car.set_signal(signal, False)  # 하위 → 상위: 차량이 끄면 화면도 꺼진다
@@ -197,7 +199,7 @@ def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
         climate.tap_seat_heat(seat)
         wait_signal(car, Signal.heat(seat), expected)
         wait_value(lambda: climate.seat_heat(seat), expected, what=f"{seat.tag} 열선 표시 단계")
-    assert car.signal(Signal.heat(other)) == 0
+    stays(lambda: car.signal(Signal.heat(other)) == 0, what=f"차량 {other.tag} 열선 꺼짐 유지")
 
 
 @pytest.mark.req("HVAC-05")
@@ -208,7 +210,7 @@ def test_seat_heat_signal_is_shown_everywhere(app, car):
     car.set_signal(Signal.HEAT_DRIVER, 1)
     wait_value(lambda: climate.seat_heat(Seat.DRIVER), 1, what="공조 화면 운전석 열선 단계")
     wait_value(lambda: app.bar().seat_heat(Seat.DRIVER), 1, what="아래 바 운전석 열선 단계")
-    assert app.bar().seat_heat(Seat.PASSENGER) == 0
+    stays(lambda: app.bar().seat_heat(Seat.PASSENGER) == 0, what="아래 바 조수석 열선 0단 유지")
     app.vehicle_controls().wait_text("qc_seat_heat_value", "1단")
 
 
@@ -221,7 +223,7 @@ def test_bottom_bar_seat_heat_works_from_any_screen(app, car):
     bar.tap_seat_heat(Seat.PASSENGER)
     wait_signal(car, Signal.HEAT_PASSENGER, 2)
     wait_value(lambda: bar.seat_heat(Seat.PASSENGER), 2, what="아래 바 조수석 열선 단계")
-    assert car.signal(Signal.HEAT_DRIVER) == 0
+    stays(lambda: car.signal(Signal.HEAT_DRIVER) == 0, what="차량 운전석 열선 꺼짐 유지")
 
 
 @pytest.mark.req("VOICE-01", "HVAC-05")
@@ -233,7 +235,7 @@ def test_assistant_seat_heat_follows_speaker_zone(app, car):
     reply = assistant.say("열선 켜줘")
     assert "조수석" in reply
     wait_signal(car, Signal.HEAT_PASSENGER, 2)
-    assert car.signal(Signal.HEAT_DRIVER) == 0
+    stays(lambda: car.signal(Signal.HEAT_DRIVER) == 0, what="차량 운전석 열선 꺼짐 유지")
 
 
 # ---------------- 도어 잠금 ----------------
