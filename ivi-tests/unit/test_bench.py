@@ -209,3 +209,14 @@ def test_adb_reboot_power_cannot_switch_device_on():
     assert calls == [("reboot", "-p")]
     with pytest.raises(NotSupported):
         power.on()
+
+
+def test_emulator_power_restarts_without_window():
+    """다시 켤 때 창 없이 켠다. 화면이 꺼진 무인 벤치에서 창 모드 재시작이 멈췄다 (2026-11-21, ivi/power.py)."""
+    from ivi.power import EmulatorPower
+
+    power = EmulatorPower("emulator-5554", sdk_root="C:/android")
+    power.avd = "OpenCabin_AAOS_34"
+    command = power.command()
+    assert command[1:5] == ["-avd", "OpenCabin_AAOS_34", "-port", "5554"]
+    assert {"-writable-system", "-no-snapshot", "-no-window"} <= set(command)

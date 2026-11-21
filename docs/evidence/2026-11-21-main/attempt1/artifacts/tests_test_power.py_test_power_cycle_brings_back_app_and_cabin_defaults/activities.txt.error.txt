@@ -1,0 +1,1 @@
+AdbError: adb shell dumpsys activity activities 실패 (1): adb.exe: device 'emulator-5554' not found

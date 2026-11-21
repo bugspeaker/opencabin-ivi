@@ -92,6 +92,14 @@ class Adb:
             return "".join(out.splitlines(keepends=True)[-lines:])
         return self.run("logcat", "-d", "-t", str(lines), "-v", "threadtime", check=False, timeout=60)
 
+    def crash_log(self, since):
+        """since(log_mark 값) 이후의 crash·system 버퍼. 크래시(AndroidRuntime, libc)는 crash 버퍼에, ANR 은 system 버퍼에 남는다.
+        판정은 ivi.crashes.find_app_crashes 가 한다. 읽지 못하면 빈 글자 (판정 도구가 테스트를 깨뜨리지 않게)."""
+        if not since:
+            return ""
+        return self.run("logcat", "-d", "-b", "crash", "-b", "system", "-v", "threadtime", "-T", since,
+                        check=False, timeout=30)
+
     def screencap_displays(self):
         out = self.shell("dumpsys", "SurfaceFlinger", "--display-id", check=False)
         return re.findall(r"Display (\d+)", out)

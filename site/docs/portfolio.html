@@ -41,16 +41,19 @@
   </aside>
   <main id="content" class="doc">
 <h1 id="opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오"><a class="anchor" href="#opencabin-ivi-aaos-ivi-테스트-자동화-포트폴리오" aria-hidden="true">#</a>OpenCabin IVI: AAOS IVI 테스트 자동화 포트폴리오</h1>
-<p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>결과 기준: 2026-11-18 실행. 그 뒤 바꾼 코드와 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">README의 &#39;결과 자료와 검증 시점&#39;</a>에 있습니다.</p>
+<p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>결과 기준: 2026-11-21 실행(커밋 <code>d54741b</code>, 두 기기 × 3회). 이전 실행과 그때의 코드 시점은 <a href="readme.html#결과-자료와-검증-시점">README의 &#39;결과 자료와 검증 시점&#39;</a>에 있습니다.</p>
 <p><img data-md src="../../docs/images/p9-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
 <p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트 129개를 AAOS 에뮬레이터와 화웨이 태블릿에서 돌립니다. 에뮬레이터에서는 CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다. 실제 차량, HIL, CAN 장비는 쓰지 않았습니다.</p>
-<p><strong>만든 사람과 만든 방식</strong></p>
+<h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
 <ul>
-<li>배경: 게임 QA 약 8년과 Playwright·pytest 기반 웹 BVT 구축 경험을 바탕으로 AAOS 테스트 자동화로 영역을 넓혔습니다. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다.</li>
+<li>경력: 게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&amp;D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩(코드는 AI가 작성)으로 만들었습니다. 게임 QA에서 쓰던 BVT 문서 양식을 바탕으로 엑셀 BVT 문서를 브랜치·플랫폼별로 관리하는 대시보드에 Playwright·pytest UI 자동화를 붙여, 공개 웹 서비스(타입캐스트)의 BVT 70개 중 47개를 Chrome에서 한 번에 약 6분에 돌리고, 실패하면 화면·녹화·메시지를 남깁니다(2026-11-03 실행). Jira 처리량 캘린더와 Claude로 검수 리포트·이슈 초안을 만드는 TC 관리 도구(Bugspeaker Zone)도 바이브 코딩으로 만들어 업무에 씁니다. 모바일·AAOS 자동화는 이 프로젝트에서 처음 구축했습니다.</li>
 <li>기간: 2026-11-13부터, 혼자 진행했습니다.</li>
-<li>역할: 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 Test Bench(PC, AAOS 에뮬레이터, 태블릿)에서 E2E를 직접 돌려 결과와 실패 자료를 확인했고, 외부 검토를 받아 반영할 항목을 골랐고, PR마다 변경 내용과 실행 결과를 보고 병합했습니다.</li>
+<li>역할: 코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 저는 Claude가 제안한 변경과 외부 검토 항목을 확인해 반영 여부를 확정했고, PR을 병합했습니다. E2E 테스트 설계는 Claude와 함께 정했습니다.</li>
 <li>기기 구성, 신호 주입 방식, 판정과 재시도 규칙, 결함 원인 분석에서 무엇을 고르고 무엇을 버렸는지와 그 근거가 된 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
 </ul>
+<p>이전에 만든 웹 BVT 도구(바이브 코딩, 개인 포트폴리오)의 실행 모습입니다. BVT 문서에서 자동화를 실행하면 Playwright가 타입캐스트 웹을 돌리며 표에 결과를 채우고(빨리 감기), 끝나면 실패한 No.64의 실패 순간 화면, 녹화, 메시지를 보여 줍니다. 타입캐스트 계정 정보는 흐리게 했습니다.</p>
+<img src="../../docs/images/web-bvt-demo.gif" width="760" alt="웹 BVT 도구에서 자동화를 실행해 타입캐스트 웹을 Playwright로 돌리고, 47건 중 실패한 1건의 화면과 녹화, 오류 메시지를 확인하는 모습">
+
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
 <th>항목</th>
@@ -58,23 +61,23 @@
 </tr>
 </thead><tbody><tr>
 <td>AAOS 에뮬레이터</td>
-<td>127개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 45초)</td>
+<td>127개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (3회차 10분 4초)</td>
 </tr>
 <tr>
 <td>화웨이 태블릿 (Mock)</td>
-<td>122개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (10분 15초). 차량 값은 앱 안 Mock이라 화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기이고, VHAL 경로는 AAOS에서만 확인합니다</td>
+<td>122개 통과, AAOS 전용 7개 건너뜀, 재시도 0 (3회차 10분 49초). 차량 값은 앱 안 Mock이라 화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기이고, VHAL 경로는 AAOS에서만 확인합니다</td>
 </tr>
 <tr>
 <td>두 기기 병렬</td>
-<td>같은 시각에 시작해 끝까지 10분 16초. 차례로 돌렸다면 약 20분 0초</td>
+<td>같은 시각에 시작해 끝까지 10분 51초. 차례로 돌렸다면 약 20분 54초 (3회차)</td>
 </tr>
 <tr>
 <td>반복 실행</td>
-<td>전체를 두 기기에서 5회씩, 테스트 1,250건(AAOS 640, 태블릿 610) 실행. 기기 전용이라 건너뛴 것은 빼고, 알려진 결함으로 xfail된 5건은 넣은 수입니다. 재시도로 통과한 것(flaky) 0건, 실패 0건. 2026-11-20에 실행 완전성 조건을 더한 Release 게이트로 원자료를 다시 판정해 여섯 조건 통과 (<a href="flaky-report.html">반복 실행 통계와 원자료</a>)</td>
+<td>2026-11-21 지금 코드로 두 기기에서 3회씩, 테스트 750건(AAOS 384, 태블릿 366) 실행. 기기 전용이라 건너뛴 것은 빼고, 알려진 결함으로 xfail된 3건은 넣은 수입니다. 재시도로 통과한 것(flaky) 0건, 실패 0건, Release 게이트 여섯 조건을 <code>--commit d54741b</code>로 통과. 2026-11-18에는 그때 코드로 5회, 1,250건에서 flaky 0, 실패 0 (<a href="flaky-report.html">반복 실행 통계와 원자료</a>)</td>
 </tr>
 <tr>
 <td>단위 테스트</td>
-<td>프레임워크 156개, 앱 22개 모두 통과</td>
+<td>프레임워크 168개, 앱 22개 모두 통과</td>
 </tr>
 <tr>
 <td>테스트별 결과</td>
@@ -86,7 +89,7 @@
 </tr>
 <tr>
 <td>GitHub Actions</td>
-<td>build와 unit job은 PR, main push, Nightly마다 GitHub에서 돕니다(<a href="https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml" target="_blank" rel="noopener">실행 기록</a>). GitHub에서 돈 것은 build와 unit job뿐이고, e2e job은 아직 GitHub에서 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 (<a href="#8-3-github-실행-기록">8-3</a>)</td>
+<td>build, unit, e2e-hosted job이 PR, main push, Nightly마다 GitHub에서 돕니다(<a href="https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml" target="_blank" rel="noopener">실행 기록</a>). e2e-hosted는 GitHub 호스트 러너에 AAOS 에뮬레이터를 새로 띄워 smoke 13개를 무인으로 돌립니다(2026-11-21부터). 태블릿과 sanity 이상의 E2E는 self-hosted Bench용 e2e job으로 작성했고 GitHub에서는 돌리지 않았습니다. 위 E2E 수치는 같은 명령을 작업 PC에서 돌린 결과입니다 (<a href="#8-3-github-실행-기록">8-3</a>)</td>
 </tr>
 </tbody></table></div>
 <p>알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_1024p_landscape</code>)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼(SystemUI) 쪽 문제라 앱에서 고칠 수 없어 <code>xfail(strict=True, raises=DefectReproduced)</code>로 걸어 두었습니다. 두 버튼이 겹치는 증상일 때만 xfailed가 되고, 버튼을 못 찾는 등 다른 이유의 실패는 그대로 실패입니다. 고쳐지면 이 테스트가 실패로 바뀌어 바로 알 수 있습니다. 건너뛴 테스트는 그 기기에 해당하지 않는 테스트입니다(태블릿: AAOS 전용 7개, AAOS: 태블릿 전용 시계 1개). Release 게이트는 이 밖의 건너뜀을 막습니다.</p>
@@ -114,8 +117,8 @@
 <th>자세히</th>
 </tr>
 </thead><tbody><tr>
-<td>IVI 서비스별 검증 전략</td>
-<td>HVAC, 차량 설정(도어), 주행 정보 패널, 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트를 배치했습니다.</td>
+<td>IVI 서비스별·단계별 검증 전략</td>
+<td>HVAC, 차량 설정(도어), 주행 정보 패널, 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트를 배치했습니다. 단계는 앱 단위 테스트, 프레임워크 단위 테스트, 에뮬레이터·태블릿 E2E까지입니다. AAOS 클러스터 디스플레이와의 연동, HIL과 실차 단계는 하지 않았습니다.</td>
 <td><a href="#4-2-서비스별-검증">4-2</a></td>
 </tr>
 <tr>
@@ -139,8 +142,8 @@
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/ivi/screens.py">screens.py</a></td>
 </tr>
 <tr>
-<td>ADB, CarPropertyManager로 Property Injection</td>
-<td>앱과 같은 경로가 필요한 설정 온도는 <code>cmd car_service</code>로, 차량(ECU) 쪽에서 바뀐 값은 <code>dumpsys VHAL --set</code>으로 넣습니다.</td>
+<td>ADB, CarPropertyManager로 Property Injection과 이벤트 검증</td>
+<td>앱과 같은 경로가 필요한 설정 온도는 <code>cmd car_service</code>로, 차량(ECU) 쪽에서 바뀐 값은 <code>dumpsys VHAL --set</code>으로 넣습니다. 이벤트는 값을 넣은 뒤 앱 화면이 바뀌는 것으로 확인합니다(앱이 <code>onChangeEvent</code>로 받은 값). 이벤트 횟수, 순서, 시각, <code>onErrorEvent</code>는 따로 판정하지 않습니다.</td>
 <td><a href="#5-4-신호-주입-명령">5-4</a></td>
 </tr>
 <tr>
@@ -155,12 +158,16 @@
 <th>이 프로젝트에서 한 일</th>
 </tr>
 </thead><tbody><tr>
+<td>테스트 자동화나 QA 3년 이상</td>
+<td>게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트와 BM, 글로벌 현지화 검수, 외부 QA사·퍼블리셔 협업, AI R&amp;D 연계 테스트 대시보드 구축. ISTQB CTFL. 자동화는 바이브 코딩으로 만든 웹 BVT 도구(개인 포트폴리오, 엑셀 BVT 대시보드 + Playwright·pytest, 공개 웹 서비스 BVT 70개 중 47개 자동화)와 이 프로젝트입니다(<a href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a>).</td>
+</tr>
+<tr>
 <td>Android/AAOS 자동화 구축과 운영</td>
 <td>AAOS 에뮬레이터와 실제 태블릿에서 E2E 129개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 판정 직후 화면도 남깁니다.</td>
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
-<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.</td>
+<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 168개 있습니다.</td>
 </tr>
 <tr>
 <td>Appium 등 UI 자동화 도구</td>
@@ -168,11 +175,11 @@
 </tr>
 <tr>
 <td>ADB, Logcat, Shell</td>
-<td>adb 어댑터를 만들고, 실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다.</td>
+<td>adb 어댑터를 만들고, 테스트 도중 앱 크래시나 ANR이 logcat에 남으면 화면 판정이 통과해도 그 테스트를 실패로 합니다. 실패하면 logcat을 자동으로 저장하고, 앱이 강제로 꺼진 원인도 logcat에서 찾았습니다.</td>
 </tr>
 <tr>
 <td>Git, CI/CD</td>
-<td>PR 단위로 작업했고, GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트, 프레임워크 단위 테스트를 돌립니다. e2e job은 self-hosted Bench용으로 작성했고 아직 GitHub에서 돌리지 않았습니다 (<a href="#8-3-github-실행-기록">8-3</a>).</td>
+<td>PR 단위로 작업했고, GitHub Actions가 PR마다 앱 빌드, 앱 단위 테스트, 프레임워크 단위 테스트, 호스트 러너의 AAOS 에뮬레이터 smoke 13개를 돌립니다. 태블릿과 전체 회귀를 돌리는 e2e job은 self-hosted Bench용으로 작성했고 GitHub에서는 돌리지 않았습니다 (<a href="#8-3-github-실행-기록">8-3</a>).</td>
 </tr>
 </tbody></table></div>
 <h3 id="우대사항"><a class="anchor" href="#우대사항" aria-hidden="true">#</a>우대사항</h3>
@@ -336,7 +343,7 @@
 <summary>3번부터 7번까지</summary>
 
 <p><strong>3번. SystemUI 버튼 겹침.</strong> AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_1024p_landscape</code>)에서 운전석 온도 ▲ <code>[192,682][268,758]</code>와 홈 버튼 <code>[188,682][264,758]</code>이 겹치고, 홈이 위에 있어서 탭을 가져갑니다. 다른 해상도나 다른 AAOS 이미지에서도 나오는지는 확인하지 않았습니다. <code>strict=True</code>로 걸어 두었기 때문에 결함이 고쳐지면 XPASS가 실패로 바뀌어 알 수 있습니다. <code>raises=DefectReproduced</code>도 주어, 겹침을 확인한 자리에서 낸 예외일 때만 xfailed가 됩니다. 처음에는 <code>raises</code>가 없어서 버튼을 못 찾은 오류나 Appium 세션 끊김까지 &#39;알려진 결함&#39;으로 통과했습니다(2026-11-20 검토에서 고침).</p>
-<p><strong>4번. 테스트 코드의 경쟁 조건.</strong> <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a>이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 <code>wait_until</code>로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 고정 sleep은 쓰지 않습니다.</p>
+<p><strong>4번. 테스트 코드의 경쟁 조건.</strong> <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a>이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 <code>wait_until</code>로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 테스트의 대기에는 고정 sleep을 쓰지 않습니다.</p>
 <p><strong>5번. 표시 단위 가정.</strong> 1단계에 쓴 테스트가 SystemUI 온도를 화씨로 가정하고 있었습니다. <code>HVAC_TEMPERATURE_DISPLAY_UNITS</code>를 읽어 기대 글자를 계산하도록 바꿨고, 섭씨와 화씨 양쪽에서 통과하는 것을 확인했습니다.</p>
 <p><strong>6번. 회귀 테스트로 찾은 앱 결함.</strong></p>
 <ul>
@@ -387,8 +394,8 @@
 </thead><tbody><tr>
 <td>unit</td>
 <td>테스트 도구 자체가 맞는지 (기기 없음)</td>
-<td>156</td>
-<td>약 13초</td>
+<td>168</td>
+<td>약 20초</td>
 <td>모든 PR, push</td>
 <td>실패 0</td>
 </tr>
@@ -510,6 +517,44 @@
 </tr>
 </tbody></table></div>
 <p>테스트 수는 요구사항 표시(<code>@pytest.mark.req</code>)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 <a href="traceability.html">추적표</a>에 있습니다.</p>
+<p><strong>검증 단계.</strong> 앞 단계일수록 빠르고 기기가 필요 없으며, 뒤 단계일수록 실제 차량에 가깝습니다. 이 프로젝트는 3단계까지 했습니다.</p>
+<div class="table"><table><thead><tr>
+<th>단계</th>
+<th>무엇으로</th>
+<th>보는 것</th>
+<th>언제</th>
+<th>이 프로젝트</th>
+</tr>
+</thead><tbody><tr>
+<td>1. 앱 단위 테스트</td>
+<td>JVM 테스트 (<code>HvacSpecTest</code>, <code>CabinAssistantTest</code>)</td>
+<td>공조 값의 범위와 단계 규칙, 말 → 동작 규칙</td>
+<td>PR마다 GitHub에서</td>
+<td>22개</td>
+</tr>
+<tr>
+<td>2. 프레임워크 단위 테스트</td>
+<td>기기 없이 pytest (<code>ivi-tests/unit</code>)</td>
+<td>어댑터 명령 조립, 대기와 판정, 크래시 판정, Release 게이트 규칙, 요구사항 추적, 문서 링크</td>
+<td>PR마다 GitHub에서</td>
+<td>168개</td>
+</tr>
+<tr>
+<td>3. 에뮬레이터·태블릿 E2E</td>
+<td>AAOS 에뮬레이터(CarService, 가상 VHAL)와 태블릿(앱 안 Mock 차량)</td>
+<td>화면 ↔ 차량 신호, 위 표의 서비스별 위험</td>
+<td>Test Bench(작업 PC)에서</td>
+<td>129개 × 2기기</td>
+</tr>
+<tr>
+<td>4. HIL, 실차</td>
+<td>실제 ECU와 헤드 유닛, 차량</td>
+<td>위 표 &#39;이 프로젝트에서 보지 못하는 것&#39; 열: ECU의 응답 지연과 거절, 실차 area 구성, 클러스터 디스플레이 연동, 스피커 출력</td>
+<td></td>
+<td>하지 않음 (경험 없음)</td>
+</tr>
+</tbody></table></div>
+<p>3단계는 실제 하드웨어 없이 소프트웨어만으로 도는 단계라 SIL에 가깝습니다. 4단계로 넘길 항목은 위 표의 마지막 열에 적었습니다.</p>
 <h3 id="4-3-판정-기준"><a class="anchor" href="#4-3-판정-기준" aria-hidden="true">#</a>4-3. 판정 기준</h3>
 <div class="table"><table><thead><tr>
 <th>판정</th>
@@ -728,6 +773,10 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <td>사유, 등록일, 해제 조건 가운데 하나라도 빠진 줄은 받지 않습니다. 격리한 테스트도 계속 돌려서 데이터를 모읍니다.</td>
 </tr>
 <tr>
+<td>앱 크래시</td>
+<td>앱이 죽었다가 다음 테스트의 <code>am start</code>로 다시 뜨면 화면만 봐서는 알 수 없습니다. 테스트마다 시작 시각 이후의 crash·system 버퍼에서 이 앱의 <code>FATAL EXCEPTION</code>, <code>Fatal signal</code>, <code>ANR in</code>을 찾아, 있으면 화면 판정이 통과해도 그 테스트를 실패로 하고 실패 자료에 <code>app_crash.txt</code>를 남깁니다(<code>ivi/crashes.py</code>). 다른 앱(Appium 서버)의 크래시는 보지 않고, 알려진 결함 xfail로 받지 않습니다. 두 기기에서 테스트 도중 <code>am crash</code>로 앱을 일부러 죽여 실패로 잡히는 것을 확인했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md#앱-크래시-판정-확인">확인 기록</a>). 시작 시각이 초 단위라 앞 테스트의 마지막 1초 안에 난 크래시는 다음 테스트에 잡힐 수 있습니다.</td>
+</tr>
+<tr>
 <td>Appium 세션</td>
 <td>실행 전체에서 세션 하나를 쓰고, 테스트를 시작할 때마다 UiAutomator2 서버까지 가는 가벼운 요청으로 확인합니다. 끊겼으면 닫고 다시 붙이며(서버가 다시 뜨는 중이면 3초 간격으로 3번까지), 그 일을 <code>session_restart</code>로 기록해 flaky 통계에 &#39;세션 재연결&#39;로 보여 줍니다. 테스트 도중에 끊긴 시도는 실패로 남고 재시도에서 다시 붙습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">확인 기록</a>).</td>
 </tr>
@@ -737,7 +786,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tr>
 <tr>
 <td>대기</td>
-<td>고정 sleep은 쓰지 않습니다. 바뀌기를 기다릴 때는 조건 대기(<code>wait_until</code>, 값이 같아지기를 기다릴 때는 <code>wait_value</code>), &#39;바뀌지 않아야 함&#39;은 정한 시간 동안 계속 읽어 한 번이라도 바뀌면 실패하는 <code>stays</code>를 씁니다. 요소가 아직 없음, adb 실패, 숫자로 아직 못 바꾸는 글자처럼 다시 볼 예외만 &#39;아직 아님&#39;으로 보고, 오타 같은 코드 오류는 기다리지 않고 바로 올립니다. 대기 안에서 부른 화면 객체는 따로 기다리지 않아 제한 시간이 겹치지 않습니다. Appium 세션이 끊긴 응답(<code>instrumentation process is not running</code> 등)은 다시 봐도 살아나지 않으므로 기다리지 않고 바로 실패로 올립니다. 세션은 다음 시도를 시작할 때 다시 붙습니다(아래 &#39;Appium 세션&#39; 행). 시간을 넘기면 마지막으로 읽은 값과 마지막 오류를 함께 남깁니다.</td>
+<td>테스트의 대기에는 고정 sleep을 쓰지 않습니다. 바뀌기를 기다릴 때는 조건 대기(<code>wait_until</code>, 값이 같아지기를 기다릴 때는 <code>wait_value</code>), &#39;바뀌지 않아야 함&#39;은 정한 시간 동안 계속 읽어 한 번이라도 바뀌면 실패하는 <code>stays</code>를 씁니다. 요소가 아직 없음, adb 실패, 숫자로 아직 못 바꾸는 글자처럼 다시 볼 예외만 &#39;아직 아님&#39;으로 보고, 오타 같은 코드 오류는 기다리지 않고 바로 올립니다. 대기 안에서 부른 화면 객체는 따로 기다리지 않아 제한 시간이 겹치지 않습니다. Appium 세션이 끊긴 응답(<code>instrumentation process is not running</code> 등)은 다시 봐도 살아나지 않으므로 기다리지 않고 바로 실패로 올립니다. 세션은 다음 시도를 시작할 때 다시 붙습니다(아래 &#39;Appium 세션&#39; 행). 시간을 넘기면 마지막으로 읽은 값과 마지막 오류를 함께 남깁니다. 도구 쪽에는 고정 간격이 있습니다. 신호 주입 재시도 간격(0.3초), 세션 재연결 간격(3초), 원격 전원을 끈 뒤 기다리는 시간(2초)입니다.</td>
 </tr>
 </tbody></table></div>
 <p>격리 후보는 불안정률이 10% 이상이고 5회 이상 실행된 테스트, 해제 후보는 격리 중에 20회 연속 통과한 테스트입니다. 후보가 올라와도 자동으로 격리하지는 않고 원인을 확인한 뒤 정합니다.</p>
@@ -746,6 +795,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <pre class="mermaid">flowchart LR
     E[PR / push / Nightly / Release] --&gt; B[build]
     E --&gt; U[unit]
+    B --&gt; H[e2e-hosted: AAOS smoke]
     B --&gt; X{Bench 켜짐?}
     U --&gt; X
     X --&gt;|예| R[e2e]
@@ -764,6 +814,11 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <td>unit</td>
 <td>GitHub 호스트</td>
 <td>기기 없이 프레임워크 단위 테스트를 돌립니다. 요구사항 추적 누락도 여기서 막습니다.</td>
+</tr>
+<tr>
+<td>e2e-hosted</td>
+<td>GitHub 호스트 (ubuntu, KVM)</td>
+<td>매번 AAOS 에뮬레이터를 새로 띄우고(작업 PC와 같은 이미지와 화면, 창 없음) build job의 APK를 priv-app으로 넣은 뒤 smoke 13개를 돌립니다. 태블릿은 없습니다. 결과 파일, 실패 자료, 에뮬레이터·Appium 로그를 올리고 통과 수를 실행 요약에 씁니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/tools/ci_hosted_aaos.sh"><code>ci_hosted_aaos.sh</code></a>).</td>
 </tr>
 <tr>
 <td>e2e</td>
@@ -794,28 +849,31 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tbody></table></div>
 <p>워크플로를 짜면서 정한 것들입니다.</p>
 <ul>
-<li>e2e는 Bench에서 APK를 다시 빌드합니다. AAOS에 priv-app으로 넣어 둔 앱과 서명 키가 같아야 덮어쓸 수 있는데, GitHub 호스트에서 만든 APK는 키가 다릅니다.</li>
+<li>e2e는 Bench에서 APK를 다시 빌드합니다. AAOS에 priv-app으로 넣어 둔 앱과 서명 키가 같아야 덮어쓸 수 있는데, GitHub 호스트에서 만든 APK는 키가 다릅니다. e2e-hosted는 매번 새 에뮬레이터에 처음 넣으므로 build job의 APK를 그대로 씁니다.</li>
 <li>기기에 있는 APK와 해시가 같으면 설치를 건너뜁니다. 화웨이는 adb 설치마다 기기 화면에서 승인해야 해서, 매번 설치하면 무인 실행이 멈춥니다.</li>
 <li>Bench가 한 대라 e2e job은 한 번에 하나만 돌게 했습니다. build와 unit에는 이 제한을 걸지 않았습니다.</li>
 <li>checkout 때 누적 기록 폴더를 지우지 않습니다. flaky 통계가 실행을 넘어 쌓여야 하기 때문입니다.</li>
 <li>공개 저장소라 포크에서 온 PR은 e2e를 돌리지 않습니다(build와 unit만). <code>workflow_dispatch</code> 입력은 스크립트에 바로 넣지 않고 환경 변수로 넘깁니다.</li>
 </ul>
 <h3 id="8-3-github-실행-기록"><a class="anchor" href="#8-3-github-실행-기록" aria-hidden="true">#</a>8-3. GitHub 실행 기록</h3>
-<p>ivi-ci 워크플로의 build와 unit job은 PR, main push, Nightly(매일 03:00 KST)마다 GitHub에서 돕니다. e2e job은 Test Bench(self-hosted 러너)를 켜 두지 않아서 건너뜁니다. 실행 횟수와 결과는 <a href="https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml" target="_blank" rel="noopener">Actions 실행 기록</a>에 있습니다. 횟수를 문서에 적으면 PR마다 낡아서 링크로 둡니다.</p>
+<p>ivi-ci 워크플로의 build, unit, e2e-hosted job은 PR, main push, Nightly(매일 03:00 KST)마다 GitHub에서 돕니다. e2e job은 Test Bench(self-hosted 러너)를 켜 두지 않아서 건너뜁니다. 실행 횟수와 결과는 <a href="https://github.com/bugspeaker/opencabin-ivi/actions/workflows/ivi-ci.yml" target="_blank" rel="noopener">Actions 실행 기록</a>에 있습니다. 횟수를 문서에 적으면 PR마다 낡아서 링크로 둡니다.</p>
 <div class="table"><table><thead><tr>
 <th>이벤트</th>
 <th>build</th>
 <th>unit</th>
+<th>e2e-hosted</th>
 <th>e2e</th>
 </tr>
 </thead><tbody><tr>
 <td>PR 생성, 갱신</td>
 <td>앱 빌드와 앱 단위 테스트 (4~5분)</td>
 <td>프레임워크 단위 테스트 (15~30초)</td>
+<td>AAOS 에뮬레이터 smoke 13개 (job 약 4~5분, smoke 약 1분)</td>
 <td>건너뜀</td>
 </tr>
 <tr>
 <td>main push (병합)</td>
+<td>같음</td>
 <td>같음</td>
 <td>같음</td>
 <td>건너뜀</td>
@@ -824,11 +882,13 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <td>Nightly</td>
 <td>같음</td>
 <td>같음</td>
+<td>같음</td>
 <td>건너뜀</td>
 </tr>
 </tbody></table></div>
 <p>소개 사이트는 pages 워크플로가 <code>site/</code>나 <code>docs/images/</code>가 바뀐 main push마다 올립니다.</p>
-<p>취소한 1회는 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 두 번째 실행부터는 그 수정이 들어간 실행입니다.</p>
+<p>Actions 기록의 취소된 실행은 2회입니다. 하나는 첫 실행입니다. self-hosted 러너가 등록돼 있지 않으면 e2e job이 러너를 계속 기다리는데, 이 상태로는 Bench가 꺼져 있는 동안 PR 결과가 나오지 않습니다. 실행을 취소하고, e2e를 저장소 변수로 켜고 끌 수 있게 워크플로를 고쳤습니다. 다른 하나는 2026-11-21 e2e-hosted를 만들면서 고치기 전 커밋으로 잘못 시작한 수동 실행입니다.</p>
+<p>e2e-hosted를 처음 만든 2026-11-21에는 브랜치에서 수동 실행(<code>workflow_dispatch</code>)으로 시험했습니다. 첫 실행은 호스트 러너의 avdmanager가 AVD를 <code>~/.android/avd</code>가 아닌 곳에 만들어 실패했고, 위치를 고정한 뒤 smoke 13개가 통과했습니다(부팅 25초, smoke 58초). 같은 날 시험 실행들의 unit job 실패는 아직 넣지 않은 원자료 문서를 가리키는 링크 때문이었습니다(끊긴 링크 검사가 막은 것).</p>
 <p>앱 단위 테스트는 CI에서 처음으로 Gradle로 돌았습니다. 작업 PC는 사용자 폴더가 한글 경로라 Gradle 테스트 실행기가 죽어서, 그동안은 <code>java</code>로 직접 돌려 확인했습니다.</p>
 <p><img data-md src="../../docs/images/ci-runs.png" alt="GitHub Actions 실행 목록 (2026-11-16에 찍은 처음 4회)" loading="lazy"></p>
 <hr>
@@ -840,18 +900,19 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 <li>AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다. 이 문서의 &#39;주행 정보 패널&#39;은 앱 왼쪽의 화면입니다.</li>
 <li>앱은 가상 IVI입니다. 지도, 라디오, 통화는 가상 데이터이고, AI 어시스턴트는 LLM이 아니라 규칙 기반입니다. 운전자 보조 표시와 주변 차량은 연출입니다. 화면 구조는 공개 자료를 참고했고 타사 로고, 이미지, 코드는 쓰지 않았습니다.</li>
 <li>앱도 이 프로젝트에서 만들어서 테스트에 필요한 testTag와 테스트 훅을 마음대로 넣을 수 있었습니다. 다른 팀이 만든 앱을 테스트하는 실제 환경과 다릅니다.</li>
-<li>CI에서 e2e는 아직 GitHub로 돌리지 않았습니다. build와 unit만 GitHub에서 통과했고, e2e는 같은 명령(<code>run_bench.py</code>)을 작업 PC에서 실행해 확인했습니다. 공개 저장소라 개인 PC를 self-hosted 러너로 붙이지 않기로 했습니다.</li>
+<li>GitHub에서 무인으로 도는 E2E는 호스트 러너의 AAOS 에뮬레이터 smoke 13개뿐입니다. 태블릿과 sanity 이상은 같은 명령(<code>run_bench.py</code>)을 작업 PC에서 실행해 확인했습니다. 공개 저장소라 개인 PC를 self-hosted 러너로 붙이지 않기로 했습니다.</li>
 <li><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_out_of_range_signal_is_shown_safely</code></a>는 기기마다 기대값이 다릅니다. AAOS는 VHAL에 범위 밖 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주는지, ▲ 한 번에 차량 값이 16.0°C가 되는지 봅니다. 태블릿의 Mock 차량은 받은 값을 16.0~28.0°C로 잘라 두므로 15.5°C는 16.0°C가 되고, ▲ 한 번에 16.5°C가 되는지만 봅니다. 범위 밖 값 표시는 AAOS에서만 확인한 것입니다.</li>
 <li>테스트 쪽 차량 어댑터는 좌석 area를 에뮬레이터 값으로 고정했습니다(<code>SEAT_AREAS</code>, <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/ivi/vehicle.py"><code>ivi/vehicle.py</code></a>). 앱이 <code>CarPropertyConfig</code>에서 읽은 area와 출처가 다른 기대값으로 두어, 설정이 틀렸을 때 앱과 테스트가 같이 틀리지 않게 하려는 것입니다. 다른 차종에서는 <code>cmd car_service get-property-config</code>로 읽은 area와 이 목록을 먼저 맞춰 봐야 합니다.</li>
 <li>앱의 온도 범위(16.0~28.0°C)와 0.5°C 증분은 앱 코드(<code>HvacSpec</code>)에 고정했습니다. 좌석 area는 <code>CarPropertyConfig</code>에서 읽지만 범위와 증분은 읽지 않습니다. 차종마다 다르면 area별 최소·최대 값과 <code>HVAC_TEMPERATURE_SET</code>의 <code>configArray</code>에서 읽어야 합니다.</li>
-<li>반복 실행은 하루(2026-11-18) 5회입니다. 기간에 걸친 flaky 추세는 아직 없습니다.</li>
-<li>위 E2E 결과와 반복 실행 5회는 2026-11-18 코드로 돌린 것입니다. 2026-11-19 대기 방식 변경 뒤에는 두 기기 전체를 1회, smoke 공조 왕복 변경 뒤에는 smoke만 다시 돌렸습니다. 2026-11-20에는 세션 복구를 넣고 두 기기 전체를 1회 더 돌렸습니다. 같은 날의 게이트·대기·픽스처 변경은 아직 기기에서 돌리지 않았습니다(단위 테스트로만 확인). 자료별 시점은 <a href="readme.html#결과-자료와-검증-시점">README의 표</a>에 있습니다. 반복 실행은 아직 다시 하지 않았습니다.</li>
+<li>반복 실행은 2026-11-18 5회와 2026-11-21 3회, 같은 PC에서 이틀입니다. 기간에 걸친 flaky 추세는 아직 없습니다.</li>
+<li>위 E2E 결과는 2026-11-21 커밋 <code>d54741b</code>로 돌린 것입니다(두 기기 × 3회, 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK, 종료 코드 기록). 그 뒤에 바뀐 것은 문서, 사이트, 단위 테스트, CI 설정이고 E2E 코드와 앱은 같습니다. 이전 실행들의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">원자료 목록</a>에 있습니다.</li>
+<li>2026-11-21 첫 반복에서 전원 테스트가 다시 켠 에뮬레이터를 기다리다 실패했습니다. PC 화면이 꺼진 상태에서 창 모드로 켠 에뮬레이터가 멈춘 것이라 창 없이 켜게 고쳤습니다. 재시도는 꺼진 에뮬레이터를 켜지 못하는 약점(AVD 이름을 켜진 에뮬레이터에서만 읽음)은 남아 있습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md#첫-시도-전원-테스트가-멈춘-에뮬레이터를-기다리다-실패">원자료</a>).</li>
 <li>막 켠 AAOS 에뮬레이터에서 UiAutomator2 계측 프로세스가 스스로 죽는 원인은 확인하지 못했습니다(2026-11-19, 11-20 두 번). 세션을 다시 붙여 그 뒤 테스트는 이어지지만, 그때 돌던 테스트는 재시도에서야 통과합니다.</li>
 <li>사이드 미러, 트렁크, 차일드 락, 실내등, 전조등은 차량 신호에 연결하지 않은 화면 상태입니다.</li>
 </ul>
 <h3 id="다음-단계"><a class="anchor" href="#다음-단계" aria-hidden="true">#</a>다음 단계</h3>
 <ol>
-<li>Bench 전용 PC나 비공개 저장소의 self-hosted 러너로 e2e까지 GitHub에서 돌리고, Nightly 기록을 남기려고 합니다.</li>
+<li>호스트 러너의 AAOS 에뮬레이터로 sanity까지 넓히고, 태블릿은 Bench 전용 PC나 비공개 저장소의 self-hosted 러너로 붙여 Nightly 기록을 남기려고 합니다.</li>
 <li>반복 실행을 Nightly로 쌓아 기간별 flaky 추세를 보려고 합니다.</li>
 <li>차량 네트워크는 SOME/IP와 DDS도 같은 방식의 모의 환경으로 해 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.</li>
 </ol>
@@ -939,7 +1000,7 @@ if out.count(&quot;Set property&quot;) == len(commands):   # 31개가 모두 들
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

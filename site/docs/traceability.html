@@ -378,7 +378,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td>HVAC-02.7</td>
 <td>이상한 값이 와도 앱이 멈추지 않는다</td>
 <td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_out_of_range_signal_is_shown_safely</code></a>, <a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_off_grid_signal_steps_back_to_grid</code></a></td>
-<td>값이 화면에 보이고 그 뒤 버튼이 동작하는 것으로만 본다. 앱 크래시 로그(logcat의 <code>FATAL EXCEPTION</code>)를 따로 판정하지는 않는다</td>
+<td>값이 화면에 보이고 그 뒤 버튼이 동작하는지 본다. 테스트 도중 이 앱의 크래시(<code>FATAL EXCEPTION</code>, <code>Fatal signal</code>)나 ANR이 logcat에 남으면 화면 판정이 통과해도 그 테스트를 실패로 한다(모든 E2E 공통, <code>ivi/crashes.py</code>)</td>
 <td>4/4 통과</td>
 <td>4/4 통과</td>
 </tr>

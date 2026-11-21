@@ -16,10 +16,12 @@
   세션     Appium 세션이 끊겨 있으면 테스트 시작 전에 다시 붙이고 'session_restart' 로 기록 (ivi/session.py)
   격리     quarantine.txt 에 있는 테스트는 xfail(strict=False) → 돌리되 게이트를 막지 않음
   기기전용 aaos 마커는 태블릿(Mock)에서, tablet 마커는 AAOS 에서 건너뜀. Release 게이트는 이 두 경우 말고 건너뛴 테스트를 막는다
+  크래시   테스트 도중 앱이 죽었거나 ANR 이 나면(logcat crash·system 버퍼, ivi/crashes.py) 화면 판정이 통과해도 그 테스트를 실패로 한다.
+           다음 테스트의 am start 가 앱을 다시 띄우므로 화면만 봐서는 알 수 없다
   세션끊김 테스트 도중 세션이 끊기면 대기가 제한 시간을 쓰지 않고 바로 실패시킨다(ivi.waits.SessionLost). 그 실패는 그대로
            남고, 다음 시도(재시도 포함)를 시작할 때 위 '세션' 이 다시 붙인다. 실패 자료에 세션 끊김이라고 적는다
   기록     reports/history/results.jsonl (누적), reports/runs/<run>-<serial>.json (이번 실행: 커밋, 종료 코드, 수집 수 포함), JUnit
-  실패자료 reports/artifacts/<테스트>[__재시도 n]/ 화면·UI 계층·차량 상태·액티비티·logcat (정리 전에 남김)
+  실패자료 reports/artifacts/<테스트>[__재시도 n]/ 화면·UI 계층·차량 상태·액티비티·logcat·앱 크래시(app_crash.txt, 있을 때) (정리 전에 남김)
   결과화면 --shots 를 주면 통과한 테스트도 끝 화면을 reports/shots/<run>-<serial>/ 에 남긴다 (tools/publish_results.py 가 사이트로 옮긴다)
 """
 import os
@@ -32,6 +34,8 @@ import pytest
 from appium import webdriver
 
 from ivi import quarantine
+from ivi.adb import AdbError
+from ivi.crashes import AppCrashed, crash_message, find_app_crashes
 from ivi.device import Device
 from ivi.vehicle import PACKAGE
 from ivi.results import QUARANTINE_KEYWORD, Recorder, code_version, junit_name
@@ -113,11 +117,38 @@ def pytest_runtest_setup(item):
         item.ivi_log_since = device.adb.log_mark()
 
 
-@pytest.hookimpl(tryfirst=True)
+@pytest.hookimpl(wrapper=True, tryfirst=True)
 def pytest_runtest_call(item):
+    """테스트 본문을 감싼다. 앞: 준비 단계에서 읽은 차량 값을 지운다. 뒤: 앱이 테스트 도중 죽었는지 logcat 으로 본다.
+    크래시가 있으면 테스트가 통과했어도 AppCrashed 로 실패시키고, 다른 이유로 실패했으면 원래 실패를 원인으로 이어 붙인다.
+    세션 끊김 실패는 그대로 둔다(다음 시도가 세션을 다시 붙이는 표시를 지우지 않게). 크래시 기록은 어느 경우든 실패 자료에 남긴다."""
     device = getattr(item.config, "ivi_device", None)
-    if device:
-        device.vehicle.observed.clear()  # 준비 단계에서 읽은 값은 판정이 아니다
+    if device is None:
+        return (yield)
+    device.vehicle.observed.clear()  # 준비 단계에서 읽은 값은 판정이 아니다
+    item.ivi_app_crashes = []  # 재시도하면 같은 item 이 다시 돈다. 앞 시도의 기록이 이번 실패 자료에 섞이지 않게
+    try:
+        result = yield
+    except Exception as err:  # 테스트 실패. skip·xfail 호출(OutcomeException)과 중단은 Exception 이 아니라 여기 오지 않는다
+        crashes = _app_crashes(item, device)
+        if crashes and not session_lost(err):
+            raise AppCrashed(crash_message(crashes)) from err
+        raise
+    crashes = _app_crashes(item, device)
+    if crashes:
+        raise AppCrashed(crash_message(crashes))
+    return result
+
+
+def _app_crashes(item, device):
+    """이 테스트를 시작한 뒤 이 앱의 크래시·ANR (ivi/crashes.py). 로그를 읽지 못하면 판정하지 못했다고 결과에 남기고 넘어간다."""
+    try:
+        crashes = find_app_crashes(device.adb.crash_log(getattr(item, "ivi_log_since", None)), PACKAGE)
+    except (AdbError, OSError, subprocess.SubprocessError) as err:
+        item.user_properties.append(("crash_check", f"logcat 을 읽지 못해 크래시를 판정하지 못함: {err}"))
+        return []
+    item.ivi_app_crashes = crashes
+    return crashes
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -323,4 +354,7 @@ def _save_artifacts(item, suffix=""):
     save("vehicle.txt", device.vehicle.dump)
     save("activities.txt", lambda: "\n".join(device.adb.resumed_activities()))
     save("logcat.txt", lambda: device.adb.logcat_dump(since=getattr(item, "ivi_log_since", None)))
+    crashes = getattr(item, "ivi_app_crashes", None)
+    if crashes:
+        save("app_crash.txt", lambda: "\n\n".join(crashes))
     return folder

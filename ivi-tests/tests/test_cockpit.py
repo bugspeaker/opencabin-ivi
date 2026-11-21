@@ -50,7 +50,7 @@ def test_passenger_change_releases_sync(app, car):
     wait_value(lambda: car.temperature(Seat.PASSENGER), 21.5, what="차량 조수석 온도")
     climate.increase(Seat.DRIVER)
     wait_value(lambda: car.temperature(Seat.DRIVER), 22.5, what="차량 운전석 온도")
-    assert car.temperature(Seat.PASSENGER) == 21.5
+    stays(lambda: car.temperature(Seat.PASSENGER) == 21.5, what="차량 조수석 온도 21.5 유지")
 
 
 @pytest.mark.req("DRIVE-01")

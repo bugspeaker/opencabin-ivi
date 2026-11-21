@@ -224,6 +224,7 @@ function reqIndex(data) {
       const { files = [], tests: names = [], doc } = r.select;
       for (const n of names) if (!all.some((t) => t.name === n)) console.warn(`주의: 요구 역량 ${r.id} 의 테스트 ${n} 가 결과에 없다`);
       tests = all.filter((t) => files.includes(t.file) || names.includes(t.name) || (doc && doc.test(t.doc)));
+      for (const n of r.lead ?? []) if (!tests.some((t) => t.name === n)) console.warn(`주의: 요구 역량 ${r.id} 의 대표 근거 ${n} 가 그 항목의 테스트에 없다`);
       for (const t of tests) byTest.set(t.name, [...(byTest.get(t.name) ?? []), r.id]);
     }
     const count = r.select ? casesOf(tests) : r.chip ? stats[r.chip] : r.all ? stats.total : null;
@@ -247,7 +248,7 @@ function renderResults(page) {
   // 첫 화면 목차에서 ?req=<id> 로 들어올 때 쓰는 정보 (근거가 테스트인 항목만)
   const reqMeta = Object.fromEntries(reqs.filter((r) => !r.gap && (r.select || r.chip || r.onlyBad || r.all)).map((r) => [r.id, {
     eyebrow: `요구 역량 ${r.num} · ${groupLabel[r.group]}`, title: r.title, note: r.note ? `${esc(r.done)} ${r.note}` : r.done,
-    count: r.count, filter: Boolean(r.select), chip: r.chip || "", onlyBad: Boolean(r.onlyBad),
+    count: r.count, filter: Boolean(r.select), chip: r.chip || "", onlyBad: Boolean(r.onlyBad), lead: r.lead ?? [],
   }]));
   const devices = data.devices.map((d) => `
       <section class="device-card">
@@ -338,6 +339,11 @@ function renderResults(page) {
       <select class="jump" id="jump" aria-label="파일로 이동"><option value="">파일로 이동</option>${toc.map((t) => `<option value="${esc(t.id)}">${esc(t.text)}</option>`).join("")}</select>
     </div>
     <p class="empty-note" id="empty-note" hidden>조건에 맞는 테스트가 없습니다.</p>
+    <section class="rfile rlead" id="req-lead" hidden>
+      <h2>먼저 볼 근거 <span class="rfile-count"></span></h2>
+      <p class="rfile-title">이 항목을 가장 잘 보여 주는 테스트입니다. 나머지 근거는 아래 파일별 목록에 있습니다.</p>
+      <div id="req-lead-list"></div>
+    </section>
     ${files}
     <p class="generated">결과 기록 ${esc(data.generated)} · <code>ivi-tests/tools/publish_results.py</code></p>
     <dialog id="viewer" aria-label="화면 크게 보기">
@@ -394,6 +400,18 @@ function renderResults(page) {
     if (e.target.value) document.getElementById(e.target.value).scrollIntoView({ behavior: "smooth" });
     e.target.value = "";
   });
+  // 항목마다 정한 대표 근거(requirements.mjs 의 lead)를 파일 목록 위로 옮긴다. 파일 이름순이면 대표 사례가 뒤로 밀린다
+  const leadList = document.getElementById("req-lead-list");
+  const moved = [];
+  function placeLeads(names) {
+    moved.splice(0).forEach(([el, mark]) => mark.replaceWith(el));
+    for (const name of names) {
+      const el = document.getElementById(name);
+      if (!el || !el.classList.contains("rtest")) continue;
+      const mark = document.createComment(name);
+      el.replaceWith(mark); leadList.appendChild(el); moved.push([el, mark]);
+    }
+  }
   // 첫 화면 목차에서 ?req=<id> 로 들어오면 그 항목의 근거 테스트만 보여 준다
   const meta = REQS[new URLSearchParams(location.search).get("req")];
   if (meta) {
@@ -402,12 +420,13 @@ function renderResults(page) {
     document.getElementById("req-title").textContent = meta.title;
     document.getElementById("req-note").innerHTML = meta.note;
     if (meta.filter) req = id;
+    placeLeads(meta.lead);
     if (meta.chip) pick(meta.chip);
     onlyBad.checked = meta.onlyBad;
     banner.hidden = false;
   }
   document.getElementById("req-clear").addEventListener("click", () => {
-    req = ""; pick(""); onlyBad.checked = false; banner.hidden = true;
+    req = ""; pick(""); onlyBad.checked = false; banner.hidden = true; placeLeads([]);
     history.replaceState(null, "", location.pathname + location.hash);
     apply();
   });
@@ -499,9 +518,10 @@ function renderStats({ stats }, data) {
   const st = stats.stability;
   cards.push(st
     // 조건(언제, 어디서)을 숫자 옆에: 'flaky 0'만 크게 쓰면 조건 없는 주장처럼 읽힌다 (2026-11-19 검토)
-    ? card(`반복 실행 ${st.rounds}회 × 기기 ${st.devices}대 (${runDate(st)}, 같은 PC)`,
+    // 제목 줄은 한 줄에 들어가게 짧게, 날짜와 장소는 아래 설명 줄로 (2026-11-21 검토)
+    ? card(`반복 ${st.rounds}회 × ${st.devices}기기`,
         `재시도 ${st.reruns} / ${st.executions.toLocaleString("en-US")}건`,
-        `테스트 ${st.executions.toLocaleString("en-US")}건${byKind(st)}, flaky ${st.flaky}건, 실패 ${st.failed}건`, "docs/flaky-report.html")
+        `${runDate(st)}, 같은 PC. 테스트 ${st.executions.toLocaleString("en-US")}건${byKind(st)}, flaky ${st.flaky}건, 실패 ${st.failed}건`, "docs/flaky-report.html")
     : card("실패와 재시도", `${stats.bad}건`, `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번 (기기마다 1회 실행)`, "docs/test-results.html"));
   return `<section class="stats-section" aria-label="최근 결과">
       <div class="stats">

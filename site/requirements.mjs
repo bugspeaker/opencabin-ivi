@@ -5,6 +5,7 @@
 //
 // select 는 합집합이다: files(테스트 파일) · tests(함수 이름) · doc(설명 정규식) 중 하나라도 맞으면 넣는다.
 // doc 은 설명 문구가 바뀌면 조용히 빠지므로, 되도록 files 와 tests 로 적는다.
+// lead 는 결과 페이지에서 파일 목록보다 먼저 보여 줄 대표 근거 2~3개다 (select 로 고른 테스트 안에서).
 // select 대신 chip(마커 칩을 미리 고름) · onlyBad(실패·재시도만) · all(전체) 을 쓸 수 있다.
 // 테스트로 보일 수 없는 항목은 link 로 문서의 해당 절에 잇는다. 근거가 표인 항목은 link 와 select/chip 을 함께 둔다:
 // 목차는 문서의 표로 가고, 결과 페이지 ?req=<id> 로 그 항목의 테스트도 볼 수 있다.
@@ -17,11 +18,11 @@ export const GROUPS = [
 
 export const REQUIREMENTS = [
   {
-    id: "services", group: "duty", title: "IVI 서비스별 검증 전략",
-    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다.",
+    id: "services", group: "duty", title: "IVI 서비스별·단계별 검증 전략", partial: "클러스터 제외",
+    done: "HVAC, 차량 설정(도어), 주행 정보 패널(앱 왼쪽, 계기판 역할), 미디어를 나누고, 서비스마다 주요 위험과 확인 방향(화면→신호, 신호→화면)을 정해 테스트했습니다. 단계는 앱 단위 테스트, 프레임워크 단위 테스트, 에뮬레이터·태블릿 E2E까지이고 HIL과 실차는 하지 않았습니다.",
     // 근거는 테스트 목록이 아니라 서비스별 전략 표다. 테스트 목록은 결과 페이지 ?req=services 로 그대로 볼 수 있다
-    link: { href: "docs/portfolio.html#4-2-서비스별-검증", label: "서비스별 전략 표" },
-    note: "서비스별 위험, 확인 방향, 테스트 수는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.",
+    link: { href: "docs/portfolio.html#4-2-서비스별-검증", label: "서비스별·단계별 표" },
+    note: "서비스별 위험, 확인 방향, 테스트 수와 검증 단계는 <a href=\"portfolio.html#4-2-서비스별-검증\">포트폴리오 4-2</a>에 표로 정리했습니다. AAOS 클러스터 디스플레이(보조 화면)와의 연동은 검증하지 않았습니다.",
     select: { files: ["test_climate.py", "test_vehicle_signals.py", "test_settings.py", "test_cockpit.py", "test_driving.py", "test_media.py", "test_radio.py"] },
   },
   {
@@ -35,6 +36,8 @@ export const REQUIREMENTS = [
   {
     id: "e2e", group: "duty", title: "UI와 CarProperty/VHAL을 잇는 E2E",
     done: "화면 조작이 차량 신호로, 신호 변화가 화면으로 이어지는지 양쪽을 봤습니다. 좌석과 문은 area마다 확인합니다.",
+    // 결과 페이지에서 먼저 보여 줄 대표 근거: 버튼 → VHAL, VHAL → 화면, 전 좌석 area
+    lead: ["test_button_changes_signal_by_one_step", "test_signal_is_shown_on_climate_and_home", "test_ac_toggle_reaches_every_seat"],
     select: {
       files: ["test_spike_aaos.py"],
       tests: [
@@ -54,6 +57,7 @@ export const REQUIREMENTS = [
   {
     id: "integration", group: "duty", title: "터치부터 하위 연동까지 통합 검증",
     done: "AAOS 에뮬레이터에서 화면의 운전석 온도를 한 칸 올리면, 앱 → CarService → VHAL로 바뀐 값을 게이트웨이가 adb로 읽어 CAN 프레임(IVI_HvacStatus)으로 내보내고, 그 값이 22.5°C인지 확인합니다. 반대로 가상 ECU가 보낸 CAN 프레임이 VHAL을 거쳐 화면에 보이는지도 봅니다.",
+    lead: ["test_climate_button_goes_out_on_can", "test_zone_applies_command_to_speaking_seat", "test_low_range_card_starts_guidance_to_nearest_charger"],
     note: "CAN 쪽은 PC 안의 가상 버스(python-can, DBC)입니다. 태블릿에서는 같은 테스트가 VHAL 대신 앱 안의 Mock 차량을 거칩니다. 음성과 터치가 차량 신호까지, 거리 부족 신호가 경고와 충전소 안내까지 이어지는 흐름도 함께 봅니다.",
     select: {
       files: ["test_can_gateway.py"],
@@ -72,8 +76,9 @@ export const REQUIREMENTS = [
     link: { href: "docs/phase7-layout.html#5-테스트", label: "7단계 기록" },
   },
   {
-    id: "injection", group: "duty", title: "ADB · shell · CarPropertyManager로 Property Injection",
-    done: "앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다.",
+    id: "injection", group: "duty", title: "ADB · shell · CarPropertyManager로 Property Injection과 이벤트 검증",
+    done: "앱과 같은 경로가 필요한 설정 온도는 cmd car_service로, 속도·기어 같은 읽기 전용 값과 차량 쪽에서 바뀐 공조·도어 값은 dumpsys로 VHAL에 바로 넣습니다. 이벤트는 값을 넣은 뒤 앱 화면이 바뀌는 것으로 확인합니다(앱이 onChangeEvent로 받은 값). 이벤트 횟수, 순서, 시각, onErrorEvent는 따로 판정하지 않습니다.",
+    lead: ["test_signal_is_shown_on_climate_and_home", "test_guidance_counts_down_with_vehicle_speed", "test_door_lock_signal_is_shown"],
     select: {
       files: ["test_driving.py", "test_rear_camera.py", "test_spike_aaos.py"],
       tests: [
@@ -95,13 +100,18 @@ export const REQUIREMENTS = [
     link: { href: "docs/flaky-report.html", label: "반복 실행 통계" },
   },
   {
+    id: "experience", group: "must", title: "테스트 자동화나 QA 3년 이상",
+    done: "게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트와 BM, 글로벌 현지화 검수, AI R&D 연계 테스트 대시보드 구축. ISTQB CTFL. 자동화는 바이브 코딩으로 만든 웹 BVT 도구(개인 포트폴리오, 엑셀 BVT 대시보드 + Playwright·pytest, 공개 웹 서비스 BVT 70개 중 47개 자동화)와 이 프로젝트입니다.",
+    link: { href: "docs/portfolio.html#만든-사람과-만든-방식", label: "경력" },
+  },
+  {
     id: "android", group: "must", title: "Android/AAOS 테스트 자동화 구축과 운영",
     done: (s) => `AAOS 에뮬레이터와 태블릿에서 E2E ${s.total}개를 돌리고, 테스트마다 판정 직후 화면을 남겼습니다.`,
     all: true,
   },
   {
     id: "pytest", group: "must", title: "Python 테스트 프레임워크 (pytest)",
-    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 156개 있습니다.",
+    done: "훅, 픽스처, 마커와 결과 기록 플러그인을 만들었습니다. 프레임워크 단위 테스트가 168개 있습니다.",
     link: { href: "docs/phase3-framework.html#구조", label: "3단계 기록" },
   },
   {
@@ -111,12 +121,12 @@ export const REQUIREMENTS = [
   },
   {
     id: "adb", group: "must", title: "ADB · Logcat · Shell",
-    done: "실패하면 logcat을 자동으로 저장합니다. 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.",
+    done: "테스트 도중 앱 크래시나 ANR이 logcat에 남으면 화면 판정이 통과해도 실패로 합니다. 실패하면 logcat을 자동으로 저장하고, 앱이 강제로 꺼지던 원인도 logcat에서 찾았습니다.",
     link: { href: "docs/portfolio.html#3-결함과-원인-분석", label: "결함 기록" },
   },
   {
     id: "ci", group: "must", title: "Git · CI/CD",
-    done: "PR 단위로 작업했고, GitHub Actions가 PR마다 빌드와 단위 테스트를 돌립니다.",
+    done: "PR 단위로 작업했고, GitHub Actions가 PR마다 빌드, 단위 테스트, 호스트 러너의 AAOS 에뮬레이터 smoke 13개를 무인으로 돌립니다. 태블릿과 전체 회귀는 작업 PC에서 돌렸습니다.",
     link: { href: "docs/portfolio.html#8-3-github-실행-기록", label: "실행 기록" },
   },
   {

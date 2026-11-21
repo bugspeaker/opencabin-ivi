@@ -42,76 +42,90 @@
   <main id="content" class="doc">
 <h1 id="결정-기록"><a class="anchor" href="#결정-기록" aria-hidden="true">#</a>결정 기록</h1>
 <p>이 프로젝트에서 방향을 정한 결정마다 상황, 고른 것, 버린 것, 근거, 결과를 적었습니다. 근거는 단계별 기록에 남은 측정값이고, 각 항목에서 그 기록으로 이어집니다.</p>
-<p>코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다(<a href="readme.html#만든-사람과-만든-방식">만든 사람과 만든 방식</a>). 이 문서는 무엇을 왜 골랐는지를 남기기 위한 것입니다.</p>
+<p>코드는 거의 전부 AI 코딩 도구(Claude Code)가 작성했습니다. 아래 결정도 모두 Claude가 제안했고, 제가 확인해 채택 여부를 확정했습니다(&#39;누가&#39; 열, <a href="portfolio.html#만든-사람과-만든-방식">만든 사람과 만든 방식</a>). 이 문서는 무엇을 왜 골랐는지를 남기기 위한 것입니다.</p>
 <div class="table"><table><thead><tr>
 <th>번호</th>
 <th>결정</th>
 <th>근거가 된 측정값</th>
+<th>누가</th>
 </tr>
 </thead><tbody><tr>
 <td>1</td>
 <td>기기를 AAOS 에뮬레이터와 일반 태블릿 두 종류로</td>
 <td>오래 걸린 결함 두 건이 모두 태블릿에서 나옴</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>2</td>
 <td>화웨이 태블릿에서는 누르기만 adb로</td>
 <td>탭 한 번 10,377 ms → 117 ms</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>3</td>
 <td><code>inject-vhal-event</code>는 쓰지 않음</td>
 <td>저장 값이 안 바뀌어 <code>get</code>으로 판정 불가</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>4</td>
 <td>값을 넣는 길을 둘로 나눔</td>
 <td>CarService는 범위 밖 값(15.5°C)을 거절</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>5</td>
 <td>기준 값 31개를 adb 한 번에 묶고 응답 수를 셈</td>
 <td>테스트당 4.1초 → 3.7초 (8단계 기준)</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>6</td>
 <td>앱 프로세스 종료는 세션 시작 때 한 번만</td>
 <td>21번째 테스트마다 강제 종료 → 3회 연속 0회</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>7</td>
 <td>플랫폼 결함은 <code>xfail(strict=True)</code></td>
 <td>고쳐지면 XPASS가 실패로 바뀜</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>8</td>
 <td>재시도는 1회, 재시도로 통과하면 flaky로 따로 기록</td>
 <td>재시도를 통과로 치면 흔들림이 통계에서 사라짐</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>9</td>
 <td>격리는 후보만 내고 사람이 정함</td>
 <td>불안정률 10% 이상·5회 이상, 해제는 20회 연속 통과</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>10</td>
 <td>sanity를 대표 경로로 줄임</td>
 <td>55개(45%) → 25개, main 게이트 기기당 약 4분 45초 → 약 2분 15초</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>11</td>
 <td>대기는 다시 볼 예외만 기다림</td>
 <td>오타가 10초 뒤 &#39;조건이 맞지 않았다&#39;로 바뀌던 것</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>12</td>
 <td>공개 저장소에 개인 PC를 self-hosted 러너로 붙이지 않음</td>
 <td>포크 PR이 개인 PC에서 코드를 돌릴 수 있음</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 <tr>
 <td>13</td>
 <td>Appium 세션이 끊기면 다음 테스트 시작 때 다시 붙이고 기록</td>
 <td>세션 하나가 죽자 129개가 모두 error → 일부러 끊은 시험 2번에서 38개씩 모두 통과</td>
+<td>Claude 제안, 본인 확정</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -216,7 +230,7 @@
 <li><strong>상황</strong>: Appium 세션은 만드는 데 기기당 5~15초가 걸려 실행 전체에서 하나를 씁니다. 2026-11-19 막 켠 AAOS 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽자(<code>instrumentation process is not running</code>), 그 세션에 묶인 뒤의 테스트 129개가 모두 준비 단계 오류가 됐습니다. 외부 검토에서도 &#39;무인 Nightly에서 세션 끊김 한 번이 전체 실패로 번진다&#39;고 짚었던 부분입니다.</li>
 <li><strong>고른 것</strong>: 드라이버 자리에 세션을 감싸는 <code>SessionHolder</code>를 두고, 테스트를 시작할 때마다 UiAutomator2 서버까지 가는 가벼운 요청(창 크기)으로 확인합니다. 끊겼으면 닫고 새로 만들며, 서버가 다시 뜨는 중일 수 있어 3초 간격으로 3번까지 해 봅니다. 다시 붙인 일은 <code>session_restart</code>로 기록하고 flaky 통계에 &#39;세션 재연결&#39; 열로 보여 줍니다.</li>
 <li><strong>버린 것</strong>: 테스트마다 세션을 새로 만드는 방법(129개 × 5~15초). 세션 확인 없이 실패한 테스트만 재시도하는 방법(재시도도 같은 죽은 세션을 쓴다). 다시 붙인 일을 기록하지 않는 방법.</li>
-<li><strong>근거</strong>: 앱 재실행(<code>app_relaunch</code>), 신호 재시도(<code>vhal_retry</code>)와 같은 원칙입니다. 인프라를 자동으로 되살리되, 되살린 횟수는 숨기지 않고 셉니다. 테스트 도중에 끊긴 시도는 실패로 남겨 재시도에서 통과하면 flaky가 되고, Release 게이트(flaky 0 조건, 지금 번호로 조건 3)에서는 막힙니다.</li>
+<li><strong>근거</strong>: 앱 재실행(<code>app_relaunch</code>), 신호 재시도(<code>vhal_retry</code>)와 같은 원칙입니다. 세션은 자동으로 다시 붙이고, 다시 붙인 횟수를 결과에 남깁니다. 테스트 도중에 끊긴 시도는 실패로 남겨 재시도에서 통과하면 flaky가 되고, Release 게이트(flaky 0 조건, 지금 번호로 조건 3)에서는 막힙니다.</li>
 <li><strong>결과</strong>: 2026-11-20에 일부러 끊어 확인했습니다. AAOS에서 UiAutomator2 서버를 두 번 강제 종료한 실행과 태블릿에서 Appium 서버를 다시 켠 실행 모두 smoke와 sanity 38개가 통과했고, 세션 재연결은 각각 3번, 1번이었습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">확인 기록</a>). AAOS의 3번 가운데 1번은 끊기 전에 계측 프로세스가 스스로 죽은 것이었습니다. 끊지 않고 두 기기 전체 129개를 돌린 실행도 재시도 0, 세션 재연결 0으로 통과했습니다.</li>
 </ul>
 

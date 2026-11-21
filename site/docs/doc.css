@@ -182,6 +182,7 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .req-btn:hover { border-color: var(--primary); }
 
 .rfile { scroll-margin-top: calc(var(--nav-h) + 64px); }
+.doc .rlead h2 { margin-top: 24px; font-family: var(--font-text); font-size: 18px; }
 .doc .rfile h2 { margin-top: 48px; display: flex; align-items: baseline; gap: 10px; font-family: var(--font-mono); font-size: 20px; letter-spacing: 0; }
 .rfile-count { font-family: var(--font-text); font-size: 13px; font-weight: 500; color: var(--ink-subtle); }
 .doc .rfile-title { color: var(--ink-subtle); margin-bottom: 20px; }

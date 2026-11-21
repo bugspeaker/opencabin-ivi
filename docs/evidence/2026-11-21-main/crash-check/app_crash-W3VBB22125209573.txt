@@ -1,0 +1,14 @@
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: FATAL EXCEPTION: main
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: Process: dev.opencabin.ivi, PID: 5265
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: android.app.RemoteServiceException: shell-induced crash
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.app.ActivityThread.throwRemoteServiceException(ActivityThread.java:2599)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.app.ActivityThread.access$4000(ActivityThread.java:313)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:3025)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:117)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:293)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.app.ActivityThread.loopProcess(ActivityThread.java:9998)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9987)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:586)
+11-21 10:50:47.351  5265  5265 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1240)

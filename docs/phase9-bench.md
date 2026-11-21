@@ -193,3 +193,5 @@ flowchart LR
 
 이번 변경(conftest, 대기, 차량 어댑터, 알려진 결함 테스트, 태블릿 전용 마커)은 아직 기기에서 돌리지 않았습니다. 다음 Bench 실행에서 두 기기 전체를 반복하고 `release_gate.py --commit HEAD`로 확인하려고 합니다.
 
+2026-11-21 추가: 이 변경을 모두 넣은 커밋 `d54741b`로 두 기기 × 3회를 돌려 750건 모두 통과했고, `release_gate.py --commit`도 통과했습니다([원자료](evidence/2026-11-21-main/README.md)).
+
