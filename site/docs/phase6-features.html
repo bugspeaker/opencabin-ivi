@@ -50,37 +50,37 @@
 <th>테스트</th>
 </tr>
 </thead><tbody><tr>
-<td>내비게이션</td>
+<td class="nw">내비게이션</td>
 <td>검색, 미리 보기, 안내(다음 안내, 남은 거리, 도착 예정), 도착. 즐겨찾기(집, 회사)</td>
 <td>남은 거리가 차량 속도 신호를 따라 줄어듭니다. 주행 중에는 검색 입력이 막히고 즐겨찾기만 쓸 수 있습니다.</td>
 <td>6개</td>
 </tr>
 <tr>
-<td>라디오</td>
+<td class="nw">라디오</td>
 <td>FM(0.1 MHz)과 AM(9 kHz), 미세 조정, 방송국 찾기, 프리셋 6개 저장</td>
 <td>라디오와 음악 중 하나만 소리를 냅니다.</td>
 <td>6개</td>
 </tr>
 <tr>
-<td>전화</td>
+<td class="nw">전화</td>
 <td>가상 블루투스 핸즈프리. 최근 통화, 연락처, 키패드, 통화 화면</td>
 <td>주행 중에는 키패드가 막히고 연락처는 5개까지만 보입니다. 통화 중에는 오디오가 멈췄다가 끝나면 다시 나옵니다.</td>
 <td>4개</td>
 </tr>
 <tr>
-<td>설정</td>
+<td class="nw">설정</td>
 <td>볼륨, 밝기, 24시간 시계, 속도 단위(km/h, mph), 도어 자동 잠금, 무드등, 초기화</td>
 <td>mph로 바꾸면 차량 속도 50 km/h가 31 mph로 보입니다.</td>
 <td>5개</td>
 </tr>
 <tr>
-<td>후방 카메라</td>
+<td class="nw">후방 카메라</td>
 <td>기어가 R이면 모든 화면 위에 카메라 화면과 주차 가이드 선이 뜹니다.</td>
 <td>기어 신호(GEAR_SELECTION=R)만으로 뜨고 사라집니다.</td>
 <td>3개</td>
 </tr>
 <tr>
-<td>음성</td>
+<td class="nw">음성</td>
 <td>상태 줄의 &#39;음성&#39;을 누르면 명령 문장 네 개가 나옵니다. 음성 인식 대신 알아들은 문장을 누르는 것으로 대신했습니다.</td>
 <td>&quot;운전석 온도 24도로 맞춰줘&quot;라고 하면 차량 공조 신호가 24.0°C로 바뀝니다.</td>
 <td>5개</td>
@@ -89,16 +89,16 @@
 <p>smoke의 탭 이동 테스트도 7개 탭으로 늘렸습니다. 전체 테스트는 31개에서 64개가 됐고(AAOS 전용 6개 포함), 단위 테스트는 25개입니다.</p>
 <h2 id="2-앱-구조"><a class="anchor" href="#2-앱-구조" aria-hidden="true">#</a>2. 앱 구조</h2>
 <p>파일을 기능별로 나눴습니다.</p>
-<pre class="code"><code>ivi-app/app/src/main/java/dev/opencabin/ivi/
-  state/SettingsStore.kt     저장 설정 (SharedPreferences와 StateFlow): 볼륨, 밝기, 시계, 단위, 무드등, 라디오 대역과 주파수, 프리셋
-  state/CabinController.kt   화면들이 함께 쓰는 상태와 규칙: 오디오 하나만 재생, 통화 중 일시 정지, 경로 진행, 음성 명령
-  ui/Theme.kt                색과 공통 부품 (Panel, RoundButton, PillButton, ToggleRow, StepperRow)
-  ui/Shell.kt                화면 틀: 상태 줄, 주행 정보, 앱 바(7개), 통화 화면, 음성 패널, 후방 카메라, 밝기
-  ui/Home.kt Navigation.kt Radio.kt Media.kt Phone.kt Climate.kt SettingsScreen.kt
-ivi-app/app/src/debug/       TestHookReceiver. 테스트가 저장 설정을 초기화할 때 쓰는 입구 (release에는 없음)</code></pre>
+<pre class="code"><code>ivi-app/<wbr>app/<wbr>src/<wbr>main/<wbr>java/<wbr>dev/<wbr>opencabin/<wbr>ivi/
+  state/<wbr>SettingsStore.<wbr>kt     저장 설정 (SharedPreferences와 StateFlow): 볼륨, 밝기, 시계, 단위, 무드등, 라디오 대역과 주파수, 프리셋
+  state/<wbr>CabinController.<wbr>kt   화면들이 함께 쓰는 상태와 규칙: 오디오 하나만 재생, 통화 중 일시 정지, 경로 진행, 음성 명령
+  ui/<wbr>Theme.<wbr>kt                색과 공통 부품 (Panel, RoundButton, PillButton, ToggleRow, StepperRow)
+  ui/<wbr>Shell.<wbr>kt                화면 틀: 상태 줄, 주행 정보, 앱 바(7개), 통화 화면, 음성 패널, 후방 카메라, 밝기
+  ui/<wbr>Home.<wbr>kt Navigation.<wbr>kt Radio.<wbr>kt Media.<wbr>kt Phone.<wbr>kt Climate.<wbr>kt SettingsScreen.<wbr>kt
+ivi-app/<wbr>app/<wbr>src/<wbr>debug/       TestHookReceiver. 테스트가 저장 설정을 초기화할 때 쓰는 입구 (release에는 없음)</code></pre>
 <h2 id="3-테스트를-위해-앱에-넣은-것-테스트-훅"><a class="anchor" href="#3-테스트를-위해-앱에-넣은-것-테스트-훅" aria-hidden="true">#</a>3. 테스트를 위해 앱에 넣은 것: 테스트 훅</h2>
 <p>저장 설정은 앱을 다시 켜도 남습니다. 그래서 한 테스트에서 mph로 바꾸면 다음 테스트도 mph로 시작하게 됩니다.</p>
-<p>이 문제를 막으려고 <code>src/debug</code>에만 <code>TestHookReceiver</code>를 두고, <code>app</code> 픽스처가 테스트마다 <code>am broadcast … test.RESET</code>을 보내 기본값으로 되돌립니다. debug 소스 세트라 release 빌드에는 들어가지 않습니다.</p>
+<p>이 문제를 막으려고 <code>src/debug</code>에만 <code>TestHookReceiver</code>를 두고, <code>app</code> 픽스처가 테스트마다 <code>am broadcast … test.<wbr>RESET</code>을 보내 기본값으로 되돌립니다. debug 소스 세트라 release 빌드에는 들어가지 않습니다.</p>
 <p>기기마다 차이가 있었습니다. AAOS 에뮬레이터는 앱이 꺼져 있어도 브로드캐스트를 받지만(<code>-f 0x20</code>), 화웨이는 꺼진 앱에는 전달하지 않습니다(logcat에 <code>targets O+, restricted</code>가 남습니다). 그래서 앱을 띄운 뒤에 초기화합니다. 설정이 화면에 바로 반영되기 때문에 결과는 같습니다.</p>
 <h2 id="4-회귀-테스트에서-잡은-것"><a class="anchor" href="#4-회귀-테스트에서-잡은-것" aria-hidden="true">#</a>4. 회귀 테스트에서 잡은 것</h2>
 <div class="table"><table><thead><tr>
@@ -109,7 +109,7 @@ ivi-app/app/src/debug/       TestHookReceiver. 테스트가 저장 설정을 초
 </thead><tbody><tr>
 <td>&quot;집으로 안내해줘&quot; 뒤에 <code>nav_dest_name</code>을 찾지 못했습니다.</td>
 <td>기능은 동작했는데, 명령을 처리한 뒤에도 음성 패널이 남아 안내 화면을 가렸습니다.</td>
-<td>앱 결함으로 보고 고쳤습니다. 명령을 처리하면 패널을 닫고, 결과는 상태 줄 알림으로 5초 동안 보여 줍니다. 회귀 테스트 <a class="test-link" href="test-results.html#test_voice_panel_closes_after_command" title="테스트 결과와 화면 보기"><code>test_voice_panel_closes_after_command</code></a>를 더했습니다.</td>
+<td>앱 결함으로 보고 고쳤습니다. 명령을 처리하면 패널을 닫고, 결과는 상태 줄 알림으로 5초 동안 보여 줍니다. 회귀 테스트 <a class="test-link" href="test-results.html#test_voice_panel_closes_after_command" title="테스트 결과와 화면 보기"><code>test_<wbr>voice_<wbr>panel_<wbr>closes_<wbr>after_<wbr>command</code></a>를 더했습니다.</td>
 </tr>
 <tr>
 <td>통화 중에 전화 화면을 열지 못했습니다.</td>
@@ -137,7 +137,7 @@ ivi-app/app/src/debug/       TestHookReceiver. 테스트가 저장 설정을 초
 <th>내비게이션 (검색)</th>
 </tr>
 </thead><tbody><tr>
-<td><img data-md src="../../docs/images/p9-home.png" alt="home" loading="lazy"></td>
+<td class="nw"><img data-md src="../../docs/images/p9-home.png" alt="home" loading="lazy"></td>
 <td><img data-md src="../../docs/images/p9-navi.png" alt="navi" loading="lazy"></td>
 </tr>
 </tbody></table></div>
@@ -146,7 +146,7 @@ ivi-app/app/src/debug/       TestHookReceiver. 테스트가 저장 설정을 초
 <th>전화</th>
 </tr>
 </thead><tbody><tr>
-<td><img data-md src="../../docs/images/p9-radio.png" alt="radio" loading="lazy"></td>
+<td class="nw"><img data-md src="../../docs/images/p9-radio.png" alt="radio" loading="lazy"></td>
 <td><img data-md src="../../docs/images/p9-phone.png" alt="phone" loading="lazy"></td>
 </tr>
 </tbody></table></div>
@@ -155,7 +155,7 @@ ivi-app/app/src/debug/       TestHookReceiver. 테스트가 저장 설정을 초
 <th>후방 카메라 (기어 R)</th>
 </tr>
 </thead><tbody><tr>
-<td><img data-md src="../../docs/images/p9-settings.png" alt="settings" loading="lazy"></td>
+<td class="nw"><img data-md src="../../docs/images/p9-settings.png" alt="settings" loading="lazy"></td>
 <td><img data-md src="../../docs/images/p9-reverse.png" alt="camera" loading="lazy"></td>
 </tr>
 </tbody></table></div>

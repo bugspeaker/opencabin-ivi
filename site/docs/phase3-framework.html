@@ -65,16 +65,16 @@
 <p>태블릿에서는 실행할 때마다 21번째 테스트에서 앱을 한 번 다시 띄운 기록이 남았습니다. 이유는 아래 &#39;화웨이 iAware&#39;에 적었습니다.</p>
 <h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
 <pre class="code"><code>ivi-tests/
-  ivi/adb.py        adb 명령, 맨 위 액티비티, logcat
-  ivi/waits.py      wait_until. 조건이 맞을 때까지 기다림 (테스트의 대기에 고정 sleep을 쓰지 않음)
-  ivi/vehicle.py    VehicleController
-                      AaosVehicle  VHAL --set, car_service set-property-value, 값 저장과 복원
-                      MockVehicle  am broadcast mock.SET, mock.GET
-  ivi/device.py     Device. 기기 종류 판별, Appium 설정, 앱 실행, 누르는 방법, 기기마다 다른 판정
-  ivi/screens.py    화면 객체. IviApp(탭, 배지)에서 Home, Climate, Media, Video로
-  conftest.py       --serial 옵션, 픽스처(device, driver, app, car, vehicle), aaos 마커 건너뛰기, 실패 자료
+  ivi/<wbr>adb.<wbr>py        adb 명령, 맨 위 액티비티, logcat
+  ivi/<wbr>waits.<wbr>py      wait_<wbr>until. 조건이 맞을 때까지 기다림 (테스트의 대기에 고정 sleep을 쓰지 않음)
+  ivi/<wbr>vehicle.<wbr>py    VehicleController
+                      AaosVehicle  VHAL --set, car_<wbr>service set-property-value, 값 저장과 복원
+                      MockVehicle  am broadcast mock.<wbr>SET, mock.<wbr>GET
+  ivi/<wbr>device.<wbr>py     Device. 기기 종류 판별, Appium 설정, 앱 실행, 누르는 방법, 기기마다 다른 판정
+  ivi/<wbr>screens.<wbr>py    화면 객체. IviApp(탭, 배지)에서 Home, Climate, Media, Video로
+  conftest.<wbr>py       --serial 옵션, 픽스처(device, driver, app, car, vehicle), aaos 마커 건너뛰기, 실패 자료
   tests/            smoke, sanity, regression, spike</code></pre>
-<p>테스트에는 <code>car.drive(50)</code>, <code>climate.increase(Seat.DRIVER)</code>처럼 할 일만 씁니다. VHAL을 쓸지 broadcast를 쓸지, Appium으로 누를지 adb로 누를지는 어댑터가 정합니다.</p>
+<p>테스트에는 <code>car.drive(50)</code>, <code>climate.<wbr>increase(Seat.<wbr>DRIVER)</code>처럼 할 일만 씁니다. VHAL을 쓸지 broadcast를 쓸지, Appium으로 누를지 adb로 누를지는 어댑터가 정합니다.</p>
 <h2 id="테스트-구성-31개"><a class="anchor" href="#테스트-구성-31개" aria-hidden="true">#</a>테스트 구성 (31개)</h2>
 <div class="table"><table><thead><tr>
 <th>마커</th>
@@ -82,37 +82,37 @@
 <th>내용</th>
 </tr>
 </thead><tbody><tr>
-<td>smoke</td>
+<td class="nw">smoke</td>
 <td>test_smoke.py</td>
 <td>앱이 뜨고 기기에 맞는 데이터 소스에 붙는지, 정차 상태로 시작하는지, 탭 세 개가 열리는지, 공조를 제어할 수 있는지(priv-app 확인)</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td>test_climate.py</td>
 <td>신호가 공조 화면과 홈에 보이는지(좌석 두 곳), 버튼을 누르면 신호가 0.5°C 바뀌는지(좌석 두 곳과 올림, 내림)</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td>test_driving.py</td>
 <td>속도, 기어, 제한 배지가 보였다가 사라지는지, 주행 중 영상 버튼 잠금, 영상 화면을 바로 열어도 막히는지, 정차 중 재생</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td>test_climate.py</td>
 <td>최저, 최고 온도에서 버튼이 꺼지는지(좌석 두 곳), 좌석 값이 서로 영향을 주지 않는지</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td>test_driving.py</td>
 <td>막혔던 영상이 정차하면 재생 화면으로 돌아오는지</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td>test_media.py</td>
 <td>곡 선택(세 곡), 재생과 일시 정지, 주행 중에도 음악을 고를 수 있는지</td>
 </tr>
 <tr>
-<td>spike, aaos</td>
+<td class="nw">spike, aaos</td>
 <td>test_spike_aaos.py</td>
 <td>1단계에서 했던 기본 SystemUI HVAC 바 검증 (AAOS에서만)</td>
 </tr>
@@ -129,9 +129,9 @@
 <th>처리하는 곳</th>
 </tr>
 </thead><tbody><tr>
-<td>차량 값 넣기</td>
-<td><code>dumpsys &lt;VHAL&gt; --set</code>, <code>cmd car_service set-property-value</code></td>
-<td><code>am broadcast … mock.SET</code></td>
+<td class="nw">차량 값 넣기</td>
+<td><code>dumpsys &lt;VHAL&gt; --set</code>, <code>cmd car_<wbr>service set-property-value</code></td>
+<td><code>am broadcast … mock.<wbr>SET</code></td>
 <td><code>ivi/vehicle.py</code></td>
 </tr>
 <tr>
@@ -141,25 +141,25 @@
 <td><code>prepare()</code>, <code>cleanup()</code></td>
 </tr>
 <tr>
-<td>주행 중 제한 판정</td>
+<td class="nw">주행 중 제한 판정</td>
 <td>CarDrivingStateService가 MOVING인지</td>
 <td>mock.GET의 <code>restricted=true</code></td>
 <td><code>is_restricted()</code></td>
 </tr>
 <tr>
-<td>영상 차단 판정</td>
+<td class="nw">영상 차단 판정</td>
 <td>맨 위 화면이 OS의 <code>ActivityBlockingActivity</code>인지</td>
 <td>앱의 <code>video_blocked</code> 화면</td>
-<td><code>Device.video_blocked()</code></td>
+<td><code>Device.<wbr>video_<wbr>blocked()</code></td>
 </tr>
 <tr>
-<td>Appium 설정</td>
+<td class="nw">Appium 설정</td>
 <td><code>userProfile=10</code>, <code>skipDeviceInitialization</code>, <code>enableMultiWindows</code></td>
 <td>기본값</td>
-<td><code>Device.appium_options()</code></td>
+<td><code>Device.<wbr>appium_<wbr>options()</code></td>
 </tr>
 <tr>
-<td>누르는 방법</td>
+<td class="nw">누르는 방법</td>
 <td>Appium click</td>
 <td>요소 가운데 좌표를 <code>adb shell input tap</code></td>
 <td><code>Device.tap_mode</code>. <code>IVI_TAP</code>으로 바꿀 수 있습니다.</td>
@@ -185,7 +185,7 @@
 <td>501 ms</td>
 </tr>
 <tr>
-<td>W3C actions</td>
+<td class="nw">W3C actions</td>
 <td>10,430 ms</td>
 <td>-</td>
 </tr>
@@ -199,18 +199,18 @@
 <p><code>waitForIdleTimeout</code>과 <code>actionAcknowledgmentTimeout</code>을 0으로 바꿔도 그대로였습니다. 설정 문제가 아니라, 화웨이 기기에서 UiAutomator가 넣는 터치를 처리하는 데 10초쯤 걸리는 것이었습니다.</p>
 <p>그래서 화웨이와 아너 기기는 기본으로 adb tap을 쓰게 했습니다. 요소는 여전히 Appium으로 찾기 때문에 화면 객체와 테스트 코드는 바꾸지 않았습니다.</p>
 <h3 id="2-화웨이-iaware가-테스트-중인-앱을-강제로-끈-문제"><a class="anchor" href="#2-화웨이-iaware가-테스트-중인-앱을-강제로-끈-문제" aria-hidden="true">#</a>2) 화웨이 iAware가 테스트 중인 앱을 강제로 끈 문제</h3>
-<p>태블릿에서 반복 실행하던 중 한 번, 앱을 띄우는 단계에서 <code>source_badge</code>를 찾지 못해 error가 났습니다. 실패 자료의 logcat에 <code>Force stopping dev.opencabin.ivi … iAwareF[CrashClean]</code>이 남아 있었고, 그 뒤 화면은 런처로 돌아가 있었습니다.</p>
+<p>태블릿에서 반복 실행하던 중 한 번, 앱을 띄우는 단계에서 <code>source_badge</code>를 찾지 못해 error가 났습니다. 실패 자료의 logcat에 <code>Force stopping dev.<wbr>opencabin.<wbr>ivi … iAwareF[CrashClean]</code>이 남아 있었고, 그 뒤 화면은 런처로 돌아가 있었습니다.</p>
 <p>테스트마다 <code>am start -S</code>로 앱을 끄고 다시 켜는데, 짧은 간격으로 스무 번쯤 반복되면 화웨이 OS가 이것을 반복 크래시로 보고 앱을 죽였습니다. 실행할 때마다 21번째 테스트에서 재현됐습니다.</p>
 <p>우선 <code>app</code> 픽스처가 앱이 뜨지 않으면 한 번 더 띄우고, 그 사실을 JUnit property <code>app_relaunch</code>로 남기게 했습니다. 테스트는 통과로 처리하지만 다시 띄웠다는 기록은 남습니다.</p>
 <p>4단계에서 할 일로 두 가지를 남겼습니다. Mock 기기에서는 프로세스를 끄지 않고 화면과 상태만 초기화해서 재실행 자체를 줄이는 것, 그리고 <code>app_relaunch</code> 기록을 flaky 통계로 모으는 것입니다.</p>
 <h2 id="실패-자료"><a class="anchor" href="#실패-자료" aria-hidden="true">#</a>실패 자료</h2>
-<p>테스트가 실패하면 정리 단계(teardown) 전에 <code>reports/artifacts/&lt;실행&gt;-&lt;기기&gt;/&lt;테스트&gt;/</code>에 자료를 남깁니다(2026-11-18부터 실행과 기기별 폴더. 그 전에는 두 기기를 병렬로 돌리면 같은 테스트의 자료가 덮어써졌습니다). 정리 단계에서 정차시키고 값을 되돌리기 때문에, 그 전에 찍어야 실패한 순간이 남습니다.</p>
+<p>테스트가 실패하면 정리 단계(teardown) 전에 <code>reports/<wbr>artifacts/<wbr>&lt;실행&gt;-&lt;기기&gt;/<wbr>&lt;테스트&gt;/</code>에 자료를 남깁니다(2026-11-18부터 실행과 기기별 폴더. 그 전에는 두 기기를 병렬로 돌리면 같은 테스트의 자료가 덮어써졌습니다). 정리 단계에서 정차시키고 값을 되돌리기 때문에, 그 전에 찍어야 실패한 순간이 남습니다.</p>
 <div class="table"><table><thead><tr>
 <th>파일</th>
 <th>내용</th>
 </tr>
 </thead><tbody><tr>
-<td><code>screen.png</code></td>
+<td class="nw"><code>screen.png</code></td>
 <td>화면</td>
 </tr>
 <tr>
@@ -218,7 +218,7 @@
 <td>UI 계층. 요소를 못 찾았을 때 실제로 무엇이 있었는지 볼 수 있습니다.</td>
 </tr>
 <tr>
-<td><code>vehicle.txt</code></td>
+<td class="nw"><code>vehicle.txt</code></td>
 <td>차량 상태. AAOS는 속도(m/s), 기어, 주행 상태, 좌석별 온도이고, Mock은 mock.GET 결과입니다.</td>
 </tr>
 <tr>
@@ -226,13 +226,13 @@
 <td>디스플레이마다 맨 위에 있는 액티비티. AAOS는 메인과 클러스터 두 개입니다.</td>
 </tr>
 <tr>
-<td><code>logcat.txt</code></td>
+<td class="nw"><code>logcat.txt</code></td>
 <td>테스트를 시작할 때 비운 뒤부터 쌓인 로그</td>
 </tr>
 </tbody></table></div>
 <p>일부러 실패시킨 확인용 테스트에서 <code>vehicle.txt</code>에 <code>driving_state=2</code>(주행), <code>gear=8</code>(D)이 찍혀 실패 순간이 그대로 남았습니다. 앞의 iAware 원인도 이 logcat으로 찾았습니다.</p>
 <h2 id="결과-파일"><a class="anchor" href="#결과-파일" aria-hidden="true">#</a>결과 파일</h2>
-<p>JUnit 결과는 기기마다 <code>reports/junit-&lt;aaos|mock&gt;-&lt;serial&gt;.xml</code>로 남고, CI가 이것을 모읍니다. 앱을 다시 띄운 테스트에는 <code>app_relaunch</code> property가 붙습니다.</p>
+<p>JUnit 결과는 기기마다 <code>reports/<wbr>junit-&lt;aaos|mock&gt;-&lt;serial&gt;.<wbr>xml</code>로 남고, CI가 이것을 모읍니다. 앱을 다시 띄운 테스트에는 <code>app_relaunch</code> property가 붙습니다.</p>
 
   </main>
   <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#결과">결과</a><a class="l2" href="#구조">구조</a><a class="l2" href="#테스트-구성-31개">테스트 구성 (31개)</a><a class="l2" href="#기기마다-다른-점을-감춘-곳">기기마다 다른 점을 감춘 곳</a><a class="l2" href="#찾아서-고친-것">찾아서 고친 것</a><a class="l3" href="#1-화웨이에서-탭-한-번에-10초가-걸린-문제">1) 화웨이에서 탭 한 번에 10초가 걸린 문제</a><a class="l3" href="#2-화웨이-iaware가-테스트-중인-앱을-강제로-끈-문제">2) 화웨이 iAware가 테스트 중인 앱을 강제로 끈 문제</a><a class="l2" href="#실패-자료">실패 자료</a><a class="l2" href="#결과-파일">결과 파일</a></nav>

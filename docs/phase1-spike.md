@@ -6,10 +6,10 @@
 
 | 확인한 것 | 결과 | 비고 |
 |---|---|---|
-| Automotive 에뮬레이터 부팅 | 약 30초 만에 켜짐 | API 34 `android-automotive` x86_64, 화면 1024x768 |
+| Automotive 에뮬레이터 부팅 | 약 30초 만에 켜졌습니다. | API 34 `android-automotive` x86_64, 화면 1024x768 |
 | adb root (VHAL 직접 제어용) | 됨 | 이미지가 `userdebug`입니다. |
-| 읽기 전용 센서 값 넣기 (속도, 기어) | `dumpsys <VHAL> --set`으로 됨 | `cmd car_service inject-vhal-event`는 값이 저장되지 않습니다. 아래에 자세히 적었습니다. |
-| 쓰기 가능한 값 (HVAC 온도) | `cmd car_service set-property-value`로 됨 | 앱의 CarPropertyManager와 같은 경로입니다. |
+| 읽기 전용 센서 값 넣기 (속도, 기어) | `dumpsys <VHAL> --set`으로 됩니다. | `cmd car_service inject-vhal-event`는 값이 저장되지 않습니다. 아래에 자세히 적었습니다. |
+| 쓰기 가능한 값 (HVAC 온도) | `cmd car_service set-property-value`로 됩니다. | 앱의 CarPropertyManager와 같은 경로입니다. |
 | 신호를 넣으면 화면이 바뀌는지 | 됨 | HVAC 25.0°C를 넣으면 하단 바에 77°가 보입니다. |
 | 화면을 누르면 신호가 바뀌는지 | 됨 | ▼나 ▲를 한 번 누르면 0.5°C 바뀝니다. |
 | 속도와 기어로 주행 상태가 바뀌는지 | 됨 | PARKED(0)와 MOVING(2) 사이를 오가고, UX 제한이 0x1ff가 되면 주행 중에 쓸 수 없는 화면에 "You can't use this feature while driving"이 뜹니다. |
@@ -21,7 +21,7 @@
 | 명령 | 경로 | 결과 |
 |---|---|---|
 | `cmd car_service set-property-value <prop> <area> <값>` | CarService를 거쳐 VHAL로 | 쓰기 권한이 있는 property만 됩니다. HVAC는 되고, 속도는 읽기 전용이라 안 됩니다. |
-| `cmd car_service inject-vhal-event <prop> <area> <값>` | 이벤트만 보냄 | 저장된 값이 그대로라 `get-property-value`로 확인할 수 없습니다. 테스트 판정에는 쓰지 않습니다. |
+| `cmd car_service inject-vhal-event <prop> <area> <값>` | 이벤트만 보냅니다. | 저장된 값이 그대로라 `get-property-value`로 확인할 수 없습니다. 테스트 판정에는 쓰지 않습니다. |
 | `dumpsys android.hardware.automotive.vehicle.IVehicle/default --set <prop> -f/-i <값> -a <area>` | VHAL에 바로 (root) | 읽기 전용 센서 값도 바뀌고 변경 이벤트가 CarService로 나가서, 주행 상태까지 실제로 바뀝니다. |
 
 VHAL에는 테스트용 `--save-prop`과 `--restore-prop`이 있습니다. 픽스처에서 테스트 앞뒤로 값을 저장하고 되돌려서 테스트끼리 서로 영향을 주지 않게 했습니다.
@@ -34,9 +34,9 @@ VHAL에는 테스트용 `--save-prop`과 `--restore-prop`이 있습니다. 픽�
 |---|---|---|
 | `Neither ANDROID_HOME nor ANDROID_SDK_ROOT environment variable was exported` | Appium 서버에 환경 변수가 없었습니다. | `ANDROID_HOME=C:\android`를 주고 서버를 켰습니다. |
 | `Appium Settings app is not running after 30000ms` | AAOS에서는 시스템 사용자(0)와 운전자 사용자(10)가 따로 돕니다. | `appium:userProfile`에 `am get-current-user` 값을 넣고 `appium:skipDeviceInitialization: true`를 줬습니다. |
-| 하단 HVAC 바가 화면 소스에 안 보임 | SystemUI 바는 앱과 다른 창입니다. | 세션을 연 뒤 `update_settings({"enableMultiWindows": True})`를 불렀습니다. |
+| 하단 HVAC 바가 화면 소스에 보이지 않았습니다. | SystemUI 바는 앱과 다른 창입니다. | 세션을 연 뒤 `update_settings({"enableMultiWindows": True})`를 불렀습니다. |
 
-## 찾은 결함: 운전석 온도 ▲ 버튼이 홈 버튼에 가려짐
+## 찾은 결함: 운전석 온도 ▲ 버튼이 홈 버튼에 가려졌습니다
 
 1024x768 화면(`automotive_1024p_landscape`)의 하단 시스템 바에서 운전석 온도 ▲를 눌러도 온도가 바뀌지 않았습니다. Appium으로 눌러도, `adb shell input tap`으로 눌러도 같았습니다.
 

@@ -40,7 +40,7 @@
   </aside>
   <main id="content" class="doc">
 <h1 id="요구사항"><a class="anchor" href="#요구사항" aria-hidden="true">#</a>요구사항</h1>
-<p>OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습니다. 테스트 코드는 <code>@pytest.mark.req(&quot;ID&quot;)</code>로 이 ID를 가리키고, <code>ivi-tests/tools/trace_report.py</code>가 둘을 이어 <a href="traceability.html">요구사항 추적표</a>를 만듭니다.</p>
+<p>OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습니다. 테스트 코드는 <code>@pytest.<wbr>mark.<wbr>req(&quot;ID&quot;)</code>로 이 ID를 가리키고, <code>ivi-tests/<wbr>tools/<wbr>trace_<wbr>report.<wbr>py</code>가 둘을 이어 <a href="traceability.html">요구사항 추적표</a>를 만듭니다.</p>
 <p>출처 열의 &#39;기능&#39;은 이 앱에서 정한 동작이고, &#39;운전자 주의 분산&#39;은 AAOS의 주행 중 UX 제한을, &#39;법규&#39;는 해당 기준을 가져온 것입니다. &#39;모의 환경&#39;은 실제 장비 대신 PC 안에서 흉내 낸 환경에서 확인한다는 뜻입니다.</p>
 <div class="table"><table><thead><tr>
 <th>ID</th>
@@ -48,133 +48,133 @@
 <th>출처</th>
 </tr>
 </thead><tbody><tr>
-<td>SYS-01</td>
-<td>앱은 기기에 맞는 차량 데이터(AAOS는 CarService, 그 밖의 기기는 Mock)에 연결하고, 권한이 없는 신호는 앱이 멈추지 않고 &#39;값 없음&#39;으로 보여 준다.</td>
+<td class="nw">SYS-01</td>
+<td>앱은 기기에 맞는 차량 데이터(AAOS는 CarService, 그 밖의 기기는 Mock)에 연결하고, 권한이 없는 신호는 앱이 멈추지 않고 &#39;값 없음&#39;으로 보여 줍니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>UI-01</td>
-<td>화면 틀(아래 바, 분할 화면, 위젯, 알림 센터, 앱 목록, 이전 실행 앱)이 어느 화면에서든 동작한다.</td>
+<td class="nw">UI-01</td>
+<td>화면 틀(아래 바, 분할 화면, 위젯, 알림 센터, 앱 목록, 이전 실행 앱)이 어느 화면에서든 동작합니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>DRIVE-01</td>
-<td>속도와 기어 신호를 주행 정보에 바로 보여 준다.</td>
+<td class="nw">DRIVE-01</td>
+<td>속도와 기어 신호를 주행 정보에 바로 보여 줍니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>DRIVE-02</td>
-<td>주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있다. 음악은 주행 중에도 쓸 수 있다.</td>
+<td class="nw">DRIVE-02</td>
+<td>주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다.</td>
 <td>운전자 주의 분산</td>
 </tr>
 <tr>
-<td>DRIVE-03</td>
-<td>주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막는다.</td>
+<td class="nw">DRIVE-03</td>
+<td>주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다.</td>
 <td>운전자 주의 분산</td>
 </tr>
 <tr>
-<td>HVAC-01</td>
-<td>운전석과 조수석 온도는 화면과 차량 신호가 같은 값을 가진다. 한쪽이 바뀌면 다른 쪽이 따라온다.</td>
+<td class="nw">HVAC-01</td>
+<td>운전석과 조수석 온도는 화면과 차량 신호가 같은 값을 가집니다. 한쪽이 바뀌면 다른 쪽이 따라옵니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>HVAC-02</td>
-<td>온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼진다. 차량 쪽에서 범위 밖 값이나 0.5°C 단위가 아닌 값이 와도 앱은 멈추지 않고 그 값을 보여 주며, 범위 밖으로 더 가는 버튼은 꺼진다. 버튼을 누르면 범위 안의 0.5°C 단위 값으로 맞춰 차량에 쓴다.</td>
+<td class="nw">HVAC-02</td>
+<td>온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼집니다. 차량 쪽에서 범위 밖 값이나 0.5°C 단위가 아닌 값이 와도 앱은 멈추지 않고 그 값을 보여 주며, 범위 밖으로 더 가는 버튼은 꺼집니다. 버튼을 누르면 범위 안의 0.5°C 단위 값으로 맞춰 차량에 씁니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>HVAC-03</td>
-<td>A/C, AUTO, 풍량은 모든 좌석 area에 함께 적용된다. 풍량을 직접 바꾸면 AUTO가 풀린다.</td>
+<td class="nw">HVAC-03</td>
+<td>A/C, AUTO, 풍량은 모든 좌석 area에 함께 적용됩니다. 풍량을 직접 바꾸면 AUTO가 풀립니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>HVAC-04</td>
-<td>최대 냉방(FULL)을 켜면 최저 온도와 최대 풍량이 되고, 끄면 켜기 전 값으로 돌아간다. 다른 공조 값을 직접 바꾸면 최대 냉방이 풀린다.</td>
+<td class="nw">HVAC-04</td>
+<td>최대 냉방(FULL)을 켜면 최저 온도와 최대 풍량이 되고, 끄면 켜기 전 값으로 돌아갑니다. 다른 공조 값을 직접 바꾸면 최대 냉방이 풀립니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>HVAC-05</td>
-<td>김서림 제거와 좌석 열선은 누른 유리, 그 좌석에만 적용되고, 화면 여러 곳에 같은 값으로 보인다.</td>
+<td class="nw">HVAC-05</td>
+<td>김서림 제거와 좌석 열선은 누른 유리, 그 좌석에만 적용되고, 화면 여러 곳에 같은 값으로 보입니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>HVAC-06</td>
-<td>SYNC를 켜면 조수석 온도가 운전석을 따르고, 조수석을 직접 바꾸면 SYNC가 풀린다.</td>
+<td class="nw">HVAC-06</td>
+<td>SYNC를 켜면 조수석 온도가 운전석을 따르고, 조수석을 직접 바꾸면 SYNC가 풀립니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>BODY-01</td>
-<td>도어 버튼은 모든 문을 함께 잠그고 풀며, 차량 쪽 문 상태를 화면에 보여 준다.</td>
+<td class="nw">BODY-01</td>
+<td>도어 버튼은 모든 문을 함께 잠그고 풀며, 차량 쪽 문 상태를 화면에 보여 줍니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>ENERGY-01</td>
-<td>주행 가능 거리, 배터리, 외기 온도를 화면 단위(km 또는 마일, %, °C)로 보여 준다.</td>
+<td class="nw">ENERGY-01</td>
+<td>주행 가능 거리, 배터리, 외기 온도를 화면 단위(km 또는 마일, %, °C)로 보여 줍니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>ENERGY-02</td>
-<td>주행 가능 거리가 30 km 이하면 경고와 충전소 안내를 띄우고 알림 센터에 남긴다. 충전해서 거리가 늘면 경고를 거둔다.</td>
+<td class="nw">ENERGY-02</td>
+<td>주행 가능 거리가 30 km 이하면 경고와 충전소 안내를 띄우고 알림 센터에 남깁니다. 충전해서 거리가 늘면 경고를 거둡니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>CAM-01</td>
-<td>기어가 R이 되면 어느 화면에서든 후방 카메라를 띄우고, R에서 벗어나면 보던 화면으로 돌아간다.</td>
+<td class="nw">CAM-01</td>
+<td>기어가 R이 되면 어느 화면에서든 후방 카메라를 띄우고, R에서 벗어나면 보던 화면으로 돌아갑니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>CAM-02</td>
-<td>후방 카메라 화면은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 한다. FMVSS 111의 2초 기준을 빌렸고, 앱의 카메라 화면 요소가 뜰 때까지를 잰다(adb 주입과 Appium 조회 시간 포함). 실제 카메라 영상이나 실차에서 잰 값은 아니다.</td>
-<td>법규 기준을 빌림 (FMVSS 111)</td>
+<td class="nw">CAM-02</td>
+<td>후방 카메라 화면은 기어를 R로 바꾼 뒤 2.0초 안에 보여야 합니다. FMVSS 111의 2초 기준을 빌렸고, 앱의 카메라 화면 요소가 뜰 때까지를 잽니다(adb 주입과 Appium 조회 시간 포함). 실제 카메라 영상이나 실차에서 잰 값은 아닙니다.</td>
+<td>법규 (FMVSS 111 기준)</td>
 </tr>
 <tr>
-<td>NAV-01</td>
-<td>목적지를 찾아 안내를 시작하고, 남은 거리는 차량 속도 신호를 따라 줄며, 도착하거나 끝내면 안내를 거둔다.</td>
+<td class="nw">NAV-01</td>
+<td>목적지를 찾아 안내를 시작하고, 남은 거리는 차량 속도 신호를 따라 줄며, 도착하거나 끝내면 안내를 거둡니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>MEDIA-01</td>
-<td>음악, 라디오, 통화는 한 번에 하나만 소리를 낸다. 통화가 끝나면 듣던 것이 다시 나온다.</td>
+<td class="nw">MEDIA-01</td>
+<td>음악, 라디오, 통화는 한 번에 하나만 소리를 냅니다. 통화가 끝나면 듣던 것이 다시 나옵니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>MEDIA-02</td>
-<td>음악과 영상 재생, 라디오 조정과 프리셋, 전화 걸기가 동작한다.</td>
+<td class="nw">MEDIA-02</td>
+<td>음악과 영상 재생, 라디오 조정과 프리셋, 전화 걸기가 동작합니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>VOICE-01</td>
-<td>음성 명령과 AI 어시스턴트는 말한 사람의 좌석에 맞춰 차량 기능과 앱 기능을 실행한다.</td>
+<td class="nw">VOICE-01</td>
+<td>음성 명령과 AI 어시스턴트는 말한 사람의 좌석에 맞춰 차량 기능과 앱 기능을 실행합니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>SET-01</td>
-<td>설정과 라디오 프리셋은 앱을 다시 켜도 남고, 초기화하면 기본값으로 돌아간다. 속도 단위는 차량 정보 표시에 반영된다.</td>
+<td class="nw">SET-01</td>
+<td>설정과 라디오 프리셋은 앱을 다시 켜도 남고, 초기화하면 기본값으로 돌아갑니다. 속도 단위는 차량 정보 표시에 반영됩니다.</td>
 <td>기능</td>
 </tr>
 <tr>
-<td>NET-01</td>
-<td>차량 네트워크(CAN)로 들어온 주행, 배터리, 도어 신호가 VHAL을 거쳐 화면에 보인다.</td>
+<td class="nw">NET-01</td>
+<td>차량 네트워크(CAN)로 들어온 주행, 배터리, 도어 신호가 VHAL을 거쳐 화면에 보입니다.</td>
 <td>통합 (모의 환경)</td>
 </tr>
 <tr>
-<td>NET-02</td>
-<td>화면에서 바꾼 공조 값이 CAN 프레임으로 나간다.</td>
+<td class="nw">NET-02</td>
+<td>화면에서 바꾼 공조 값이 CAN 프레임으로 나갑니다.</td>
 <td>통합 (모의 환경)</td>
 </tr>
 <tr>
-<td>BENCH-01</td>
-<td>Test Bench API로 기기, 차량 신호, 실행 결과를 조회하고 신호를 넣을 수 있다. 잘못된 값은 거절하고 차량에 넣지 않는다.</td>
+<td class="nw">BENCH-01</td>
+<td>Test Bench API로 기기, 차량 신호, 실행 결과를 조회하고 신호를 넣을 수 있습니다. 잘못된 값은 거절하고 차량에 넣지 않습니다.</td>
 <td>운영</td>
 </tr>
 <tr>
-<td>BENCH-02</td>
-<td>전원을 껐다 켜도 기기가 정해진 시간 안에 부팅되고, 앱과 공조 기본값이 돌아온다.</td>
+<td class="nw">BENCH-02</td>
+<td>전원을 껐다 켜도 기기가 정해진 시간 안에 부팅되고, 앱과 공조 기본값이 돌아옵니다.</td>
 <td>운영 (모의 환경)</td>
 </tr>
 <tr>
-<td>SPIKE-01</td>
-<td>AAOS 기본 SystemUI의 공조 바가 VHAL 신호와 이어지고, 속도와 기어가 주행 상태를 바꾼다.</td>
+<td class="nw">SPIKE-01</td>
+<td>AAOS 기본 SystemUI의 공조 바가 VHAL 신호와 이어지고, 속도와 기어가 주행 상태를 바꿉니다.</td>
 <td>기술 검증 (1단계)</td>
 </tr>
 </tbody></table></div>
@@ -188,166 +188,166 @@
 <th>그 조건을 보는 확인</th>
 </tr>
 </thead><tbody><tr>
-<td>SYS-01.1</td>
-<td>기기에 맞는 차량 데이터에 연결한다 (AAOS는 CarService, 태블릿은 Mock)</td>
-<td><a class="test-link" href="test-results.html#test_app_starts_with_vehicle_source_for_device" title="테스트 결과와 화면 보기"><code>test_app_starts_with_vehicle_source_for_device</code></a></td>
-<td><code>assert app.source_badge() == device.vehicle.badge</code>, 연결 안 됨·오류 표시가 없음</td>
+<td class="nw">SYS-01.1</td>
+<td>기기에 맞는 차량 데이터에 연결합니다 (AAOS는 CarService, 태블릿은 Mock)</td>
+<td><a class="test-link" href="test-results.html#test_app_starts_with_vehicle_source_for_device" title="테스트 결과와 화면 보기"><code>test_<wbr>app_<wbr>starts_<wbr>with_<wbr>vehicle_<wbr>source_<wbr>for_<wbr>device</code></a></td>
+<td><code>assert app.<wbr>source_<wbr>badge() == device.<wbr>vehicle.<wbr>badge</code>, 연결 안 됨·오류 표시가 없습니다</td>
 </tr>
 <tr>
-<td>SYS-01.2</td>
-<td>연결한 차량 값이 시작 화면에 맞게 보인다</td>
-<td><a class="test-link" href="test-results.html#test_parked_on_start" title="테스트 결과와 화면 보기"><code>test_parked_on_start</code></a></td>
-<td><code>wait_text(&quot;speed_value&quot;, &quot;0&quot;)</code>, <code>assert home.gear() == &quot;P&quot;</code></td>
+<td class="nw">SYS-01.2</td>
+<td>연결한 차량 값이 시작 화면에 맞게 보입니다</td>
+<td><a class="test-link" href="test-results.html#test_parked_on_start" title="테스트 결과와 화면 보기"><code>test_<wbr>parked_<wbr>on_<wbr>start</code></a></td>
+<td><code>wait_<wbr>text(&quot;speed_<wbr>value&quot;, &quot;0&quot;)</code>, <code>assert home.<wbr>gear() == &quot;P&quot;</code></td>
 </tr>
 <tr>
-<td>SYS-01.3</td>
-<td>권한이 있으면 공조를 제어할 수 있다</td>
-<td><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_hvac_is_controllable</code></a></td>
-<td><code>assert not climate.unavailable()</code> 뒤 화면 + 한 번이 차량 22.5°C로</td>
+<td class="nw">SYS-01.3</td>
+<td>권한이 있으면 공조를 제어할 수 있습니다</td>
+<td><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_<wbr>hvac_<wbr>is_<wbr>controllable</code></a></td>
+<td><code>assert not climate.<wbr>unavailable()</code> 뒤 화면 + 한 번이 차량 22.5°C로</td>
 </tr>
 <tr>
-<td>SYS-01.4</td>
-<td>권한이 없는 신호는 앱이 멈추지 않고 &#39;값 없음&#39;으로 보여 준다</td>
+<td class="nw">SYS-01.4</td>
+<td>권한이 없는 신호는 앱이 멈추지 않고 &#39;값 없음&#39;으로 보여 줍니다</td>
 <td>확인하지 않음</td>
-<td>앱 코드(<code>CarVehicleDataSource</code>가 <code>SecurityException</code>을 받아 &#39;값 없음&#39;)에는 있지만, 권한을 뺀 상태로 돌리는 E2E나 앱 단위 테스트가 없다</td>
+<td>앱 코드(<code>CarVehicleDataSource</code>가 <code>SecurityException</code>을 받아 &#39;값 없음&#39;)에는 있지만, 권한을 뺀 상태로 돌리는 E2E나 앱 단위 테스트가 없습니다</td>
 </tr>
 <tr>
-<td>HVAC-02.1</td>
-<td>버튼 한 번에 0.5°C 바뀐다</td>
-<td><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_button_changes_signal_by_one_step</code></a></td>
-<td>차량 값 <code>wait_value(car.temperature(seat), 22.5)</code>(▼는 21.5)와 화면 <code>wait_temperature</code>를 따로 본다. 좌석 2 × 방향 2</td>
+<td class="nw">HVAC-02.1</td>
+<td>버튼 한 번에 0.5°C 바뀝니다</td>
+<td><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_<wbr>button_<wbr>changes_<wbr>signal_<wbr>by_<wbr>one_<wbr>step</code></a></td>
+<td>차량 값 <code>wait_<wbr>value(car.<wbr>temperature(seat), 22.<wbr>5)</code>(▼는 21.5)와 화면 <code>wait_<wbr>temperature</code>를 따로 봅니다. 좌석 2 × 방향 2</td>
 </tr>
 <tr>
-<td>HVAC-02.2</td>
-<td>끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌린다</td>
-<td><a class="test-link" href="test-results.html#test_buttons_disabled_at_limits" title="테스트 결과와 화면 보기"><code>test_buttons_disabled_at_limits</code></a></td>
-<td><code>wait_enabled(&quot;&lt;좌석&gt;_temp_down&quot;, False)</code>와 <code>assert climate.can_increase(seat)</code>. 28.0°C는 반대</td>
+<td class="nw">HVAC-02.2</td>
+<td>끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌립니다</td>
+<td><a class="test-link" href="test-results.html#test_buttons_disabled_at_limits" title="테스트 결과와 화면 보기"><code>test_<wbr>buttons_<wbr>disabled_<wbr>at_<wbr>limits</code></a></td>
+<td><code>wait_<wbr>enabled(&quot;&lt;좌석&gt;_<wbr>temp_<wbr>down&quot;, False)</code>와 <code>assert climate.<wbr>can_<wbr>increase(seat)</code>. 28.0°C는 반대</td>
 </tr>
 <tr>
-<td>HVAC-02.3</td>
-<td>버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않는다</td>
-<td><a class="test-link" href="test-results.html#test_step_reaches_limit_and_disables" title="테스트 결과와 화면 보기"><code>test_step_reaches_limit_and_disables</code></a></td>
-<td>16.5→16.0°C <code>wait_value</code>, <code>wait_enabled(False)</code>, 꺼진 버튼을 누른 뒤 1.5초 동안 <code>stays(car.temperature(seat) == 16.0)</code>. 28.0°C도 같다</td>
+<td class="nw">HVAC-02.3</td>
+<td>버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_step_reaches_limit_and_disables" title="테스트 결과와 화면 보기"><code>test_<wbr>step_<wbr>reaches_<wbr>limit_<wbr>and_<wbr>disables</code></a></td>
+<td>16.5→16.0°C <code>wait_value</code>, <code>wait_<wbr>enabled(False)</code>, 꺼진 버튼을 누른 뒤 1.5초 동안 <code>stays(car.<wbr>temperature(seat) == 16.<wbr>0)</code>. 28.0°C도 같습니다</td>
 </tr>
 <tr>
-<td>HVAC-02.4</td>
-<td>차량 쪽 범위 밖 값(15.5, 28.5°C)을 화면에 보여 주고, 범위 밖으로 더 가는 버튼은 꺼진다</td>
-<td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_out_of_range_signal_is_shown_safely</code></a></td>
-<td><code>wait_temperature(seat, 15.5)</code>, <code>wait_enabled(&quot;driver_temp_down&quot;, False)</code>. 15.5°C를 그대로 보여 주는 것은 AAOS에서만 확인한다(태블릿 Mock은 16.0°C로 자른다)</td>
+<td class="nw">HVAC-02.4</td>
+<td>차량 쪽 범위 밖 값(15.5, 28.5°C)을 화면에 보여 주고, 범위 밖으로 더 가는 버튼은 꺼집니다</td>
+<td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a></td>
+<td><code>wait_<wbr>temperature(seat, 15.<wbr>5)</code>, <code>wait_<wbr>enabled(&quot;driver_<wbr>temp_<wbr>down&quot;, False)</code>. 15.5°C를 그대로 보여 주는 것은 AAOS에서만 확인합니다(태블릿 Mock은 16.0°C로 자릅니다)</td>
 </tr>
 <tr>
-<td>HVAC-02.5</td>
-<td>범위 밖 값에서 버튼을 누르면 범위 안의 값을 차량에 쓴다</td>
-<td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_out_of_range_signal_is_shown_safely</code></a></td>
-<td>▲ 뒤 <code>wait_value(car.temperature(seat), 16.0)</code>(AAOS), 16.5(태블릿)</td>
+<td class="nw">HVAC-02.5</td>
+<td>범위 밖 값에서 버튼을 누르면 범위 안의 값을 차량에 씁니다</td>
+<td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a></td>
+<td>▲ 뒤 <code>wait_<wbr>value(car.<wbr>temperature(seat), 16.<wbr>0)</code>(AAOS), 16.5(태블릿)</td>
 </tr>
 <tr>
-<td>HVAC-02.6</td>
-<td>0.5°C 단위가 아닌 값(22.3°C)에서 버튼을 누르면 0.5°C 단위로 맞춰 쓴다</td>
-<td><a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_off_grid_signal_steps_back_to_grid</code></a></td>
-<td><code>wait_value(car.temperature(seat), 22.5)</code>(▲), 22.0(▼). 이 확인에서 앱 결함(22.8°C를 씀)을 찾았다</td>
+<td class="nw">HVAC-02.6</td>
+<td>0.5°C 단위가 아닌 값(22.3°C)에서 버튼을 누르면 0.5°C 단위로 맞춰 씁니다</td>
+<td><a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_<wbr>off_<wbr>grid_<wbr>signal_<wbr>steps_<wbr>back_<wbr>to_<wbr>grid</code></a></td>
+<td><code>wait_<wbr>value(car.<wbr>temperature(seat), 22.<wbr>5)</code>(▲), 22.0(▼). 이 확인에서 앱 결함(22.8°C를 씀)을 찾았습니다</td>
 </tr>
 <tr>
-<td>HVAC-02.7</td>
-<td>이상한 값이 와도 앱이 멈추지 않는다</td>
-<td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_out_of_range_signal_is_shown_safely</code></a>, <a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_off_grid_signal_steps_back_to_grid</code></a></td>
-<td>값이 화면에 보이고 그 뒤 버튼이 동작하는지 본다. 테스트 도중 이 앱의 크래시(<code>FATAL EXCEPTION</code>, <code>Fatal signal</code>)나 ANR이 logcat에 남으면 화면 판정이 통과해도 그 테스트를 실패로 한다(모든 E2E 공통, <code>ivi/crashes.py</code>)</td>
+<td class="nw">HVAC-02.7</td>
+<td>이상한 값이 와도 앱이 멈추지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a>, <a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_<wbr>off_<wbr>grid_<wbr>signal_<wbr>steps_<wbr>back_<wbr>to_<wbr>grid</code></a></td>
+<td>값이 화면에 보이고 그 뒤 버튼이 동작하는지 봅니다. 테스트 도중 이 앱의 크래시(<code>FATAL EXCEPTION</code>, <code>Fatal signal</code>)나 ANR이 logcat에 남으면 화면 판정이 통과해도 그 테스트를 실패로 합니다(모든 E2E 공통, <code>ivi/crashes.py</code>)</td>
 </tr>
 <tr>
-<td>HVAC-04.1</td>
-<td>FULL을 켜면 전 좌석 최대 냉방, 최저 온도, 최대 풍량이 된다</td>
-<td><a class="test-link" href="test-results.html#test_max_ac_sets_signal_and_coldest_settings" title="테스트 결과와 화면 보기"><code>test_max_ac_sets_signal_and_coldest_settings</code></a></td>
-<td><code>wait_until(all(car.signal_all(Signal.MAX_AC)))</code>, <code>wait_signal(car, Signal.FAN, 7)</code>, 좌석마다 <code>wait_value(car.temperature(seat), 16.0)</code></td>
+<td class="nw">HVAC-04.1</td>
+<td>FULL을 켜면 전 좌석 최대 냉방, 최저 온도, 최대 풍량이 됩니다</td>
+<td><a class="test-link" href="test-results.html#test_max_ac_sets_signal_and_coldest_settings" title="테스트 결과와 화면 보기"><code>test_<wbr>max_<wbr>ac_<wbr>sets_<wbr>signal_<wbr>and_<wbr>coldest_<wbr>settings</code></a></td>
+<td><code>wait_<wbr>until(all(car.<wbr>signal_<wbr>all(Signal.<wbr>MAX_<wbr>AC)))</code>, <code>wait_<wbr>signal(car, Signal.<wbr>FAN, 7)</code>, 좌석마다 <code>wait_<wbr>value(car.<wbr>temperature(seat), 16.<wbr>0)</code></td>
 </tr>
 <tr>
-<td>HVAC-04.2</td>
-<td>끄면 켜기 전 값(22.0°C, 풍량 3)으로 돌아간다</td>
-<td><a class="test-link" href="test-results.html#test_max_ac_off_restores_previous_settings" title="테스트 결과와 화면 보기"><code>test_max_ac_off_restores_previous_settings</code></a></td>
-<td><code>wait_signal(car, Signal.FAN, 3)</code>, 좌석마다 <code>wait_value(car.temperature(seat), 22.0)</code></td>
+<td class="nw">HVAC-04.2</td>
+<td>끄면 켜기 전 값(22.0°C, 풍량 3)으로 돌아갑니다</td>
+<td><a class="test-link" href="test-results.html#test_max_ac_off_restores_previous_settings" title="테스트 결과와 화면 보기"><code>test_<wbr>max_<wbr>ac_<wbr>off_<wbr>restores_<wbr>previous_<wbr>settings</code></a></td>
+<td><code>wait_<wbr>signal(car, Signal.<wbr>FAN, 3)</code>, 좌석마다 <code>wait_<wbr>value(car.<wbr>temperature(seat), 22.<wbr>0)</code></td>
 </tr>
 <tr>
-<td>HVAC-04.3</td>
-<td>풍량을 직접 바꾸면 풀리고, 온도는 되돌리지 않는다</td>
-<td><a class="test-link" href="test-results.html#test_manual_fan_releases_max_ac" title="테스트 결과와 화면 보기"><code>test_manual_fan_releases_max_ac</code></a></td>
-<td><code>wait_signal(car, Signal.MAX_AC, False)</code>, <code>wait_signal(car, Signal.FAN, 6)</code>, <code>assert car.temperature(Seat.DRIVER) == 16.0</code></td>
+<td class="nw">HVAC-04.3</td>
+<td>풍량을 직접 바꾸면 풀리고, 온도는 되돌리지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_manual_fan_releases_max_ac" title="테스트 결과와 화면 보기"><code>test_<wbr>manual_<wbr>fan_<wbr>releases_<wbr>max_<wbr>ac</code></a></td>
+<td><code>wait_<wbr>signal(car, Signal.<wbr>MAX_<wbr>AC, False)</code>, <code>wait_<wbr>signal(car, Signal.<wbr>FAN, 6)</code>, <code>assert car.<wbr>temperature(Seat.<wbr>DRIVER) == 16.<wbr>0</code></td>
 </tr>
 <tr>
-<td>HVAC-04.4</td>
-<td>A/C를 끄면 최대 냉방도 꺼진다</td>
-<td><a class="test-link" href="test-results.html#test_turning_ac_off_releases_max_ac" title="테스트 결과와 화면 보기"><code>test_turning_ac_off_releases_max_ac</code></a></td>
-<td><code>wait_signal(car, Signal.AC, False)</code>, <code>wait_signal(car, Signal.MAX_AC, False)</code></td>
+<td class="nw">HVAC-04.4</td>
+<td>A/C를 끄면 최대 냉방도 꺼집니다</td>
+<td><a class="test-link" href="test-results.html#test_turning_ac_off_releases_max_ac" title="테스트 결과와 화면 보기"><code>test_<wbr>turning_<wbr>ac_<wbr>off_<wbr>releases_<wbr>max_<wbr>ac</code></a></td>
+<td><code>wait_<wbr>signal(car, Signal.<wbr>AC, False)</code>, <code>wait_<wbr>signal(car, Signal.<wbr>MAX_<wbr>AC, False)</code></td>
 </tr>
 <tr>
-<td>HVAC-04.5</td>
-<td>온도를 직접 바꾸면 풀린다</td>
+<td class="nw">HVAC-04.5</td>
+<td>온도를 직접 바꾸면 풀립니다</td>
 <td>확인하지 않음</td>
-<td>요구사항의 &#39;다른 공조 값&#39;에 온도도 들어가지만 테스트가 없다. 풍량과 A/C만 확인했다</td>
+<td>요구사항의 &#39;다른 공조 값&#39;에 온도도 들어가지만 테스트가 없습니다. 풍량과 A/C만 확인했습니다</td>
 </tr>
 <tr>
-<td>HVAC-04.6</td>
-<td>차량 쪽에서 바뀐 최대 냉방이 화면 토글에 보인다</td>
-<td><a class="test-link" href="test-results.html#test_max_ac_signal_is_shown_on_toggle" title="테스트 결과와 화면 보기"><code>test_max_ac_signal_is_shown_on_toggle</code></a></td>
-<td><code>wait_checked(&quot;max_ac&quot;, True)</code>, 끄면 <code>False</code></td>
+<td class="nw">HVAC-04.6</td>
+<td>차량 쪽에서 바뀐 최대 냉방이 화면 토글에 보입니다</td>
+<td><a class="test-link" href="test-results.html#test_max_ac_signal_is_shown_on_toggle" title="테스트 결과와 화면 보기"><code>test_<wbr>max_<wbr>ac_<wbr>signal_<wbr>is_<wbr>shown_<wbr>on_<wbr>toggle</code></a></td>
+<td><code>wait_<wbr>checked(&quot;max_<wbr>ac&quot;, True)</code>, 끄면 <code>False</code></td>
 </tr>
 <tr>
-<td>DRIVE-02.1</td>
-<td>주행 중에는 영상 버튼이 꺼지고 안내가 나온다</td>
-<td><a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_button_locked_while_driving</code></a></td>
-<td><code>wait_enabled(&quot;open_video&quot;, False)</code>, <code>assert media.restricted_notice()</code></td>
+<td class="nw">DRIVE-02.1</td>
+<td>주행 중에는 영상 버튼이 꺼지고 안내가 나옵니다</td>
+<td><a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>button_<wbr>locked_<wbr>while_<wbr>driving</code></a></td>
+<td><code>wait_<wbr>enabled(&quot;open_<wbr>video&quot;, False)</code>, <code>assert media.<wbr>restricted_<wbr>notice()</code></td>
 </tr>
 <tr>
-<td>DRIVE-02.2</td>
-<td>버튼을 거치지 않고 영상 화면을 열어도 주행 중에는 막힌다</td>
-<td><a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_is_blocked_while_driving</code></a></td>
-<td><code>wait_until(device.video_blocked(video))</code>, <code>assert not video.playing()</code></td>
+<td class="nw">DRIVE-02.2</td>
+<td>버튼을 거치지 않고 영상 화면을 열어도 주행 중에는 막힙니다</td>
+<td><a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>is_<wbr>blocked_<wbr>while_<wbr>driving</code></a></td>
+<td><code>wait_<wbr>until(device.<wbr>video_<wbr>blocked(video))</code>, <code>assert not video.<wbr>playing()</code></td>
 </tr>
 <tr>
-<td>DRIVE-02.3</td>
-<td>차를 세우면 다시 볼 수 있다</td>
-<td><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a>, <a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_button_locked_while_driving</code></a>, <a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_video_plays_when_parked</code></a></td>
-<td>막힌 화면이 <code>wait_until(not device.video_blocked(video))</code> 뒤 <code>wait_visible(&quot;video_player&quot;)</code>, 영상 버튼 <code>wait_enabled(&quot;open_video&quot;, True)</code>, 정차 중 재생 시간이 흐름</td>
+<td class="nw">DRIVE-02.3</td>
+<td>차를 세우면 다시 볼 수 있습니다</td>
+<td><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a>, <a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>button_<wbr>locked_<wbr>while_<wbr>driving</code></a>, <a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a></td>
+<td>막힌 화면이 <code>wait_<wbr>until(not device.<wbr>video_<wbr>blocked(video))</code> 뒤 <code>wait_<wbr>visible(&quot;video_<wbr>player&quot;)</code>, 영상 버튼 <code>wait_<wbr>enabled(&quot;open_<wbr>video&quot;, True)</code>, 정차 중 재생 시간이 흐릅니다</td>
 </tr>
 <tr>
-<td>DRIVE-02.4</td>
-<td>멈춘 자리부터 이어진다. 막힌 동안 재생 시간이 흐르지 않는다</td>
-<td><a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_video_resumes_where_it_stopped</code></a></td>
-<td><code>assert resumed &gt;= before</code>(처음부터 다시 재생하지 않음), <code>assert resumed - before &lt;= wall - 4</code>(막힌 5초 동안 흐르지 않음). 기기에 영상이 없으면 건너뛰는데, Release 게이트가 이 건너뜀을 막는다</td>
+<td class="nw">DRIVE-02.4</td>
+<td>멈춘 자리부터 이어집니다. 막힌 동안 재생 시간이 흐르지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></a></td>
+<td><code>assert resumed &gt;= before</code>(처음부터 다시 재생하지 않음), <code>assert resumed - before &lt;= wall - 4</code>(막힌 5초 동안 흐르지 않음). 기기에 영상이 없으면 건너뛰는데, Release 게이트가 이 건너뜀을 막습니다</td>
 </tr>
 <tr>
-<td>DRIVE-02.5</td>
-<td>주행 중에도 음악은 고를 수 있다</td>
-<td><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_media_stays_usable_while_driving</code></a></td>
-<td>주행 제한 표시(<code>restriction_banner</code>)가 뜬 상태에서 곡을 고르고 <code>wait_text(&quot;now_playing_title&quot;, title)</code></td>
+<td class="nw">DRIVE-02.5</td>
+<td>주행 중에도 음악은 고를 수 있습니다</td>
+<td><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>media_<wbr>stays_<wbr>usable_<wbr>while_<wbr>driving</code></a></td>
+<td>주행 제한 표시(<code>restriction_<wbr>banner</code>)가 뜬 상태에서 곡을 고르고 <code>wait_<wbr>text(&quot;now_<wbr>playing_<wbr>title&quot;, title)</code></td>
 </tr>
 <tr>
-<td>ENERGY-02.1</td>
-<td>30 km 이하에서 경고와 충전소 카드가 뜨고, 31 km에서는 뜨지 않는다</td>
-<td><a class="test-link" href="test-results.html#test_low_range_threshold" title="테스트 결과와 화면 보기"><code>test_low_range_threshold</code></a></td>
-<td>31, 30, 29 km마다 <code>wait_value(cluster.low_range_warning(), 기대값)</code>, <code>assert app.visible(&quot;low_range_card&quot;) == 기대값</code></td>
+<td class="nw">ENERGY-02.1</td>
+<td>30 km 이하에서 경고와 충전소 카드가 뜨고, 31 km에서는 뜨지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_low_range_threshold" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>threshold</code></a></td>
+<td>31, 30, 29 km마다 <code>wait_<wbr>value(cluster.<wbr>low_<wbr>range_<wbr>warning(), 기대값)</code>, <code>assert app.<wbr>visible(&quot;low_<wbr>range_<wbr>card&quot;) == 기대값</code></td>
 </tr>
 <tr>
-<td>ENERGY-02.2</td>
-<td>충전소 카드로 가장 가까운 충전소 안내를 시작한다. 주행 중에도 누를 수 있다</td>
-<td><a class="test-link" href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger" title="테스트 결과와 화면 보기"><code>test_low_range_card_starts_guidance_to_nearest_charger</code></a></td>
-<td>주행 중 <code>assert app.text(&quot;low_range_charger&quot;).startswith(&quot;판교 급속 충전소&quot;)</code>, 누른 뒤 <code>wait_text(&quot;nav_dest_name&quot;, &quot;판교 급속 충전소&quot;)</code></td>
+<td class="nw">ENERGY-02.2</td>
+<td>충전소 카드로 가장 가까운 충전소 안내를 시작합니다. 주행 중에도 누를 수 있습니다</td>
+<td><a class="test-link" href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>card_<wbr>starts_<wbr>guidance_<wbr>to_<wbr>nearest_<wbr>charger</code></a></td>
+<td>주행 중 <code>assert app.<wbr>text(&quot;low_<wbr>range_<wbr>charger&quot;).<wbr>startswith(&quot;판교 급속 충전소&quot;)</code>, 누른 뒤 <code>wait_<wbr>text(&quot;nav_<wbr>dest_<wbr>name&quot;, &quot;판교 급속 충전소&quot;)</code></td>
 </tr>
 <tr>
-<td>ENERGY-02.3</td>
-<td>알림 센터에 남는다</td>
-<td><a class="test-link" href="test-results.html#test_low_range_is_recorded_in_notifications" title="테스트 결과와 화면 보기"><code>test_low_range_is_recorded_in_notifications</code></a></td>
-<td><code>assert panel.titles()[0] == &quot;주행 가능 거리 부족&quot;</code></td>
+<td class="nw">ENERGY-02.3</td>
+<td>알림 센터에 남습니다</td>
+<td><a class="test-link" href="test-results.html#test_low_range_is_recorded_in_notifications" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>is_<wbr>recorded_<wbr>in_<wbr>notifications</code></a></td>
+<td><code>assert panel.<wbr>titles()[0] == &quot;주행 가능 거리 부족&quot;</code></td>
 </tr>
 <tr>
-<td>ENERGY-02.4</td>
-<td>충전해서 거리가 늘면 경고와 카드를 거둔다</td>
-<td><a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a></td>
-<td><code>wait_visible(&quot;low_range_card&quot;, expected=False)</code>, <code>wait_until(not cluster.low_range_warning())</code></td>
+<td class="nw">ENERGY-02.4</td>
+<td>충전해서 거리가 늘면 경고와 카드를 거둡니다</td>
+<td><a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_<wbr>range_<wbr>recovers_<wbr>after_<wbr>charging</code></a></td>
+<td><code>wait_<wbr>visible(&quot;low_<wbr>range_<wbr>card&quot;, expected=False)</code>, <code>wait_<wbr>until(not cluster.<wbr>low_<wbr>range_<wbr>warning())</code></td>
 </tr>
 <tr>
-<td>ENERGY-02.5</td>
-<td>Test Bench API와 모의 CAN으로 들어온 거리 값에도 같게 동작한다</td>
-<td><a class="test-link" href="test-results.html#test_api_low_range_shows_charger_card" title="테스트 결과와 화면 보기"><code>test_api_low_range_shows_charger_card</code></a>, <a class="test-link" href="test-results.html#test_can_battery_and_door_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_can_battery_and_door_frames_reach_screen</code></a></td>
-<td>25 km를 넣은 뒤 <code>wait_until(cluster.low_range_warning)</code>. API 쪽은 카드도 <code>assert app.visible(&quot;low_range_card&quot;)</code></td>
+<td class="nw">ENERGY-02.5</td>
+<td>Test Bench API와 모의 CAN으로 들어온 거리 값에도 같게 동작합니다</td>
+<td><a class="test-link" href="test-results.html#test_api_low_range_shows_charger_card" title="테스트 결과와 화면 보기"><code>test_<wbr>api_<wbr>low_<wbr>range_<wbr>shows_<wbr>charger_<wbr>card</code></a>, <a class="test-link" href="test-results.html#test_can_battery_and_door_frames_reach_screen" title="테스트 결과와 화면 보기"><code>test_<wbr>can_<wbr>battery_<wbr>and_<wbr>door_<wbr>frames_<wbr>reach_<wbr>screen</code></a></td>
+<td>25 km를 넣은 뒤 <code>wait_<wbr>until(cluster.<wbr>low_<wbr>range_<wbr>warning)</code>. API 쪽은 카드도 <code>assert app.<wbr>visible(&quot;low_<wbr>range_<wbr>card&quot;)</code></td>
 </tr>
 </tbody></table></div>
 

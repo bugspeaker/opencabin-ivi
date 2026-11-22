@@ -27,7 +27,7 @@
 
 ## AI 결과를 어떻게 검증했나
 
-AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝트에서 신경 쓴 것은 AI가 "통과했다", "고쳤다"고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 '직접 써 보며 준 피드백'). 지적마다 반영할지는 제가 정했습니다.
+이 프로젝트에서 신경 쓴 것은 AI가 "통과했다", "고쳤다"고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 '직접 써 보며 준 피드백'). 지적마다 반영할지는 제가 정했습니다.
 
 ### 원칙
 
@@ -38,13 +38,13 @@ AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝�
 
 ### 검증에서 잡혀 고친 사례
 
-| 무엇이 틀렸나 | 어떻게 드러났나 | 고친 것 | 기록 |
-|---|---|---|---|
-| 문서에는 'Release 게이트 다섯 조건', '고정 sleep은 쓰지 않습니다'라고 썼는데, 조건 셋은 검사하는 코드가 없었고 sleep이 3곳 있었음 | 외부 검토가 문서와 코드를 대조 (2026-11-19) | 게이트가 결과 파일로 조건을 모두 확인, sleep 3곳을 `stays`로 | [9단계 기록 7절](phase9-bench.md#7-외부-검토-반영-2026-11-19), [`9870972`](https://github.com/bugspeaker/opencabin-ivi/commit/9870972) |
-| 반복 실행 통계가 5회 원자료가 아니라 누적 기록을 읽어, 따로 돌린 15개짜리 실행이 섞임 | 원자료를 저장소에 남기고 다시 세다가 발견 | 원자료 10개만 읽게 다시 만들고 정정 기록을 남김 | [반복 실행 통계의 정정](flaky-report.md#읽는-법과-한계) |
-| `run_bench.py --repeat 0`이 아무것도 돌리지 않고 종료 코드 0. 게이트는 실패 수만 보고 실행이 끝까지 됐는지는 보지 않음. 알려진 결함의 xfail이 어떤 오류든 '알려진 결함'으로 받음 | 외부 검토 (2026-11-20) | 실행 완전성 조건, 반복 횟수 1 이상, `raises=DefectReproduced`로 증상일 때만 xfail | [9단계 기록 8절](phase9-bench.md#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위), [`de733dd`](https://github.com/bugspeaker/opencabin-ivi/commit/de733dd) |
-| README에 "'바뀌지 않아야 함'은 1.5초 동안 계속 본다"고 썼지만 10곳은 한 번만 읽음 | 외부 검토가 코드에서 해당 줄을 찾아 대조 (2026-11-21) | 10곳을 `stays`로 | [`d41337a`](https://github.com/bugspeaker/opencabin-ivi/commit/d41337a) |
-| 게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었음. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈춤 | 두 기기 전체 재실행 (2026-11-21) | 창 없이 다시 켜게 고치고 처음부터 3회, 750건 통과 | [원자료](evidence/2026-11-21-main/README.md), [`d54741b`](https://github.com/bugspeaker/opencabin-ivi/commit/d54741b) |
+| 무엇이 틀렸나 | 어떻게 드러났나 | 고친 것 |
+|---|---|---|
+| 문서에는 'Release 게이트 다섯 조건', '고정 sleep은 쓰지 않습니다'라고 썼는데, 조건 셋은 검사하는 코드가 없었고 sleep이 3곳 있었습니다. | 외부 검토가 문서와 코드를 대조했습니다(2026-11-19). | 게이트가 결과 파일로 조건을 모두 확인하게 하고, sleep 3곳을 `stays`로 바꿨습니다.<br>[9단계 기록 7절](phase9-bench.md#7-외부-검토-반영-2026-11-19) · [`9870972`](https://github.com/bugspeaker/opencabin-ivi/commit/9870972) |
+| 반복 실행 통계가 5회 원자료가 아니라 누적 기록을 읽어, 따로 돌린 15개짜리 실행이 섞였습니다. | 원자료를 저장소에 남기고 다시 세다가 찾았습니다. | 원자료 10개만 읽게 다시 만들고 정정 기록을 남겼습니다.<br>[반복 실행 통계의 정정](flaky-report.md#읽는-법과-한계) |
+| `run_bench.py --repeat 0`이 아무것도 돌리지 않고 종료 코드 0으로 끝났습니다. 게이트는 실패 수만 보고 실행이 끝까지 됐는지는 보지 않았습니다. 알려진 결함의 xfail이 어떤 오류든 '알려진 결함'으로 받았습니다. | 외부 검토(2026-11-20)에서 나왔습니다. | 실행 완전성 조건을 더하고, 반복 횟수는 1 이상만 받게 했습니다. xfail은 `raises=DefectReproduced`로 증상일 때만 받습니다.<br>[9단계 기록 8절](phase9-bench.md#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위) · [`de733dd`](https://github.com/bugspeaker/opencabin-ivi/commit/de733dd) |
+| README에 "'바뀌지 않아야 함'은 1.5초 동안 계속 본다"고 썼지만 10곳은 한 번만 읽었습니다. | 외부 검토가 코드에서 해당 줄을 찾아 대조했습니다(2026-11-21). | 10곳을 `stays`로 바꿨습니다.<br>[`d41337a`](https://github.com/bugspeaker/opencabin-ivi/commit/d41337a) |
+| 게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었습니다. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈췄습니다. | 두 기기에서 전체를 다시 돌렸습니다(2026-11-21). | 창 없이 다시 켜게 고치고, 처음부터 3회 돌려 750건이 통과했습니다.<br>[원자료](evidence/2026-11-21-main/README.md) · [`d54741b`](https://github.com/bugspeaker/opencabin-ivi/commit/d54741b) |
 
 ### 직접 써 보며 준 피드백 (FQA)
 
@@ -56,7 +56,7 @@ AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝�
 |---|---|---|---|
 | <img src="images/before-home.png" width="230" alt="재점검 전 홈 화면: 속도와 기어 카드, 비어 있는 공조 카드, 아래 시스템 바는 화씨 70°와 61°"> | <img src="images/home-driving.png" width="230" alt="재점검 뒤 홈 화면: 속도 게이지, 미디어 카드, 공조 카드"> | <img src="images/p7-home.png" width="230" alt="3영역으로 바꾼 홈 화면: 왼쪽 주행 정보, 가운데 지도, 오른쪽 미디어, 아래 공조 바"> | <img src="images/p9-home.png" width="230" alt="지금 홈 화면: 목적지 검색, 아래 시스템 바 대신 앱의 공조 바"> |
 
-#### 11-14 공조 온도가 태블릿과 다르게 보임
+#### 11-14 공조 온도가 태블릿과 다르게 보였습니다
 
 에뮬레이터에서는 앱이 16.0°C, 아래 시스템 바가 화씨 61°로 보였습니다. 운전석·조수석을 22.0°C, 섭씨로 맞췄습니다. 이 변경으로 화씨를 가정하던 1단계 테스트 4개가 실패해, 표시 단위를 읽어 기대값을 계산하게 고쳤습니다. [7단계 기록](phase7-layout.md#에뮬레이터-공조-값을-태블릿과-같게) · [`7590d42`](https://github.com/bugspeaker/opencabin-ivi/commit/7590d42)
 
@@ -64,11 +64,11 @@ AI로 코드를 만드는 것은 누구나 할 수 있습니다. 이 프로젝�
 |---|---|
 | <img src="images/fqa/1114-climate-before.png" width="400" alt="앱은 16.0°C, 아래 시스템 바는 화씨 61°로 보이는 공조 화면"> | <img src="images/p7-climate.png" width="400" alt="운전석, 조수석, 아래 시스템 바가 모두 22.0°C로 보이는 공조 화면"> |
 
-#### 11-16 고쳤던 온도가 재부팅 뒤 다시 63°
+#### 11-16 고쳤던 온도가 재부팅 뒤 다시 63°로 돌아왔습니다
 
 같은 지적을 다시 했습니다. 지금 값만 바꾸던 방식을 VHAL 초기값 덮어쓰기로 바꿔, 에뮬레이터를 다시 켜도 22.0°C가 유지되게 했습니다. [`5d95212`](https://github.com/bugspeaker/opencabin-ivi/commit/5d95212)
 
-#### 11-16 공조에 최대 냉방(FULL)이 없음
+#### 11-16 공조에 최대 냉방(FULL)이 없었습니다
 
 FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍량을 바꾸면 풀림)를 더했습니다. FULL을 켜면 온도는 16.0°C, 풍량은 7이 됩니다. [`3c60f2d`](https://github.com/bugspeaker/opencabin-ivi/commit/3c60f2d)
 
@@ -76,7 +76,7 @@ FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍�
 |---|---|
 | <img src="images/p8-climate.png" width="400" alt="FULL 버튼이 없는 공조 화면: A/C, AUTO, SYNC"> | <img src="images/p9-climate-full.png" width="400" alt="FULL을 켠 공조 화면: 16.0°C, 풍량 7"> |
 
-#### 11-16 영상 화면 아래에 블랙박스 제품 이름이 보임
+#### 11-16 영상 화면 아래에 블랙박스 제품 이름이 보였습니다
 
 영상 아래 줄을 잘라 내고 재생하게 했습니다. 영상은 직접 찍은 블랙박스 주행 영상입니다. [`9b36711`](https://github.com/bugspeaker/opencabin-ivi/commit/9b36711)
 
@@ -84,7 +84,7 @@ FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍�
 |---|
 | <img src="images/p9-video.png" width="400" alt="아래 줄을 잘라 낸 블랙박스 주행 영상 화면"> |
 
-#### 11-16, 11-18 테스트 결과를 글자로만 확인할 수 있음
+#### 11-16, 11-18 테스트 결과를 글자로만 확인할 수 있었습니다
 
 테스트마다 판정 직후 화면을 남기고, 결과 페이지에서 두 기기의 화면을 나란히 보게 했습니다. [`0aa184f`](https://github.com/bugspeaker/opencabin-ivi/commit/0aa184f) · [테스트 결과](test-results.md)
 
@@ -92,7 +92,7 @@ FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍�
 |---|
 | <img src="images/fqa/results-page.png" width="640" alt="테스트 결과 페이지: 기기별 요약과, 테스트마다 AAOS와 태블릿의 판정 직후 화면"> |
 
-#### 11-18 우대사항 3개가 비어 있음
+#### 11-18 우대사항 3개가 비어 있었습니다
 
 차량 네트워크, REST·원격 전원, 기능 안전 항목이 비어 있어 지금 방법으로는 정말 안 되는지 물었습니다. Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 '일부'로 표시했습니다. [9단계 기록](phase9-bench.md) · [`84b63d6`](https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6)
 
@@ -199,22 +199,22 @@ flowchart LR
 
 ## 3. 결함과 원인 분석
 
-각 항목은 [GitHub 이슈](https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated)로도 옮겨 두었습니다(라벨 `migrated`, 6번은 세 건으로 나눔). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 열린 이슈는 알려진 결함([#21](https://github.com/bugspeaker/opencabin-ivi/issues/21))과 원인을 모르는 흔들림([#27](https://github.com/bugspeaker/opencabin-ivi/issues/27)) 두 건입니다.
+각 항목은 [GitHub 이슈](https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated)로도 옮겨 두었습니다(라벨 `migrated`. 6번은 세 건으로 나눴습니다). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 열린 이슈는 알려진 결함([#21](https://github.com/bugspeaker/opencabin-ivi/issues/21))과 원인을 모르는 흔들림([#27](https://github.com/bugspeaker/opencabin-ivi/issues/27)) 두 건입니다.
 
 | 번호 | 증상 | 원인 | 조치와 결과 | 이슈 |
 |---|---|---|---|---|
-| 1 | 태블릿에서 탭 한 번에 10초가 걸림 | 이 기기에서는 UiAutomator 터치 자체가 느림 | 누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었음 | [#19](https://github.com/bugspeaker/opencabin-ivi/issues/19) |
-| 2 | 실행할 때마다 21번째 테스트에서 앱이 사라짐 | 화웨이 OS(iAware)가 반복 재시작을 크래시로 판단 | 프로세스는 그대로 두고 화면만 초기화. 3회 연속 재실행 0회 | [#20](https://github.com/bugspeaker/opencabin-ivi/issues/20) |
-| 3 | AAOS 에뮬레이터 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 눌리지 않음 | 홈 버튼과 72×76 px 겹침 | 플랫폼 쪽 문제라 `xfail(strict=True)`로 걸어 둠 | [#21](https://github.com/bugspeaker/opencabin-ivi/issues/21) |
-| 4 | 전체 실행에서만 실패 | 테스트 코드의 경쟁 조건 (제 실수) | 조건 대기로 고침 | [#22](https://github.com/bugspeaker/opencabin-ivi/issues/22) |
-| 5 | 표시 단위를 섭씨로 바꾸자 실패 | 테스트가 화씨 표시를 가정함 | 표시 단위 신호를 읽어 기대 값을 계산 | [#23](https://github.com/bugspeaker/opencabin-ivi/issues/23) |
-| 6 | 회귀 테스트에서 앱 결함 3건 | 패널 겹침, 낮은 화면, 공백 한 칸 | 앱을 고치고 회귀 테스트를 더함 | [#24](https://github.com/bugspeaker/opencabin-ivi/issues/24), [#25](https://github.com/bugspeaker/opencabin-ivi/issues/25), [#26](https://github.com/bugspeaker/opencabin-ivi/issues/26) |
-| 7 | 영상 차단 테스트가 한 번 흔들림 | 재현되지 않음 | 반복 실행 5회 × 2기기(10번)에서 재현 0. 격리하지 않고 계속 기록 | [#27](https://github.com/bugspeaker/opencabin-ivi/issues/27) |
-| 8 | 차량 온도가 0.5°C 단위가 아니면 온도 버튼이 어긋난 값을 차량에 씀 | 버튼이 '지금 값 ± 0.5'로 계산 | 0.5 단위에 맞춘 다음 값으로 계산하게 고침. 경계값 E2E 6개가 두 기기에서 통과 | [#28](https://github.com/bugspeaker/opencabin-ivi/issues/28) |
-| 9 | 막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류 | UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있음. 계측 프로세스가 죽는 원인은 확인하지 못함 | 테스트를 시작할 때 세션을 확인하고 끊겼으면 다시 붙임(`session_restart`로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과([확인 기록](evidence/2026-11-20-session-recovery/README.md)) | [#29](https://github.com/bugspeaker/opencabin-ivi/issues/29) |
+| 1 | 태블릿에서 탭 한 번에 10초가 걸렸습니다. | 이 기기에서는 UiAutomator 터치 자체가 느렸습니다. | 누르는 동작만 adb로 바꿔 전체 시간이 7분 22초에서 1분 32초로 줄었습니다. | [#19](https://github.com/bugspeaker/opencabin-ivi/issues/19) |
+| 2 | 실행할 때마다 21번째 테스트에서 앱이 사라졌습니다. | 화웨이 OS(iAware)가 반복 재시작을 크래시로 판단했습니다. | 프로세스는 그대로 두고 화면만 초기화하게 바꿨습니다. 3회 연속 실행에서 앱을 다시 띄운 적이 없었습니다. | [#20](https://github.com/bugspeaker/opencabin-ivi/issues/20) |
+| 3 | AAOS 에뮬레이터 기본 SystemUI(1024×768)에서 운전석 온도 ▲가 눌리지 않았습니다. | 홈 버튼과 72×76 px 겹칩니다. | 플랫폼 쪽 문제라 `xfail(strict=True)`로 걸어 두었습니다. | [#21](https://github.com/bugspeaker/opencabin-ivi/issues/21) |
+| 4 | 전체 실행에서만 실패했습니다. | 테스트 코드의 경쟁 조건이었습니다. | 조건 대기로 고쳤습니다. | [#22](https://github.com/bugspeaker/opencabin-ivi/issues/22) |
+| 5 | 표시 단위를 섭씨로 바꾸자 실패했습니다. | 테스트가 화씨 표시를 가정했습니다. | 표시 단위 신호를 읽어 기대 값을 계산하게 고쳤습니다. | [#23](https://github.com/bugspeaker/opencabin-ivi/issues/23) |
+| 6 | 회귀 테스트에서 앱 결함 3건이 나왔습니다. | 패널 겹침, 낮은 화면, 공백 한 칸이 원인이었습니다. | 앱을 고치고 회귀 테스트를 더했습니다. | [#24](https://github.com/bugspeaker/opencabin-ivi/issues/24), [#25](https://github.com/bugspeaker/opencabin-ivi/issues/25), [#26](https://github.com/bugspeaker/opencabin-ivi/issues/26) |
+| 7 | 영상 차단 테스트가 한 번 흔들렸습니다. | 재현되지 않았습니다. | 반복 실행 5회 × 2기기(10번)에서 다시 나오지 않았습니다. 격리하지 않고 계속 기록합니다. | [#27](https://github.com/bugspeaker/opencabin-ivi/issues/27) |
+| 8 | 차량 온도가 0.5°C 단위가 아니면 온도 버튼이 어긋난 값을 차량에 썼습니다. | 버튼이 '지금 값 ± 0.5'로 계산했습니다. | 0.5 단위에 맞춘 다음 값으로 계산하게 고쳤습니다. 경계값 E2E 6개가 두 기기에서 통과했습니다. | [#28](https://github.com/bugspeaker/opencabin-ivi/issues/28) |
+| 9 | 막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류로 끝났습니다. | UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있었습니다. 계측 프로세스가 죽는 원인은 확인하지 못했습니다. | 테스트를 시작할 때 세션을 확인하고, 끊겼으면 다시 붙이게 했습니다(`session_restart`로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과했습니다([확인 기록](evidence/2026-11-20-session-recovery/README.md)). | [#29](https://github.com/bugspeaker/opencabin-ivi/issues/29) |
 
 <details>
-<summary>1번. 탭 한 번에 10초</summary>
+<summary>1번. 탭 한 번에 10초가 걸렸습니다</summary>
 
 | 누르는 방법 | 화웨이 | AAOS 에뮬레이터 |
 |---|---|---|
@@ -230,7 +230,7 @@ flowchart LR
 </details>
 
 <details>
-<summary>2번. 21번째 테스트에서 앱이 사라짐</summary>
+<summary>2번. 21번째 테스트에서 앱이 사라졌습니다</summary>
 
 실패 자료로 저장된 logcat에 `Force stopping dev.opencabin.ivi … iAwareF[CrashClean]`이 찍혀 있었습니다. 테스트마다 `am start -S`로 프로세스를 죽였다 살렸는데, 화웨이 OS가 이것을 반복 크래시로 보고 앱을 강제 종료한 것입니다.
 
@@ -241,7 +241,7 @@ flowchart LR
 <details>
 <summary>3번부터 7번까지</summary>
 
-**3번. SystemUI 버튼 겹침.** AAOS 에뮬레이터 기본 SystemUI(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ `[192,682][268,758]`와 홈 버튼 `[188,682][264,758]`이 겹치고, 홈이 위에 있어서 탭을 가져갑니다. 다른 해상도나 다른 AAOS 이미지에서도 나오는지는 확인하지 않았습니다. `strict=True`로 걸어 두었기 때문에 결함이 고쳐지면 XPASS가 실패로 바뀌어 알 수 있습니다. `raises=DefectReproduced`도 주어, 겹침을 확인한 자리에서 낸 예외일 때만 xfailed가 됩니다. 처음에는 `raises`가 없어서 버튼을 못 찾은 오류나 Appium 세션 끊김까지 '알려진 결함'으로 통과했습니다(2026-11-20 검토에서 고침).
+**3번. SystemUI 버튼 겹침.** AAOS 에뮬레이터 기본 SystemUI(1024×768, `automotive_1024p_landscape`)에서 운전석 온도 ▲ `[192,682][268,758]`와 홈 버튼 `[188,682][264,758]`이 겹치고, 홈이 위에 있어서 탭을 가져갑니다. 다른 해상도나 다른 AAOS 이미지에서도 나오는지는 확인하지 않았습니다. `strict=True`로 걸어 두었기 때문에 결함이 고쳐지면 XPASS가 실패로 바뀌어 알 수 있습니다. `raises=DefectReproduced`도 주어, 겹침을 확인한 자리에서 낸 예외일 때만 xfailed가 됩니다. 처음에는 `raises`가 없어서 버튼을 못 찾은 오류나 Appium 세션 끊김까지 '알려진 결함'으로 통과했습니다(2026-11-20 검토에서 고쳤습니다).
 
 **4번. 테스트 코드의 경쟁 조건.** `test_range_recovers_after_charging`이 전체 실행에서만 실패하고 혼자 돌리면 통과했습니다. 주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착하는데, 거리만 기다린 뒤 배터리 값을 바로 assert한 것이 원인이었습니다. 배터리도 `wait_until`로 기다리게 고쳤고, 같은 모양이던 외기 온도 확인도 함께 고쳤습니다. 테스트의 대기에는 고정 sleep을 쓰지 않습니다.
 
@@ -257,7 +257,7 @@ flowchart LR
 </details>
 
 <details>
-<summary>8번. 0.5°C 단위가 아닌 차량 값에서 온도 버튼</summary>
+<summary>8번. 0.5°C 단위가 아닌 차량 값에서 온도 버튼이 어긋났습니다</summary>
 
 경계값을 보강하면서, 차량 쪽(VHAL)에서 범위 밖 값(15.5°C, 28.5°C)이나 0.5°C 단위가 아닌 값(22.3°C)이 들어오는 경우를 테스트로 만들었습니다. 먼저 에뮬레이터에서 확인한 것은 이렇습니다.
 
@@ -282,25 +282,25 @@ flowchart LR
 
 ### 4-1. 게이트 단계와 기준
 
-| 단계 | 고르는 기준 | 개수 | 기기당 시간 (실측 합) | 언제 | 통과 조건 |
-|---|---|---|---|---|---|
-| unit | 테스트 도구 자체가 맞는지 (기기 없음) | 168 | 약 20초 | 모든 PR, push | 실패 0 |
-| smoke | 이 빌드를 올려도 되는지: 앱 실행, 데이터 소스, 탭 이동, 공조의 화면↔차량 왕복(화면 + 한 번이 차량 22.5°C로, 차량 쪽 25.0°C가 화면으로) | 13 | 약 45초 | PR | failed, error 0 |
-| sanity | 서비스마다 '화면→신호', '신호→화면' 대표 경로 하나씩, 주행 중 제한 대표 | 25 | 약 1분 45초 | main push (smoke와 함께) | failed, error 0. 재시도로 통과한 것은 flaky로 기록 |
-| regression | 경계값, 조합, 예전 결함 재발 확인, 대표가 아닌 경로 | 85 | 약 6분 30초~7분 | Nightly | 위와 같음 |
-| spike | AAOS 기본 SystemUI (1단계 기술 검증) | 6 | 약 15초 (AAOS만) | Nightly | 알려진 결함은 strict xfail 유지 |
-| Release | 전체를 반복 실행 | 129 | 약 8분 45초~9분 15초 × 반복 | 릴리스 후보 | 아래 여섯 가지 |
+| 단계 | 고르는 기준 | 기기당 시간 (실측 합) | 언제 | 통과 조건 |
+|---|---|---|---|---|
+| **unit**<br>168개 | 테스트 도구 자체가 맞는지 봅니다(기기 없이). | 약 20초 | 모든 PR, push | 실패 0 |
+| **smoke**<br>13개 | 이 빌드를 올려도 되는지 봅니다. 앱 실행, 데이터 소스, 탭 이동, 공조의 화면↔차량 왕복(화면 + 한 번이 차량 22.5°C로, 차량 쪽 25.0°C가 화면으로)입니다. | 약 45초 | PR | failed, error 0 |
+| **sanity**<br>25개 | 서비스마다 '화면→신호', '신호→화면' 대표 경로를 하나씩 보고, 주행 중 제한도 대표 경로를 봅니다. | 약 1분 45초 | main push<br>(smoke와 함께) | failed, error 0. 재시도로 통과한 것은 flaky로 기록합니다. |
+| **regression**<br>85개 | 경계값, 조합, 예전 결함의 재발, 대표가 아닌 경로를 봅니다. | 약 6분 30초~7분 | Nightly | 위와 같습니다. |
+| **spike**<br>6개 | AAOS 기본 SystemUI (1단계 기술 검증) | 약 15초 (AAOS만) | Nightly | 알려진 결함은 strict xfail로 둡니다. |
+| **Release**<br>129개 | 전체를 반복해서 돌립니다. | 약 8분 45초~9분 15초<br>× 반복 | 릴리스 후보 | 아래 여섯 가지 조건 |
 
 Release 후보는 `workflow_dispatch`로 markers를 비우고 repeat 3으로 돌립니다. 반복이 끝나면 [`tools/release_gate.py`](../ivi-tests/tools/release_gate.py)가 이번 실행의 결과 파일(`reports/runs/*.json`)을 읽어 아래 여섯 조건을 확인하고, 하나라도 어기면 이유를 출력하고 실패합니다([ivi-ci.yml](../.github/workflows/ivi-ci.yml)의 'Release 게이트' 단계). 조건마다 통과 사례와 막는 사례를 단위 테스트로 확인했습니다([`unit/test_release_gate.py`](../ivi-tests/unit/test_release_gate.py)).
 
 | 조건 | 검사하는 곳 |
 |---|---|
-| 1. 실행 완전성. 회차마다 필수 기기(AAOS, 태블릿)의 결과가 모두 있고, 각 결과에 지금 코드에서 수집한 테스트 129개가 빠짐없이 판정과 함께 있으며, pytest 종료 코드가 0. 건너뜀은 기기 전용 마커(`aaos`, `tablet`)로 정한 것만. 같은 회차·기기의 결과가 둘이거나 같은 테스트가 두 번 있으면 막음. 결과에 적힌 APK가 회차·기기마다 같아야 함. CI에서는 모든 결과가 이번 커밋에서, 커밋하지 않은 변경 없이 돈 것이어야 함 | `release_gate.py`가 [`tools/collect_tests.py`](../ivi-tests/tools/collect_tests.py)로 테스트 목록을 기기 없이 다시 모아 결과와 맞춤. 결과 파일의 목록만 보면 `-m smoke`로 일부만 돌렸거나 중간에 멈춘 실행을 알 수 없음 |
-| 2. 모든 회차, 두 기기 모두 failed, error, xpassed 0 | `release_gate.py` |
-| 3. 이번 Release 반복 안에서 flaky 0. 직전 실행과 비교하지 않고, 반복 중 재시도로 통과한 테스트가 하나라도 있으면 막음 | `release_gate.py` |
-| 4. 격리 목록의 모든 줄에 사유, 등록일, 해제 조건이 있고 2개 이하. 격리된 테스트도 결과는 따로 남김. 목록 파일이 없으면 빈 목록으로 보지 않고 막음 | 칸이 빠진 줄은 목록을 읽을 때 실패([`ivi/quarantine.py`](../ivi-tests/ivi/quarantine.py)), 개수는 `release_gate.py` |
-| 5. 요구사항 추적 누락 0 | PR마다 unit job([`unit/test_operations.py`](../ivi-tests/unit/test_operations.py)), Release에서 `release_gate.py`가 한 번 더 |
-| 6. xfailed가 된 테스트가 알려진 결함 목록([`known_defects.txt`](../ivi-tests/known_defects.txt))과 같음. 회차·기기마다 따로 봄(한 회차에서 xfailed였다고 다른 회차를 넘기지 않음). 목록에 없는 xfail, 목록에 있는데 xfailed가 아니거나 돌지 않은 테스트, 목록 파일이 없는 경우를 막음 | `release_gate.py`. 목록과 코드의 `xfail(strict=True)`가 같은지, 모든 xfail에 `raises`가 있는지는 unit job이 확인 |
+| 1. 실행 완전성. 회차마다 필수 기기(AAOS, 태블릿)의 결과가 모두 있고, 각 결과에 지금 코드에서 수집한 테스트 129개가 빠짐없이 판정과 함께 있으며, pytest 종료 코드가 0이어야 합니다. 건너뜀은 기기 전용 마커(`aaos`, `tablet`)로 정한 것만 받습니다. 같은 회차·기기의 결과가 둘이거나 같은 테스트가 두 번 있으면 막습니다. 결과에 적힌 APK가 회차·기기마다 같아야 합니다. CI에서는 모든 결과가 이번 커밋에서, 커밋하지 않은 변경 없이 돈 것이어야 합니다. | `release_gate.py`가 [`tools/collect_tests.py`](../ivi-tests/tools/collect_tests.py)로 테스트 목록을 기기 없이 다시 모아 결과와 맞춥니다. 결과 파일의 목록만 보면 `-m smoke`로 일부만 돌렸거나 중간에 멈춘 실행을 알 수 없기 때문입니다. |
+| 2. 모든 회차, 두 기기 모두 failed, error, xpassed가 0이어야 합니다. | `release_gate.py` |
+| 3. 이번 Release 반복 안에서 flaky가 0이어야 합니다. 직전 실행과 비교하지 않고, 반복 중 재시도로 통과한 테스트가 하나라도 있으면 막습니다. | `release_gate.py` |
+| 4. 격리 목록의 모든 줄에 사유, 등록일, 해제 조건이 있고, 2개 이하여야 합니다. 격리된 테스트도 결과는 따로 남깁니다. 목록 파일이 없으면 빈 목록으로 보지 않고 막습니다. | 칸이 빠진 줄은 목록을 읽을 때 실패합니다([`ivi/quarantine.py`](../ivi-tests/ivi/quarantine.py)). 개수는 `release_gate.py`가 봅니다. |
+| 5. 요구사항 추적 누락이 0이어야 합니다. | PR마다 unit job([`unit/test_operations.py`](../ivi-tests/unit/test_operations.py))이 보고, Release에서 `release_gate.py`가 한 번 더 봅니다. |
+| 6. xfailed가 된 테스트가 알려진 결함 목록([`known_defects.txt`](../ivi-tests/known_defects.txt))과 같아야 합니다. 회차·기기마다 따로 봅니다(한 회차에서 xfailed였다고 다른 회차를 넘기지 않습니다). 목록에 없는 xfail, 목록에 있는데 xfailed가 아니거나 돌지 않은 테스트, 목록 파일이 없는 경우를 막습니다. | `release_gate.py`가 봅니다. 목록과 코드의 `xfail(strict=True)`가 같은지, 모든 xfail에 `raises`가 있는지는 unit job이 확인합니다. |
 
 조건 1은 2026-11-20 검토에서 더했습니다. 그전 게이트는 기기 목록을 결과 파일에서 유추해서, 태블릿이 처음부터 연결되지 않았거나 일부 테스트만 돌린 결과도 failed가 0이면 통과시킬 수 있었습니다. '실패한 테스트가 없다'와 '정한 검증을 끝까지 했다'는 다른 말이라 따로 봅니다. 실행기(`run_bench.py`)도 결과 파일의 판정만 믿지 않고 pytest 종료 코드를 함께 보고, 결과 파일의 실행 ID와 기기가 이번 실행의 것인지 확인합니다. `--repeat`는 1 이상만 받습니다(0이면 아무것도 돌리지 않고 통과처럼 끝났습니다).
 
@@ -314,35 +314,35 @@ sanity는 처음에 55개(전체의 45%)까지 늘어 regression과 크기가 �
 
 | 서비스 | 주요 위험 | 확인 방향 | 테스트 수<br>smoke / sanity / regression | 이 프로젝트에서 보지 못하는 것 |
 |---|---|---|---|---|
-| **HVAC**<br>HVAC-01~06 | 다른 좌석 area에 쓰기, 범위 밖이나 단위가 어긋난 값 쓰기, 화면과 신호 불일치 | **화면→신호** 버튼, 아래 바, 음성이 `HVAC_TEMPERATURE_SET`과 A/C 전 좌석 area를 바꾸는지<br>**신호→화면** VHAL 값이 공조 화면, 홈, 아래 바에 같은 값으로 보이는지 | 1 / 11 / 31 | 실제 공조 ECU의 응답 지연과 거절, 실차의 area 구성 |
-| **차량 설정**<br>BODY-01, SET-01 | 일부 문만 잠김, 설정이 재시작 뒤 사라짐 | **화면→신호** 도어 버튼이 모든 문 area의 `DOOR_LOCK`을 바꾸는지<br>**신호→화면** 차량 쪽 문 열림이 화면에 보이는지. 속도 단위 설정이 차량 정보 표시에 반영되는지 | 0 / 3 / 7 | 실제 BCM. 사이드 미러, 트렁크 같은 항목은 신호에 연결하지 않은 화면 상태 |
-| **주행 정보 패널**<br>(앱 왼쪽, 계기판 역할)<br>DRIVE-01, ENERGY-01, ENERGY-02 | 잘못된 속도와 기어 표시, 거리 부족 경고 누락 | **신호→화면** 속도, 기어, 주행 가능 거리, 배터리, 외기 온도. 거리 30, 29 km에서 경고와 충전소 안내 | 1 / 6 / 11 | AAOS 클러스터 디스플레이(보조 화면)와의 연동, 실제 계기판 |
-| **미디어**<br>MEDIA-01, MEDIA-02, DRIVE-02 | 주행 중 영상 재생(운전자 주의 분산), 소리 겹침 | **신호→화면** 주행 중 영상 차단, 정차하면 이어 보기<br>**앱 안** 음악, 라디오, 통화가 한 번에 하나만 소리 냄 | 0 / 4 / 15 | 실제 스피커 출력, 블루투스 기기, 차량 오디오 시스템 |
+| **HVAC**<br>HVAC-01~06 | 다른 좌석 area에 값을 쓰거나, 범위 밖이나 단위가 어긋난 값을 쓰거나, 화면과 신호가 다를 수 있습니다. | **화면→신호** 버튼, 아래 바, 음성이 `HVAC_TEMPERATURE_SET`과 A/C 전 좌석 area를 바꾸는지 봅니다.<br>**신호→화면** VHAL 값이 공조 화면, 홈, 아래 바에 같은 값으로 보이는지 봅니다. | 1 / 11 / 31 | 실제 공조 ECU의 응답 지연과 거절, 실차의 area 구성 |
+| **차량 설정**<br>BODY-01<br>SET-01 | 일부 문만 잠기거나, 설정이 재시작 뒤 사라질 수 있습니다. | **화면→신호** 도어 버튼이 모든 문 area의 `DOOR_LOCK`을 바꾸는지 봅니다.<br>**신호→화면** 차량 쪽 문 열림이 화면에 보이는지, 속도 단위 설정이 차량 정보 표시에 반영되는지 봅니다. | 0 / 3 / 7 | 실제 BCM. 사이드 미러, 트렁크 같은 항목은 신호에 연결하지 않은 화면 상태입니다. |
+| **주행 정보 패널**<br>DRIVE-01<br>ENERGY-01, 02 | 속도와 기어를 잘못 보여 주거나, 거리 부족 경고가 빠질 수 있습니다. | **신호→화면** 속도, 기어, 주행 가능 거리, 배터리, 외기 온도를 봅니다. 거리 30, 29 km에서 경고와 충전소 안내가 뜨는지 봅니다. | 1 / 6 / 11 | AAOS 클러스터 디스플레이(보조 화면)와의 연동, 실제 계기판 |
+| **미디어**<br>MEDIA-01, 02<br>DRIVE-02 | 주행 중에 영상이 재생되거나(운전자 주의 분산), 소리가 겹칠 수 있습니다. | **신호→화면** 주행 중에는 영상을 막고, 정차하면 이어 보는지 봅니다.<br>**앱 안** 음악, 라디오, 통화가 한 번에 하나만 소리를 내는지 봅니다. | 0 / 4 / 15 | 실제 스피커 출력, 블루투스 기기, 차량 오디오 시스템 |
 
-서비스 이름 아래는 [요구사항](requirements.md) 번호입니다. 테스트 수는 요구사항 표시(`@pytest.mark.req`)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 [추적표](traceability.md)에 있습니다.
+서비스 이름 아래는 [요구사항](requirements.md) 번호이고, 주행 정보 패널은 앱 왼쪽의 계기판 역할 화면입니다. 테스트 수는 요구사항 표시(`@pytest.mark.req`)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 [추적표](traceability.md)에 있습니다.
 
 **검증 단계.** 앞 단계일수록 빠르고 기기가 필요 없으며, 뒤 단계일수록 실제 차량에 가깝습니다. 이 프로젝트는 3단계까지 했습니다.
 
-| 단계 | 무엇으로 | 보는 것 | 언제 | 이 프로젝트 |
-|---|---|---|---|---|
-| 1. 앱 단위 테스트 | JVM 테스트 (`HvacSpecTest`, `CabinAssistantTest`) | 공조 값의 범위와 단계 규칙, 말 → 동작 규칙 | PR마다 GitHub에서 | 22개 |
-| 2. 프레임워크 단위 테스트 | 기기 없이 pytest (`ivi-tests/unit`) | 어댑터 명령 조립, 대기와 판정, 크래시 판정, Release 게이트 규칙, 요구사항 추적, 문서 링크 | PR마다 GitHub에서 | 168개 |
-| 3. 에뮬레이터·태블릿 E2E | AAOS 에뮬레이터(CarService, 가상 VHAL)와 태블릿(앱 안 Mock 차량) | 화면 ↔ 차량 신호, 위 표의 서비스별 위험 | Test Bench(작업 PC)에서 | 129개 × 2기기 |
-| 4. HIL, 실차 | 실제 ECU와 헤드 유닛, 차량 | 위 표 '이 프로젝트에서 보지 못하는 것' 열: ECU의 응답 지연과 거절, 실차 area 구성, 클러스터 디스플레이 연동, 스피커 출력 | | 하지 않음 (경험 없음) |
+| 단계 | 무엇으로 | 보는 것 | 이 프로젝트 |
+|---|---|---|---|
+| 1. 앱 단위 테스트 | JVM 테스트 (`HvacSpecTest`, `CabinAssistantTest`) | 공조 값의 범위와 단계 규칙, 말 → 동작 규칙 | 22개<br>PR마다 GitHub에서 |
+| 2. 프레임워크 단위 테스트 | 기기 없이 pytest (`ivi-tests/unit`) | 어댑터 명령 조립, 대기와 판정, 크래시 판정, Release 게이트 규칙, 요구사항 추적, 문서 링크 | 168개<br>PR마다 GitHub에서 |
+| 3. 에뮬레이터·태블릿 E2E | AAOS 에뮬레이터(CarService, 가상 VHAL)와 태블릿(앱 안 Mock 차량) | 화면 ↔ 차량 신호, 위 표의 서비스별 위험 | 129개 × 2기기<br>Test Bench(작업 PC)에서 |
+| 4. HIL, 실차 | 실제 ECU와 헤드 유닛, 차량 | 위 표 '이 프로젝트에서 보지 못하는 것' 열: ECU의 응답 지연과 거절, 실차 area 구성, 클러스터 디스플레이 연동, 스피커 출력 | 하지 않았습니다(경험 없음). |
 
 3단계는 실제 하드웨어 없이 소프트웨어만으로 도는 단계라 SIL에 가깝습니다. 4단계로 넘길 항목은 위 표의 마지막 열에 적었습니다.
 
 ### 4-3. 판정 기준
 
-| 판정 | 뜻 | PR, main, Nightly 게이트 | Release 게이트 |
+| 판정 | 뜻 | PR · main · Nightly | Release |
 |---|---|---|---|
-| passed | 한 번에 통과 | 통과 | 통과 |
-| flaky | 실패했다가 재시도에서 통과 | 통과, 통계에 남김 | 이번 반복 안에서 하나라도 있으면 막음 |
-| failed / error | 재시도까지 실패했거나 준비, 정리 단계에서 실패 | 실패 | 실패 |
-| xfailed | 알려진 결함의 증상(`DefectReproduced`)으로 실패 | 통과 | `known_defects.txt`에 있는 것만 통과 |
-| quarantined | 사유를 적고 격리 목록에 올린 테스트 | 통과 | 사유, 등록일, 해제 조건이 있고 2개 이하일 때만 |
-| skipped | 기기 전용 테스트를 다른 기기에서 돌린 경우(`aaos`, `tablet` 마커) | 통과 | 기기 전용 마커로 건너뛴 것만 통과. 그 밖의 건너뜀(예: 기기에 주행 영상이 없음)은 막음 |
-| 판정 없음, 중단 | 테스트가 판정 없이 끝났거나, 실행이 끝까지 가지 않음(종료 코드 0이 아님) | 실패 | 막음 |
+| passed | 한 번에 통과한 테스트 | 통과 | 통과 |
+| flaky | 실패했다가 재시도에서 통과한 테스트 | 통과. 통계에는 남깁니다. | 이번 반복 안에서 하나라도 있으면 막습니다. |
+| failed / error | 재시도까지 실패했거나 준비, 정리 단계에서 실패한 테스트 | 실패 | 실패 |
+| xfailed | 알려진 결함의 증상(`DefectReproduced`)으로 실패한 테스트 | 통과 | `known_defects.txt`에 있는 것만 통과합니다. |
+| quarantined | 사유를 적고 격리 목록에 올린 테스트 | 통과 | 사유, 등록일, 해제 조건이 있고 2개 이하일 때만 통과합니다. |
+| skipped | 기기 전용 테스트를 다른 기기에서 돌린 경우(`aaos`, `tablet` 마커) | 통과 | 기기 전용 마커로 건너뛴 것만 통과합니다. 그 밖의 건너뜀(예: 기기에 주행 영상이 없는 경우)은 막습니다. |
+| 판정 없음, 중단 | 테스트가 판정 없이 끝났거나, 실행이 끝까지 가지 않은 경우(종료 코드가 0이 아님) | 실패 | 막습니다. |
 
 재시도해서 통과한 테스트를 passed로 치면 흔들리는 테스트가 통계에서 사라집니다. 그래서 flaky로 따로 기록합니다. 앱을 다시 띄운 횟수와 신호 주입을 다시 시도한 횟수도 JUnit 결과와 누적 기록(`results.jsonl`)에 같이 남깁니다.
 
@@ -363,9 +363,9 @@ A/C는 전 좌석에 적용되는 기능인데, 구현이 운전석 area에만 �
 | 경계값 | 온도 16.5→16.0°C와 27.5→28.0°C로 끝에 닿는 경로, 끝에서 꺼진 버튼, 범위 밖 차량 값(15.5, 28.5°C), 0.5°C 단위가 아닌 차량 값(22.3°C). 풍량 1과 7, 주행 가능 거리 31, 30, 29 km |
 | 상태 전이 | 좌석 열선이 꺼짐, 2단, 1단, 꺼짐으로 도는 순서. 정차와 주행 사이의 전환 |
 | 조합 | 좌석 두 곳과 올림, 내림 버튼. 앞 유리와 뒤 유리. km/mph 설정과 신호 |
-| 규칙 충돌 | AUTO 중에 풍량을 직접 바꾸면 AUTO가 꺼지는지 |
-| 일관성 | 같은 열선 신호가 화면 세 곳에 같은 값으로 보이는지 |
-| 바뀌지 않음 | 운전석을 바꾼 뒤 조수석 신호와 화면이 1.5초 동안 그대로인지(`stays`). 한 번만 보면 늦게 도착하는 잘못된 쓰기를 놓칩니다 |
+| 규칙 충돌 | AUTO 중에 풍량을 직접 바꾸면 AUTO가 꺼지는지 봅니다. |
+| 일관성 | 같은 열선 신호가 화면 세 곳에 같은 값으로 보이는지 봅니다. |
+| 바뀌지 않음 | 운전석을 바꾼 뒤 조수석 신호와 화면이 1.5초 동안 그대로인지 봅니다(`stays`). 한 번만 보면 늦게 도착하는 잘못된 쓰기를 놓칩니다. |
 | 주행 안전 | 주행 중 영상 차단, 검색과 키패드 잠금 |
 
 ### 5-3. 테스트 격리
@@ -384,7 +384,7 @@ AAOS에서는 신호에 area를 곱하면 `--set`이 31번입니다. 하나씩 �
 |---|---|---|
 | `cmd car_service set-property-value` | CarService를 거쳐 VHAL로 (앱과 같은 경로) | 운전석, 조수석 설정 온도. 앱이 쓰는 값을 같은 권한 경로로 바꿀 때 |
 | `dumpsys <VHAL> --set` (root) | VHAL에 바로 | 차량(ECU) 쪽에서 값이 바뀐 상황을 만들 때. 속도, 기어 같은 읽기 전용 값과, A/C, 풍량, 도어처럼 쓰기 가능한 값의 '차량 쪽 변화' 모두 |
-| `cmd car_service inject-vhal-event` | 이벤트만 보냄 | 쓰지 않습니다. 저장된 값이 바뀌지 않아 `get`으로 판정할 수 없습니다. |
+| `cmd car_service inject-vhal-event` | 이벤트만 보냅니다. | 쓰지 않습니다. 저장된 값이 바뀌지 않아 `get`으로 판정할 수 없습니다. |
 
 둘을 나눈 기준은 '그 값을 누가 바꾸는가'입니다. 앱이 바꾸는 값을 테스트가 준비할 때는 앱과 같은 CarService 경로를 써야 권한과 범위 검사까지 같은 조건이 됩니다. 차량이 바꾸는 값은 CarService가 범위 밖 값을 거절하기 때문에(3장 8번) VHAL에 바로 넣어야 이상한 값이 올라오는 상황까지 만들 수 있습니다. 읽기는 모두 `cmd car_service get-property-value`로 합니다.
 
@@ -451,7 +451,7 @@ flowchart LR
 |---|---|---|
 | build | GitHub 호스트 | 앱을 빌드하고 앱 단위 테스트를 돌린 뒤 APK를 보관합니다. |
 | unit | GitHub 호스트 | 기기 없이 프레임워크 단위 테스트를 돌립니다. 요구사항 추적 누락도 여기서 막습니다. |
-| e2e-hosted | GitHub 호스트 (ubuntu, KVM) | 매번 AAOS 에뮬레이터를 새로 띄우고(작업 PC와 같은 이미지와 화면, 창 없음) build job의 APK를 priv-app으로 넣은 뒤 smoke 13개를 돌립니다. 태블릿은 없습니다. 결과 파일, 실패 자료, 에뮬레이터·Appium 로그를 올리고 통과 수를 실행 요약에 씁니다([`ci_hosted_aaos.sh`](../ivi-tests/tools/ci_hosted_aaos.sh)). |
+| e2e-hosted | GitHub 호스트 | ubuntu 러너에서 KVM으로 매번 AAOS 에뮬레이터를 새로 띄우고(작업 PC와 같은 이미지와 화면, 창 없음) build job의 APK를 priv-app으로 넣은 뒤 smoke 13개를 돌립니다. 태블릿은 없습니다. 결과 파일, 실패 자료, 에뮬레이터·Appium 로그를 올리고 통과 수를 실행 요약에 씁니다([`ci_hosted_aaos.sh`](../ivi-tests/tools/ci_hosted_aaos.sh)). |
 | e2e | self-hosted Test Bench | 두 기기에서 병렬로 돌리고 flaky 리포트를 냅니다. 저장소 변수 `IVI_BENCH=online`일 때만 돕니다. |
 
 | 이벤트 | e2e 범위 |
@@ -541,4 +541,4 @@ e2e-hosted를 처음 만든 2026-11-21에는 브랜치에서 수동 실행(`work
 
 | 홈 | 공조 (FULL 켬) | 주행 가능 거리 부족 |
 |---|---|---|
-| ![home](images/p9-home.png) | ![climate](images/p9-climate-full.png) | ![low range](images/p9-lowrange.png) |
+| <img src="images/p9-home.png" width="260" alt="홈 화면"> | <img src="images/p9-climate-full.png" width="260" alt="FULL을 켠 공조 화면"> | <img src="images/p9-lowrange.png" width="260" alt="주행 가능 거리 부족 화면"> |

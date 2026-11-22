@@ -51,72 +51,72 @@
 <th>필요한 권한</th>
 </tr>
 </thead><tbody><tr>
-<td>A/C</td>
+<td class="nw">A/C</td>
 <td><code>HVAC_AC_ON</code></td>
 <td>좌석 5개</td>
 <td>읽고 씀 (전 좌석)</td>
-<td><code>CONTROL_CAR_CLIMATE</code> (priv-app)</td>
+<td><code>CONTROL_<wbr>CAR_<wbr>CLIMATE</code> (priv-app)</td>
 </tr>
 <tr>
-<td>AUTO</td>
+<td class="nw">AUTO</td>
 <td><code>HVAC_AUTO_ON</code></td>
 <td>좌석 5개</td>
 <td>읽고 씀 (전 좌석)</td>
-<td>위와 같음</td>
+<td>위와 같습니다.</td>
 </tr>
 <tr>
-<td>풍량 1~7</td>
+<td class="nw">풍량 1~7</td>
 <td><code>HVAC_FAN_SPEED</code></td>
 <td>좌석 5개</td>
 <td>읽고 씀 (전 좌석)</td>
-<td>위와 같음</td>
+<td>위와 같습니다.</td>
 </tr>
 <tr>
-<td>앞뒤 김서림 제거</td>
+<td class="nw">앞뒤 김서림 제거</td>
 <td><code>HVAC_DEFROSTER</code></td>
 <td>유리 2개</td>
 <td>읽고 씀 (누른 유리만)</td>
-<td>위와 같음</td>
+<td>위와 같습니다.</td>
 </tr>
 <tr>
-<td>좌석 열선 0~2단</td>
-<td><code>HVAC_SEAT_TEMPERATURE</code></td>
+<td class="nw">좌석 열선 0~2단</td>
+<td><code>HVAC_<wbr>SEAT_<wbr>TEMPERATURE</code></td>
 <td>좌석마다</td>
 <td>읽고 씀 (그 좌석만)</td>
-<td>위와 같음</td>
+<td>위와 같습니다.</td>
 </tr>
 <tr>
-<td>도어 잠금</td>
+<td class="nw">도어 잠금</td>
 <td><code>DOOR_LOCK</code></td>
 <td>문 4개</td>
 <td>읽고 씀 (모든 문)</td>
-<td><code>CONTROL_CAR_DOORS</code> (priv-app), 이번에 추가</td>
+<td><code>CONTROL_<wbr>CAR_<wbr>DOORS</code> (priv-app), 이번에 추가</td>
 </tr>
 <tr>
-<td>주행 가능 거리</td>
+<td class="nw">주행 가능 거리</td>
 <td><code>RANGE_REMAINING</code> (m)</td>
 <td>전역</td>
 <td>읽기</td>
 <td><code>CAR_ENERGY</code> (dangerous), 이번에 추가</td>
 </tr>
 <tr>
-<td>배터리 잔량</td>
-<td><code>EV_BATTERY_LEVEL</code>을 <code>INFO_EV_BATTERY_CAPACITY</code>로 나눔 (Wh를 %로)</td>
+<td class="nw">배터리 잔량</td>
+<td><code>EV_<wbr>BATTERY_<wbr>LEVEL</code>을 <code>INFO_<wbr>EV_<wbr>BATTERY_<wbr>CAPACITY</code>로 나눔 (Wh를 %로)</td>
 <td>전역</td>
 <td>읽기</td>
 <td><code>CAR_ENERGY</code>, <code>CAR_INFO</code></td>
 </tr>
 <tr>
-<td>외기 온도</td>
-<td><code>ENV_OUTSIDE_TEMPERATURE</code> (°C)</td>
+<td class="nw">외기 온도</td>
+<td><code>ENV_<wbr>OUTSIDE_<wbr>TEMPERATURE</code> (°C)</td>
 <td>전역</td>
 <td>읽기</td>
-<td><code>CAR_EXTERIOR_ENVIRONMENT</code></td>
+<td><code>CAR_<wbr>EXTERIOR_<wbr>ENVIRONMENT</code></td>
 </tr>
 </tbody></table></div>
 <p>7단계까지 연결돼 있던 신호는 속도, 기어, 좌석 온도, 주행 중 UX 제한입니다.</p>
 <p>사이드 미러 접기, 트렁크, 차일드 락, 실내등, 전조등은 아직 화면 상태로 남아 있습니다. 미러 접기와 트렁크는 에뮬레이터 VHAL에 맞는 property가 없었고, 나머지는 이번 범위에서 뺐습니다. 운전자 보조 표시와 주변 차량도 여전히 화면 연출입니다.</p>
-<p>area 구성은 차마다 다르기 때문에, 앱은 area를 코드에 박아 두지 않고 <code>CarPropertyConfig.areaIds</code>에서 읽어 씁니다.</p>
+<p>area 구성은 차마다 다르기 때문에, 앱은 area를 코드에 박아 두지 않고 <code>CarPropertyConfig.<wbr>areaIds</code>에서 읽어 씁니다.</p>
 <p>권한이 없는 신호는 구독이 실패하고, 화면에 &#39;값 없음&#39;으로 남습니다. 도어는 &#39;제어 불가&#39;, 주행 가능 거리는 &#39;주행 가능 거리 정보 없음&#39;으로 나옵니다. 앱이 죽지는 않습니다.</p>
 <h2 id="2-화면에서-달라진-것"><a class="anchor" href="#2-화면에서-달라진-것" aria-hidden="true">#</a>2. 화면에서 달라진 것</h2>
 <div class="table"><table><thead><tr>
@@ -124,7 +124,7 @@
 <th>전 좌석 공조 (화면에서 신호로)</th>
 </tr>
 </thead><tbody><tr>
-<td><img data-md src="../../docs/images/p8-lowrange.png" alt="low range" loading="lazy"></td>
+<td class="nw"><img data-md src="../../docs/images/p8-lowrange.png" alt="low range" loading="lazy"></td>
 <td><img data-md src="../../docs/images/p8-climate.png" alt="climate" loading="lazy"></td>
 </tr>
 </tbody></table></div>
@@ -137,7 +137,7 @@
 <li>AI 어시스턴트에 &quot;에어컨 켜줘&quot;, &quot;열선 켜줘&quot;라고 하면 이제 차량 신호까지 바뀝니다. 열선은 말한 사람의 좌석만 켭니다.</li>
 </ul>
 <h2 id="3-테스트-설계"><a class="anchor" href="#3-테스트-설계" aria-hidden="true">#</a>3. 테스트 설계</h2>
-<h3 id="3-1-어댑터-carset_signal과-carsignal"><a class="anchor" href="#3-1-어댑터-carset_signal과-carsignal" aria-hidden="true">#</a>3-1) 어댑터: <code>car.set_signal()</code>과 <code>car.signal()</code></h3>
+<h3 id="3-1-어댑터-carset_signal과-carsignal"><a class="anchor" href="#3-1-어댑터-carset_signal과-carsignal" aria-hidden="true">#</a>3-1) 어댑터: <code>car.<wbr>set_<wbr>signal()</code>과 <code>car.signal()</code></h3>
 <p>테스트에는 신호 이름과 화면에 보이는 단위(km, %, °C, 단계)만 씁니다. 기기 차이와 단위 변환은 어댑터(<code>ivi/vehicle.py</code>)가 맡습니다.</p>
 <div class="table"><table><thead><tr>
 <th></th>
@@ -145,34 +145,34 @@
 <th>태블릿 (<code>MockVehicle</code>)</th>
 </tr>
 </thead><tbody><tr>
-<td>넣기</td>
-<td>VHAL에 바로: <code>dumpsys &lt;VHAL&gt; --set &lt;prop&gt; -i/-f &lt;값&gt; -a &lt;area&gt;</code></td>
-<td><code>am broadcast … mock.SET --ez/--ei/--ef</code></td>
+<td class="nw">넣기</td>
+<td>VHAL에 바로: <code>dumpsys &lt;VHAL&gt; --set &lt;prop&gt; -i/<wbr>-f &lt;값&gt; -a &lt;area&gt;</code></td>
+<td><code>am broadcast … mock.<wbr>SET --ez/<wbr>--ei/<wbr>--ef</code></td>
 </tr>
 <tr>
-<td>읽기</td>
-<td>CarService로: <code>cmd car_service get-property-value</code></td>
-<td><code>am broadcast … mock.GET</code></td>
+<td class="nw">읽기</td>
+<td>CarService로: <code>cmd car_<wbr>service get-property-value</code></td>
+<td><code>am broadcast … mock.<wbr>GET</code></td>
 </tr>
 <tr>
-<td>변환</td>
+<td class="nw">변환</td>
 <td>km를 m로, %를 용량 대비 Wh로, bool을 0과 1로</td>
 <td>없음</td>
 </tr>
 <tr>
-<td>area</td>
+<td class="nw">area</td>
 <td>&#39;전 좌석&#39; 신호는 5개, 도어는 4개 area에 모두</td>
 <td>값 하나</td>
 </tr>
 </tbody></table></div>
-<p><code>car.signal_all(이름)</code>은 area마다 값을 돌려줍니다. 이것으로 &quot;A/C를 끄면 모든 좌석이 꺼진다&quot;, &quot;도어 버튼이 문 네 개를 모두 잠근다&quot;를 확인합니다. 운전석 area에만 값을 쓰는 잘못된 구현은 화면만 보면 통과하지만 이 확인에서는 걸립니다.</p>
+<p><code>car.<wbr>signal_<wbr>all(이름)</code>은 area마다 값을 돌려줍니다. 이것으로 &quot;A/C를 끄면 모든 좌석이 꺼진다&quot;, &quot;도어 버튼이 문 네 개를 모두 잠근다&quot;를 확인합니다. 운전석 area에만 값을 쓰는 잘못된 구현은 화면만 보면 통과하지만 이 확인에서는 걸립니다.</p>
 <h3 id="3-2-테스트마다-기준-값으로-되돌리기-테스트-격리"><a class="anchor" href="#3-2-테스트마다-기준-값으로-되돌리기-테스트-격리" aria-hidden="true">#</a>3-2) 테스트마다 기준 값으로 되돌리기 (테스트 격리)</h3>
 <p>차량 신호는 앱을 다시 띄워도 남습니다. 앞 테스트가 문을 열어 둔 채 끝나면, 다음 테스트의 &quot;누르면 열린다&quot;는 확인이 거꾸로 됩니다. 그래서 <code>app</code> 픽스처의 <code>prepare()</code>가 테스트마다 신호 11개를 기준 값(<code>CABIN_DEFAULTS</code>)으로 되돌립니다.</p>
 <p>AAOS에서 이 초기화는 신호 11개에 area를 곱해 <code>--set</code> 26번입니다. 하나씩 보내면 테스트마다 adb 왕복이 26번 생기므로, adb shell 한 번에 묶어서 보냅니다(<code>set_signals</code>). 26개가 모두 들어갔는지 세어 보고, 모자라면 통째로 한 번 더 보낸 뒤 그 사실을 기록합니다. 4단계에서 정한 VHAL 재시도 규칙과 같습니다.</p>
 <p>그 결과 테스트가 84개에서 108개로 늘었는데, 전체 시간은 5분 47초에서 6분 40초로 조금만 늘었습니다. 테스트 하나당 시간은 4.1초에서 3.7초로 오히려 줄었습니다.</p>
 <h3 id="3-3-토글-상태를-색이-아니라-checked로"><a class="anchor" href="#3-3-토글-상태를-색이-아니라-checked로" aria-hidden="true">#</a>3-3) 토글 상태를 색이 아니라 <code>checked</code>로</h3>
-<p>A/C, AUTO, 김서림 토글은 글자는 그대로이고 색만 바뀝니다. 색은 자동화가 읽기 어렵습니다. 앱에서 <code>Modifier.toggleable(role = Switch)</code>로 켜짐과 꺼짐을 접근성 정보로 내보내고, 화면 객체는 <code>checked</code> 속성을 읽습니다. 설정 화면의 스위치와 같은 방식이고, TalkBack에도 같은 정보가 갑니다.</p>
-<h3 id="3-4-테스트-목록-teststest_vehicle_signalspy-24개"><a class="anchor" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개" aria-hidden="true">#</a>3-4) 테스트 목록 (<a class="test-link" href="test-results.html#file-test_vehicle_signals" title="테스트 결과와 화면 보기"><code>tests/test_vehicle_signals.py</code></a>, 24개)</h3>
+<p>A/C, AUTO, 김서림 토글은 글자는 그대로이고 색만 바뀝니다. 색은 자동화가 읽기 어렵습니다. 앱에서 <code>Modifier.<wbr>toggleable(role = Switch)</code>로 켜짐과 꺼짐을 접근성 정보로 내보내고, 화면 객체는 <code>checked</code> 속성을 읽습니다. 설정 화면의 스위치와 같은 방식이고, TalkBack에도 같은 정보가 갑니다.</p>
+<h3 id="3-4-테스트-목록-teststest_vehicle_signalspy-24개"><a class="anchor" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개" aria-hidden="true">#</a>3-4) 테스트 목록 (<a class="test-link" href="test-results.html#file-test_vehicle_signals" title="테스트 결과와 화면 보기"><code>tests/<wbr>test_<wbr>vehicle_<wbr>signals.<wbr>py</code></a>, 24개)</h3>
 <p>설명을 누르면 기기별 결과와 테스트가 끝난 화면을 볼 수 있습니다(<a href="test-results.html">테스트 결과</a>).</p>
 <div class="table"><table><thead><tr>
 <th>분류</th>
@@ -180,104 +180,104 @@
 <th>확인하는 방향</th>
 </tr>
 </thead><tbody><tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_ac_toggle_reaches_every_seat">A/C를 끄면 모든 좌석 area가 꺼진다</a></td>
 <td>화면에서 신호로</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_ac_signal_is_shown_on_climate_and_bottom_bar">차량이 A/C를 끄고 켜면 토글이 따라온다</a></td>
 <td>신호에서 화면으로</td>
 </tr>
 <tr>
-<td>sanity</td>
-<td><a href="test-results.html#test_fan_button_changes_signal_by_one">풍량 +, -를 한 번 누르면 신호가 한 단계 바뀐다 (2건)</a></td>
+<td class="nw">sanity</td>
+<td><a href="test-results.html#test_fan_button_changes_signal_by_one">풍량 +, -를 한 번 누르면 신호가 한 단계 바뀝니다 (2건)</a></td>
 <td>화면에서 신호로</td>
 </tr>
 <tr>
-<td>regression</td>
-<td><a href="test-results.html#test_fan_buttons_disabled_at_limits">풍량 1과 7에서 버튼이 꺼지고 신호가 범위를 벗어나지 않는다 (2건)</a></td>
+<td class="nw">regression</td>
+<td><a href="test-results.html#test_fan_buttons_disabled_at_limits">풍량 1과 7에서 버튼이 꺼지고 신호가 범위를 벗어나지 않습니다 (2건)</a></td>
 <td>양쪽</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td><a href="test-results.html#test_manual_fan_releases_auto">AUTO 중에 풍량을 바꾸면 <code>HVAC_AUTO_ON</code>이 꺼진다</a></td>
 <td>화면에서 신호 두 개로</td>
 </tr>
 <tr>
-<td>sanity</td>
-<td><a href="test-results.html#test_defrost_changes_only_its_window">앞뒤 김서림 제거는 누른 유리의 신호만 켠다 (2건)</a></td>
+<td class="nw">sanity</td>
+<td><a href="test-results.html#test_defrost_changes_only_its_window">앞뒤 김서림 제거는 누른 유리의 신호만 켭니다 (2건)</a></td>
 <td>양쪽, area 혼동 방지</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_seat_heat_cycles_levels_on_vehicle">열선이 꺼짐, 2단, 1단, 꺼짐 순서로 바뀌고 다른 좌석은 그대로다 (좌석 2건)</a></td>
 <td>화면에서 신호로</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_seat_heat_signal_is_shown_everywhere">열선 신호가 공조 화면, 아래 바, 빠른 제어에 같은 값으로 보인다</a></td>
 <td>신호에서 화면 세 곳으로</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td><a href="test-results.html#test_bottom_bar_seat_heat_works_from_any_screen">아래 바 열선은 다른 앱을 보고 있어도 신호를 바꾼다</a></td>
 <td>화면에서 신호로</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td><a href="test-results.html#test_assistant_seat_heat_follows_speaker_zone">조수석에서 &quot;열선 켜줘&quot;라고 하면 조수석 신호만 바뀐다</a></td>
 <td>말에서 신호로</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_door_lock_button_drives_every_door">도어 버튼이 모든 문을 잠그고 푼다</a></td>
 <td>화면에서 신호로 (area 4개)</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_door_lock_signal_is_shown">차량에서 문이 열리면 표시가 바뀐다</a></td>
 <td>신호에서 화면으로</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_energy_signals_are_shown_on_cluster">주행 가능 거리, 배터리, 외기 온도가 단위를 바꿔 주행 정보에 보인다</a></td>
 <td>신호에서 화면으로</td>
 </tr>
 <tr>
-<td>sanity</td>
-<td><a href="test-results.html#test_low_range_threshold">31, 30, 29 km에서 경고와 카드가 맞게 뜬다 (3건)</a></td>
+<td class="nw">sanity</td>
+<td><a href="test-results.html#test_low_range_threshold">31, 30, 29 km에서 경고와 카드가 맞게 뜹니다 (3건)</a></td>
 <td>신호에서 화면으로</td>
 </tr>
 <tr>
-<td>sanity</td>
+<td class="nw">sanity</td>
 <td><a href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger">주행 중 거리가 부족해지면 카드가 뜨고, 누르면 가장 가까운 충전소로 안내한다</a></td>
 <td>신호에서 화면, 동작까지</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td><a href="test-results.html#test_low_range_is_recorded_in_notifications">거리 부족이 알림 센터에 남는다</a></td>
 <td>신호에서 화면으로</td>
 </tr>
 <tr>
-<td>regression</td>
+<td class="nw">regression</td>
 <td><a href="test-results.html#test_range_recovers_after_charging">충전하면 경고와 카드가 사라진다</a></td>
 <td>신호에서 화면으로</td>
 </tr>
 <tr>
-<td>regression</td>
-<td><a href="test-results.html#test_range_follows_speed_unit_setting">속도 단위가 mph면 거리도 마일로 보인다 (320 km = 199 mi)</a></td>
+<td class="nw">regression</td>
+<td><a href="test-results.html#test_range_follows_speed_unit_setting">속도 단위가 mph면 거리도 마일로 보입니다 (320 km = 199 mi)</a></td>
 <td>설정과 신호</td>
 </tr>
 </tbody></table></div>
 <p>기기 없이 도는 프레임워크 단위 테스트도 7개 더했습니다. area 5개를 shell 한 번으로 보내는지, km와 %를 m와 Wh로 바꾸는 계산, 묶음 재시도와 실패 메시지, Mock의 타입별 extra, 기준 값 초기화가 신호 11개를 모두 넣는지를 봅니다.</p>
 <h2 id="4-진행하면서-잡은-것"><a class="anchor" href="#4-진행하면서-잡은-것" aria-hidden="true">#</a>4. 진행하면서 잡은 것</h2>
-<h3 id="4-1-도어-잠금은-권한-목록까지-바꿔야-했음"><a class="anchor" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-했음" aria-hidden="true">#</a>4-1) 도어 잠금은 권한 목록까지 바꿔야 했음</h3>
-<p><code>CONTROL_CAR_DOORS</code>는 <code>signature|privileged</code> 권한입니다. 매니페스트에 적는 것만으로는 부족하고, <code>/system/etc/permissions</code>의 priv-app 허용 목록(<code>privapp-permissions-dev.opencabin.ivi.xml</code>)에도 있어야 합니다.</p>
-<p>그래서 이번에는 <code>adb install -r</code>이 아니라 <code>privileged/install_priv_app.py</code>로 다시 넣고 재부팅했습니다. 설치한 뒤 <code>dumpsys package</code>에서 운전자 사용자 10의 <code>CONTROL_CAR_DOORS: granted=true</code>, <code>CAR_ENERGY: granted=true</code>를 확인했습니다.</p>
+<h3 id="4-1-도어-잠금은-권한-목록까지-바꿔야-했습니다"><a class="anchor" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-했습니다" aria-hidden="true">#</a>4-1) 도어 잠금은 권한 목록까지 바꿔야 했습니다</h3>
+<p><code>CONTROL_<wbr>CAR_<wbr>DOORS</code>는 <code>signature|privileged</code> 권한입니다. 매니페스트에 적는 것만으로는 부족하고, <code>/<wbr>system/<wbr>etc/<wbr>permissions</code>의 priv-app 허용 목록(<code>privapp-permissions-dev.<wbr>opencabin.<wbr>ivi.<wbr>xml</code>)에도 있어야 합니다.</p>
+<p>그래서 이번에는 <code>adb install -r</code>이 아니라 <code>privileged/<wbr>install_<wbr>priv_<wbr>app.<wbr>py</code>로 다시 넣고 재부팅했습니다. 설치한 뒤 <code>dumpsys package</code>에서 운전자 사용자 10의 <code>CONTROL_<wbr>CAR_<wbr>DOORS: granted=true</code>, <code>CAR_<wbr>ENERGY: granted=true</code>를 확인했습니다.</p>
 <p><code>CAR_ENERGY</code>는 dangerous 권한이라 권한 창이 뜹니다. 창이 뜨면 테스트가 앱 화면을 보지 못하기 때문에, 설치 스크립트가 <code>pm grant</code>로 미리 권한을 줍니다.</p>
 <h3 id="4-2-테스트-쪽-경쟁-조건-1건-제가-만든-것"><a class="anchor" href="#4-2-테스트-쪽-경쟁-조건-1건-제가-만든-것" aria-hidden="true">#</a>4-2) 테스트 쪽 경쟁 조건 1건 (제가 만든 것)</h3>
-<p>전체 실행에서 <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_range_recovers_after_charging</code></a>이 <code>battery_percent() == 75</code>에서 실패했습니다. 혼자 돌리면 통과했습니다.</p>
+<p>전체 실행에서 <a class="test-link" href="test-results.html#test_range_recovers_after_charging" title="테스트 결과와 화면 보기"><code>test_<wbr>range_<wbr>recovers_<wbr>after_<wbr>charging</code></a>이 <code>battery_<wbr>percent() == 75</code>에서 실패했습니다. 혼자 돌리면 통과했습니다.</p>
 <p>주행 가능 거리와 배터리는 서로 다른 신호라 따로 도착합니다. 그런데 테스트는 거리(카드가 사라지는 것)만 기다린 뒤 배터리를 바로 <code>assert</code>하고 있었습니다. 배터리도 조건 대기(<code>wait_until</code>)로 바꾸고, 같은 모양이던 외기 온도 확인도 고쳤습니다. 고정 <code>sleep</code>은 쓰지 않았습니다.</p>
 <h2 id="5-결과"><a class="anchor" href="#5-결과" aria-hidden="true">#</a>5. 결과</h2>
 <div class="table"><table><thead><tr>
@@ -285,7 +285,7 @@
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td>앱 빌드</td>
+<td class="nw">앱 빌드</td>
 <td>Kotlin 경고 0</td>
 </tr>
 <tr>
@@ -305,13 +305,13 @@
 <td>102개 통과, AAOS 전용 6개 건너뜀. 게이트 통과, 앱 재실행 0 (7분 6초)</td>
 </tr>
 <tr>
-<td>두 기기 병렬 (<code>run_bench.py --reruns 1</code>)</td>
-<td>두 기기 모두 게이트 통과, flaky 0, 앱 재실행 0, VHAL 재시도 0. 7분 20초로, 차례로 돌린 약 14분 28초보다 2.0배 빠름</td>
+<td>두 기기 병렬 (<code>run_<wbr>bench.<wbr>py --reruns 1</code>)</td>
+<td>두 기기 모두 게이트 통과, flaky 0, 앱 재실행 0, VHAL 재시도 0. 7분 20초로, 차례로 돌린 약 14분 28초보다 2.0배 빨랐습니다.</td>
 </tr>
 </tbody></table></div>
 <p>E2E는 84개에서 108개가 됐습니다. 새로 만든 24개는 모두 화면과 신호를 양쪽에서 보고, 같은 테스트가 AAOS(VHAL)와 태블릿(Mock)에서 모두 통과합니다.</p>
 <p>이날 태블릿은 처음에 adb <code>unauthorized</code> 상태였습니다. adb 서버를 다시 켠 뒤라 기기에서 USB 디버깅을 다시 승인해야 했습니다. USB 디버깅 승인, 설치 승인, 실행 순서로 진행했습니다.</p>
-<p>같은 묶음을 여러 번 돌리는 반복 안정성은 이번에 한 번만 봤습니다. 7단계의 두 번 반복에서 한 번 흔들렸던 <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a>은 이번 에뮬레이터 전체 실행 두 번(단독 한 번, 병렬 한 번)에서는 재현되지 않았습니다. 원인은 아직 확인하지 못했습니다.</p>
+<p>같은 묶음을 여러 번 돌리는 반복 안정성은 이번에 한 번만 봤습니다. 7단계의 두 번 반복에서 한 번 흔들렸던 <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a>은 이번 에뮬레이터 전체 실행 두 번(단독 한 번, 병렬 한 번)에서는 재현되지 않았습니다. 원인은 아직 확인하지 못했습니다.</p>
 <h2 id="6-채용-공고-항목과-이-단계"><a class="anchor" href="#6-채용-공고-항목과-이-단계" aria-hidden="true">#</a>6. 채용 공고 항목과 이 단계</h2>
 <div class="table"><table><thead><tr>
 <th>요구 역량</th>
@@ -340,38 +340,38 @@
 </tbody></table></div>
 <h2 id="7-8단계-이후에-더한-것-2026-11-16"><a class="anchor" href="#7-8단계-이후에-더한-것-2026-11-16" aria-hidden="true">#</a>7. 8단계 이후에 더한 것 (2026-11-16)</h2>
 <h3 id="7-1-최대-냉방-화면의-full-버튼"><a class="anchor" href="#7-1-최대-냉방-화면의-full-버튼" aria-hidden="true">#</a>7-1) 최대 냉방 (화면의 FULL 버튼)</h3>
-<p>공조 화면 A/C 옆에 FULL 버튼을 넣었습니다. 차량 신호는 <code>HVAC_MAX_AC_ON</code>이고, 에뮬레이터 VHAL에는 좌석 area 5개로 들어 있습니다(<code>cmd car_service get-carpropertyconfig 0x15200506</code>으로 확인).</p>
+<p>공조 화면 A/C 옆에 FULL 버튼을 넣었습니다. 차량 신호는 <code>HVAC_MAX_AC_ON</code>이고, 에뮬레이터 VHAL에는 좌석 area 5개로 들어 있습니다(<code>cmd car_<wbr>service get-carpropertyconfig 0x15200506</code>으로 확인).</p>
 <p><img data-md src="../../docs/images/p9-climate-full.png" alt="FULL 켠 공조 화면" loading="lazy"></p>
 <div class="table"><table><thead><tr>
 <th>동작</th>
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td>FULL을 켬</td>
+<td class="nw">FULL을 켰을 때</td>
 <td>모든 좌석의 <code>HVAC_MAX_AC_ON</code>과 A/C가 켜지고, 온도는 16.0°C, 풍량은 7이 되며 AUTO는 꺼집니다.</td>
 </tr>
 <tr>
-<td>FULL을 버튼으로 끔</td>
+<td>FULL을 버튼으로 껐을 때</td>
 <td>켜기 전의 온도, 풍량, A/C, AUTO 값으로 되돌립니다.</td>
 </tr>
 <tr>
-<td>FULL 중에 온도나 풍량을 직접 바꾸거나, A/C를 끄거나, AUTO를 켬</td>
+<td>FULL 중에 온도나 풍량을 직접 바꾸거나, A/C를 끄거나, AUTO를 켰을 때</td>
 <td>최대 냉방만 꺼집니다. 값은 되돌리지 않고 방금 바꾼 값을 따릅니다.</td>
 </tr>
 <tr>
-<td>차량 쪽에서 신호가 바뀜</td>
+<td>차량 쪽에서 신호가 바뀌었을 때</td>
 <td>FULL 토글이 따라 바뀝니다.</td>
 </tr>
 </tbody></table></div>
-<p>켜기 전 값은 화면 틀 상태(<code>CockpitState.beforeMaxAc</code>)에 둡니다. 앱을 다시 띄우면 사라지기 때문에, 그 뒤에 FULL을 끄면 신호만 꺼지고 값은 그대로입니다.</p>
-<p>테스트 다섯 개를 <a class="test-link" href="test-results.html#file-test_vehicle_signals" title="테스트 결과와 화면 보기"><code>test_vehicle_signals.py</code></a>에 더했습니다. <a href="test-results.html#test_max_ac_sets_signal_and_coldest_settings">켜면 모든 좌석 신호와 온도, 풍량, AUTO가 바뀌는지</a>, <a href="test-results.html#test_max_ac_off_restores_previous_settings">끄면 되돌아가는지</a>, <a href="test-results.html#test_max_ac_signal_is_shown_on_toggle">신호가 바뀌면 토글이 따라오는지</a>, <a href="test-results.html#test_manual_fan_releases_max_ac">풍량을 내리면 풀리는지</a>, <a href="test-results.html#test_turning_ac_off_releases_max_ac">A/C를 끄면 풀리는지</a>를 봅니다.</p>
+<p>켜기 전 값은 화면 틀 상태(<code>CockpitState.<wbr>beforeMaxAc</code>)에 둡니다. 앱을 다시 띄우면 사라지기 때문에, 그 뒤에 FULL을 끄면 신호만 꺼지고 값은 그대로입니다.</p>
+<p>테스트 다섯 개를 <a class="test-link" href="test-results.html#file-test_vehicle_signals" title="테스트 결과와 화면 보기"><code>test_<wbr>vehicle_<wbr>signals.<wbr>py</code></a>에 더했습니다. <a href="test-results.html#test_max_ac_sets_signal_and_coldest_settings">켜면 모든 좌석 신호와 온도, 풍량, AUTO가 바뀌는지</a>, <a href="test-results.html#test_max_ac_off_restores_previous_settings">끄면 되돌아가는지</a>, <a href="test-results.html#test_max_ac_signal_is_shown_on_toggle">신호가 바뀌면 토글이 따라오는지</a>, <a href="test-results.html#test_manual_fan_releases_max_ac">풍량을 내리면 풀리는지</a>, <a href="test-results.html#test_turning_ac_off_releases_max_ac">A/C를 끄면 풀리는지</a>를 봅니다.</p>
 <p>기준 값 초기화에도 <code>max_ac</code>를 넣었습니다. 신호가 11개에서 12개로, AAOS의 <code>--set</code>이 26번에서 31번으로 늘었지만 adb 왕복은 여전히 한 번입니다.</p>
 <h3 id="7-2-화면과-문구"><a class="anchor" href="#7-2-화면과-문구" aria-hidden="true">#</a>7-2) 화면과 문구</h3>
 <ul>
 <li>상단 바 프로필에 로그인한 운전자 이름(조예훈)을 보여 줍니다. 설정 화면의 시스템 항목에도 계정 줄을 넣었습니다.</li>
 <li>내비게이션 &#39;회사&#39;에 주소 줄을 넣었습니다(11-18부터 가상 주소). 이름과 거리(8.7 km)는 테스트가 보고 있어서 그대로 뒀습니다.</li>
 <li>에뮬레이터에서 화면을 하나씩 찍어 보며 어색한 곳을 고쳤습니다. 앱 목록의 위아래 줄이 어긋나던 것은 칸 너비를 같게 맞췄고, 줄글이던 설정의 시스템 정보는 이름과 값 줄로 나눴고, 공조 가운데 패널 아래가 비던 것은 묶음 간격을 고르게 했습니다.</li>
-<li>AI 어시스턴트 대답에 쓰던 &#39;(으)로&#39;, &#39;을(를)&#39; 같은 괄호 표기를 받침에 맞는 조사로 바꿨습니다(<code>CabinAssistant.josa</code>, 단위 테스트 2개 추가). 알림 문구도 &#39;합니다&#39; 말투로 맞췄습니다.</li>
+<li>AI 어시스턴트 대답에 쓰던 &#39;(으)로&#39;, &#39;을(를)&#39; 같은 괄호 표기를 받침에 맞는 조사로 바꿨습니다(<code>CabinAssistant.<wbr>josa</code>, 단위 테스트 2개 추가). 알림 문구도 &#39;합니다&#39; 말투로 맞췄습니다.</li>
 </ul>
 <h3 id="7-3-결과"><a class="anchor" href="#7-3-결과" aria-hidden="true">#</a>7-3) 결과</h3>
 <div class="table"><table><thead><tr>
@@ -383,24 +383,24 @@
 <td>111개 통과, 1개 건너뜀, 1개 알려진 결함. 게이트 통과, 재시도 0 (7분 27초)</td>
 </tr>
 <tr>
-<td>프레임워크 단위 테스트</td>
+<td class="nw">프레임워크 단위 테스트</td>
 <td>33개 통과</td>
 </tr>
 <tr>
-<td>앱 단위 테스트</td>
+<td class="nw">앱 단위 테스트</td>
 <td>컴파일만 확인했습니다. 이 PC에서는 Gradle 테스트 실행기가 죽어서 CI에서 돌립니다.</td>
 </tr>
 </tbody></table></div>
 <p>태블릿과 두 기기 병렬 실행은 이때 다시 돌리지 않았습니다. 태블릿은 새 APK를 설치할 때 기기 화면 승인이 필요합니다.</p>
 <h3 id="7-4-테스트별-결과-화면-2026-11-18"><a class="anchor" href="#7-4-테스트별-결과-화면-2026-11-18" aria-hidden="true">#</a>7-4) 테스트별 결과 화면 (2026-11-18)</h3>
-<p><code>pytest --shots</code>로 돌리면 테스트마다 판정이 난 직후, 정리 단계 전에 화면을 한 장 남깁니다. 재시도가 있었다면 마지막 시도의 화면입니다. <code>tools/publish_results.py</code>가 실행 기록과 화면을 <code>site/results/</code>(가로 960px WebP)와 <a href="test-results.html">테스트 결과</a>로 옮깁니다. 테스트 설명과 마커는 테스트 코드의 docstring과 <code>@pytest.mark</code>에서 읽기 때문에 따로 적지 않습니다.</p>
+<p><code>pytest --shots</code>로 돌리면 테스트마다 판정이 난 직후, 정리 단계 전에 화면을 한 장 남깁니다. 재시도가 있었다면 마지막 시도의 화면입니다. <code>tools/<wbr>publish_<wbr>results.<wbr>py</code>가 실행 기록과 화면을 <code>site/results/</code>(가로 960px WebP)와 <a href="test-results.html">테스트 결과</a>로 옮깁니다. 테스트 설명과 마커는 테스트 코드의 docstring과 <code>@pytest.mark</code>에서 읽기 때문에 따로 적지 않습니다.</p>
 <div class="table"><table><thead><tr>
 <th>기기</th>
 <th>결과</th>
 <th>화면</th>
 </tr>
 </thead><tbody><tr>
-<td>AAOS 에뮬레이터</td>
+<td class="nw">AAOS 에뮬레이터</td>
 <td>115개 중 113개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (9분 35초)</td>
 <td>115장</td>
 </tr>
@@ -414,10 +414,10 @@
 <h3 id="7-5-영상-화면에-실제-주행-영상-2026-11-18"><a class="anchor" href="#7-5-영상-화면에-실제-주행-영상-2026-11-18" aria-hidden="true">#</a>7-5) 영상 화면에 실제 주행 영상 (2026-11-18)</h3>
 <p>영상 화면은 그동안 그라데이션 위에 재생 시간만 흐르는 가짜였습니다. 직접 찍은 블랙박스 영상을 기기에 올려 실제로 재생하게 바꿨고, 결과 화면에도 그 영상이 보입니다. 다듬는 방법과 저장 위치는 <a href="phase2-app.html#주행-영상-블랙박스-2026-11-16-추가">2단계 문서</a>에 적었습니다.</p>
 <p>영상과 함께 테스트 두 개를 더했습니다. <a href="test-results.html#test_video_resumes_where_it_stopped">주행 때문에 멈춘 영상이 차를 세우면 멈춘 자리부터 이어지는지</a>, <a href="test-results.html#test_video_next_clip">다음 버튼으로 두 번째 영상으로 넘어가는지</a>를 봅니다. 영상 파일이 없는 기기에서는 이 두 테스트를 건너뜁니다.</p>
-<p>영상에는 다른 차 번호판이 찍혀 있습니다. 결과 화면 중 번호판이 읽히는 두 장(두 기기의 <a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_video_resumes_where_it_stopped</code></a>)은 <code>publish_results.py --blur</code>로 그 부분을 흐리게 해서 올렸습니다.</p>
+<p>영상에는 다른 차 번호판이 찍혀 있습니다. 결과 화면 중 번호판이 읽히는 두 장(두 기기의 <a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></a>)은 <code>publish_<wbr>results.<wbr>py --blur</code>로 그 부분을 흐리게 해서 올렸습니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-연결한-신호">1. 연결한 신호</a><a class="l2" href="#2-화면에서-달라진-것">2. 화면에서 달라진 것</a><a class="l2" href="#3-테스트-설계">3. 테스트 설계</a><a class="l3" href="#3-1-어댑터-carset_signal과-carsignal">3-1) 어댑터: car.set_signal()과 car.signal()</a><a class="l3" href="#3-2-테스트마다-기준-값으로-되돌리기-테스트-격리">3-2) 테스트마다 기준 값으로 되돌리기 (테스트 격리)</a><a class="l3" href="#3-3-토글-상태를-색이-아니라-checked로">3-3) 토글 상태를 색이 아니라 checked로</a><a class="l3" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개">3-4) 테스트 목록 (tests/test_vehicle_signals.py, 24개)</a><a class="l2" href="#4-진행하면서-잡은-것">4. 진행하면서 잡은 것</a><a class="l3" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-했음">4-1) 도어 잠금은 권한 목록까지 바꿔야 했음</a><a class="l3" href="#4-2-테스트-쪽-경쟁-조건-1건-제가-만든-것">4-2) 테스트 쪽 경쟁 조건 1건 (제가 만든 것)</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-채용-공고-항목과-이-단계">6. 채용 공고 항목과 이 단계</a><a class="l2" href="#7-8단계-이후에-더한-것-2026-11-16">7. 8단계 이후에 더한 것 (2026-11-16)</a><a class="l3" href="#7-1-최대-냉방-화면의-full-버튼">7-1) 최대 냉방 (화면의 FULL 버튼)</a><a class="l3" href="#7-2-화면과-문구">7-2) 화면과 문구</a><a class="l3" href="#7-3-결과">7-3) 결과</a><a class="l3" href="#7-4-테스트별-결과-화면-2026-11-18">7-4) 테스트별 결과 화면 (2026-11-18)</a><a class="l3" href="#7-5-영상-화면에-실제-주행-영상-2026-11-18">7-5) 영상 화면에 실제 주행 영상 (2026-11-18)</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#1-연결한-신호">1. 연결한 신호</a><a class="l2" href="#2-화면에서-달라진-것">2. 화면에서 달라진 것</a><a class="l2" href="#3-테스트-설계">3. 테스트 설계</a><a class="l3" href="#3-1-어댑터-carset_signal과-carsignal">3-1) 어댑터: car.set_signal()과 car.signal()</a><a class="l3" href="#3-2-테스트마다-기준-값으로-되돌리기-테스트-격리">3-2) 테스트마다 기준 값으로 되돌리기 (테스트 격리)</a><a class="l3" href="#3-3-토글-상태를-색이-아니라-checked로">3-3) 토글 상태를 색이 아니라 checked로</a><a class="l3" href="#3-4-테스트-목록-teststest_vehicle_signalspy-24개">3-4) 테스트 목록 (tests/test_vehicle_signals.py, 24개)</a><a class="l2" href="#4-진행하면서-잡은-것">4. 진행하면서 잡은 것</a><a class="l3" href="#4-1-도어-잠금은-권한-목록까지-바꿔야-했습니다">4-1) 도어 잠금은 권한 목록까지 바꿔야 했습니다</a><a class="l3" href="#4-2-테스트-쪽-경쟁-조건-1건-제가-만든-것">4-2) 테스트 쪽 경쟁 조건 1건 (제가 만든 것)</a><a class="l2" href="#5-결과">5. 결과</a><a class="l2" href="#6-채용-공고-항목과-이-단계">6. 채용 공고 항목과 이 단계</a><a class="l2" href="#7-8단계-이후에-더한-것-2026-11-16">7. 8단계 이후에 더한 것 (2026-11-16)</a><a class="l3" href="#7-1-최대-냉방-화면의-full-버튼">7-1) 최대 냉방 (화면의 FULL 버튼)</a><a class="l3" href="#7-2-화면과-문구">7-2) 화면과 문구</a><a class="l3" href="#7-3-결과">7-3) 결과</a><a class="l3" href="#7-4-테스트별-결과-화면-2026-11-18">7-4) 테스트별 결과 화면 (2026-11-18)</a><a class="l3" href="#7-5-영상-화면에-실제-주행-영상-2026-11-18">7-5) 영상 화면에 실제 주행 영상 (2026-11-18)</a></nav>
 </div>
 
 <script src="../glossary.js" defer></script>

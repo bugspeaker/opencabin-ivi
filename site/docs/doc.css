@@ -102,8 +102,12 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .doc th { text-align: left; font-weight: 600; color: var(--ink); background: var(--surface-2); }
 /* 두 칸짜리 표(이름 | 설명)는 설명이 길어 첫 칸이 눌린다. 이름이 한 줄에 들어가게 첫 칸에 최소 폭 (8-1 표) */
 .doc table:has(thead th:nth-child(2):last-child) td:first-child { min-width: 8.5em; }
+/* 첫 칸의 짧은 이름(build-docs 가 nw 를 붙인다)과 첫 칸 맨 앞의 굵은 이름은 한 줄로 */
+.doc td.nw, .doc td:first-child > strong:first-child { white-space: nowrap; }
+/* 칸이 4개 이상인 표의 둘째 칸(대개 설명)은 코드가 많은 옆 칸에 눌려 5~6줄로 접히지 않게 최소 폭 */
+.doc table:has(thead th:nth-child(4)) td:nth-child(2) { min-width: 11em; }
 /* 표 안의 긴 코드 이름(HVAC_TEMPERATURE_SET)은 글자 중간에서 자르지 않는다 */
-.doc td code { word-break: normal; overflow-wrap: break-word; }
+.doc td code { word-break: keep-all; overflow-wrap: break-word; }   /* 코드 안의 한글(예: '기대값')도 낱말 중간에서 자르지 않는다 */
 .doc th, .doc td { padding: 10px 14px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
 .doc tbody tr:last-child td { border-bottom: 0; }
 .doc tbody tr:hover td { background: var(--surface-1); }

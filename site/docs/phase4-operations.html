@@ -53,14 +53,14 @@
 <td>세 번 연속 0번</td>
 </tr>
 <tr>
-<td>태블릿 전체 시간</td>
+<td class="nw">태블릿 전체 시간</td>
 <td>약 1분 40초</td>
 <td>약 1분 22초</td>
 </tr>
 <tr>
-<td>두 기기 전체 시간</td>
+<td class="nw">두 기기 전체 시간</td>
 <td>차례로 돌려 약 3분 40초</td>
-<td>병렬로 2분 13초 ~ 2분 37초 (1.5~1.6배 빠름)</td>
+<td>병렬로 2분 13초 ~ 2분 37초 (1.5~1.6배 빨랐습니다)</td>
 </tr>
 <tr>
 <td>재시도와 flaky 판정</td>
@@ -68,24 +68,24 @@
 <td><code>--reruns 1</code>. 실패했다가 통과하면 flaky로 기록</td>
 </tr>
 <tr>
-<td>격리</td>
+<td class="nw">격리</td>
 <td>없음</td>
-<td><code>quarantine.txt</code>. 테스트는 돌리되 게이트에서는 뺌</td>
+<td><code>quarantine.txt</code>. 테스트는 돌리되 게이트에서는 뺍니다.</td>
 </tr>
 <tr>
-<td>통계</td>
+<td class="nw">통계</td>
 <td>없음</td>
-<td><code>tools/flaky_report.py</code>. 불안정률, p95, 격리 후보와 해제 후보</td>
+<td><code>tools/<wbr>flaky_<wbr>report.<wbr>py</code>. 불안정률, p95, 격리 후보와 해제 후보</td>
 </tr>
 <tr>
-<td>프레임워크 자체 검증</td>
+<td class="nw">프레임워크 자체 검증</td>
 <td>없음</td>
 <td><code>unit/</code> 22개. 기기 없이 0.3초</td>
 </tr>
 <tr>
-<td>CI</td>
+<td class="nw">CI</td>
 <td>없음</td>
-<td><code>.github/workflows/ivi-ci.yml</code>. build, unit, 그리고 self-hosted Bench의 e2e</td>
+<td><code>.<wbr>github/<wbr>workflows/<wbr>ivi-ci.<wbr>yml</code>. build, unit, 그리고 self-hosted Bench의 e2e</td>
 </tr>
 </tbody></table></div>
 <p>전체 스위트를 두 기기에서 병렬로 세 번 돌렸고(<code>--reruns 1</code>) 세 번 모두 게이트를 통과했습니다. flaky와 앱 재실행은 0이었습니다. AAOS는 매번 30개 통과, 1개 알려진 결함(SystemUI)이었고, 태블릿은 매번 25개 통과, AAOS 전용 6개 건너뜀이었습니다.</p>
@@ -101,14 +101,14 @@
 <th>게이트</th>
 </tr>
 </thead><tbody><tr>
-<td>passed</td>
+<td class="nw">passed</td>
 <td>한 번에 통과</td>
 <td>통과</td>
 </tr>
 <tr>
-<td>flaky</td>
+<td class="nw">flaky</td>
 <td>실패했다가 재시도에서 통과</td>
-<td>통과, 통계에 남음</td>
+<td>통과. 통계에는 남습니다.</td>
 </tr>
 <tr>
 <td>failed / error</td>
@@ -116,17 +116,17 @@
 <td>실패</td>
 </tr>
 <tr>
-<td>xfailed</td>
+<td class="nw">xfailed</td>
 <td>알려진 결함</td>
 <td>통과</td>
 </tr>
 <tr>
-<td>quarantined</td>
-<td>격리 목록에 있는 테스트. 실제 결과는 <code>quarantine_result</code>에 남음</td>
+<td class="nw">quarantined</td>
+<td>격리 목록에 있는 테스트. 실제 결과는 <code>quarantine_<wbr>result</code>에 남습니다.</td>
 <td>통과</td>
 </tr>
 <tr>
-<td>skipped</td>
+<td class="nw">skipped</td>
 <td>AAOS 전용 테스트 등</td>
 <td>통과</td>
 </tr>
@@ -134,14 +134,14 @@
 <p>실패한 시도마다 실패 자료(화면, UI 계층, 차량 상태, 액티비티, logcat)를 남깁니다. 재시도의 자료는 <code>…__try2</code> 폴더에 들어갑니다. flaky의 원인은 첫 번째 실패 자료에 있습니다.</p>
 <p>기록은 세 곳에 남습니다.</p>
 <ul>
-<li><code>reports/history/results.jsonl</code>: 누적 기록. 테스트 하나가 한 줄이고 실행, 기기, 판정, 재시도, 앱 재실행, 시간, 첫 오류를 담습니다.</li>
-<li><code>reports/runs/&lt;run&gt;-&lt;serial&gt;.json</code>: 이번 실행의 요약과 테스트별 결과</li>
-<li><code>reports/junit-&lt;run&gt;-&lt;aaos|mock&gt;-&lt;serial&gt;.xml</code> (2026-11-19까지는 run id 없이 <code>junit-&lt;aaos|mock&gt;-&lt;serial&gt;.xml</code>이라, <code>--repeat</code>로 돌리면 회차마다 덮어써 앞 회차 기록이 사라졌습니다)</li>
+<li><code>reports/<wbr>history/<wbr>results.<wbr>jsonl</code>: 누적 기록. 테스트 하나가 한 줄이고 실행, 기기, 판정, 재시도, 앱 재실행, 시간, 첫 오류를 담습니다.</li>
+<li><code>reports/<wbr>runs/<wbr>&lt;run&gt;-&lt;serial&gt;.<wbr>json</code>: 이번 실행의 요약과 테스트별 결과</li>
+<li><code>reports/<wbr>junit-&lt;run&gt;-&lt;aaos|mock&gt;-&lt;serial&gt;.<wbr>xml</code> (2026-11-19까지는 run id 없이 <code>junit-&lt;aaos|mock&gt;-&lt;serial&gt;.<wbr>xml</code>이라, <code>--repeat</code>로 돌리면 회차마다 덮어써 앞 회차 기록이 사라졌습니다)</li>
 </ul>
 <p>실제 기기에서 확인용 테스트를 일부러 만들어 돌려 봤고, 확인한 뒤에는 지웠습니다. 첫 시도만 실패하는 테스트는 <code>flaky, reruns 1</code>로 기록되고 첫 실패 자료가 저장됐습니다. 격리 목록에 넣은 실패 테스트는 <code>quarantined</code>로 기록되고 게이트는 통과했습니다.</p>
 <h2 id="3-격리-quarantinetxt"><a class="anchor" href="#3-격리-quarantinetxt" aria-hidden="true">#</a>3. 격리 (quarantine.txt)</h2>
 <pre class="code"><code># &lt;nodeid 또는 앞부분&gt; | &lt;이유&gt; | &lt;등록일&gt;
-tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, 원인 분석 중 | 2026-11-13</code></pre>
+tests/<wbr>test_<wbr>media.<wbr>py::test_<wbr>play_<wbr>pause_<wbr>toggles | 화웨이에서 간헐 실패, 원인 분석 중 | 2026-11-13</code></pre>
 <p>격리된 테스트는 <code>xfail(strict=False)</code>로 바뀝니다. 계속 돌려서 데이터를 모으지만, 실패해도 빌드를 막지 않습니다.</p>
 <p>nodeid 앞부분만 적으면 매개변수 조합 전체(<code>…[driver]</code>, <code>…[passenger]</code>)가 격리됩니다. 이름 앞부분만 같은 다른 테스트는 걸리지 않습니다.</p>
 <p>이유를 적지 않은 줄은 오류로 거부합니다. 사유 없이 테스트를 격리하는 일을 막기 위해서입니다. 지금은 격리할 테스트가 없어서 목록이 비어 있습니다.</p>
@@ -156,12 +156,12 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <li>느린 테스트: p95가 큰 순서로 다섯 개</li>
 </ul>
 <p>지금까지 쌓인 기록 204건에서는 불안정한 테스트가 없었고, 게이트 통과율은 100%였습니다(AAOS 5회, Mock 4회).</p>
-<p>지켜보고 있는 것이 하나 있습니다. AAOS의 <a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_video_is_blocked_while_driving</code></a>이 한 번 38.3초가 걸렸습니다. 다른 회차는 2.5~2.9초였습니다. 통과했으니 flaky는 아닙니다. 주행 중에 막힌 화면을 <code>am start -W</code>로 띄울 때 실행 완료를 기다리는 시간이 길어진 것으로 보고 있고, p95로 계속 확인합니다.</p>
+<p>지켜보고 있는 것이 하나 있습니다. AAOS의 <a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>is_<wbr>blocked_<wbr>while_<wbr>driving</code></a>이 한 번 38.3초가 걸렸습니다. 다른 회차는 2.5~2.9초였습니다. 통과했으니 flaky는 아닙니다. 주행 중에 막힌 화면을 <code>am start -W</code>로 띄울 때 실행 완료를 기다리는 시간이 길어진 것으로 보고 있고, p95로 계속 확인합니다.</p>
 <h2 id="5-병렬-실행-toolsrun_benchpy"><a class="anchor" href="#5-병렬-실행-toolsrun_benchpy" aria-hidden="true">#</a>5. 병렬 실행 (tools/run_bench.py)</h2>
 <pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\run_bench.py                                # 연결된 모든 기기, 전체
 .venv\Scripts\python tools\run_bench.py -m &quot;smoke or sanity&quot; --reruns 1
 .venv\Scripts\python tools\run_bench.py --repeat 5 --reruns 1          # 안정성 측정</code></pre>
-<p>기기마다 pytest 프로세스를 따로 띄우고 같은 run id로 묶습니다. 출력은 <code>reports/logs/&lt;run&gt;-&lt;serial&gt;.log</code>에 남습니다.</p>
+<p>기기마다 pytest 프로세스를 따로 띄우고 같은 run id로 묶습니다. 출력은 <code>reports/<wbr>logs/<wbr>&lt;run&gt;-&lt;serial&gt;.<wbr>log</code>에 남습니다.</p>
 <p>Appium 서버 하나로 두 세션을 동시에 쓰려면 UiAutomator2 <code>systemPort</code>가 기기마다 달라야 합니다. 8200, 8210처럼 나눠 주고 <code>--system-port</code>로 넘깁니다.</p>
 <p>전체 시간은 가장 느린 기기(AAOS)가 정합니다. 기기를 더 늘려도 시간은 거의 늘지 않습니다. 같은 종류의 기기가 여러 대라면 테스트를 나눠(sharding) 기기 한 대가 맡는 몫을 줄일 수 있어서, 다음 단계 후보로 적어 두었습니다.</p>
 <h2 id="6-ci-githubworkflowsivi-ciyml"><a class="anchor" href="#6-ci-githubworkflowsivi-ciyml" aria-hidden="true">#</a>6. CI (.github/workflows/ivi-ci.yml)</h2>
@@ -171,17 +171,17 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <th>내용</th>
 </tr>
 </thead><tbody><tr>
-<td>build</td>
+<td class="nw">build</td>
 <td>GitHub 호스트 (ubuntu)</td>
 <td><code>assembleDebug</code>로 컴파일되는지 보고 APK를 보관합니다.</td>
 </tr>
 <tr>
-<td>unit</td>
+<td class="nw">unit</td>
 <td>GitHub 호스트 (ubuntu)</td>
 <td>기기 없이 <code>pytest unit</code>을 돌립니다.</td>
 </tr>
 <tr>
-<td>e2e</td>
+<td class="nw">e2e</td>
 <td>self-hosted <code>ivi-bench</code> (이 PC)</td>
 <td>Bench를 점검하고, Bench에서 APK를 빌드해 설치(같으면 건너뜀)한 뒤 두 기기에서 병렬로 돌립니다. flaky 리포트는 Job Summary에 붙이고 자료를 올립니다.</td>
 </tr>
@@ -193,12 +193,12 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <th>기기당 시간 (2026-11-18 실측, 129개 기준)</th>
 </tr>
 </thead><tbody><tr>
-<td>pull_request</td>
+<td class="nw">pull_request</td>
 <td>smoke (13개)</td>
 <td>약 35초 (2026-11-19에 공조 화면↔VHAL 왕복을 넣은 뒤 약 45초)</td>
 </tr>
 <tr>
-<td>push (main)</td>
+<td class="nw">push (main)</td>
 <td>smoke와 sanity (38개)</td>
 <td>약 2분 15초, 두 기기 병렬</td>
 </tr>
@@ -217,7 +217,7 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <p>워크플로를 짜면서 고려한 것들입니다.</p>
 <ul>
 <li><strong>서명 키.</strong> AAOS에는 앱을 priv-app으로 넣어 두었습니다. GitHub 호스트에서 만든 APK는 debug 서명 키가 달라서 덮어쓰기가 거부됩니다. 그래서 e2e에서는 Bench(같은 사용자 계정)에서 다시 빌드합니다.</li>
-<li><strong>화웨이 설치 승인.</strong> adb로 설치할 때마다 기기 화면에서 승인해야 해서 무인 실행이 멈춥니다. 그래서 <code>tools/install_app.py</code>가 기기에 있는 APK의 해시를 비교해 같으면 설치하지 않습니다. 앱이 바뀐 날에는 사람이 한 번 승인해야 합니다. 기기 개발자 옵션의 &#39;ADB 설치 앱 확인&#39;을 끄는 방법도 있지만, 기기 정책에 관한 결정이라 이 프로젝트에서는 바꾸지 않았습니다.</li>
+<li><strong>화웨이 설치 승인.</strong> adb로 설치할 때마다 기기 화면에서 승인해야 해서 무인 실행이 멈춥니다. 그래서 <code>tools/<wbr>install_<wbr>app.<wbr>py</code>가 기기에 있는 APK의 해시를 비교해 같으면 설치하지 않습니다. 앱이 바뀐 날에는 사람이 한 번 승인해야 합니다. 기기 개발자 옵션의 &#39;ADB 설치 앱 확인&#39;을 끄는 방법도 있지만, 기기 정책에 관한 결정이라 이 프로젝트에서는 바꾸지 않았습니다.</li>
 <li><strong>Bench는 한 대.</strong> <code>concurrency</code>로 e2e가 동시에 두 개 돌지 않게 했습니다. 뒤에 온 실행은 기다립니다.</li>
 <li><strong>누적 기록 유지.</strong> checkout에 <code>clean: false</code>를 줘서 <code>reports/history</code>가 남게 했습니다. 그래야 flaky 통계가 실행을 넘어 쌓입니다.</li>
 </ul>
@@ -229,11 +229,11 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 </ul>
 <h3 id="bench-준비-순서"><a class="anchor" href="#bench-준비-순서" aria-hidden="true">#</a>Bench 준비 순서</h3>
 <ol>
-<li>에뮬레이터를 <code>-writable-system</code>으로 켜고, 처음 한 번 <code>ivi-app/privileged/install_priv_app.py</code>를 돌립니다.</li>
+<li>에뮬레이터를 <code>-writable-system</code>으로 켜고, 처음 한 번 <code>ivi-app/<wbr>privileged/<wbr>install_<wbr>priv_<wbr>app.<wbr>py</code>를 돌립니다.</li>
 <li>태블릿을 USB로 연결해 USB 디버깅을 허용하고, 앱과 Appium 보조 앱 세 개의 설치를 처음 한 번 승인합니다.</li>
-<li>Appium 서버를 계속 켜 둡니다: <code>ANDROID_HOME=C:\android appium --address 127.0.0.1 --port 4723</code></li>
+<li>Appium 서버를 계속 켜 둡니다: <code>ANDROID_<wbr>HOME=C:\android appium --address 127.<wbr>0.<wbr>0.<wbr>1 --port 4723</code></li>
 <li>GitHub 저장소의 Settings, Actions, Runners에서 self-hosted runner를 <code>ivi-bench</code> 라벨로 등록합니다. 서비스 계정이 아니라 이 PC의 사용자 계정으로 실행합니다.</li>
-<li>Settings, Secrets and variables, Actions, Variables에 <code>IVI_BENCH=online</code>을 넣습니다. 이 변수가 없으면 e2e job을 건너뜁니다. 러너가 없을 때 job이 하염없이 기다리지 않게 하려는 것입니다. Bench를 끌 때는 변수를 지우거나 다른 값으로 바꿉니다.</li>
+<li>Settings, Secrets and variables, Actions, Variables에 <code>IVI_<wbr>BENCH=online</code>을 넣습니다. 이 변수가 없으면 e2e job을 건너뜁니다. 러너가 없을 때 job이 하염없이 기다리지 않게 하려는 것입니다. Bench를 끌 때는 변수를 지우거나 다른 값으로 바꿉니다.</li>
 </ol>
 <h2 id="프레임워크-단위-테스트-unit"><a class="anchor" href="#프레임워크-단위-테스트-unit" aria-hidden="true">#</a>프레임워크 단위 테스트 (unit/)</h2>
 <p><code>pytest unit</code>은 기기와 Appium 없이 0.3초 만에 끝나고, CI에서는 GitHub 호스트에서 돕니다. 확인하는 것은 이렇습니다.</p>
@@ -242,7 +242,7 @@ tests/test_media.py::test_play_pause_toggles | 화웨이에서 간헐 실패, �
 <li>기기: 제조사별로 누르는 방법을 고르는 규칙과 <code>IVI_TAP</code>으로 덮어쓰기</li>
 <li>운영: 판정 분류(passed, flaky, failed, error, xfailed, quarantined), 앱 재실행 집계, 격리 목록 형식과 매칭, flaky 통계(격리 후보와 해제 후보, 최근 N회)</li>
 </ul>
-<p><code>tests/conftest.py</code>는 <code>tests/</code> 아래에만 적용되기 때문에 <code>pytest unit</code>은 기기를 찾지 않습니다.</p>
+<p><code>tests/<wbr>conftest.<wbr>py</code>는 <code>tests/</code> 아래에만 적용되기 때문에 <code>pytest unit</code>은 기기를 찾지 않습니다.</p>
 
   </main>
   <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#결과">결과</a><a class="l2" href="#1-앱-재실행-줄이기-3단계에서-남긴-일">1. 앱 재실행 줄이기 (3단계에서 남긴 일)</a><a class="l2" href="#2-재시도-판정-기록">2. 재시도, 판정, 기록</a><a class="l2" href="#3-격리-quarantinetxt">3. 격리 (quarantine.txt)</a><a class="l2" href="#4-flaky-통계-toolsflaky_reportpy">4. flaky 통계 (tools/flaky_report.py)</a><a class="l2" href="#5-병렬-실행-toolsrun_benchpy">5. 병렬 실행 (tools/run_bench.py)</a><a class="l2" href="#6-ci-githubworkflowsivi-ciyml">6. CI (.github/workflows/ivi-ci.yml)</a><a class="l3" href="#bench-준비-순서">Bench 준비 순서</a><a class="l2" href="#프레임워크-단위-테스트-unit">프레임워크 단위 테스트 (unit/)</a></nav>
