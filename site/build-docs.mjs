@@ -165,7 +165,9 @@ function render(page) {
     `<a href="${esc(rewrite(href, srcDir))}"${t ? ` title="${esc(t)}"` : ""}${/^https?:/.test(href) ? ' target="_blank" rel="noopener"' : ""}>${text}</a>`;
   renderer.image = (href, t, text) =>
     `<img data-md src="${esc(rewrite(href, srcDir))}" alt="${esc(text)}" loading="lazy">`;
-  renderer.table = (header, body) => `<div class="table"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>\n`;
+  // 표 첫 칸이 짧은 이름(12자 이하)이면 줄을 바꾸지 않는다. 설명이 긴 표에서 '앞뒤 / 김서림 / 제거'처럼 접히지 않게 (2026-11-22 표 점검)
+  const noWrapFirst = (rows) => rows.replace(/<tr>\n<td>([\s\S]*?)<\/td>/g, (m, c) => (unesc(stripTags(c)).length <= 12 ? `<tr>\n<td class="nw">${c}</td>` : m));
+  renderer.table = (header, body) => `<div class="table"><table><thead>${header}</thead><tbody>${noWrapFirst(body)}</tbody></table></div>\n`;
 
   let body = marked.parse(md, { renderer, gfm: true });
   // GitHub 알림 문법(> [!TIP] 등)을 GitHub 처럼 색 있는 상자로. marked 는 '[!TIP]'을 글자 그대로 남긴다
@@ -178,6 +180,9 @@ function render(page) {
   // ✅ ❌ ⚠️ 를 상태 배지처럼
   body = body.replace(/✅/g, '<span class="ok">✅</span>').replace(/❌/g, '<span class="no">❌</span>');
   body = linkTests(body);
+  // 표 안의 긴 코드 이름(테스트 함수, 경로)은 '_', '.', '/' 뒤에서 줄을 바꿀 수 있게 한다.
+  // 글자 중간에서 자르지는 않되, 이름 하나 때문에 표가 본문 밖으로 넘치거나 옆 칸이 눌리지 않게 (2026-11-22 표 점검)
+  body = body.replace(/<code>([^<]{16,})<\/code>/g, (m, t) => `<code>${t.replace(/([_./])(?=[^\s<])/g, "$1<wbr>")}</code>`);
 
   const scripts = body.includes('class="mermaid"') ? `<script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
@@ -278,7 +283,7 @@ function renderResults(page) {
         const cells = kinds.map((k) => {
           const r = c.results[k];
           const dev = data.devices.find((d) => d.kind === k);
-          if (!r) return `<div class="shot-cell is-empty"><span class="cell-device">${esc(dev.label)}</span><p class="cell-note">이 기기에서는 돌리지 않음</p></div>`;
+          if (!r) return `<div class="shot-cell is-empty"><span class="cell-device">${esc(dev.label)}</span><p class="cell-note">이 기기에서는 돌리지 않았습니다</p></div>`;
           const caption = `${t.name}${c.param ? ` [${c.param}]` : ""} · ${dev.label} · ${r.label} · ${r.duration}초`;
           const media = r.image
             ? `<button type="button" class="shot shot-${k}" data-full="../results/${esc(r.image)}" data-caption="${esc(caption)}" aria-label="${esc(dev.label)} 화면 크게 보기">
@@ -533,8 +538,8 @@ function renderDevices(data) {
   const ORDER = ["passed", "flaky", "xfailed", "xpassed", "quarantined", "failed", "error", "skipped"];
   // 태블릿 숫자가 VHAL 경로까지 증명하는 것처럼 읽히지 않게, 차량 값의 출처를 이름 바로 아래에 둔다
   const ABOUT = {
-    aaos: { title: "AAOS 에뮬레이터", text: "CarService와 가상 VHAL을 거침" },
-    mock: { title: "Android 태블릿", text: "앱 안 Mock 차량. AAOS 전용 테스트는 건너뜀" },
+    aaos: { title: "AAOS 에뮬레이터", text: "CarService와 가상 VHAL을 거칩니다" },
+    mock: { title: "Android 태블릿", text: "앱 안의 Mock 차량을 씁니다. AAOS 전용 테스트는 건너뜁니다" },
   };
   const rows = data.devices.map((d) => {
     const a = ABOUT[d.kind] ?? { title: d.label, text: "" };

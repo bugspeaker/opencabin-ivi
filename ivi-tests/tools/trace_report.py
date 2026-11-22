@@ -109,7 +109,7 @@ def verdict(outcome_lists):
         n = sum(o == outcome for o in flat)
         if n:
             parts.append(f"{label} {n}")
-    return ", ".join(parts)
+    return "<br>".join(parts)   # 좁은 칸에서 아무 데서나 접히지 않게 항목마다 줄을 나눈다
 
 
 def markdown(requirements, tests, outcomes, kinds, conditions=()):

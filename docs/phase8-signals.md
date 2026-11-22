@@ -9,10 +9,10 @@
 | 기능 | VHAL property | area | 앱이 하는 일 | 필요한 권한 |
 |---|---|---|---|---|
 | A/C | `HVAC_AC_ON` | 좌석 5개 | 읽고 씀 (전 좌석) | `CONTROL_CAR_CLIMATE` (priv-app) |
-| AUTO | `HVAC_AUTO_ON` | 좌석 5개 | 읽고 씀 (전 좌석) | 위와 같음 |
-| 풍량 1~7 | `HVAC_FAN_SPEED` | 좌석 5개 | 읽고 씀 (전 좌석) | 위와 같음 |
-| 앞뒤 김서림 제거 | `HVAC_DEFROSTER` | 유리 2개 | 읽고 씀 (누른 유리만) | 위와 같음 |
-| 좌석 열선 0~2단 | `HVAC_SEAT_TEMPERATURE` | 좌석마다 | 읽고 씀 (그 좌석만) | 위와 같음 |
+| AUTO | `HVAC_AUTO_ON` | 좌석 5개 | 읽고 씀 (전 좌석) | 위와 같습니다. |
+| 풍량 1~7 | `HVAC_FAN_SPEED` | 좌석 5개 | 읽고 씀 (전 좌석) | 위와 같습니다. |
+| 앞뒤 김서림 제거 | `HVAC_DEFROSTER` | 유리 2개 | 읽고 씀 (누른 유리만) | 위와 같습니다. |
+| 좌석 열선 0~2단 | `HVAC_SEAT_TEMPERATURE` | 좌석마다 | 읽고 씀 (그 좌석만) | 위와 같습니다. |
 | 도어 잠금 | `DOOR_LOCK` | 문 4개 | 읽고 씀 (모든 문) | `CONTROL_CAR_DOORS` (priv-app), 이번에 추가 |
 | 주행 가능 거리 | `RANGE_REMAINING` (m) | 전역 | 읽기 | `CAR_ENERGY` (dangerous), 이번에 추가 |
 | 배터리 잔량 | `EV_BATTERY_LEVEL`을 `INFO_EV_BATTERY_CAPACITY`로 나눔 (Wh를 %로) | 전역 | 읽기 | `CAR_ENERGY`, `CAR_INFO` |
@@ -74,10 +74,10 @@ A/C, AUTO, 김서림 토글은 글자는 그대로이고 색만 바뀝니다. �
 |---|---|---|
 | sanity | [A/C를 끄면 모든 좌석 area가 꺼진다](test-results.md#test_ac_toggle_reaches_every_seat) | 화면에서 신호로 |
 | sanity | [차량이 A/C를 끄고 켜면 토글이 따라온다](test-results.md#test_ac_signal_is_shown_on_climate_and_bottom_bar) | 신호에서 화면으로 |
-| sanity | [풍량 +, -를 한 번 누르면 신호가 한 단계 바뀐다 (2건)](test-results.md#test_fan_button_changes_signal_by_one) | 화면에서 신호로 |
-| regression | [풍량 1과 7에서 버튼이 꺼지고 신호가 범위를 벗어나지 않는다 (2건)](test-results.md#test_fan_buttons_disabled_at_limits) | 양쪽 |
+| sanity | [풍량 +, -를 한 번 누르면 신호가 한 단계 바뀝니다 (2건)](test-results.md#test_fan_button_changes_signal_by_one) | 화면에서 신호로 |
+| regression | [풍량 1과 7에서 버튼이 꺼지고 신호가 범위를 벗어나지 않습니다 (2건)](test-results.md#test_fan_buttons_disabled_at_limits) | 양쪽 |
 | regression | [AUTO 중에 풍량을 바꾸면 `HVAC_AUTO_ON`이 꺼진다](test-results.md#test_manual_fan_releases_auto) | 화면에서 신호 두 개로 |
-| sanity | [앞뒤 김서림 제거는 누른 유리의 신호만 켠다 (2건)](test-results.md#test_defrost_changes_only_its_window) | 양쪽, area 혼동 방지 |
+| sanity | [앞뒤 김서림 제거는 누른 유리의 신호만 켭니다 (2건)](test-results.md#test_defrost_changes_only_its_window) | 양쪽, area 혼동 방지 |
 | sanity | [열선이 꺼짐, 2단, 1단, 꺼짐 순서로 바뀌고 다른 좌석은 그대로다 (좌석 2건)](test-results.md#test_seat_heat_cycles_levels_on_vehicle) | 화면에서 신호로 |
 | sanity | [열선 신호가 공조 화면, 아래 바, 빠른 제어에 같은 값으로 보인다](test-results.md#test_seat_heat_signal_is_shown_everywhere) | 신호에서 화면 세 곳으로 |
 | regression | [아래 바 열선은 다른 앱을 보고 있어도 신호를 바꾼다](test-results.md#test_bottom_bar_seat_heat_works_from_any_screen) | 화면에서 신호로 |
@@ -85,17 +85,17 @@ A/C, AUTO, 김서림 토글은 글자는 그대로이고 색만 바뀝니다. �
 | sanity | [도어 버튼이 모든 문을 잠그고 푼다](test-results.md#test_door_lock_button_drives_every_door) | 화면에서 신호로 (area 4개) |
 | sanity | [차량에서 문이 열리면 표시가 바뀐다](test-results.md#test_door_lock_signal_is_shown) | 신호에서 화면으로 |
 | sanity | [주행 가능 거리, 배터리, 외기 온도가 단위를 바꿔 주행 정보에 보인다](test-results.md#test_energy_signals_are_shown_on_cluster) | 신호에서 화면으로 |
-| sanity | [31, 30, 29 km에서 경고와 카드가 맞게 뜬다 (3건)](test-results.md#test_low_range_threshold) | 신호에서 화면으로 |
+| sanity | [31, 30, 29 km에서 경고와 카드가 맞게 뜹니다 (3건)](test-results.md#test_low_range_threshold) | 신호에서 화면으로 |
 | sanity | [주행 중 거리가 부족해지면 카드가 뜨고, 누르면 가장 가까운 충전소로 안내한다](test-results.md#test_low_range_card_starts_guidance_to_nearest_charger) | 신호에서 화면, 동작까지 |
 | regression | [거리 부족이 알림 센터에 남는다](test-results.md#test_low_range_is_recorded_in_notifications) | 신호에서 화면으로 |
 | regression | [충전하면 경고와 카드가 사라진다](test-results.md#test_range_recovers_after_charging) | 신호에서 화면으로 |
-| regression | [속도 단위가 mph면 거리도 마일로 보인다 (320 km = 199 mi)](test-results.md#test_range_follows_speed_unit_setting) | 설정과 신호 |
+| regression | [속도 단위가 mph면 거리도 마일로 보입니다 (320 km = 199 mi)](test-results.md#test_range_follows_speed_unit_setting) | 설정과 신호 |
 
 기기 없이 도는 프레임워크 단위 테스트도 7개 더했습니다. area 5개를 shell 한 번으로 보내는지, km와 %를 m와 Wh로 바꾸는 계산, 묶음 재시도와 실패 메시지, Mock의 타입별 extra, 기준 값 초기화가 신호 11개를 모두 넣는지를 봅니다.
 
 ## 4. 진행하면서 잡은 것
 
-### 4-1) 도어 잠금은 권한 목록까지 바꿔야 했음
+### 4-1) 도어 잠금은 권한 목록까지 바꿔야 했습니다
 
 `CONTROL_CAR_DOORS`는 `signature|privileged` 권한입니다. 매니페스트에 적는 것만으로는 부족하고, `/system/etc/permissions`의 priv-app 허용 목록(`privapp-permissions-dev.opencabin.ivi.xml`)에도 있어야 합니다.
 
@@ -118,7 +118,7 @@ A/C, AUTO, 김서림 토글은 글자는 그대로이고 색만 바뀝니다. �
 | 프레임워크 단위 테스트 (`pytest unit`) | 26개에서 33개로 늘었고 모두 통과 |
 | AAOS 에뮬레이터 전체 E2E (108개) | 106개 통과, 1개 건너뜀, 1개 알려진 결함. 게이트 통과, 앱 재실행 0, VHAL 재시도 0 (6분 40초) |
 | 화웨이 태블릿(Mock) 전체 E2E (108개) | 102개 통과, AAOS 전용 6개 건너뜀. 게이트 통과, 앱 재실행 0 (7분 6초) |
-| 두 기기 병렬 (`run_bench.py --reruns 1`) | 두 기기 모두 게이트 통과, flaky 0, 앱 재실행 0, VHAL 재시도 0. 7분 20초로, 차례로 돌린 약 14분 28초보다 2.0배 빠름 |
+| 두 기기 병렬 (`run_bench.py --reruns 1`) | 두 기기 모두 게이트 통과, flaky 0, 앱 재실행 0, VHAL 재시도 0. 7분 20초로, 차례로 돌린 약 14분 28초보다 2.0배 빨랐습니다. |
 
 E2E는 84개에서 108개가 됐습니다. 새로 만든 24개는 모두 화면과 신호를 양쪽에서 보고, 같은 테스트가 AAOS(VHAL)와 태블릿(Mock)에서 모두 통과합니다.
 
@@ -146,10 +146,10 @@ E2E는 84개에서 108개가 됐습니다. 새로 만든 24개는 모두 화면�
 
 | 동작 | 결과 |
 |---|---|
-| FULL을 켬 | 모든 좌석의 `HVAC_MAX_AC_ON`과 A/C가 켜지고, 온도는 16.0°C, 풍량은 7이 되며 AUTO는 꺼집니다. |
-| FULL을 버튼으로 끔 | 켜기 전의 온도, 풍량, A/C, AUTO 값으로 되돌립니다. |
-| FULL 중에 온도나 풍량을 직접 바꾸거나, A/C를 끄거나, AUTO를 켬 | 최대 냉방만 꺼집니다. 값은 되돌리지 않고 방금 바꾼 값을 따릅니다. |
-| 차량 쪽에서 신호가 바뀜 | FULL 토글이 따라 바뀝니다. |
+| FULL을 켰을 때 | 모든 좌석의 `HVAC_MAX_AC_ON`과 A/C가 켜지고, 온도는 16.0°C, 풍량은 7이 되며 AUTO는 꺼집니다. |
+| FULL을 버튼으로 껐을 때 | 켜기 전의 온도, 풍량, A/C, AUTO 값으로 되돌립니다. |
+| FULL 중에 온도나 풍량을 직접 바꾸거나, A/C를 끄거나, AUTO를 켰을 때 | 최대 냉방만 꺼집니다. 값은 되돌리지 않고 방금 바꾼 값을 따릅니다. |
+| 차량 쪽에서 신호가 바뀌었을 때 | FULL 토글이 따라 바뀝니다. |
 
 켜기 전 값은 화면 틀 상태(`CockpitState.beforeMaxAc`)에 둡니다. 앱을 다시 띄우면 사라지기 때문에, 그 뒤에 FULL을 끄면 신호만 꺼지고 값은 그대로입니다.
 

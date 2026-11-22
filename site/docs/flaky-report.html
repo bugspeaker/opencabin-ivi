@@ -50,7 +50,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>값</th>
 </tr>
 </thead><tbody><tr>
-<td>실행한 테스트</td>
+<td class="nw">실행한 테스트</td>
 <td>750건 (건너뜀 제외, 두 기기 × 3회). AAOS 에뮬레이터 384건(알려진 결함 3건 포함), 태블릿 366건</td>
 </tr>
 <tr>
@@ -58,7 +58,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <td>0건</td>
 </tr>
 <tr>
-<td>재시도까지 실패</td>
+<td class="nw">재시도까지 실패</td>
 <td>0건</td>
 </tr>
 <tr>
@@ -71,7 +71,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 </tr>
 <tr>
 <td>첫 시도 (같은 날 11:51)</td>
-<td>1회차 AAOS에서 전원 테스트 실패 1건 (재시작한 에뮬레이터가 멈춤). 원인을 고치고 처음부터 다시 돌렸고, 이 통계에는 넣지 않았습니다</td>
+<td>1회차 AAOS에서 전원 테스트 실패 1건 (재시작한 에뮬레이터가 멈췄습니다). 원인을 고치고 처음부터 다시 돌렸고, 이 통계에는 넣지 않았습니다</td>
 </tr>
 </tbody></table></div>
 <div class="table"><table><thead><tr>
@@ -82,21 +82,21 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>두 기기 병렬, 끝까지</th>
 </tr>
 </thead><tbody><tr>
-<td>1</td>
+<td class="nw">1</td>
 <td><code>20261121-121421-r1</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (10분 5초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 59초)</td>
 <td>11분 0초</td>
 </tr>
 <tr>
-<td>2</td>
+<td class="nw">2</td>
 <td><code>20261121-122521-r2</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (10분 5초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 47초)</td>
 <td>10분 49초</td>
 </tr>
 <tr>
-<td>3</td>
+<td class="nw">3</td>
 <td><code>20261121-123610-r3</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (10분 4초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 49초)</td>
@@ -117,7 +117,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>평균 테스트 시간 합</th>
 </tr>
 </thead><tbody><tr>
-<td>aaos</td>
+<td class="nw">aaos</td>
 <td>3</td>
 <td>3/3 (100%)</td>
 <td>384</td>
@@ -127,7 +127,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <td>587s</td>
 </tr>
 <tr>
-<td>mock</td>
+<td class="nw">mock</td>
 <td>3</td>
 <td>3/3 (100%)</td>
 <td>366</td>
@@ -137,7 +137,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <td>557s</td>
 </tr>
 <tr>
-<td>합계</td>
+<td class="nw">합계</td>
 <td>6</td>
 <td>6/6</td>
 <td>750</td>
@@ -161,32 +161,32 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>p95</th>
 </tr>
 </thead><tbody><tr>
-<td>aaos</td>
-<td><code>tests/test_power.py::test_power_cycle_brings_back_app_and_cabin_defaults</code></td>
+<td class="nw">aaos</td>
+<td><code>tests/<wbr>test_<wbr>power.<wbr>py::test_<wbr>power_<wbr>cycle_<wbr>brings_<wbr>back_<wbr>app_<wbr>and_<wbr>cabin_<wbr>defaults</code></td>
 <td>35.3s</td>
 <td>35.6s</td>
 </tr>
 <tr>
-<td>mock</td>
-<td><code>tests/test_driving.py::test_video_resumes_where_it_stopped</code></td>
+<td class="nw">mock</td>
+<td><code>tests/<wbr>test_<wbr>driving.<wbr>py::test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></td>
 <td>13.1s</td>
 <td>13.2s</td>
 </tr>
 <tr>
-<td>aaos</td>
-<td><code>tests/test_driving.py::test_video_resumes_where_it_stopped</code></td>
+<td class="nw">aaos</td>
+<td><code>tests/<wbr>test_<wbr>driving.<wbr>py::test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></td>
 <td>12.5s</td>
 <td>12.6s</td>
 </tr>
 <tr>
-<td>mock</td>
-<td><code>tests/test_assistant.py::test_zone_applies_command_to_speaking_seat</code></td>
+<td class="nw">mock</td>
+<td><code>tests/<wbr>test_<wbr>assistant.<wbr>py::test_<wbr>zone_<wbr>applies_<wbr>command_<wbr>to_<wbr>speaking_<wbr>seat</code></td>
 <td>11.2s</td>
 <td>11.8s</td>
 </tr>
 <tr>
-<td>aaos</td>
-<td><code>tests/test_assistant.py::test_zone_applies_command_to_speaking_seat</code></td>
+<td class="nw">aaos</td>
+<td><code>tests/<wbr>test_<wbr>assistant.<wbr>py::test_<wbr>zone_<wbr>applies_<wbr>command_<wbr>to_<wbr>speaking_<wbr>seat</code></td>
 <td>11.3s</td>
 <td>11.6s</td>
 </tr>
@@ -200,7 +200,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>값</th>
 </tr>
 </thead><tbody><tr>
-<td>실행한 테스트</td>
+<td class="nw">실행한 테스트</td>
 <td>1,250건 (건너뜀 제외, 두 기기 × 5회). AAOS 에뮬레이터 640건(알려진 결함 5건 포함), 태블릿 610건</td>
 </tr>
 <tr>
@@ -208,15 +208,15 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <td>0건</td>
 </tr>
 <tr>
-<td>재시도까지 실패</td>
+<td class="nw">재시도까지 실패</td>
 <td>0건</td>
 </tr>
 <tr>
-<td>재시도 횟수</td>
+<td class="nw">재시도 횟수</td>
 <td>0번</td>
 </tr>
 <tr>
-<td>전에 한 번 흔들렸던 <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_video_blocked_screen_follows_parking</code></a></td>
+<td>전에 한 번 흔들렸던 <a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a></td>
 <td>10번 실행해 10번 한 번에 통과</td>
 </tr>
 <tr>
@@ -238,35 +238,35 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>두 기기 병렬, 끝까지</th>
 </tr>
 </thead><tbody><tr>
-<td>1</td>
+<td class="nw">1</td>
 <td><code>20261118-195509-r1</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 58초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 21초)</td>
 <td>10분 21초</td>
 </tr>
 <tr>
-<td>2</td>
+<td class="nw">2</td>
 <td><code>20261118-200531-r2</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 42초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 12초)</td>
 <td>10분 12초</td>
 </tr>
 <tr>
-<td>3</td>
+<td class="nw">3</td>
 <td><code>20261118-201545-r3</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 28초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 14초)</td>
 <td>10분 15초</td>
 </tr>
 <tr>
-<td>4</td>
+<td class="nw">4</td>
 <td><code>20261118-202600-r4</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 38초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 16초)</td>
 <td>10분 17초</td>
 </tr>
 <tr>
-<td>5</td>
+<td class="nw">5</td>
 <td><code>20261118-203617-r5</code></td>
 <td>통과 127, 건너뜀 1, 알려진 결함 1, 재시도 0 (9분 45초)</td>
 <td>통과 122, 건너뜀 7, 재시도 0 (10분 15초)</td>
@@ -294,7 +294,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>평균 테스트 시간 합</th>
 </tr>
 </thead><tbody><tr>
-<td>aaos</td>
+<td class="nw">aaos</td>
 <td>5</td>
 <td>5/5 (100%)</td>
 <td>640</td>
@@ -304,7 +304,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <td>560s</td>
 </tr>
 <tr>
-<td>mock</td>
+<td class="nw">mock</td>
 <td>5</td>
 <td>5/5 (100%)</td>
 <td>610</td>
@@ -314,7 +314,7 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <td>522s</td>
 </tr>
 <tr>
-<td>합계</td>
+<td class="nw">합계</td>
 <td>10</td>
 <td>10/10</td>
 <td>1,250</td>
@@ -338,32 +338,32 @@ un_bench.py --repeat 3 --reruns 1 --shots</code></pre>
 <th>p95</th>
 </tr>
 </thead><tbody><tr>
-<td>aaos</td>
-<td><code>tests/test_power.py::test_power_cycle_brings_back_app_and_cabin_defaults</code></td>
+<td class="nw">aaos</td>
+<td><code>tests/<wbr>test_<wbr>power.<wbr>py::test_<wbr>power_<wbr>cycle_<wbr>brings_<wbr>back_<wbr>app_<wbr>and_<wbr>cabin_<wbr>defaults</code></td>
 <td>38.4s</td>
 <td>42.3s</td>
 </tr>
 <tr>
-<td>mock</td>
-<td><code>tests/test_driving.py::test_video_resumes_where_it_stopped</code></td>
+<td class="nw">mock</td>
+<td><code>tests/<wbr>test_<wbr>driving.<wbr>py::test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></td>
 <td>12.8s</td>
 <td>13.2s</td>
 </tr>
 <tr>
-<td>aaos</td>
-<td><code>tests/test_driving.py::test_video_resumes_where_it_stopped</code></td>
+<td class="nw">aaos</td>
+<td><code>tests/<wbr>test_<wbr>driving.<wbr>py::test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></td>
 <td>12.7s</td>
 <td>13.0s</td>
 </tr>
 <tr>
-<td>mock</td>
-<td><code>tests/test_settings.py::test_settings_survive_app_restart</code></td>
+<td class="nw">mock</td>
+<td><code>tests/<wbr>test_<wbr>settings.<wbr>py::test_<wbr>settings_<wbr>survive_<wbr>app_<wbr>restart</code></td>
 <td>10.7s</td>
 <td>10.9s</td>
 </tr>
 <tr>
-<td>aaos</td>
-<td><code>tests/test_settings.py::test_settings_survive_app_restart</code></td>
+<td class="nw">aaos</td>
+<td><code>tests/<wbr>test_<wbr>settings.<wbr>py::test_<wbr>settings_<wbr>survive_<wbr>app_<wbr>restart</code></td>
 <td>10.1s</td>
 <td>10.5s</td>
 </tr>

@@ -49,7 +49,7 @@
 </tr>
 </thead><tbody><tr>
 <td>Automotive 에뮬레이터 부팅</td>
-<td>약 30초 만에 켜짐</td>
+<td>약 30초 만에 켜졌습니다.</td>
 <td>API 34 <code>android-automotive</code> x86_64, 화면 1024x768</td>
 </tr>
 <tr>
@@ -59,12 +59,12 @@
 </tr>
 <tr>
 <td>읽기 전용 센서 값 넣기 (속도, 기어)</td>
-<td><code>dumpsys &lt;VHAL&gt; --set</code>으로 됨</td>
-<td><code>cmd car_service inject-vhal-event</code>는 값이 저장되지 않습니다. 아래에 자세히 적었습니다.</td>
+<td><code>dumpsys &lt;VHAL&gt; --set</code>으로 됩니다.</td>
+<td><code>cmd car_<wbr>service inject-vhal-event</code>는 값이 저장되지 않습니다. 아래에 자세히 적었습니다.</td>
 </tr>
 <tr>
 <td>쓰기 가능한 값 (HVAC 온도)</td>
-<td><code>cmd car_service set-property-value</code>로 됨</td>
+<td><code>cmd car_<wbr>service set-property-value</code>로 됩니다.</td>
 <td>앱의 CarPropertyManager와 같은 경로입니다.</td>
 </tr>
 <tr>
@@ -88,7 +88,7 @@
 <td>AAOS에 맞는 설정이 세 가지 필요합니다. 아래에 적었습니다.</td>
 </tr>
 <tr>
-<td>안정성</td>
+<td class="nw">안정성</td>
 <td>됨</td>
 <td><code>pytest</code>를 세 번 연속 돌려 모두 5개 통과, 1개 알려진 결함이었고 한 번에 9초쯤 걸렸습니다.</td>
 </tr>
@@ -100,17 +100,17 @@
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td><code>cmd car_service set-property-value &lt;prop&gt; &lt;area&gt; &lt;값&gt;</code></td>
+<td><code>cmd car_<wbr>service set-property-value &lt;prop&gt; &lt;area&gt; &lt;값&gt;</code></td>
 <td>CarService를 거쳐 VHAL로</td>
 <td>쓰기 권한이 있는 property만 됩니다. HVAC는 되고, 속도는 읽기 전용이라 안 됩니다.</td>
 </tr>
 <tr>
-<td><code>cmd car_service inject-vhal-event &lt;prop&gt; &lt;area&gt; &lt;값&gt;</code></td>
-<td>이벤트만 보냄</td>
+<td><code>cmd car_<wbr>service inject-vhal-event &lt;prop&gt; &lt;area&gt; &lt;값&gt;</code></td>
+<td>이벤트만 보냅니다.</td>
 <td>저장된 값이 그대로라 <code>get-property-value</code>로 확인할 수 없습니다. 테스트 판정에는 쓰지 않습니다.</td>
 </tr>
 <tr>
-<td><code>dumpsys android.hardware.automotive.vehicle.IVehicle/default --set &lt;prop&gt; -f/-i &lt;값&gt; -a &lt;area&gt;</code></td>
+<td><code>dumpsys android.<wbr>hardware.<wbr>automotive.<wbr>vehicle.<wbr>IVehicle/<wbr>default --set &lt;prop&gt; -f/<wbr>-i &lt;값&gt; -a &lt;area&gt;</code></td>
 <td>VHAL에 바로 (root)</td>
 <td>읽기 전용 센서 값도 바뀌고 변경 이벤트가 CarService로 나가서, 주행 상태까지 실제로 바뀝니다.</td>
 </tr>
@@ -124,9 +124,9 @@
 <th>해결</th>
 </tr>
 </thead><tbody><tr>
-<td><code>Neither ANDROID_HOME nor ANDROID_SDK_ROOT environment variable was exported</code></td>
+<td><code>Neither ANDROID_<wbr>HOME nor ANDROID_<wbr>SDK_<wbr>ROOT environment variable was exported</code></td>
 <td>Appium 서버에 환경 변수가 없었습니다.</td>
-<td><code>ANDROID_HOME=C:\android</code>를 주고 서버를 켰습니다.</td>
+<td><code>ANDROID_<wbr>HOME=C:\android</code>를 주고 서버를 켰습니다.</td>
 </tr>
 <tr>
 <td><code>Appium Settings app is not running after 30000ms</code></td>
@@ -134,15 +134,15 @@
 <td><code>appium:userProfile</code>에 <code>am get-current-user</code> 값을 넣고 <code>appium:skipDeviceInitialization: true</code>를 줬습니다.</td>
 </tr>
 <tr>
-<td>하단 HVAC 바가 화면 소스에 안 보임</td>
+<td>하단 HVAC 바가 화면 소스에 보이지 않았습니다.</td>
 <td>SystemUI 바는 앱과 다른 창입니다.</td>
-<td>세션을 연 뒤 <code>update_settings({&quot;enableMultiWindows&quot;: True})</code>를 불렀습니다.</td>
+<td>세션을 연 뒤 <code>update_<wbr>settings({&quot;enableMultiWindows&quot;: True})</code>를 불렀습니다.</td>
 </tr>
 </tbody></table></div>
-<h2 id="찾은-결함-운전석-온도--버튼이-홈-버튼에-가려짐"><a class="anchor" href="#찾은-결함-운전석-온도--버튼이-홈-버튼에-가려짐" aria-hidden="true">#</a>찾은 결함: 운전석 온도 ▲ 버튼이 홈 버튼에 가려짐</h2>
-<p>1024x768 화면(<code>automotive_1024p_landscape</code>)의 하단 시스템 바에서 운전석 온도 ▲를 눌러도 온도가 바뀌지 않았습니다. Appium으로 눌러도, <code>adb shell input tap</code>으로 눌러도 같았습니다.</p>
+<h2 id="찾은-결함-운전석-온도--버튼이-홈-버튼에-가려졌습니다"><a class="anchor" href="#찾은-결함-운전석-온도--버튼이-홈-버튼에-가려졌습니다" aria-hidden="true">#</a>찾은 결함: 운전석 온도 ▲ 버튼이 홈 버튼에 가려졌습니다</h2>
+<p>1024x768 화면(<code>automotive_<wbr>1024p_<wbr>landscape</code>)의 하단 시스템 바에서 운전석 온도 ▲를 눌러도 온도가 바뀌지 않았습니다. Appium으로 눌러도, <code>adb shell input tap</code>으로 눌러도 같았습니다.</p>
 <p>원인은 버튼 영역이 겹친 것이었습니다. ▲는 <code>[192,682][268,758]</code>, 홈 버튼은 <code>[188,682][264,758]</code>이라 72x76px가 겹치고, 홈 버튼이 위에 있어서 탭을 가져갑니다. 운전석 ▼와 조수석 ▲, ▼는 정상이었습니다.</p>
-<p><a class="test-link" href="test-results.html#test_driver_temp_up_is_not_covered_by_home" title="테스트 결과와 화면 보기"><code>test_driver_temp_up_is_not_covered_by_home</code></a>을 <code>xfail(strict=True)</code>로 두었습니다. 나중에 결함이 고쳐지면 이 테스트가 통과하게 되고, strict 설정 때문에 그 결과가 실패로 바뀌어서 바로 알 수 있습니다.</p>
+<p><a class="test-link" href="test-results.html#test_driver_temp_up_is_not_covered_by_home" title="테스트 결과와 화면 보기"><code>test_<wbr>driver_<wbr>temp_<wbr>up_<wbr>is_<wbr>not_<wbr>covered_<wbr>by_<wbr>home</code></a>을 <code>xfail(strict=True)</code>로 두었습니다. 나중에 결함이 고쳐지면 이 테스트가 통과하게 되고, strict 설정 때문에 그 결과가 실패로 바뀌어서 바로 알 수 있습니다.</p>
 <p>이 결함은 GitHub 이슈 <a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a>로 열어 두었습니다.</p>
 <h2 id="환경에서-막혔던-것"><a class="anchor" href="#환경에서-막혔던-것" aria-hidden="true">#</a>환경에서 막혔던 것</h2>
 <div class="table"><table><thead><tr>
@@ -154,12 +154,12 @@
 <td>에뮬레이터를 37.2.13으로 올렸습니다.</td>
 </tr>
 <tr>
-<td>사용자 폴더 경로에 한글이 있었습니다 (<code>C:\Users\조예훈\.android\avd</code>).</td>
-<td>AVD를 <code>C:\android\avd</code>로 옮기고 <code>ANDROID_AVD_HOME</code>을 지정했습니다.</td>
+<td>사용자 폴더 경로에 한글이 있었습니다 (<code>C:\Users\조예훈\.<wbr>android\avd</code>).</td>
+<td>AVD를 <code>C:\android\avd</code>로 옮기고 <code>ANDROID_<wbr>AVD_<wbr>HOME</code>을 지정했습니다.</td>
 </tr>
 <tr>
 <td><code>avdmanager</code>가 응답하지 않았습니다. cmdline-tools가 SDK XML v4를 읽지 못했습니다.</td>
-<td>AVD의 <code>config.ini</code>를 직접 썼습니다 (<code>hw.device.name=automotive_1024p_landscape</code>).</td>
+<td>AVD의 <code>config.ini</code>를 직접 썼습니다 (<code>hw.<wbr>device.<wbr>name=automotive_<wbr>1024p_<wbr>landscape</code>).</td>
 </tr>
 </tbody></table></div>
 <h2 id="다음-단계로-넘긴-것"><a class="anchor" href="#다음-단계로-넘긴-것" aria-hidden="true">#</a>다음 단계로 넘긴 것</h2>
@@ -167,7 +167,7 @@
 <p>화웨이 태블릿(DBY-W09, Android 12 기반)에는 CarService가 없습니다. 그래서 앱 안에 Mock 차량 서비스를 두고 <code>adb shell am broadcast</code>로 제어하기로 했습니다. 테스트 코드가 기기를 가리지 않도록 <code>vehicle.py</code>의 <code>Vehicle</code>과 같은 인터페이스로 맞춥니다.</p>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#결론">결론</a><a class="l2" href="#차량-신호를-넣는-명령-세-가지">차량 신호를 넣는 명령 세 가지</a><a class="l2" href="#appium을-aaos에-붙일-때-필요한-것">Appium을 AAOS에 붙일 때 필요한 것</a><a class="l2" href="#찾은-결함-운전석-온도--버튼이-홈-버튼에-가려짐">찾은 결함: 운전석 온도 ▲ 버튼이 홈 버튼에 가려짐</a><a class="l2" href="#환경에서-막혔던-것">환경에서 막혔던 것</a><a class="l2" href="#다음-단계로-넘긴-것">다음 단계로 넘긴 것</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#결론">결론</a><a class="l2" href="#차량-신호를-넣는-명령-세-가지">차량 신호를 넣는 명령 세 가지</a><a class="l2" href="#appium을-aaos에-붙일-때-필요한-것">Appium을 AAOS에 붙일 때 필요한 것</a><a class="l2" href="#찾은-결함-운전석-온도--버튼이-홈-버튼에-가려졌습니다">찾은 결함: 운전석 온도 ▲ 버튼이 홈 버튼에 가려졌습니다</a><a class="l2" href="#환경에서-막혔던-것">환경에서 막혔던 것</a><a class="l2" href="#다음-단계로-넘긴-것">다음 단계로 넘긴 것</a></nav>
 </div>
 
 <script src="../glossary.js" defer></script>

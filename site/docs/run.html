@@ -46,8 +46,8 @@
 <li>Automotive 에뮬레이터를 켭니다. AVD도 영문 경로에 두고, priv-app으로 앱을 넣으려면 <code>-writable-system</code>으로 켭니다.<pre class="code"><code data-lang="powershell">$env:ANDROID_AVD_HOME = &quot;C:\android\avd&quot;; $env:ANDROID_SDK_ROOT = &quot;C:\android&quot;
 C:\android\emulator\emulator.exe -avd OpenCabin_AAOS_34 -writable-system -no-snapshot -no-boot-anim</code></pre>
 앱 빌드와 priv-app 설치 방법은 <a href="phase2-app.html">phase2-app.md</a>에 있습니다.
-에뮬레이터 공조를 태블릿과 같은 22.0°C, 섭씨 표시로 맞추려면 <code>python ivi-tests/tools/emulator_defaults.py --persist</code>를 한 번 돌립니다. 에뮬레이터가 재부팅됩니다.
-영상 화면에 실제 주행 영상을 띄우려면 블랙박스 mp4를 <code>.drive/</code>에 넣고 <code>python ivi-tests/tools/push_drive_videos.py</code>를 돌립니다. 영상이 없으면 가짜 재생 화면이 나옵니다.</li>
+에뮬레이터 공조를 태블릿과 같은 22.0°C, 섭씨 표시로 맞추려면 <code>python ivi-tests/<wbr>tools/<wbr>emulator_<wbr>defaults.<wbr>py --persist</code>를 한 번 돌립니다. 에뮬레이터가 재부팅됩니다.
+영상 화면에 실제 주행 영상을 띄우려면 블랙박스 mp4를 <code>.drive/</code>에 넣고 <code>python ivi-tests/<wbr>tools/<wbr>push_<wbr>drive_<wbr>videos.<wbr>py</code>를 돌립니다. 영상이 없으면 가짜 재생 화면이 나옵니다.</li>
 <li>Appium 서버를 띄웁니다.<pre class="code"><code data-lang="powershell">$env:ANDROID_HOME = &quot;C:\android&quot;; appium --address 127.0.0.1 --port 4723</code></pre>
 </li>
 </ol>
@@ -63,7 +63,7 @@ python -m venv .venv; .venv\Scripts\python -m pip install -r requirements.txt
 .venv\Scripts\python tools\flaky_report.py --last 5
 .venv\Scripts\python -m pytest unit</code></pre>
 <p>게이트 단계(smoke, sanity, regression, Release)의 기준은 <a href="portfolio.html#4-1-게이트-단계와-기준">포트폴리오 4-1</a>에 있습니다.</p>
-<p>앱 단위 테스트는 <code>ivi-app</code>에서 <code>.\gradlew testDebugUnitTest</code>로 돌립니다. 사용자 폴더가 한글 경로이면 Gradle 테스트 실행기가 실패하므로, Gradle 캐시(<code>GRADLE_USER_HOME</code>)와 임시 폴더를 모두 영문 경로로 바꿔서 돌립니다. 임시 폴더만 바꾸면 <code>Gradle Test Executor 1</code>이 종료 코드 1로 끝납니다(2026-11-20 확인). 임시 폴더는 없으면 먼저 만듭니다.</p>
+<p>앱 단위 테스트는 <code>ivi-app</code>에서 <code>.<wbr>\gradlew testDebugUnitTest</code>로 돌립니다. 사용자 폴더가 한글 경로이면 Gradle 테스트 실행기가 실패하므로, Gradle 캐시(<code>GRADLE_<wbr>USER_<wbr>HOME</code>)와 임시 폴더를 모두 영문 경로로 바꿔서 돌립니다. 임시 폴더만 바꾸면 <code>Gradle Test Executor 1</code>이 종료 코드 1로 끝납니다(2026-11-20 확인). 임시 폴더는 없으면 먼저 만듭니다.</p>
 <pre class="code"><code data-lang="powershell">New-Item -ItemType Directory -Force C:\dev\.tmp | Out-Null
 $env:GRADLE_USER_HOME = &quot;C:\dev\.gradle&quot;; $env:TMP = &quot;C:\dev\.tmp&quot;; $env:TEMP = $env:TMP
 .\gradlew testDebugUnitTest</code></pre>
@@ -76,7 +76,7 @@ $env:GRADLE_USER_HOME = &quot;C:\dev\.gradle&quot;; $env:TMP = &quot;C:\dev\.tmp
 .venv\Scripts\python tools\publish_results.py --repeat-runs &quot;reports/runs/&lt;날짜&gt;-*-r*.json&quot;
 .venv\Scripts\python tools\trace_report.py
 cd ..\site; npm install; npm run build-docs</code></pre>
-<p>영상 화면에 다른 차 번호판이 읽히면 <code>publish_results.py --blur</code>로 그 부분을 흐리게 합니다.</p>
+<p>영상 화면에 다른 차 번호판이 읽히면 <code>publish_<wbr>results.<wbr>py --blur</code>로 그 부분을 흐리게 합니다.</p>
 <h2 id="환경-변수"><a class="anchor" href="#환경-변수" aria-hidden="true">#</a>환경 변수</h2>
 <div class="table"><table><thead><tr>
 <th>환경 변수</th>
@@ -84,18 +84,18 @@ cd ..\site; npm install; npm run build-docs</code></pre>
 <th>설명</th>
 </tr>
 </thead><tbody><tr>
-<td><code>IVI_SERIAL</code></td>
+<td class="nw"><code>IVI_SERIAL</code></td>
 <td>연결된 기기 한 대</td>
 <td>대상 기기. <code>--serial</code>과 같습니다.</td>
 </tr>
 <tr>
-<td><code>IVI_TAP</code></td>
+<td class="nw"><code>IVI_TAP</code></td>
 <td>화웨이와 아너는 <code>adb</code>, 그 밖에는 <code>appium</code></td>
 <td>화면을 누르는 방법</td>
 </tr>
 <tr>
-<td><code>APPIUM_URL</code></td>
-<td><code>http://127.0.0.1:4723</code></td>
+<td class="nw"><code>APPIUM_URL</code></td>
+<td><code>http:/<wbr>/<wbr>127.<wbr>0.<wbr>0.<wbr>1:4723</code></td>
 <td>Appium 서버 주소</td>
 </tr>
 </tbody></table></div>

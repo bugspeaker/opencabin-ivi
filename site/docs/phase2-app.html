@@ -42,53 +42,53 @@
 <h1 id="2단계-ivi-앱-opencabin"><a class="anchor" href="#2단계-ivi-앱-opencabin" aria-hidden="true">#</a>2단계 IVI 앱 (OpenCabin)</h1>
 <p>2026-11-13에 정리했습니다. 자동화 대상이 될 가상 IVI 앱입니다. 화면을 꾸미는 것보다 차량 신호와 맞닿는 부분, 그리고 테스트하기 쉬운 구조에 신경을 썼습니다.</p>
 <h2 id="구조"><a class="anchor" href="#구조" aria-hidden="true">#</a>구조</h2>
-<pre class="code"><code>ivi-app/app/src/main/java/dev/opencabin/ivi/
-  vehicle/VehicleDataSource.kt     화면이 보는 상태(VehicleState)와 차량 쪽 인터페이스
-  vehicle/CarVehicleDataSource.kt  AAOS용. CarPropertyManager로 속도, 기어, 공조를, CarUxRestrictionsManager로 주행 중 제한을 읽음
-  vehicle/MockVehicleDataSource.kt 일반 Android용. adb broadcast로 값을 넣고 읽음 (debug 빌드만)
-  IviApp.kt                        FEATURE_AUTOMOTIVE를 보고 둘 중 하나를 고름
-  MainActivity.kt                  홈, 공조, 미디어. 주행 중에도 쓰는 화면(distractionOptimized)
-  VideoActivity.kt                 영상. 주행 중에 막혀야 하는 화면. 기기에 올린 주행 영상을 Media3로 재생
-  ui/IviScreens.kt                 Compose 화면과 테스트 태그
-ivi-app/privileged/                priv-app 설치 스크립트와 권한 허용 목록</code></pre>
+<pre class="code"><code>ivi-app/<wbr>app/<wbr>src/<wbr>main/<wbr>java/<wbr>dev/<wbr>opencabin/<wbr>ivi/
+  vehicle/<wbr>VehicleDataSource.<wbr>kt     화면이 보는 상태(VehicleState)와 차량 쪽 인터페이스
+  vehicle/<wbr>CarVehicleDataSource.<wbr>kt  AAOS용. CarPropertyManager로 속도, 기어, 공조를, CarUxRestrictionsManager로 주행 중 제한을 읽음
+  vehicle/<wbr>MockVehicleDataSource.<wbr>kt 일반 Android용. adb broadcast로 값을 넣고 읽음 (debug 빌드만)
+  IviApp.<wbr>kt                        FEATURE_<wbr>AUTOMOTIVE를 보고 둘 중 하나를 고름
+  MainActivity.<wbr>kt                  홈, 공조, 미디어. 주행 중에도 쓰는 화면(distractionOptimized)
+  VideoActivity.<wbr>kt                 영상. 주행 중에 막혀야 하는 화면. 기기에 올린 주행 영상을 Media3로 재생
+  ui/<wbr>IviScreens.<wbr>kt                 Compose 화면과 테스트 태그
+ivi-app/<wbr>privileged/                priv-app 설치 스크립트와 권한 허용 목록</code></pre>
 <h2 id="화면과-테스트-태그"><a class="anchor" href="#화면과-테스트-태그" aria-hidden="true">#</a>화면과 테스트 태그</h2>
-<p>Compose의 <code>testTag</code>를 <code>testTagsAsResourceId = true</code>로 내보냅니다. 이렇게 하면 Appium에서 resource-id가 패키지 접두사 없이 태그 이름 그대로 보입니다(<code>nav_climate</code>). <code>By.ID</code>는 <code>dev.opencabin.ivi:id/</code>를 붙여서 찾기 때문에 실패하고, 그래서 <code>-android uiautomator</code>의 <code>new UiSelector().resourceId(&quot;nav_climate&quot;)</code>로 찾습니다.</p>
+<p>Compose의 <code>testTag</code>를 <code>testTagsAsResourceId = true</code>로 내보냅니다. 이렇게 하면 Appium에서 resource-id가 패키지 접두사 없이 태그 이름 그대로 보입니다(<code>nav_climate</code>). <code>By.ID</code>는 <code>dev.<wbr>opencabin.<wbr>ivi:id/</code>를 붙여서 찾기 때문에 실패하고, 그래서 <code>-android uiautomator</code>의 <code>new UiSelector().<wbr>resourceId(&quot;nav_<wbr>climate&quot;)</code>로 찾습니다.</p>
 <div class="table"><table><thead><tr>
 <th>화면</th>
 <th>태그</th>
 </tr>
 </thead><tbody><tr>
-<td>공통</td>
-<td><code>nav_home</code> <code>nav_climate</code> <code>nav_media</code> (5단계부터 아래 앱 바), <code>source_badge</code>(AAOS 또는 Mock), <code>restriction_banner</code>, <code>vehicle_disconnected</code>, <code>vehicle_error</code></td>
+<td class="nw">공통</td>
+<td><code>nav_home</code> <code>nav_climate</code> <code>nav_media</code> (5단계부터 아래 앱 바), <code>source_badge</code>(AAOS 또는 Mock), <code>restriction_<wbr>banner</code>, <code>vehicle_<wbr>disconnected</code>, <code>vehicle_error</code></td>
 </tr>
 <tr>
 <td>주행 정보 (항상 보임)</td>
 <td><code>speed_value</code>, <code>gear_value</code> (5단계부터는 현재 기어 칸)</td>
 </tr>
 <tr>
-<td>홈</td>
-<td><code>home_media_title</code>, <code>home_driver_temp</code>, <code>home_passenger_temp</code></td>
+<td class="nw">홈</td>
+<td><code>home_<wbr>media_<wbr>title</code>, <code>home_<wbr>driver_<wbr>temp</code>, <code>home_<wbr>passenger_<wbr>temp</code></td>
 </tr>
 <tr>
-<td>공조</td>
-<td><code>driver_temp_value</code> <code>driver_temp_up</code> <code>driver_temp_down</code>, 조수석은 <code>passenger_</code>로 시작하는 같은 이름. 권한이 없으면 <code>hvac_unavailable</code></td>
+<td class="nw">공조</td>
+<td><code>driver_<wbr>temp_<wbr>value</code> <code>driver_temp_up</code> <code>driver_<wbr>temp_<wbr>down</code>, 조수석은 <code>passenger_</code>로 시작하는 같은 이름. 권한이 없으면 <code>hvac_<wbr>unavailable</code></td>
 </tr>
 <tr>
-<td>미디어</td>
+<td class="nw">미디어</td>
 <td>곡 줄 <code>track_0</code>~`track_4<code>, 곡 제목 </code>track_N_title<code>(5단계에 추가), </code>now_playing_title<code>, </code>playback_state<code>, </code>play_pause<code>, </code>open_video<code>, 주행 중에는 </code>video_restricted_notice`</td>
 </tr>
 <tr>
-<td>영상</td>
+<td class="nw">영상</td>
 <td><code>video_player</code> <code>video_elapsed</code> <code>video_close</code>, 앱이 막으면 <code>video_blocked</code>. 실제 영상을 틀면 <code>video_surface</code> <code>video_index</code>(<code>1 / 2</code>) <code>video_next</code>도 있습니다.</td>
 </tr>
 </tbody></table></div>
 <h2 id="주행-영상-블랙박스-2026-11-16-추가"><a class="anchor" href="#주행-영상-블랙박스-2026-11-16-추가" aria-hidden="true">#</a>주행 영상 (블랙박스, 2026-11-16 추가)</h2>
 <p>처음 만든 영상 화면은 그라데이션 위에 재생 시간만 흐르는 가짜였습니다. 지금은 앱 전용 폴더 <code>files/drive/</code>에 있는 mp4를 Media3(ExoPlayer)로 재생하고, 파일이 없을 때만 예전 가짜 화면을 보여 줍니다. 두 경우 모두 테스트 태그가 같아서, 기존 테스트는 영상이 있든 없든 그대로 돕니다.</p>
-<p>영상은 직접 찍은 블랙박스 영상입니다. 번호판과 위치가 담긴 개인 자료라 저장소에는 넣지 않고(<code>.drive/</code>는 gitignore), <code>ivi-tests/tools/push_drive_videos.py --src &lt;원본 폴더&gt;</code>로 기기에만 올립니다.</p>
+<p>영상은 직접 찍은 블랙박스 영상입니다. 번호판과 위치가 담긴 개인 자료라 저장소에는 넣지 않고(<code>.drive/</code>는 gitignore), <code>ivi-tests/<wbr>tools/<wbr>push_<wbr>drive_<wbr>videos.<wbr>py --src &lt;원본 폴더&gt;</code>로 기기에만 올립니다.</p>
 <p>올리기 전에 ffmpeg로 다듬습니다. 블랙박스는 1920x1080 화면 아래쪽, 보닛 위에 날짜와 제품명, GPS 좌표, 속도를 겹쳐 녹화합니다. 아래 81px와 오른쪽 거치대 쪽 144px를 잘라 16:9(1776x999)로 맞추고 1280x720으로 줄였습니다. 잘린 끝이 보닛 위라 화면이 어색하지 않습니다. 원본은 H.265인데 에뮬레이터가 HEVC를 소프트웨어로 풀면서 끊겨서 H.264로 바꿨고, 실내 대화가 담긴 음성과 메타데이터는 지웠습니다.</p>
 <p>화면에서는 남는 자리 안에 16:9 영역을 가장 크게 잡고 모서리를 둥글게 잘랐습니다. <code>PlayerView</code>를 <code>texture_view</code>로 써야 Compose의 clip이 적용됩니다.</p>
-<p>AAOS에서는 저장 위치가 까다로웠습니다. 현재 사용자가 10이라 <code>adb push /sdcard/...</code>로 올리면 사용자 0의 폴더에 들어가서 앱이 보지 못합니다. 셸에는 <code>/storage/emulated/10</code>에 쓸 권한도 없습니다. 그래서 root로 <code>/data/media/10/Android/data/&lt;pkg&gt;/files/drive/</code>에 넣고, 앱이 만든 폴더의 소유자(<code>u10_aNNN:ext_data_rw</code>)로 <code>chown</code>한 뒤 <code>restorecon</code>합니다.</p>
-<p>주행으로 바뀌어 화면이 막히면 영상을 멈추고, 차를 세우면 멈춘 자리부터 이어서 재생합니다. AAOS는 OS가 화면을 막으면서 <code>onStop</code>과 <code>onStart</code>가 불리고, 태블릿은 같은 화면 안에서 <code>restricted</code> 값이 바뀝니다. <a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_video_resumes_where_it_stopped</code></a>가 처음부터 다시 재생되지 않는지, 막혀 있는 동안 재생 시간이 흐르지 않는지를 함께 확인합니다.</p>
+<p>AAOS에서는 저장 위치가 까다로웠습니다. 현재 사용자가 10이라 <code>adb push /<wbr>sdcard/<wbr>.<wbr>.<wbr>.</code>로 올리면 사용자 0의 폴더에 들어가서 앱이 보지 못합니다. 셸에는 <code>/<wbr>storage/<wbr>emulated/<wbr>10</code>에 쓸 권한도 없습니다. 그래서 root로 <code>/<wbr>data/<wbr>media/<wbr>10/<wbr>Android/<wbr>data/<wbr>&lt;pkg&gt;/<wbr>files/<wbr>drive/</code>에 넣고, 앱이 만든 폴더의 소유자(<code>u10_<wbr>aNNN:ext_<wbr>data_<wbr>rw</code>)로 <code>chown</code>한 뒤 <code>restorecon</code>합니다.</p>
+<p>주행으로 바뀌어 화면이 막히면 영상을 멈추고, 차를 세우면 멈춘 자리부터 이어서 재생합니다. AAOS는 OS가 화면을 막으면서 <code>onStop</code>과 <code>onStart</code>가 불리고, 태블릿은 같은 화면 안에서 <code>restricted</code> 값이 바뀝니다. <a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></a>가 처음부터 다시 재생되지 않는지, 막혀 있는 동안 재생 시간이 흐르지 않는지를 함께 확인합니다.</p>
 <h2 id="aaos-에뮬레이터에서-확인한-것-2026-11-13"><a class="anchor" href="#aaos-에뮬레이터에서-확인한-것-2026-11-13" aria-hidden="true">#</a>AAOS 에뮬레이터에서 확인한 것 (2026-11-13)</h2>
 <div class="table"><table><thead><tr>
 <th>확인한 것</th>
@@ -100,36 +100,36 @@ ivi-app/privileged/                priv-app 설치 스크립트와 권한 허용
 </tr>
 <tr>
 <td>공조 신호가 화면에 보이는지</td>
-<td><code>set-property-value</code>로 운전석 25.0을 넣으면 <code>driver_temp_value</code>가 <code>25.0°C</code>가 됩니다.</td>
+<td><code>set-property-value</code>로 운전석 25.0을 넣으면 <code>driver_<wbr>temp_<wbr>value</code>가 <code>25.0°C</code>가 됩니다.</td>
 </tr>
 <tr>
 <td>화면을 누르면 공조 신호가 바뀌는지</td>
 <td>조수석 <code>+</code>를 한 번 누르면 property가 17.0에서 17.5가 됩니다.</td>
 </tr>
 <tr>
-<td>주행 중 영상</td>
+<td class="nw">주행 중 영상</td>
 <td><code>VideoActivity</code>를 열면 AAOS가 <code>ActivityBlockingActivity</code>(&quot;You can&#39;t use this feature while driving&quot;)로 막습니다.</td>
 </tr>
 <tr>
-<td>주행 중 메인 화면</td>
+<td class="nw">주행 중 메인 화면</td>
 <td>distractionOptimized로 선언해서 막히지 않습니다.</td>
 </tr>
 </tbody></table></div>
 <h2 id="공조-권한과-priv-app-설치"><a class="anchor" href="#공조-권한과-priv-app-설치" aria-hidden="true">#</a>공조 권한과 priv-app 설치</h2>
-<p><code>CONTROL_CAR_CLIMATE</code>는 <code>signature|privileged</code> 권한입니다. 보통처럼 <code>adb install</code>로 설치하면 공조를 읽지도 쓰지도 못하고, 화면에는 <code>hvac_unavailable</code>이 보입니다. 이 상태도 테스트 케이스로 씁니다.</p>
-<p>실제 IVI 앱처럼 시스템 이미지에 넣으려고 <code>privileged/install_priv_app.py</code>를 만들었습니다. 하는 일은 이렇습니다.</p>
+<p><code>CONTROL_<wbr>CAR_<wbr>CLIMATE</code>는 <code>signature|privileged</code> 권한입니다. 보통처럼 <code>adb install</code>로 설치하면 공조를 읽지도 쓰지도 못하고, 화면에는 <code>hvac_<wbr>unavailable</code>이 보입니다. 이 상태도 테스트 케이스로 씁니다.</p>
+<p>실제 IVI 앱처럼 시스템 이미지에 넣으려고 <code>privileged/<wbr>install_<wbr>priv_<wbr>app.<wbr>py</code>를 만들었습니다. 하는 일은 이렇습니다.</p>
 <ol>
 <li>에뮬레이터를 <code>-writable-system</code>으로 켭니다.</li>
 <li><code>adb root</code>와 <code>adb remount</code>를 합니다. 처음 한 번은 재부팅이 필요한데 스크립트가 알아서 합니다.</li>
-<li><code>/system/priv-app/OpenCabinIvi/</code>에 APK를, <code>/system/etc/permissions/</code>에 권한 허용 목록을 넣습니다.</li>
-<li>재부팅한 뒤 <code>PRIVILEGED</code> 플래그와 <code>CONTROL_CAR_CLIMATE: granted=true</code>를 확인하고, dangerous 권한인 <code>CAR_SPEED</code>는 <code>pm grant --user 10</code>으로 줍니다.</li>
+<li><code>/<wbr>system/<wbr>priv-app/<wbr>OpenCabinIvi/</code>에 APK를, <code>/<wbr>system/<wbr>etc/<wbr>permissions/</code>에 권한 허용 목록을 넣습니다.</li>
+<li>재부팅한 뒤 <code>PRIVILEGED</code> 플래그와 <code>CONTROL_<wbr>CAR_<wbr>CLIMATE: granted=true</code>를 확인하고, dangerous 권한인 <code>CAR_SPEED</code>는 <code>pm grant --user 10</code>으로 줍니다.</li>
 </ol>
 <p>그 뒤로 코드를 고쳐서 <code>adb install -r</code>로 덮어써도 서명이 같으면 priv-app 권한이 유지됩니다.</p>
 <h2 id="태블릿mock-제어-방법"><a class="anchor" href="#태블릿mock-제어-방법" aria-hidden="true">#</a>태블릿(Mock) 제어 방법</h2>
-<pre class="code"><code>쓰기  adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.SET \
-        --ef speed_kmh 50 --es gear D --ef temp_driver 25 --ef temp_passenger 20
-읽기  adb shell am broadcast -p dev.opencabin.ivi -a dev.opencabin.ivi.mock.GET
-      → Broadcast completed: result=0, data=&quot;speed_kmh=50.0;gear=D;temp_driver=25.0;temp_passenger=22.0;restricted=true&quot;</code></pre>
+<pre class="code"><code>쓰기  adb shell am broadcast -p dev.<wbr>opencabin.<wbr>ivi -a dev.<wbr>opencabin.<wbr>ivi.<wbr>mock.<wbr>SET \
+        --ef speed_<wbr>kmh 50 --es gear D --ef temp_<wbr>driver 25 --ef temp_<wbr>passenger 20
+읽기  adb shell am broadcast -p dev.<wbr>opencabin.<wbr>ivi -a dev.<wbr>opencabin.<wbr>ivi.<wbr>mock.<wbr>GET
+      → Broadcast completed: result=0, data=&quot;speed_<wbr>kmh=50.<wbr>0;gear=D;temp_<wbr>driver=25.<wbr>0;temp_<wbr>passenger=22.<wbr>0;restricted=true&quot;</code></pre>
 <p>주행 중 제한 규칙은 AAOS 기본값과 맞췄습니다. 기어가 P가 아니고 속도가 0보다 크면 주행 중입니다.</p>
 <p>태블릿에는 시스템 차단이 없어서 <code>VideoActivity</code>가 직접 <code>video_blocked</code> 화면을 보여 줍니다. 덕분에 &quot;주행 중 영상 차단&quot;을 두 기기에서 같은 테스트로 확인할 수 있습니다. 판정에 쓰는 요소만 다르고, AAOS는 <code>ActivityBlockingActivity</code>, 태블릿은 <code>video_blocked</code>를 봅니다.</p>
 <h2 id="화웨이-태블릿에서-확인한-것-dby-w09-android-12-기반-2026-11-13"><a class="anchor" href="#화웨이-태블릿에서-확인한-것-dby-w09-android-12-기반-2026-11-13" aria-hidden="true">#</a>화웨이 태블릿에서 확인한 것 (DBY-W09, Android 12 기반, 2026-11-13)</h2>
@@ -138,45 +138,45 @@ ivi-app/privileged/                priv-app 설치 스크립트와 권한 허용
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td>데이터 소스</td>
+<td class="nw">데이터 소스</td>
 <td><code>source_badge</code>가 <code>Mock</code>입니다.</td>
 </tr>
 <tr>
-<td>Mock에 쓰고 읽기</td>
-<td>SET 뒤 GET이 <code>speed_kmh=50.0;gear=D;…;restricted=true</code>이고, 정차로 돌리면 <code>restricted=false</code>가 됩니다.</td>
+<td class="nw">Mock에 쓰고 읽기</td>
+<td>SET 뒤 GET이 <code>speed_<wbr>kmh=50.<wbr>0;gear=D;…;restricted=true</code>이고, 정차로 돌리면 <code>restricted=false</code>가 됩니다.</td>
 </tr>
 <tr>
-<td>신호가 화면에 보이는지</td>
-<td><code>temp_driver=25</code>를 넣으면 <code>driver_temp_value</code>가 <code>25.0°C</code>가 됩니다.</td>
+<td class="nw">신호가 화면에 보이는지</td>
+<td><code>temp_driver=25</code>를 넣으면 <code>driver_<wbr>temp_<wbr>value</code>가 <code>25.0°C</code>가 됩니다.</td>
 </tr>
 <tr>
 <td>화면을 누르면 신호가 바뀌는지</td>
 <td>조수석 <code>+</code>를 한 번 누르면 GET의 <code>temp_passenger</code>가 22.0에서 22.5가 됩니다.</td>
 </tr>
 <tr>
-<td>주행 표시</td>
-<td><code>50</code>, <code>D</code>, <code>restriction_banner</code>가 보입니다.</td>
+<td class="nw">주행 표시</td>
+<td><code>50</code>, <code>D</code>, <code>restriction_<wbr>banner</code>가 보입니다.</td>
 </tr>
 <tr>
-<td>주행 중 미디어</td>
-<td><code>open_video</code>가 꺼지고 <code>video_restricted_notice</code>가 보입니다.</td>
+<td class="nw">주행 중 미디어</td>
+<td><code>open_video</code>가 꺼지고 <code>video_<wbr>restricted_<wbr>notice</code>가 보입니다.</td>
 </tr>
 <tr>
 <td>주행 중에 영상 화면을 바로 열면</td>
 <td><code>video_blocked</code>가 보이고 <code>video_player</code>는 없습니다.</td>
 </tr>
 <tr>
-<td>정차로 바꾸면</td>
+<td class="nw">정차로 바꾸면</td>
 <td>같은 화면이 <code>video_player</code>로 바뀌고 <code>open_video</code>도 다시 켜집니다.</td>
 </tr>
 <tr>
-<td>Appium 세션</td>
+<td class="nw">Appium 세션</td>
 <td>약 4.6초. AAOS용 설정 없이 기본 UiAutomator2로 됩니다.</td>
 </tr>
 </tbody></table></div>
 <h3 id="화웨이-기기에서-주의할-점"><a class="anchor" href="#화웨이-기기에서-주의할-점" aria-hidden="true">#</a>화웨이 기기에서 주의할 점</h3>
-<p>adb로 앱을 설치할 때마다 기기 화면에서 승인해야 합니다. 아무도 누르지 않으면 <code>INSTALL_FAILED_ABORTED: User rejected permissions</code>로 끝납니다.</p>
-<p>Appium은 처음 연결할 때 보조 앱 세 개(<code>io.appium.settings</code>, <code>io.appium.uiautomator2.server</code>, <code>…server.test</code>)를 설치합니다. 승인이 늦으면 <code>uiautomator2ServerInstallTimeout</code>(기본 2분)에 걸려 세션이 실패하고, 마지막 테스트 APK만 빠진 채로 남기도 합니다. 그럴 때는 <code>pm list instrumentation</code>으로 확인하고 직접 설치합니다.</p>
+<p>adb로 앱을 설치할 때마다 기기 화면에서 승인해야 합니다. 아무도 누르지 않으면 <code>INSTALL_<wbr>FAILED_<wbr>ABORTED: User rejected permissions</code>로 끝납니다.</p>
+<p>Appium은 처음 연결할 때 보조 앱 세 개(<code>io.<wbr>appium.<wbr>settings</code>, <code>io.<wbr>appium.<wbr>uiautomator2.<wbr>server</code>, <code>…server.test</code>)를 설치합니다. 승인이 늦으면 <code>uiautomator2ServerInstallTimeout</code>(기본 2분)에 걸려 세션이 실패하고, 마지막 테스트 APK만 빠진 채로 남기도 합니다. 그럴 때는 <code>pm list instrumentation</code>으로 확인하고 직접 설치합니다.</p>
 <p>무인 실행(CI)에서는 승인할 사람이 없습니다. 그래서 보조 앱과 테스트 대상 앱은 실행 전에 미리 설치해 두고, 테스트 중에는 다시 설치하지 않게 했습니다. <code>no_reset</code>을 쓰고, 버전이 같으면 Appium이 설치를 건너뜁니다.</p>
 <h2 id="만들면서-고친-것"><a class="anchor" href="#만들면서-고친-것" aria-hidden="true">#</a>만들면서 고친 것</h2>
 <div class="table"><table><thead><tr>
@@ -187,7 +187,7 @@ ivi-app/privileged/                priv-app 설치 스크립트와 권한 허용
 </thead><tbody><tr>
 <td>Gradle이 <code>Your project path contains non-ASCII characters</code>로 멈췄습니다.</td>
 <td>사용자 폴더 경로에 한글이 있습니다.</td>
-<td>프로젝트를 <code>C:\dev\opencabin-ivi</code>로, Gradle 캐시를 <code>GRADLE_USER_HOME=C:\dev\.gradle</code>로 옮겼습니다.</td>
+<td>프로젝트를 <code>C:\dev\opencabin-ivi</code>로, Gradle 캐시를 <code>GRADLE_<wbr>USER_<wbr>HOME=C:\dev\.<wbr>gradle</code>로 옮겼습니다.</td>
 </tr>
 <tr>
 <td>속도 숫자가 검은 글자라 보이지 않았습니다.</td>

@@ -34,22 +34,22 @@
 
 | 시도 | 결과 |
 |---|---|
-| 1차 | 에뮬레이터를 끄고 다시 켰는데 새 에뮬레이터가 adb에 나타나지 않아 부팅 대기 240초를 넘김(`WaitTimeout`) |
-| 재시도 | `PowerError: AVD 이름을 모른다`. 재시도가 만든 전원 제어는 켜져 있는 에뮬레이터에서 AVD 이름을 읽는데, 에뮬레이터가 꺼져 있어 다시 켜지 못함 |
+| 1차 | 에뮬레이터를 끄고 다시 켰는데 새 에뮬레이터가 adb에 나타나지 않아 부팅 대기 240초를 넘겼습니다(`WaitTimeout`). |
+| 재시도 | `PowerError: AVD 이름을 모른다`. 재시도가 만든 전원 제어는 켜져 있는 에뮬레이터에서 AVD 이름을 읽는데, 에뮬레이터가 꺼져 있어 다시 켜지 못했습니다. |
 
 - 원인: 다시 켠 에뮬레이터 프로세스는 떠 있었지만 로그가 `Found systemPath …` 다음에서 멈췄고 CPU도 거의 쓰지 않았습니다([로그 끝부분](attempt1/emulator-restart-tail.log)). 그때 PC 화면은 꺼져 있었습니다(모니터 상태 '오프라인'). 같은 명령을 창 모드로 다시 실행해 같은 지점에서 멈추는 것을 재현했고, `-no-window`를 붙이면 부팅됐습니다.
 - 조치: 전원 제어가 에뮬레이터를 창 없이 다시 켜게 바꾸고(`d54741b`, `ivi-tests/ivi/power.py`) 단위 테스트를 더했습니다. 전원 테스트만 다시 돌려 통과(36초)를 확인한 뒤, 반복 3회를 처음부터 다시 돌렸습니다. 첫 시도의 결과는 위 통계에 넣지 않았습니다.
-- 남은 약점: 재시도는 꺼진 에뮬레이터를 켜지 못합니다(AVD 이름을 켜진 에뮬레이터에서만 읽음). 이번에는 고치지 않았습니다.
-- 첫 시도를 멈춘 뒤 보니 Appium 서버도 꺼져 있었습니다(로그가 세션 정리 도중에 끊김). 다시 띄운 뒤 전원 테스트를 확인했습니다.
+- 남은 약점: 재시도는 꺼진 에뮬레이터를 켜지 못합니다(AVD 이름을 켜진 에뮬레이터에서만 읽습니다). 이번에는 고치지 않았습니다.
+- 첫 시도를 멈춘 뒤 보니 Appium 서버도 꺼져 있었습니다(로그가 세션 정리 도중에 끊겼습니다). 다시 띄운 뒤 전원 테스트를 확인했습니다.
 
 ## 앱 크래시 판정 확인
 
-테스트 도중 앱이 죽으면 화면 판정이 통과해도 실패로 하는 판정(`ivi-tests/ivi/crashes.py`)을 넣은 뒤, 두 기기에서 테스트 도중 `am crash`로 앱을 일부러 죽이는 임시 테스트를 돌렸습니다(커밋하지 않음).
+테스트 도중 앱이 죽으면 화면 판정이 통과해도 실패로 하는 판정(`ivi-tests/ivi/crashes.py`)을 넣은 뒤, 두 기기에서 테스트 도중 `am crash`로 앱을 일부러 죽이는 임시 테스트를 돌렸습니다(커밋하지 않았습니다).
 
 | 기기 | 결과 | 자료 |
 |---|---|---|
 | AAOS 에뮬레이터 (`20261121-probe2`) | `AppCrashed`로 failed. 실패 자료에 `app_crash.txt` (`FATAL EXCEPTION: main`, `Process: dev.opencabin.ivi`, `CrashedByAdbException: shell-induced crash`) | [결과 파일](crash-check/20261121-probe2-emulator-5554.json), [app_crash.txt](crash-check/app_crash-emulator-5554.txt) |
-| 태블릿 (`20261121-probe5`) | `AppCrashed`로 failed, `app_crash.txt` 있음. 앱 안의 Mock 차량도 같이 죽어 정리 단계 오류도 함께 남음 | [결과 파일](crash-check/20261121-probe5-W3VBB22125209573.json), [app_crash.txt](crash-check/app_crash-W3VBB22125209573.txt) |
+| 태블릿 (`20261121-probe5`) | `AppCrashed`로 failed가 됐고, `app_crash.txt`가 남았습니다. 앱 안의 Mock 차량도 같이 죽어 정리 단계 오류도 함께 남았습니다. | [결과 파일](crash-check/20261121-probe5-W3VBB22125209573.json), [app_crash.txt](crash-check/app_crash-W3VBB22125209573.txt) |
 
 - 태블릿의 crash 버퍼에는 2026-11-19 Appium 서버(`io.appium.uiautomator2.server`)의 크래시가 남아 있었습니다. 이 앱의 것이 아니라 판정에 넣지 않습니다(단위 테스트에 같은 로그로 확인).
 - 확인 중에 태블릿 화면에 화웨이의 'USB를 사용하여 다음 작업 수행' 창이 떠 앱을 가려 준비 단계 오류가 난 시도가 두 번 있었습니다. '취소'로 닫고(충전 전용 그대로) 다시 돌렸습니다.
@@ -60,7 +60,7 @@
 
 | 실행 | e2e-hosted | 내용 |
 |---|---|---|
-| [44860180322](https://github.com/bugspeaker/opencabin-ivi/actions/runs/44860180322) | 실패 | AVD를 `~/.android/avd`가 아닌 곳에 만들어 설정 파일을 찾지 못함. 위치를 고정 |
+| [44860180322](https://github.com/bugspeaker/opencabin-ivi/actions/runs/44860180322) | 실패 | AVD를 `~/.android/avd`가 아닌 곳에 만들어 설정 파일을 찾지 못했습니다. 위치를 고정했습니다. |
 | [44861042029](https://github.com/bugspeaker/opencabin-ivi/actions/runs/44861042029) | 통과 | smoke 13개 통과 (부팅 25초, smoke 58초, job 4분 21초) |
 | [44861944480](https://github.com/bugspeaker/opencabin-ivi/actions/runs/44861944480) | 통과 | smoke 13개 통과 |
 | [44861951956](https://github.com/bugspeaker/opencabin-ivi/actions/runs/44861951956) | 통과 | smoke 13개 통과 |
