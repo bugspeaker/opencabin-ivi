@@ -313,6 +313,11 @@ a.stat:hover { background: var(--bg-soft); }
 .prev-tool .demo-frame img { border-radius: 0; }
 .prev-body { padding: 22px 26px 24px; }
 .prev-body p { margin: 8px 0 0; font-size: 15px; color: var(--ink-2); }
+.prev-tool.wide { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); margin-top: 20px; }
+.prev-tool.wide .demo-frame { display: flex; align-items: center; }
+.prev-tool.wide .prev-body { display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 28px 30px; }
+.prev-tool.wide .prev-body p { margin: 0; }
+.prev-tool.wide .chip { align-self: flex-start; }
 .prev-list { margin: 14px 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); list-style: none; display: grid; gap: 6px; font-size: 14.5px; color: var(--ink-2); }
 
 /* 8. 한계 */
@@ -365,6 +370,7 @@ a.fit-row:hover { border-color: var(--brand); transform: translateY(-2px); }
   .stat:nth-child(3) { border-left: 0; padding-left: 0; }
   .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
   .split { grid-template-columns: 1fr; }
+  .prev-tool.wide { grid-template-columns: 1fr; }
   .cases { grid-template-columns: 1fr; }
   .gates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
