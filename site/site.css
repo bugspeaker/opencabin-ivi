@@ -261,19 +261,29 @@ a.stat:hover { background: var(--bg-soft); }
 .shot img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; }
 .shot span { display: block; padding: 10px 14px 12px; font-size: 13.5px; line-height: 1.5; color: #dfe6ef; background: #151a22; }
 
-/* 6. 역할 */
-.roles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr); gap: 0; align-items: stretch; }
-.role { padding: 26px 28px; }
-.role h3 { display: flex; align-items: center; gap: 8px; font-size: 17px; }
-.role ul { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 15px; color: var(--ink-2); }
-.role li::before { content: "·"; margin-right: 8px; color: var(--ink-3); font-weight: 800; }
-.role.ai { border-radius: var(--r) 0 0 var(--r); background: #fff; border: 1px solid var(--line); border-right: 0; }
-.role.both { background: var(--brand-soft); border: 1px solid var(--brand-line); display: flex; flex-direction: column; justify-content: center; text-align: center; }
-.role.both ul { justify-items: center; }
-.role.both li::before { content: none; }
-.role.both h3 { justify-content: center; color: var(--brand-dark); }
-.role.me { border-radius: 0 var(--r) var(--r) 0; background: #fff; border: 1px solid var(--line); border-left: 0; }
-.role.me h3 { color: var(--brand-dark); }
+/* 6. 역할: Claude Code · 함께 · 조예훈(QA). 가운데 손 맞잡는 아이콘과 점선이 두 카드를 잇는다 */
+.team { display: grid; grid-template-columns: minmax(0, 1fr) 200px minmax(0, 1fr); align-items: stretch; }
+.member { position: relative; z-index: 1; padding: 26px 28px 28px; border-radius: var(--r); background: #fff; border: 1px solid var(--line); box-shadow: 0 1px 2px rgb(25 31 40 / 0.04); }
+.member.me { border-color: var(--brand-line); box-shadow: 0 10px 28px rgb(27 91 230 / 0.10); }
+.member-head { display: flex; align-items: center; gap: 14px; padding-bottom: 18px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+.avatar { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; }
+.avatar.code { background: var(--ink); color: #fff; }
+.avatar.qa { background: var(--brand); color: #fff; font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
+.member-name { display: grid; gap: 2px; }
+.member-name h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 18px; }
+.member-name > span { font-size: 13.5px; color: var(--ink-3); }
+.role-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-dark); font-size: 12px; font-weight: 800; }
+.member-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 15px; color: var(--ink-2); }
+.member-list li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; align-items: start; }
+.member-list li::before { content: ""; width: 7px; height: 7px; margin: 9px 0 0 5px; border-radius: 50%; background: var(--line-2); }
+.member.me .member-list li::before { background: var(--brand); }
+.together { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; padding: 12px 0; text-align: center; }
+.hands-row { position: relative; display: flex; justify-content: center; width: 100%; }
+.hands-row::before { /* 두 카드를 잇는 점선 (손 아이콘 뒤를 지난다) */
+  content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px dashed var(--brand-line); }
+.hands { position: relative; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--brand-soft); color: var(--brand); border: 6px solid var(--bg); box-shadow: 0 0 0 1px var(--brand-line); }
+.together-label { margin: 6px 0 0; font-size: 16px; font-weight: 800; color: var(--brand-dark); }
+.together-task { margin: 0; padding: 4px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--brand-line); font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; }
 /* 앱 첫 화면 변천 (4단계) */
 .evo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; margin-bottom: 20px; }
 .evo-step { position: relative; margin: 0; }
@@ -375,11 +385,13 @@ a.fit-row:hover { border-color: var(--brand); transform: translateY(-2px); }
   .gates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fit-cols { grid-template-columns: 1fr; }
-  .roles { grid-template-columns: 1fr; }
-  .role.ai { border-radius: var(--r) var(--r) 0 0; border-right: 1px solid var(--line); border-bottom: 0; }
-  .role.me { border-radius: 0 0 var(--r) var(--r); border-left: 1px solid var(--line); border-top: 0; }
-  .role.both { text-align: left; }
-  .role.both ul, .role.both h3 { justify-items: start; justify-content: flex-start; }
+  .team { grid-template-columns: 1fr; }
+  .together { padding: 20px 0; }
+  .hands-row::before { content: none; }
+  .together::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 2px dashed var(--brand-line); }
+  .together-label, .together-task { position: relative; background: var(--bg); }
+  .together-label { padding: 0 8px; }
+  .together-task { background: #fff; }
 }
 @media (max-width: 768px) {
   .wrap { padding: 0 16px; }
