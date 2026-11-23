@@ -126,6 +126,22 @@ def test_quick_control_mirror_locked_while_driving(app, car):
     assert qc.toggle("mirror") == "접힘"
 
 
+@pytest.mark.req("DRIVE-03")
+@pytest.mark.regression
+def test_folded_mirror_can_be_unfolded_while_driving(app, car):
+    """주행 중에 막는 것은 사이드 미러를 '접는' 것입니다.
+    정차 중에 접어 둔 미러는 주행 중에도 펼 수 있고, 펴고 나면 다시 접을 수 없습니다.
+    """
+    qc = app.vehicle_controls()
+    assert qc.toggle("mirror") == "접힘"
+
+    car.drive(50.0)
+    qc.wait_visible("qc_restricted_notice")
+    assert qc.can_toggle("mirror"), "주행 중에 접힌 미러를 펼 수 없다"
+    assert qc.toggle("mirror") == "펼침"
+    qc.wait_enabled("qc_mirror", False)
+
+
 @pytest.mark.req("UI-01")
 @pytest.mark.regression
 def test_notifications_record_guidance_and_restriction(app, car):
@@ -141,6 +157,28 @@ def test_notifications_record_guidance_and_restriction(app, car):
     titles = panel.titles()
     assert titles[:2] == ["주행 중 제한", "경로 안내 시작"], titles
     assert not app.visible("notification_badge")
+    panel.close()
+
+
+@pytest.mark.req("UI-01")
+@pytest.mark.regression
+def test_clearing_notifications_leaves_empty_panel(app, car):
+    """알림 센터에서 '모두 지우기'를 누르면 목록이 비고 '새 알림이 없습니다'가 보입니다.
+    닫았다 다시 열어도 지운 알림이 돌아오지 않습니다.
+    """
+    car.drive(50.0)
+    app.wait_visible("restriction_banner")
+    app.wait_visible("notification_badge")
+    panel = app.notifications()
+    assert panel.titles(), "주행 제한 알림이 없다"
+
+    panel.clear()
+    assert panel.titles() == []
+    panel.close()
+    assert not app.visible("notification_badge")
+    panel = app.notifications()
+    panel.find("notification_empty")
+    assert panel.titles() == []
     panel.close()
 
 

@@ -222,6 +222,45 @@ def test_condition_table_matches_test_code():
     assert trace_report.check_conditions(conditions, trace_report.read_test_reqs()) == []
 
 
+def test_trace_check_finds_untested_untraced_and_unknown_ids():
+    """연결이 빠진 세 경우를 각각 찾는다 (위 테스트는 빠진 곳이 없는 경우만 본다)."""
+    from tools import trace_report
+
+    requirements = [{"id": "HVAC-01"}, {"id": "HVAC-02"}]
+    tests = {"test_a": ("test_x.py", ["HVAC-01"]), "test_b": ("test_x.py", []), "test_c": ("test_y.py", ["HVAC-09"])}
+    assert trace_report.check(requirements, tests) == (["HVAC-02"], ["test_b"], ["test_c: HVAC-09"])
+
+
+def test_trace_verdict_counts_tests_without_results():
+    """결과가 없는 테스트를 빼고 세면 '2/2 통과'로 보인다. 결과 없는 테스트 수를 따로 적는다."""
+    from tools import trace_report
+
+    assert trace_report.verdict([["passed"], ["passed", "skipped"]]) == "2/3 통과<br>건너뜀 1"
+    assert trace_report.verdict([["passed"], ["passed"], []]) == "2/2 통과<br>결과 없는 테스트 1"
+    assert trace_report.verdict([[], []]) == "결과 없음"
+
+
+def test_trace_columns_match_result_page_columns():
+    """추적표의 결과 칸 이름은 결과 페이지가 쓰는 칸(aaos/mock/fold)과 같아야 한다.
+    2026-11-23: 결과 페이지에 폴드 칸이 생긴 뒤 trace_report 만 KeyError('fold')로 멈췄고, 추적표가 두 기기 칸으로 남았다."""
+    from tools import publish_results, trace_report
+
+    assert trace_report.KINDS == publish_results.NAMES
+    assert set(publish_results.COLUMNS) == set(trace_report.KINDS)
+
+
+def test_traceability_doc_is_up_to_date():
+    """docs/traceability.md 가 지금 코드와 결과 파일로 다시 만든 것과 같다.
+    테스트를 더하거나 요구사항 표시를 바꾸고 tools/trace_report.py 를 다시 돌리지 않으면 여기서 실패한다."""
+    from tools import trace_report
+
+    outcomes, kinds = trace_report.read_results()
+    expected = trace_report.markdown(trace_report.read_requirements(), trace_report.read_test_reqs(), outcomes,
+                                     kinds or list(trace_report.KINDS), trace_report.read_conditions())
+    assert trace_report.OUT.read_text(encoding="utf-8") == expected, \
+        "추적표가 낡았다: python tools/trace_report.py 로 다시 만든다"
+
+
 def test_condition_table_check_finds_stale_rows():
     from tools import trace_report
 

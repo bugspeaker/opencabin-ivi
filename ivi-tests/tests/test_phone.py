@@ -1,7 +1,7 @@
 """블루투스 핸즈프리 전화(가상)의 통화 화면, 최근 통화, 키패드, 주행 중 제한을 확인합니다."""
 import pytest
 
-from ivi.waits import wait_until, wait_value
+from ivi.waits import stays, wait_until, wait_value
 
 
 @pytest.mark.req("MEDIA-02")
@@ -30,6 +30,27 @@ def test_keypad_dial(app):
     phone.call()
     assert phone.call_name() == "0101234"
     phone.end()
+
+
+@pytest.mark.req("MEDIA-02")
+@pytest.mark.regression
+def test_keypad_limits_length_and_edits(app):
+    """키패드의 *, #도 번호에 들어가고, ⌫는 한 자리씩 지웁니다. 다 지우면 ⌫와 통화 버튼이 꺼집니다.
+    번호는 13자리까지만 들어가고 14번째 누름은 버립니다.
+    """
+    phone = app.phone()
+    phone.tab("keypad")
+    phone.dial("*#")
+    phone.backspace()
+    phone.wait_text("phone_dial_number", "*")
+    phone.backspace()
+    wait_until(lambda: phone.dialed().strip() == "", what="번호 칸 비움")
+    phone.wait_enabled("phone_backspace", False)
+    phone.wait_enabled("phone_call", False)
+
+    phone.dial("0101234567890")  # 13자리
+    phone.press("1")
+    stays(lambda: phone.dialed() == "0101234567890", what="번호 13자리 유지")
 
 
 @pytest.mark.req("DRIVE-03")

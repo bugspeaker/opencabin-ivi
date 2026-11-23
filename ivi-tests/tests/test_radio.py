@@ -41,6 +41,37 @@ def test_am_band_uses_khz_steps(app):
 
 @pytest.mark.req("MEDIA-02")
 @pytest.mark.regression
+def test_seek_wraps_around_band_ends(app):
+    """FM 첫 방송(89.1 MHz)에서 이전 방송을 찾으면 마지막 방송인 107.7 MHz로 넘어가고,
+    거기서 다음 방송을 찾으면 다시 89.1 MHz로 돌아옵니다. 끝에서 멈추지 않습니다.
+    """
+    radio = app.radio()
+    assert radio.freq() == "89.1 MHz"
+    assert radio.step("seek_down") == "107.7 MHz"
+    assert radio.station() == "영어 방송"
+    assert radio.step("seek_up") == "89.1 MHz"
+    assert radio.station() == "뉴스 FM"
+
+
+@pytest.mark.req("MEDIA-02")
+@pytest.mark.regression
+def test_each_band_keeps_its_own_frequency(app):
+    """FM과 AM은 마지막 주파수를 따로 기억합니다.
+    AM을 720 kHz로 옮기고 FM으로 갔다 오면 AM은 720 kHz, FM은 89.1 MHz 그대로입니다.
+    """
+    radio = app.radio()
+    radio.band("am")
+    radio.wait_text("radio_freq", "711 kHz")
+    assert radio.step("tune_up") == "720 kHz"
+
+    radio.band("fm")
+    radio.wait_text("radio_freq", "89.1 MHz")
+    radio.band("am")
+    radio.wait_text("radio_freq", "720 kHz")
+
+
+@pytest.mark.req("MEDIA-02")
+@pytest.mark.regression
 def test_preset_save_and_recall(app):
     """지금 주파수를 프리셋에 저장하고 다른 방송으로 옮긴 뒤 프리셋을 누르면, 저장한 주파수로 돌아옵니다."""
     radio = app.radio()

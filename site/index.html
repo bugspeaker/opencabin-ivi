@@ -71,18 +71,18 @@
       <div class="wrap stats">
         <a class="stat" href="docs/test-results.html">
           <p class="stat-label">E2E 테스트</p>
-          <p class="stat-num">129<small>개</small></p>
+          <p class="stat-num">140<small>개</small></p>
           <p class="stat-note">두 기기에서 같은 테스트 코드</p>
         </a>
         <a class="stat" href="docs/flaky-report.html">
-          <p class="stat-label">반복 실행 750건</p>
+          <p class="stat-label">반복 실행 813건</p>
           <p class="stat-num">실패 0</p>
-          <p class="stat-note">두 기기 × 3회 (11-21)<br>재시도로 통과한 것도 0건</p>
+          <p class="stat-note">두 기기 × 3회 (11-23)<br>재시도로 통과한 것도 0건</p>
         </a>
         <a class="stat" href="#results">
           <p class="stat-label">두 기기 병렬 실행</p>
-          <p class="stat-num">약 11<small>분</small></p>
-          <p class="stat-note">차례로 돌리면 약 21분</p>
+          <p class="stat-num">약 12<small>분</small></p>
+          <p class="stat-note">차례로 돌리면 약 24분</p>
         </a>
         <a class="stat" href="#defects">
           <p class="stat-label">테스트에서 나온 문제</p>
@@ -161,7 +161,7 @@
           </div>
           <div class="tools">
             <div class="card tool"><span class="tool-num">1</span><div><h3>테스트할 IVI 앱</h3><p>공조, 도어, 주행 정보, 미디어 화면이 있는 가상 IVI 앱입니다. <br class="pc">차량 신호 12종을 에뮬레이터에서는 CarService로, <br class="pc">태블릿에서는 앱 안의 Mock으로 주고받습니다.</p></div></div>
-            <div class="card tool"><span class="tool-num">2</span><div><h3>테스트 프레임워크</h3><p>화면은 Appium으로, 차량 값은 adb 명령으로 넣고 읽습니다. <br class="pc">E2E 테스트 129개를 smoke, sanity, regression으로 나눴습니다.</p></div></div>
+            <div class="card tool"><span class="tool-num">2</span><div><h3>테스트 프레임워크</h3><p>화면은 Appium으로, 차량 값은 adb 명령으로 넣고 읽습니다. <br class="pc">E2E 테스트 140개를 smoke, sanity, regression으로 나눴습니다.</p></div></div>
             <div class="card tool"><span class="tool-num">3</span><div><h3>실행과 결과 도구</h3><p>두 기기 병렬 실행, 실패 자료 저장, 재시도 통계, <br class="pc">릴리스 판정, 테스트별 결과 페이지를 붙였습니다.</p></div></div>
           </div>
         </div>
@@ -184,9 +184,10 @@
         <p class="lead">테스트를 돌려 보면서 생긴 문제를 하나씩 도구의 기능으로 풀었습니다.</p>
       </div>
       <ul class="pairs">
-        <li class="pair-row"><span class="prob">두 기기를 차례로 돌리면 약 21분이 걸렸습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">두 기기를 병렬로 돌리게 했습니다<span class="chip blue">약 11분</span></span></li>
+        <li class="pair-row"><span class="prob">두 기기를 차례로 돌리면 약 24분이 걸렸습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">두 기기를 병렬로 돌리게 했습니다<span class="chip blue">약 12분</span></span></li>
         <li class="pair-row"><span class="prob">재시도로 통과하면 불안정한 테스트가 가려졌습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">재시도로 통과한 테스트는 flaky로 따로 세고 통계를 냈습니다</span></li>
-        <li class="pair-row"><span class="prob">'실패 0'이어도 테스트 일부만 돌았을 수 있었습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">Release 게이트가 두 기기, 129개 전부, 같은 코드인지 먼저 보게 했습니다</span></li>
+        <li class="pair-row"><span class="prob">'실패 0'이어도 테스트 일부만 돌았을 수 있었습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">Release 게이트가 두 기기, 140개 전부, 같은 코드인지 먼저 보게 했습니다</span></li>
+        <li class="pair-row"><span class="prob">추적 누락 0이어도 확인하지 않은 조건이 남아 있었습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">조건, 화면 요소, 경계값으로 다시 점검해 테스트 11개를 더했습니다<span class="chip blue">조건 33개 모두</span></span></li>
         <li class="pair-row"><span class="prob">실패 원인을 보려면 다시 재현해야 했습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">실패한 순간의 화면, 화면 구조, 차량 값, 로그를 자동으로 남겼습니다</span></li>
         <li class="pair-row"><span class="prob">결과를 글자로만 확인할 수 있었습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">테스트마다 판정 직후 화면을 남기는 결과 페이지를 만들었습니다</span></li>
         <li class="pair-row"><span class="prob">테스트를 매번 손으로 돌려야 했습니다</span><svg class="arrow" width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M1 8h36M30 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sol">PR마다 GitHub Actions가 빌드, 단위 테스트, smoke를 돌리게 했습니다</span></li>
@@ -208,13 +209,13 @@
         </div>
         <div class="card gate">
           <p class="gate-when">매일 밤</p>
-          <p class="gate-what">전체 129개</p>
+          <p class="gate-what">전체 140개</p>
           <div class="gate-bar" aria-hidden="true"><span style="--w: 100%"></span></div>
           <p class="gate-meta">경계값, 조합, <br class="pc">예전 결함의 재발까지 봅니다.</p>
         </div>
         <div class="card gate">
           <p class="gate-when">릴리스 후보</p>
-          <p class="gate-what">129개 × 3회</p>
+          <p class="gate-what">140개 × 3회</p>
           <div class="gate-bar" aria-hidden="true"><span style="--w: 100%"></span></div>
           <p class="gate-meta">세 번 돌린 뒤 <br class="pc">조건 여섯 개를 모두 봅니다.</p>
         </div>
@@ -294,26 +295,26 @@
     <div class="wrap">
       <div class="sec-head">
         <p class="label">검증 결과</p>
-        <h2 id="results-title">두 기기에서 3번씩,<br><em>750건 중 실패 0건</em></h2>
-        <p class="lead">2026년 11월 21일, 같은 코드로 두 기기에서 전체 테스트를 세 번 돌린 결과입니다. <br class="pc">재시도로 통과한 테스트도 없었습니다. 아래는 마지막 회차입니다.</p>
+        <h2 id="results-title">두 기기에서 3번씩,<br><em>813건 중 실패 0건</em></h2>
+        <p class="lead">2026년 11월 23일, 테스트 범위를 넓힌 140개를 같은 코드로 두 기기에서 세 번 돌린 결과입니다. <br class="pc">재시도로 통과한 테스트도 없었습니다. 아래는 마지막 회차입니다.</p>
       </div>
       <!-- devices:start (build-docs.mjs 가 results.json 으로 채운다) -->
   <div class="runs">
         <div class="card run">
           <div class="run-name"><b>AAOS 에뮬레이터</b><span>CarService와 가상 VHAL을 거칩니다</span></div>
           <div>
-            <div class="stack" role="img" aria-label="통과 127, 알려진 결함 1, 건너뜀 1"><span class="s-passed" style="--n: 127"></span><span class="s-xfailed" style="--n: 1"></span><span class="s-skipped" style="--n: 1"></span></div>
-            <ul class="stack-legend"><li><i class="s-passed"></i>통과 127</li><li><i class="s-xfailed"></i>알려진 결함 1</li><li><i class="s-skipped"></i>건너뜀 1</li></ul>
+            <div class="stack" role="img" aria-label="통과 138, 알려진 결함 1, 건너뜀 1"><span class="s-passed" style="--n: 138"></span><span class="s-xfailed" style="--n: 1"></span><span class="s-skipped" style="--n: 1"></span></div>
+            <ul class="stack-legend"><li><i class="s-passed"></i>통과 138</li><li><i class="s-xfailed"></i>알려진 결함 1</li><li><i class="s-skipped"></i>건너뜀 1</li></ul>
           </div>
-          <p class="run-time">10분 4초<span>3회차</span></p>
+          <p class="run-time">11분 38초<span>3회차</span></p>
         </div>
         <div class="card run">
           <div class="run-name"><b>Android 태블릿</b><span>앱 안의 Mock 차량을 씁니다. AAOS 전용 테스트는 건너뜁니다</span></div>
           <div>
-            <div class="stack" role="img" aria-label="통과 122, 건너뜀 7"><span class="s-passed" style="--n: 122"></span><span class="s-skipped" style="--n: 7"></span></div>
-            <ul class="stack-legend"><li><i class="s-passed"></i>통과 122</li><li><i class="s-skipped"></i>건너뜀 7</li></ul>
+            <div class="stack" role="img" aria-label="통과 132, 건너뜀 8"><span class="s-passed" style="--n: 132"></span><span class="s-skipped" style="--n: 8"></span></div>
+            <ul class="stack-legend"><li><i class="s-passed"></i>통과 132</li><li><i class="s-skipped"></i>건너뜀 8</li></ul>
           </div>
-          <p class="run-time">10분 49초<span>3회차</span></p>
+          <p class="run-time">11분 56초<span>3회차</span></p>
         </div>
       </div>
       <!-- devices:end -->
@@ -341,7 +342,7 @@
         </div>
       </article>
       <div class="btn-row more">
-        <a class="btn" href="docs/test-results.html">테스트 129개 결과와 화면 보기</a>
+        <a class="btn" href="docs/test-results.html">테스트 140개 결과와 화면 보기</a>
         <a class="btn line" href="docs/flaky-report.html">반복 실행 통계</a>
         <a class="btn line" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 수정 전후 기록</a>
       </div>
@@ -517,7 +518,7 @@
     <h2 id="links-title">더 볼 곳</h2>
     <p class="lead">자세한 근거는 아래 페이지에 있습니다.</p>
     <div class="links">
-      <a class="link-card main" href="docs/test-results.html"><b>테스트 결과 <span aria-hidden="true">→</span></b><span>129개 테스트의 판정과 판정 직후 화면</span></a>
+      <a class="link-card main" href="docs/test-results.html"><b>테스트 결과 <span aria-hidden="true">→</span></b><span>140개 테스트의 판정과 판정 직후 화면</span></a>
       <a class="link-card" href="fit.html"><b>공고 항목별 근거 <span aria-hidden="true">→</span></b><span>주요 업무, 자격요건, 우대사항마다 한 일</span></a>
       <a class="link-card" href="docs/portfolio.html"><b>상세 문서 <span aria-hidden="true">→</span></b><span>검증 전략, 게이트 기준, 결함 분석 전체</span></a>
       <a class="link-card" href="https://github.com/bugspeaker/opencabin-ivi"><b>GitHub 저장소 <span aria-hidden="true">↗</span></b><span>코드, CI 실행 기록, 이슈</span></a>

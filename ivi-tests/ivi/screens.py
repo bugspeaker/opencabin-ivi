@@ -403,6 +403,14 @@ class Navigation(Screen):
         self.tap(f"nav_fav_{which}")
         self.find("nav_start")
 
+    def category(self, which):
+        """분류 바로가기(charger / parking)를 누른다. 목록이 그 분류만 가까운 순으로 바뀐다. 다시 누르면 풀린다."""
+        self.tap(f"nav_cat_{which}")
+
+    def cancel(self):
+        """미리 보기에서 '취소' (안내를 시작하지 않고 찾기 화면으로)."""
+        self.tap("nav_cancel")
+
     def start(self):
         self.tap("nav_start")
         self.find("nav_remaining")
@@ -479,10 +487,22 @@ class Phone(Screen):
         self.find("phone_call_screen")
         return name
 
+    KEY_TAGS = {"*": "phone_key_star", "#": "phone_key_hash"}
+
+    def press(self, keys):
+        """키패드 버튼을 차례로 누른다 (번호 칸을 확인하지 않는다). '*', '#' 도 된다."""
+        for key in keys:
+            self.tap(self.KEY_TAGS.get(key, f"phone_key_{key}"))
+
     def dial(self, digits):
-        for digit in digits:
-            self.tap(f"phone_key_{digit}")
+        self.press(digits)
         self.wait_text("phone_dial_number", digits)
+
+    def dialed(self):
+        return self.text("phone_dial_number")
+
+    def backspace(self):
+        self.tap("phone_backspace")
 
     def call(self):
         self.tap("phone_call")
@@ -681,6 +701,11 @@ class QuickControl(Screen):
 class Notifications(Screen):
     def titles(self):
         return [element.text for element in tags_matching(self.driver, "notification_[0-9]+_title")]
+
+    def clear(self):
+        """'모두 지우기'. 목록이 비고 빈 상태 문구가 보일 때까지 기다린다."""
+        self.tap("notification_clear")
+        self.find("notification_empty")
 
     def close(self):
         self.tap("top_notifications")
