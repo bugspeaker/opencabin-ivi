@@ -21,7 +21,9 @@ REPO = ROOT.parent
 REQUIREMENTS = REPO / "docs" / "requirements.md"
 OUT = REPO / "docs" / "traceability.md"
 RESULTS = REPO / "site" / "results" / "results.json"
-KINDS = {"aaos": "AAOS 에뮬레이터", "mock": "태블릿"}
+# 결과 칸 이름. 칸(aaos/mock/fold)은 publish_results 가 정하므로 그 NAMES 와 같아야 한다 (unit/test_operations.py 가 본다).
+# 다르게 두었더니 폴드 칸이 생겼을 때 이 도구만 KeyError 로 멈췄고, 추적표가 두 기기 칸으로 남았다 (2026-11-23)
+KINDS = {"aaos": "AAOS 에뮬레이터", "mock": "태블릿", "fold": "갤럭시 폴드"}
 
 
 def read_requirements(path=REQUIREMENTS):
@@ -100,7 +102,11 @@ def check(requirements, tests):
 
 
 def verdict(outcome_lists):
+    """한 칸의 판정. outcome_lists 는 테스트마다 [판정, ...] (parametrize 케이스마다 하나).
+    판정이 하나도 없는 테스트(더한 뒤 결과를 아직 싣지 않음)는 '결과 없는 테스트'로 따로 센다.
+    세지 않으면 결과가 있는 테스트만으로 '5/5 통과'처럼 보여, 돌리지 않은 테스트가 표에서 사라진다."""
     flat = [o for outcomes in outcome_lists for o in outcomes]
+    missing = sum(not outcomes for outcomes in outcome_lists)
     if not flat:
         return "결과 없음"
     passed = sum(o == "passed" for o in flat)
@@ -109,6 +115,8 @@ def verdict(outcome_lists):
         n = sum(o == outcome for o in flat)
         if n:
             parts.append(f"{label} {n}")
+    if missing:
+        parts.append(f"결과 없는 테스트 {missing}")
     return "<br>".join(parts)   # 좁은 칸에서 아무 데서나 접히지 않게 항목마다 줄을 나눈다
 
 
@@ -131,9 +139,10 @@ def markdown(requirements, tests, outcomes, kinds, conditions=()):
         f"| 테스트 함수 | {len(tests)}개 |",
         f"| 요구사항이 없는 테스트 | {len(untraced)}개 |",
         "",
-        "'요구사항이 없는 테스트 0개', '테스트가 있는 요구사항 26개'는 요구사항 ID 연결이 빠지지 않았다는 수치입니다. 조건별 검증이 충분하다거나 표준(ISO 26262, A-SPICE)을 지켰다는 뜻은 아닙니다. 조건별로 어디까지 확인했는지는 아래 '복합 요구사항' 표에 있습니다.",
+        f"'요구사항이 없는 테스트 {len(untraced)}개', '테스트가 있는 요구사항 {len(requirements) - len(untested)}개'는 요구사항 ID 연결이 빠지지 않았다는 수치입니다. 조건별 검증이 충분하다거나 표준(ISO 26262, A-SPICE)을 지켰다는 뜻은 아닙니다. 조건별로 어디까지 확인했는지는 아래 '복합 요구사항' 표에 있습니다.",
         "",
-        "결과 열은 parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다.",
+        "결과 열은 결과 페이지에 실은 최신 실행이고, parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, "
+        "건너뜀은 그 기기에서 의미가 없는 테스트입니다. '결과 없는 테스트'는 그 실행 뒤에 더해서 결과 페이지에 아직 결과가 없는 테스트입니다.",
         "",
         "## 요구사항에서 테스트로",
         "",

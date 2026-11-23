@@ -10,7 +10,7 @@ AAOS 에서 실패하면 권한부터 본다: 공조 = CONTROL_CAR_CLIMATE, 도�
 """
 import pytest
 
-from ivi.vehicle import Seat, Signal
+from ivi.vehicle import PACKAGE, Seat, Signal
 from ivi.waits import stays, wait_until, wait_value
 
 
@@ -147,6 +147,44 @@ def test_turning_ac_off_releases_max_ac(app, car):
     wait_signal(car, Signal.AC, False)
     wait_signal(car, Signal.MAX_AC, False)
     climate.wait_checked("max_ac", False)
+
+
+@pytest.mark.req("HVAC-04")
+@pytest.mark.regression
+def test_manual_temperature_releases_max_ac(app, car):
+    """FULL 중에 운전석 온도를 직접 한 칸 올리면 최대 냉방이 풀리고, 운전석만 16.5°C가 됩니다.
+    풍량 7과 조수석 16.0°C는 FULL 값 그대로입니다. 켜기 전 값(22.0°C, 풍량 3)으로 되돌리지 않습니다.
+    """
+    climate = app.climate()
+    climate.toggle("max_ac")
+    wait_signal(car, Signal.FAN, 7)
+    climate.wait_temperature(Seat.DRIVER, 16.0)
+
+    climate.increase(Seat.DRIVER)
+    wait_value(lambda: car.temperature(Seat.DRIVER), 16.5, what="차량 운전석 온도")
+    wait_until(lambda: not any(car.signal_all(Signal.MAX_AC)), what="전 좌석 최대 냉방 꺼짐")
+    climate.wait_checked("max_ac", False)
+    # 풀리면서 켜기 전 값으로 되돌려 쓰는 결함도 잡도록 일정 시간 동안 본다
+    stays(lambda: car.signal(Signal.FAN) == 7 and car.temperature(Seat.PASSENGER) == 16.0,
+          what="차량 풍량 7, 조수석 16.0°C 유지")
+
+
+@pytest.mark.req("HVAC-04")
+@pytest.mark.regression
+def test_turning_auto_on_releases_max_ac(app, car):
+    """FULL 중에 AUTO를 켜면 최대 냉방이 풀립니다.
+    최대 냉방과 AUTO가 함께 켜져 있을 수는 없습니다.
+    """
+    climate = app.climate()
+    climate.toggle("max_ac")
+    climate.wait_checked("max_ac", True)
+    wait_signal(car, Signal.AUTO, False)
+
+    climate.toggle("auto")
+    wait_signal(car, Signal.AUTO, True)
+    wait_until(lambda: not any(car.signal_all(Signal.MAX_AC)), what="전 좌석 최대 냉방 꺼짐")
+    climate.wait_checked("max_ac", False)
+    climate.wait_checked("auto", True)
 
 
 @pytest.mark.req("HVAC-03")
@@ -342,6 +380,51 @@ def test_range_recovers_after_charging(app, car):
     wait_until(lambda: not cluster.low_range_warning(), what="충전 필요 표시 사라짐")
     # 거리와 배터리는 서로 다른 신호라 따로 도착한다 → 바로 assert 하지 않고 기다린다 (8단계 회귀에서 한 번 실패)
     wait_value(lambda: cluster.battery_percent(), 75, what="배터리(%)")
+
+
+CAR_ENERGY = "android.car.permission.CAR_ENERGY"
+
+
+@pytest.fixture
+def energy_permission_revoked(app, device, request):
+    """앱에서 CAR_ENERGY(주행 가능 거리·배터리, dangerous 권한)를 빼고 앱을 새로 띄운다.
+    user-fixed 를 붙여 앱이 권한을 다시 요청해도 권한 창이 뜨지 않고 바로 거절되게 한다 (권한 창이 앱 화면을 가리지 않게).
+    끝나면 권한을 돌려주고 앱을 끈다. 다음 테스트가 앱을 새로 띄워 다시 구독한다."""
+    user = str(device.user)
+
+    def restore():
+        device.adb.shell("pm", "grant", "--user", user, PACKAGE, CAR_ENERGY, check=False)
+        device.adb.shell("pm", "clear-permission-flags", "--user", user, PACKAGE, CAR_ENERGY, "user-fixed", check=False)
+        device.stop_app()
+
+    request.addfinalizer(restore)
+    device.adb.shell("pm", "revoke", "--user", user, PACKAGE, CAR_ENERGY)  # 권한을 빼면 시스템이 앱 프로세스를 끝낸다
+    device.adb.shell("pm", "set-permission-flags", "--user", user, PACKAGE, CAR_ENERGY, "user-fixed")
+    device.launch(reset=True)
+    app.find("source_badge")
+    return app
+
+
+@pytest.mark.req("SYS-01", "ENERGY-01")
+@pytest.mark.aaos  # 태블릿의 Mock 차량에는 권한이 없다
+@pytest.mark.regression
+def test_signal_without_permission_shows_no_value(energy_permission_revoked, car):
+    """CAR_ENERGY 권한이 없으면 주행 가능 거리와 배터리 대신 '주행 가능 거리 정보 없음'이 보이고, 앱은 멈추지 않습니다.
+    권한이 있는 외기 온도와 속도는 그대로 보이고, 읽을 수 없는 거리 신호(12 km)로 경고를 띄우지 않습니다.
+    """
+    app = energy_permission_revoked
+    cluster = app.cluster()
+    app.wait_visible("range_unavailable")
+    assert not app.visible("range_value") and not app.visible("battery_value")
+    assert app.source_badge() == "AAOS"
+    assert not app.visible("vehicle_error"), f"차량 오류 표시: {app.text('vehicle_error')}"
+    wait_value(lambda: cluster.outside_temperature(), 18.0, what="외기 온도 표시 (CAR_EXTERIOR_ENVIRONMENT, 권한 있음)")
+
+    car.set_signal(Signal.RANGE_KM, 12.0)
+    car.drive(50.0)
+    app.home().wait_text("speed_value", "50")  # 속도(CAR_SPEED)는 권한이 있어 그대로 따라온다
+    stays(lambda: app.visible("range_unavailable") and not cluster.low_range_warning() and not app.visible("low_range_card"),
+          what="거리 정보 없음 유지, 경고·충전소 카드 없음")
 
 
 @pytest.mark.req("ENERGY-01", "SET-01")

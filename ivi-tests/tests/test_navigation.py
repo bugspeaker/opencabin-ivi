@@ -51,6 +51,44 @@ def test_search_locked_while_driving_but_favorites_work(app, car):
     assert nav.destination() == "집"
 
 
+@pytest.mark.req("NAV-01", "DRIVE-03")
+@pytest.mark.regression
+@pytest.mark.parametrize("category, nearest, first", [
+    # 목록 태그 nav_dest_N 의 N 은 전체 장소 목록의 순번이다 (앱 assistant/Places)
+    ("charger", ["판교 급속 충전소", "정자 급속 충전소"], 6),   # 1.8 km, 4.6 km
+    ("parking", ["판교 공영주차장", "정자 공영주차장"], 8),     # 2.0 km, 4.1 km
+])
+def test_category_shortcut_works_while_driving(app, car, category, nearest, first):
+    """주행 중에는 검색 입력이 막혀도 충전소, 주차 분류 버튼은 누를 수 있습니다.
+    그 분류의 장소만 가까운 순으로 나오고, 가장 가까운 곳으로 바로 안내를 시작할 수 있습니다.
+    """
+    nav = app.navigation()
+    car.drive(50.0)
+    nav.wait_enabled("nav_search", False)
+
+    nav.category(category)
+    wait_value(lambda: nav.results(), nearest, what=f"'{category}' 분류 목록")
+    nav.pick(first)
+    assert nav.destination() == nearest[0]
+    nav.start()
+    app.wait_text("nav_dest_name", nearest[0])
+
+
+@pytest.mark.req("NAV-01")
+@pytest.mark.regression
+def test_cancel_preview_returns_to_search(app):
+    """목적지를 고른 뒤 '취소'를 누르면 안내를 시작하지 않고 찾기 화면으로 돌아갑니다.
+    주행 정보에도 경로가 생기지 않습니다.
+    """
+    nav = app.navigation()
+    nav.pick(2)  # 판교역
+    assert nav.destination() == "판교역"
+    nav.cancel()
+    nav.wait_visible("nav_search")
+    assert not nav.visible("nav_remaining")
+    assert app.cluster().route() is None
+
+
 @pytest.mark.req("NAV-01")
 @pytest.mark.regression
 def test_search_filters_destinations(app):
@@ -63,7 +101,9 @@ def test_search_filters_destinations(app):
 @pytest.mark.req("NAV-01")
 @pytest.mark.regression
 def test_arrival(app, car):
-    """0.1 km 떨어진 편의점으로 안내를 시작하고 120 km/h로 달리면 도착 화면이 뜹니다."""
+    """0.1 km 떨어진 편의점으로 안내를 시작하고 120 km/h로 달리면 도착 화면이 뜹니다.
+    '확인'을 누르면 찾기 화면으로 돌아가고 주행 정보의 경로 표시도 사라집니다.
+    """
     nav = app.navigation()
     nav.search("편의점")
     wait_value(lambda: nav.results(), ["편의점"], what="'편의점' 검색 결과")
@@ -71,6 +111,10 @@ def test_arrival(app, car):
     nav.start()
     car.drive(120.0)
     nav.wait_visible("nav_arrived", timeout=20)
+
+    nav.tap("nav_done")
+    nav.wait_visible("nav_search")
+    app.wait_visible("cluster_route", expected=False)
 
 
 @pytest.mark.req("NAV-01", "UI-01")

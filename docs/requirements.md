@@ -44,7 +44,7 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 | SYS-01.1 | 기기에 맞는 차량 데이터에 연결합니다 (AAOS는 CarService, 태블릿은 Mock) | `test_app_starts_with_vehicle_source_for_device` | `assert app.source_badge() == device.vehicle.badge`, 연결 안 됨·오류 표시가 없습니다 |
 | SYS-01.2 | 연결한 차량 값이 시작 화면에 맞게 보입니다 | `test_parked_on_start` | `wait_text("speed_value", "0")`, `assert home.gear() == "P"` |
 | SYS-01.3 | 권한이 있으면 공조를 제어할 수 있습니다 | `test_hvac_is_controllable` | `assert not climate.unavailable()` 뒤 화면 + 한 번이 차량 22.5°C로 |
-| SYS-01.4 | 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 줍니다 | 확인하지 않음 | 앱 코드(`CarVehicleDataSource`가 `SecurityException`을 받아 '값 없음')에는 있지만, 권한을 뺀 상태로 돌리는 E2E나 앱 단위 테스트가 없습니다 |
+| SYS-01.4 | 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 줍니다 | `test_signal_without_permission_shows_no_value` | AAOS에서 `pm revoke`로 CAR_ENERGY를 뺀 뒤 앱을 새로 띄우고 `wait_visible("range_unavailable")`, 거리·배터리 표시가 없는지 봅니다. 권한이 있는 외기 온도(18.0°C)와 속도(50)는 그대로 보이고, 거리 12 km를 넣어도 경고와 충전소 카드가 뜨지 않는지 `stays`로 봅니다. 태블릿의 Mock 차량에는 권한이 없어 AAOS에서만 확인합니다 |
 | HVAC-02.1 | 버튼 한 번에 0.5°C 바뀝니다 | `test_button_changes_signal_by_one_step` | 차량 값 `wait_value(car.temperature(seat), 22.5)`(▼는 21.5)와 화면 `wait_temperature`를 따로 봅니다. 좌석 2 × 방향 2 |
 | HVAC-02.2 | 끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌립니다 | `test_buttons_disabled_at_limits` | `wait_enabled("<좌석>_temp_down", False)`와 `assert climate.can_increase(seat)`. 28.0°C는 반대 |
 | HVAC-02.3 | 버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않습니다 | `test_step_reaches_limit_and_disables` | 16.5→16.0°C `wait_value`, `wait_enabled(False)`, 꺼진 버튼을 누른 뒤 1.5초 동안 `stays(car.temperature(seat) == 16.0)`. 28.0°C도 같습니다 |
@@ -56,13 +56,19 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 | HVAC-04.2 | 끄면 켜기 전 값(22.0°C, 풍량 3)으로 돌아갑니다 | `test_max_ac_off_restores_previous_settings` | `wait_signal(car, Signal.FAN, 3)`, 좌석마다 `wait_value(car.temperature(seat), 22.0)` |
 | HVAC-04.3 | 풍량을 직접 바꾸면 풀리고, 온도는 되돌리지 않습니다 | `test_manual_fan_releases_max_ac` | `wait_signal(car, Signal.MAX_AC, False)`, `wait_signal(car, Signal.FAN, 6)`, `assert car.temperature(Seat.DRIVER) == 16.0` |
 | HVAC-04.4 | A/C를 끄면 최대 냉방도 꺼집니다 | `test_turning_ac_off_releases_max_ac` | `wait_signal(car, Signal.AC, False)`, `wait_signal(car, Signal.MAX_AC, False)` |
-| HVAC-04.5 | 온도를 직접 바꾸면 풀립니다 | 확인하지 않음 | 요구사항의 '다른 공조 값'에 온도도 들어가지만 테스트가 없습니다. 풍량과 A/C만 확인했습니다 |
+| HVAC-04.5 | 온도를 직접 바꾸면 풀리고, 켜기 전 값으로 되돌리지 않습니다 | `test_manual_temperature_releases_max_ac` | FULL 뒤 운전석 + 한 번에 `wait_value(car.temperature(Seat.DRIVER), 16.5)`, 전 좌석 `MAX_AC` 꺼짐, `stays(풍량 7, 조수석 16.0°C)` |
 | HVAC-04.6 | 차량 쪽에서 바뀐 최대 냉방이 화면 토글에 보입니다 | `test_max_ac_signal_is_shown_on_toggle` | `wait_checked("max_ac", True)`, 끄면 `False` |
+| HVAC-04.7 | AUTO를 켜면 풀립니다 | `test_turning_auto_on_releases_max_ac` | `wait_signal(car, Signal.AUTO, True)`, 전 좌석 `MAX_AC` 꺼짐, 화면 토글 `max_ac` 꺼짐과 `auto` 켜짐 |
 | DRIVE-02.1 | 주행 중에는 영상 버튼이 꺼지고 안내가 나옵니다 | `test_video_button_locked_while_driving` | `wait_enabled("open_video", False)`, `assert media.restricted_notice()` |
 | DRIVE-02.2 | 버튼을 거치지 않고 영상 화면을 열어도 주행 중에는 막힙니다 | `test_video_is_blocked_while_driving` | `wait_until(device.video_blocked(video))`, `assert not video.playing()` |
 | DRIVE-02.3 | 차를 세우면 다시 볼 수 있습니다 | `test_video_blocked_screen_follows_parking`, `test_video_button_locked_while_driving`, `test_video_plays_when_parked` | 막힌 화면이 `wait_until(not device.video_blocked(video))` 뒤 `wait_visible("video_player")`, 영상 버튼 `wait_enabled("open_video", True)`, 정차 중 재생 시간이 흐릅니다 |
 | DRIVE-02.4 | 멈춘 자리부터 이어집니다. 막힌 동안 재생 시간이 흐르지 않습니다 | `test_video_resumes_where_it_stopped` | `assert resumed >= before`(처음부터 다시 재생하지 않음), `assert resumed - before <= wall - 4`(막힌 5초 동안 흐르지 않음). 기기에 영상이 없으면 건너뛰는데, Release 게이트가 이 건너뜀을 막습니다 |
 | DRIVE-02.5 | 주행 중에도 음악은 고를 수 있습니다 | `test_media_stays_usable_while_driving` | 주행 제한 표시(`restriction_banner`)가 뜬 상태에서 곡을 고르고 `wait_text("now_playing_title", title)` |
+| DRIVE-03.1 | 주행 중에는 내비 검색 입력을 막고, 즐겨찾기와 충전소·주차 분류로는 목적지를 고를 수 있습니다 | `test_search_locked_while_driving_but_favorites_work`, `test_category_shortcut_works_while_driving` | `wait_enabled("nav_search", False)`, 즐겨찾기로 `destination() == "집"`. 분류는 `wait_value(nav.results(), 가까운 순 두 곳)` 뒤 첫 곳으로 안내를 시작합니다 |
+| DRIVE-03.2 | 주행 중에는 전화 키패드를 막고 연락처는 5개까지만 보여 줍니다 | `test_driving_locks_keypad_and_limits_contacts` | `wait_enabled("phone_key_1", False)`, `wait_value(len(phone.contact_names()), 5)` |
+| DRIVE-03.3 | 주행 중에는 어시스턴트 글자 입력을 막고, 추천 명령의 사이드 미러 접기는 거절합니다 | `test_driving_locks_typing_and_refuses_mirror_fold` | `wait_enabled("assistant_input", False)`, 대답에 '주행 중', 빠른 제어의 미러는 '펼침' 그대로입니다 |
+| DRIVE-03.4 | 주행 중에는 사이드 미러 접기와 트렁크를 막고, 도어 잠금은 쓸 수 있습니다 | `test_quick_control_mirror_locked_while_driving` | `wait_enabled("qc_mirror", False)`, `assert not qc.can_toggle("trunk")`, 도어 `toggle("door_lock") == "열림"` |
+| DRIVE-03.5 | 접어 둔 사이드 미러를 펴는 것은 주행 중에도 됩니다 | `test_folded_mirror_can_be_unfolded_while_driving` | 주행 중 `assert qc.can_toggle("mirror")`, `toggle("mirror") == "펼침"`, 편 뒤에는 `wait_enabled("qc_mirror", False)` |
 | ENERGY-02.1 | 30 km 이하에서 경고와 충전소 카드가 뜨고, 31 km에서는 뜨지 않습니다 | `test_low_range_threshold` | 31, 30, 29 km마다 `wait_value(cluster.low_range_warning(), 기대값)`, `assert app.visible("low_range_card") == 기대값` |
 | ENERGY-02.2 | 충전소 카드로 가장 가까운 충전소 안내를 시작합니다. 주행 중에도 누를 수 있습니다 | `test_low_range_card_starts_guidance_to_nearest_charger` | 주행 중 `assert app.text("low_range_charger").startswith("판교 급속 충전소")`, 누른 뒤 `wait_text("nav_dest_name", "판교 급속 충전소")` |
 | ENERGY-02.3 | 알림 센터에 남습니다 | `test_low_range_is_recorded_in_notifications` | `assert panel.titles()[0] == "주행 가능 거리 부족"` |
