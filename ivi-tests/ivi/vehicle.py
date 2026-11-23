@@ -102,9 +102,24 @@ class TempUnit:
 
 
 class Gear:
+    NEUTRAL = 1
     REVERSE = 2
     PARK = 4
     DRIVE = 8
+
+    BY_LABEL = {"N": NEUTRAL, "R": REVERSE, "P": PARK, "D": DRIVE}
+
+
+class Ux:
+    """주행 중 UX 제한 종류 (CarUxRestrictions.UX_RESTRICTIONS_*, 앱의 UxRules 와 같은 값).
+    AAOS 에뮬레이터의 표(2026-11-23 dumpsys): P 0, 멈춤(P 아님·0 km/h) NO_VIDEO, 주행 0xff."""
+    NONE = 0
+    NO_DIALPAD = 0x1
+    NO_KEYBOARD = 0x8
+    NO_VIDEO = 0x10
+    LIMIT_CONTENT = 0x20
+    IDLING = NO_VIDEO
+    MOVING = 0xff
 
 
 class Area:
@@ -169,7 +184,8 @@ class VehicleController(ABC):
         self.park()
 
     @abstractmethod
-    def drive(self, kmh=50.0): ...
+    def drive(self, kmh=50.0, gear="D"):
+        """기어(D·N·R)와 속도. kmh=0 이면 P 가 아닌 채 멈춘 상태(신호 대기, 플랫폼의 idling)다."""
 
     @abstractmethod
     def park(self): ...
@@ -190,7 +206,12 @@ class VehicleController(ABC):
         0.5 단위가 아닌 값도 넣을 수 있다 (경계값 테스트의 입력)."""
 
     @abstractmethod
-    def is_restricted(self): ...
+    def is_restricted(self):
+        """주행 중(P 가 아니고 속도 > 0)인가. D 기어로 멈춰 있을 때는 False 다 (그때의 영상 제한은 ux_restrictions 로 본다)."""
+
+    @abstractmethod
+    def ux_restrictions(self):
+        """지금 걸린 UX 제한 종류 (Ux 비트, 0 이면 제한 없음). AAOS 는 CarService 가 정한 값, Mock 은 앱의 표로 계산한 값."""
 
     @abstractmethod
     def dump(self):
@@ -344,8 +365,8 @@ class AaosVehicle(VehicleController):
         return int(found.group(1)) if found else DrivingState.UNKNOWN
 
     # ---- 공통 동작 ----
-    def drive(self, kmh=50.0):
-        self.force(Prop.GEAR_SELECTION, Gear.DRIVE)
+    def drive(self, kmh=50.0, gear="D"):
+        self.force(Prop.GEAR_SELECTION, Gear.BY_LABEL[gear])
         self.force(Prop.PERF_VEHICLE_SPEED, float(kmh) / 3.6)
 
     def park(self):
@@ -369,6 +390,14 @@ class AaosVehicle(VehicleController):
 
     def is_restricted(self):
         return self.driving_state() == DrivingState.MOVING
+
+    def ux_restrictions(self):
+        """주 화면(display 0)에 지금 걸린 제한. DO 가 false 면 제한이 없는 것이다 (비트가 남아 있어도 앱은 무시한다)."""
+        out = self.adb.shell("dumpsys", "car_service", "--services", "CarUxRestrictionsManagerService")
+        found = re.search(r"Display id: 0 UXR: DO: (true|false) UxR: (\d+)", out)
+        if not found:
+            raise RuntimeError(f"UX 제한을 읽지 못했다: {out.strip()[:200]}")
+        return int(found.group(2)) if found.group(1) == "true" else Ux.NONE
 
     def dump(self):
         rows = [
@@ -413,8 +442,8 @@ class MockVehicle(VehicleController):
             raise RuntimeError(f"Mock 상태를 읽지 못했다 (앱이 떠 있는지 확인): {out.strip()[-200:]}")
         return dict(pair.split("=", 1) for pair in found.group(1).split(";"))
 
-    def drive(self, kmh=50.0):
-        self._set(gear="D", speed_kmh=kmh)
+    def drive(self, kmh=50.0, gear="D"):
+        self._set(gear=gear, speed_kmh=kmh)
 
     def park(self):
         self._set(speed_kmh=0.0, gear="P")
@@ -433,7 +462,10 @@ class MockVehicle(VehicleController):
         self._set(**{f"temp_{seat.tag}": celsius})
 
     def is_restricted(self):
-        return self.state()["restricted"] == "true"
+        return self.state()["moving"] == "true"
+
+    def ux_restrictions(self):
+        return int(self.state()["ux"])
 
     def set_signals(self, values):
         """타입에 맞는 extra 로 보낸다: bool --ez, int --ei, float --ef."""

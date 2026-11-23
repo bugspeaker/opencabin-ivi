@@ -49,6 +49,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import dev.opencabin.ivi.ui.IviColors
 import dev.opencabin.ivi.ui.IviTheme
+import dev.opencabin.ivi.vehicle.UxRules
 import kotlinx.coroutines.delay
 
 /**
@@ -79,7 +80,7 @@ class VideoActivity : ComponentActivity() {
         setContent {
             val state = vehicle.state.collectAsStateWithLifecycle().value
             // 태블릿: 같은 화면 안에서 차단 ↔ 재생이 바뀐다. 차단 중에는 멈춘다
-            LaunchedEffect(state.restricted) { updatePlayback(state.restricted) }
+            LaunchedEffect(state.uxRestrictions) { updatePlayback(state.blocks(UxRules.NO_VIDEO)) }
             IviTheme {
                 Box(
                     Modifier
@@ -89,7 +90,7 @@ class VideoActivity : ComponentActivity() {
                 ) {
                     val p = player
                     when {
-                        state.restricted -> Blocked { finish() }
+                        state.blocks(UxRules.NO_VIDEO) -> Blocked(state.moving) { finish() }
                         p != null -> DrivePlayer(p) { finish() }
                         else -> FakePlayer { finish() }
                     }
@@ -102,7 +103,7 @@ class VideoActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         started = true
-        updatePlayback((application as IviApp).vehicle.state.value.restricted)
+        updatePlayback((application as IviApp).vehicle.state.value.blocks(UxRules.NO_VIDEO))
     }
 
     override fun onResume() {
@@ -134,15 +135,15 @@ class VideoActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Blocked(onClose: () -> Unit) {
+private fun Blocked(moving: Boolean, onClose: () -> Unit) {
     Column(
         Modifier.fillMaxSize().testTag("video_blocked"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
     ) {
         Text("⏸", fontSize = 48.sp, color = IviColors.Warn)
-        Text("주행 중에는 영상을 볼 수 없습니다", fontSize = 28.sp, fontWeight = FontWeight.Medium)
-        Text("차를 세우면 이어서 볼 수 있습니다", color = IviColors.TextSecondary, fontSize = 18.sp)
+        Text(if (moving) "주행 중에는 영상을 볼 수 없습니다" else "P 기어에서만 영상을 볼 수 있습니다", fontSize = 28.sp, fontWeight = FontWeight.Medium)
+        Text("P로 바꾸면 이어서 볼 수 있습니다", color = IviColors.TextSecondary, fontSize = 18.sp)
         CloseButton(onClose)
     }
 }

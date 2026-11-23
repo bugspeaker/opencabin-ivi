@@ -227,8 +227,13 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
 
     private fun CarPropertyValue<*>.isFor(seat: Seat) = areaId and seat.areaId != 0
 
+    /**
+     * 플랫폼이 정한 제한 종류를 그대로 쓴다. 예전에는 requiresDistractionOptimization 하나만 보고 모든 기능을 막아서,
+     * D 기어로 멈춰 있을 때(플랫폼은 영상만 막음, 0x10) 검색·키패드까지 막았다 (2026-11-23 찾은 결함).
+     */
     private fun applyRestrictions(restrictions: CarUxRestrictions) {
-        _state.update { it.copy(restricted = restrictions.isRequiresDistractionOptimization) }
+        val active = if (restrictions.isRequiresDistractionOptimization) restrictions.activeRestrictions else UxRules.NONE
+        _state.update { it.copy(uxRestrictions = active) }
     }
 
     private companion object {

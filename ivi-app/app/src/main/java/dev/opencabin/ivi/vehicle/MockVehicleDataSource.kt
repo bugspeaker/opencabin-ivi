@@ -108,7 +108,9 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
             if (intent.hasExtra(EXTRA_RANGE)) next = next.copy(rangeKm = intent.getFloatExtra(EXTRA_RANGE, 0f).coerceAtLeast(0f))
             if (intent.hasExtra(EXTRA_BATTERY)) next = next.copy(batteryPercent = intent.getFloatExtra(EXTRA_BATTERY, 0f).coerceIn(0f, 100f))
             if (intent.hasExtra(EXTRA_OUTSIDE)) next = next.copy(outsideTempC = intent.getFloatExtra(EXTRA_OUTSIDE, 0f))
-            next.copy(restricted = next.gear != Gear.PARK && next.speedKmh > 0f)
+            // AAOS 플랫폼과 같은 표: P 제한 없음, 멈춤(P 아님, 0 km/h) 영상만, 주행 전부.
+            // 예전에는 속도 > 0 일 때만 제한해서, D 기어로 멈춰 있으면 영상을 볼 수 있었다 (2026-11-23 찾은 결함)
+            next.copy(uxRestrictions = UxRules.forDriving(next.gear, next.speedKmh))
         }
     }
 
@@ -118,6 +120,8 @@ class MockVehicleDataSource(private val context: Context, private val acceptAdb:
         "temp_driver=${s.driverTempC?.let(::fmt) ?: "-"}",
         "temp_passenger=${s.passengerTempC?.let(::fmt) ?: "-"}",
         "restricted=${s.restricted}",
+        "moving=${s.moving}",
+        "ux=${s.uxRestrictions}",
         "$EXTRA_AC=${s.acOn}",
         "$EXTRA_AUTO=${s.autoOn}",
         "$EXTRA_MAX_AC=${s.maxAcOn}",

@@ -9,7 +9,15 @@ import org.junit.Test
 /** 비서의 '말 → 동작' 규칙. 기기 없이 JVM 에서 돈다 (./gradlew testDebugUnitTest). */
 class CabinAssistantTest {
 
-    private class FakeCar(override var restricted: Boolean = false, override val hvacAvailable: Boolean = true) : CabinControls {
+    private class FakeCar(override val hvacAvailable: Boolean = true) : CabinControls {
+        override var videoBlocked = false
+        override var moving = false
+
+        /** 주행: 영상과 미러 접기 모두 막힘 */
+        fun drive() { videoBlocked = true; moving = true }
+        /** D 기어로 멈춤 (신호 대기): 플랫폼은 영상만 막는다 */
+        fun idle() { videoBlocked = true; moving = false }
+        fun park() { videoBlocked = false; moving = false }
         val temps = mutableMapOf(Seat.DRIVER to 22f, Seat.PASSENGER to 22f)
         var acOn = false
         var syncOn = false
@@ -111,15 +119,23 @@ class CabinAssistantTest {
     }
 
     @Test fun `주행 중에는 영상과 사이드 미러 접기를 거절한다`() {
-        car.restricted = true
+        car.drive()
         assertTrue(assistant.handle("영상 틀어줘", Seat.DRIVER).text.contains("주행 중"))
         assertFalse(car.videoOpened)
         assertTrue(assistant.handle("사이드 미러 접어줘", Seat.PASSENGER).text.contains("주행 중"))
         assertFalse(car.mirrorsFolded)
 
-        car.restricted = false
+        car.park()
         assistant.handle("영상 틀어줘", Seat.DRIVER)
         assertTrue(car.videoOpened)
+    }
+
+    @Test fun `D 기어로 멈춰 있으면 영상만 거절하고 사이드 미러는 접는다`() {
+        car.idle()
+        assertTrue(assistant.handle("영상 틀어줘", Seat.DRIVER).text.contains("P 기어"))
+        assertFalse(car.videoOpened)
+        assistant.handle("사이드 미러 접어줘", Seat.PASSENGER)
+        assertTrue(car.mirrorsFolded)
     }
 
     @Test fun `영상 틀어줘는 음악이 아니다`() {

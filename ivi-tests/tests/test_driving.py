@@ -3,13 +3,19 @@
 영상 차단 판정은 기기마다 다르다 (Device.video_blocked):
   AAOS  : OS 가 ActivityBlockingActivity 로 막는다 (VideoActivity 는 distractionOptimized 가 아님)
   Mock  : 시스템 차단이 없어 앱이 video_blocked 화면을 보여 준다
+
+주행 중 제한은 플랫폼의 UX 제한 종류(car.ux_restrictions())를 따른다 (AAOS 에뮬레이터의 car_ux_restrictions_map):
+  P                     제한 없음
+  P 아님 + 0 km/h       영상만 (NO_VIDEO 0x10, 신호 대기 같은 '정지')
+  P 아님 + 0 km/h 초과  전부 (0xff: 글자 입력, 키패드, 목록 길이, 영상 ...)
 """
 import time
 
 import pytest
 
 from ivi.device import VIDEO
-from ivi.waits import stays, wait_until
+from ivi.vehicle import Ux
+from ivi.waits import stays, wait_until, wait_value
 
 
 @pytest.mark.req("DRIVE-01")
@@ -146,3 +152,96 @@ def test_video_next_clip(app, car, device, driver):
     video.next_clip()
     video.wait_text("video_index", f"2 / {video.clip_index().split('/')[1].strip()}")
     video.close()
+
+
+# ---------------- P 가 아닌 채 멈춘 상태 (신호 대기) ----------------
+
+STOPPED_BANNER = "정지 중 · 영상만 제한"
+MOVING_BANNER = "주행 중 · 일부 기능 제한"
+
+
+@pytest.mark.req("DRIVE-02", "DRIVE-03")
+@pytest.mark.regression
+@pytest.mark.parametrize("gear", ["D", "N"])
+def test_stopped_in_gear_blocks_only_video(app, car, gear):
+    """P가 아닌 기어(D, N)로 멈춰 있으면 플랫폼 UX 제한은 영상만 막습니다(NO_VIDEO 0x10).
+    영상 버튼은 꺼지지만 내비 검색, 전화 키패드, 사이드 미러와 트렁크는 그대로 쓸 수 있습니다. P로 바꾸면 영상 버튼이 켜집니다.
+    """
+    car.drive(0.0, gear=gear)
+    wait_value(car.ux_restrictions, Ux.NO_VIDEO, what="UX 제한 (영상만)")
+    app.wait_text("restriction_banner", STOPPED_BANNER)
+
+    media = app.media()
+    media.wait_enabled("open_video", False)
+    assert media.restricted_notice()
+    nav = app.navigation()
+    assert nav.search_enabled() and not nav.visible("nav_search_locked"), "멈춰 있는데 검색 입력을 막았다"
+    phone = app.phone()
+    phone.tab("keypad")
+    assert phone.enabled("phone_key_1") and not phone.visible("phone_keypad_locked"), "멈춰 있는데 키패드를 막았다"
+    qc = app.vehicle_controls()
+    assert qc.can_toggle("mirror") and qc.can_toggle("trunk"), "멈춰 있는데 사이드 미러나 트렁크를 막았다"
+    assert not qc.visible("qc_restricted_notice")
+
+    car.park()
+    wait_value(car.ux_restrictions, Ux.NONE, what="UX 제한 (없음)")
+    app.media().wait_enabled("open_video", True)
+    app.wait_visible("restriction_banner", expected=False)
+
+
+@pytest.mark.req("DRIVE-02")
+@pytest.mark.regression
+def test_video_screen_is_blocked_while_stopped_in_drive(app, car, device, driver):
+    """D 기어로 멈춰 있을 때 영상 화면을 바로 열어도 막힙니다. P로 바꾸면 같은 화면에서 재생 화면이 나옵니다."""
+    car.drive(0.0)
+    wait_value(car.ux_restrictions, Ux.NO_VIDEO, what="UX 제한 (영상만)")
+    device.launch(VIDEO)
+    video = app.video()
+    wait_until(lambda: device.video_blocked(video), what="D 기어 정지 중 영상 차단")
+    assert not video.playing(), "D 기어로 멈춰 있는데 영상 재생 화면이 보인다"
+
+    car.park()
+    wait_until(lambda: not device.video_blocked(video), what="P 로 바꾼 뒤 차단 해제")
+    video.wait_visible("video_player")
+
+
+# (기어, km/h, 머무는 초, 기대 UX 제한, 검색 입력, 상단 배지). 신호 대기 → 천천히 출발 → 정지 → 가속 → 중립 → 주차.
+# 3 km/h 와 60 km/h 는 에뮬레이터 설정의 두 주행 구간(0~5, 5 km/h~)에 하나씩 든다
+STOP_AND_GO = [
+    ("P", 0, 2, Ux.NONE, True, None),
+    ("D", 0, 3, Ux.NO_VIDEO, True, STOPPED_BANNER),
+    ("D", 3, 2, Ux.MOVING, False, MOVING_BANNER),
+    ("D", 0, 3, Ux.NO_VIDEO, True, STOPPED_BANNER),
+    ("D", 60, 3, Ux.MOVING, False, MOVING_BANNER),
+    ("N", 0, 2, Ux.NO_VIDEO, True, STOPPED_BANNER),
+    ("P", 0, 2, Ux.NONE, True, None),
+]
+
+
+@pytest.mark.req("DRIVE-02", "DRIVE-03")
+@pytest.mark.regression
+def test_restrictions_follow_stop_and_go_timeline(app, car, request):
+    """속도와 기어를 시간에 따라 바꾸는 시나리오(신호 대기, 3 km/h 출발, 정지, 60 km/h, 중립, 주차)에서
+    단계마다 UX 제한과 화면(내비 검색 입력, 상단 배지)이 바로 바뀌고, 그 단계에 머무는 동안 흔들리지 않습니다.
+    단계마다 신호를 넣고 화면이 따라오기까지 걸린 시간을 결과에 남깁니다.
+    """
+    nav = app.navigation()
+    took = []
+    for gear, kmh, hold, ux, typing, banner in STOP_AND_GO:
+        step = f"{gear} {kmh} km/h"
+        started = time.monotonic()
+        if gear == "P":
+            car.park()
+        else:
+            car.drive(float(kmh), gear=gear)
+        wait_value(car.ux_restrictions, ux, what=f"{step}: UX 제한")
+        nav.wait_enabled("nav_search", typing)
+        if banner:
+            app.wait_text("restriction_banner", banner)
+        else:
+            app.wait_visible("restriction_banner", expected=False)
+        took.append(f"{step} {time.monotonic() - started:.1f}s")
+        # 그 단계에 머무는 동안 제한이 풀리거나 더 걸리지 않는다 (속도 0 ↔ 0 초과 경계가 흔들리면 여기서 잡힌다)
+        stays(lambda: car.ux_restrictions() == ux and nav.search_enabled() == typing, duration=hold, interval=0.5,
+              what=f"{step}: {hold}초 동안 제한 유지")
+    request.node.user_properties.append(("restriction_seconds", ", ".join(took)))

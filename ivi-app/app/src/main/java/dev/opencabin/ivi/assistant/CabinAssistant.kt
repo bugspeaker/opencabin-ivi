@@ -83,7 +83,10 @@ sealed interface Action {
 
 /** 비서가 차를 움직이는 경계. 화면 쪽(IviRoot)이 구현한다. */
 interface CabinControls {
-    val restricted: Boolean
+    /** 영상을 막는 UX 제한이 걸려 있는가 (P 가 아니면 멈춰 있어도 true) */
+    val videoBlocked: Boolean
+    /** 차가 움직이는가 (사이드 미러 접기를 막는다) */
+    val moving: Boolean
     val hvacAvailable: Boolean
     fun temperature(seat: Seat): Float?
     fun setTemperature(seat: Seat, celsius: Float)
@@ -233,10 +236,10 @@ class CabinAssistant(private val controls: CabinControls) {
         }
         Action.CancelRoute -> Reply(if (controls.cancelRoute()) "경로 안내를 종료했어요." else "지금 안내 중인 경로가 없어요.")
         Action.OpenVideo ->
-            if (controls.restricted) Reply("주행 중에는 영상을 볼 수 없어요. 차를 세우면 열어 드릴게요.")
+            if (controls.videoBlocked) Reply(if (controls.moving) "주행 중에는 영상을 볼 수 없어요. 차를 세우고 P로 바꾸면 열어 드릴게요." else "P 기어에서만 영상을 볼 수 있어요. P로 바꾸면 열어 드릴게요.")
             else { controls.openVideo(); Reply("영상을 열게요.") }
         is Action.FoldMirrors ->
-            if (controls.restricted && action.fold) Reply("주행 중에는 사이드 미러를 접을 수 없어요.")
+            if (controls.moving && action.fold) Reply("주행 중에는 사이드 미러를 접을 수 없어요.")
             else { controls.foldMirrors(action.fold); Reply(if (action.fold) "사이드 미러를 접었어요." else "사이드 미러를 폈어요.") }
         is Action.Radio -> { controls.setRadio(action.on); Reply(if (action.on) "라디오를 켤게요." else "라디오를 껐어요.") }
         is Action.Call -> controls.call(action.who)?.let { Reply("${it}에게 전화를 걸게요.") }

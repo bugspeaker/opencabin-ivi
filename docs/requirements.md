@@ -9,8 +9,8 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 | SYS-01 | 앱은 기기에 맞는 차량 데이터(AAOS는 CarService, 그 밖의 기기는 Mock)에 연결하고, 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 줍니다. | 기능 |
 | UI-01 | 화면 틀(아래 바, 분할 화면, 위젯, 알림 센터, 앱 목록, 이전 실행 앱)이 어느 화면에서든 동작합니다. | 기능 |
 | DRIVE-01 | 속도와 기어 신호를 주행 정보에 바로 보여 줍니다. | 기능 |
-| DRIVE-02 | 주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다. | 운전자 주의 분산 |
-| DRIVE-03 | 주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다. | 운전자 주의 분산 |
+| DRIVE-02 | P 기어가 아니면(D·N·R로 멈춰 있어도) 영상을 볼 수 없고, P로 바꾸면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다. | 운전자 주의 분산 |
+| DRIVE-03 | 주행 중(P가 아니고 속도가 0보다 클 때)에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다. P가 아닌 채 멈춰 있을 때(신호 대기)는 막지 않습니다. | 운전자 주의 분산 |
 | HVAC-01 | 운전석과 조수석 온도는 화면과 차량 신호가 같은 값을 가집니다. 한쪽이 바뀌면 다른 쪽이 따라옵니다. | 기능 |
 | HVAC-02 | 온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼집니다. 차량 쪽에서 범위 밖 값이나 0.5°C 단위가 아닌 값이 와도 앱은 멈추지 않고 그 값을 보여 주며, 범위 밖으로 더 가는 버튼은 꺼집니다. 버튼을 누르면 범위 안의 0.5°C 단위 값으로 맞춰 차량에 씁니다. | 기능 |
 | HVAC-03 | A/C, AUTO, 풍량은 모든 좌석 area에 함께 적용됩니다. 풍량을 직접 바꾸면 AUTO가 풀립니다. | 기능 |
@@ -32,6 +32,8 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 | BENCH-01 | Test Bench API로 기기, 차량 신호, 실행 결과를 조회하고 신호를 넣을 수 있습니다. 잘못된 값은 거절하고 차량에 넣지 않습니다. | 운영 |
 | BENCH-02 | 전원을 껐다 켜도 기기가 정해진 시간 안에 부팅되고, 앱과 공조 기본값이 돌아옵니다. | 운영 (모의 환경) |
 | SPIKE-01 | AAOS 기본 SystemUI의 공조 바가 VHAL 신호와 이어지고, 속도와 기어가 주행 상태를 바꿉니다. | 기술 검증 (1단계) |
+
+DRIVE-02와 DRIVE-03의 '주행 중'은 AAOS의 UX 제한(CarUxRestrictions) 표를 따릅니다. P는 제한이 없고, P가 아닌 채 멈춰 있으면(속도 0) 영상만 막고(NO_VIDEO), 속도가 0보다 크면 모두 막습니다(0xff). 앱은 기어와 속도가 아니라 플랫폼이 알려 준 제한 종류를 보고 기능을 막고, 태블릿의 Mock 차량은 같은 표로 제한을 계산합니다. AOSP 문서가 앱에 권하는 방식이고, 표는 2026-11-23 AAOS 에뮬레이터의 설정(`dumpsys car_service --services CarUxRestrictionsManagerService`)에서 확인했습니다. 그전에는 AAOS 앱이 D 기어로 멈춰 있을 때 검색까지 막고, 태블릿은 영상을 막지 않았습니다([3장 13번](portfolio.md#플랫폼-설정을-읽다-찾은-정지-상태-결함), [#47](https://github.com/bugspeaker/opencabin-ivi/issues/47)).
 
 ## 복합 요구사항: 조건마다 확인하는 곳
 
@@ -61,14 +63,17 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 | HVAC-04.7 | AUTO를 켜면 풀립니다 | `test_turning_auto_on_releases_max_ac` | `wait_signal(car, Signal.AUTO, True)`, 전 좌석 `MAX_AC` 꺼짐, 화면 토글 `max_ac` 꺼짐과 `auto` 켜짐 |
 | DRIVE-02.1 | 주행 중에는 영상 버튼이 꺼지고 안내가 나옵니다 | `test_video_button_locked_while_driving` | `wait_enabled("open_video", False)`, `assert media.restricted_notice()` |
 | DRIVE-02.2 | 버튼을 거치지 않고 영상 화면을 열어도 주행 중에는 막힙니다 | `test_video_is_blocked_while_driving` | `wait_until(device.video_blocked(video))`, `assert not video.playing()` |
-| DRIVE-02.3 | 차를 세우면 다시 볼 수 있습니다 | `test_video_blocked_screen_follows_parking`, `test_video_button_locked_while_driving`, `test_video_plays_when_parked` | 막힌 화면이 `wait_until(not device.video_blocked(video))` 뒤 `wait_visible("video_player")`, 영상 버튼 `wait_enabled("open_video", True)`, 정차 중 재생 시간이 흐릅니다 |
+| DRIVE-02.3 | P로 바꾸면 다시 볼 수 있습니다 | `test_video_blocked_screen_follows_parking`, `test_video_button_locked_while_driving`, `test_video_plays_when_parked` | 막힌 화면이 `wait_until(not device.video_blocked(video))` 뒤 `wait_visible("video_player")`, 영상 버튼 `wait_enabled("open_video", True)`, 정차 중 재생 시간이 흐릅니다 |
 | DRIVE-02.4 | 멈춘 자리부터 이어집니다. 막힌 동안 재생 시간이 흐르지 않습니다 | `test_video_resumes_where_it_stopped` | `assert resumed >= before`(처음부터 다시 재생하지 않음), `assert resumed - before <= wall - 4`(막힌 5초 동안 흐르지 않음). 기기에 영상이 없으면 건너뛰는데, Release 게이트가 이 건너뜀을 막습니다 |
 | DRIVE-02.5 | 주행 중에도 음악은 고를 수 있습니다 | `test_media_stays_usable_while_driving` | 주행 제한 표시(`restriction_banner`)가 뜬 상태에서 곡을 고르고 `wait_text("now_playing_title", title)` |
+| DRIVE-02.6 | P가 아닌 기어(D, N)로 멈춰 있어도 영상 버튼과 영상 화면을 막습니다 | `test_stopped_in_gear_blocks_only_video`, `test_video_screen_is_blocked_while_stopped_in_drive` | `wait_value(car.ux_restrictions, Ux.NO_VIDEO)`(플랫폼 쪽), `wait_enabled("open_video", False)`, 바로 연 영상 화면은 `wait_until(device.video_blocked(video))` 뒤 P에서 `wait_visible("video_player")` |
 | DRIVE-03.1 | 주행 중에는 내비 검색 입력을 막고, 즐겨찾기와 충전소·주차 분류로는 목적지를 고를 수 있습니다 | `test_search_locked_while_driving_but_favorites_work`, `test_category_shortcut_works_while_driving` | `wait_enabled("nav_search", False)`, 즐겨찾기로 `destination() == "집"`. 분류는 `wait_value(nav.results(), 가까운 순 두 곳)` 뒤 첫 곳으로 안내를 시작합니다 |
 | DRIVE-03.2 | 주행 중에는 전화 키패드를 막고 연락처는 5개까지만 보여 줍니다 | `test_driving_locks_keypad_and_limits_contacts` | `wait_enabled("phone_key_1", False)`, `wait_value(len(phone.contact_names()), 5)` |
 | DRIVE-03.3 | 주행 중에는 어시스턴트 글자 입력을 막고, 추천 명령의 사이드 미러 접기는 거절합니다 | `test_driving_locks_typing_and_refuses_mirror_fold` | `wait_enabled("assistant_input", False)`, 대답에 '주행 중', 빠른 제어의 미러는 '펼침' 그대로입니다 |
 | DRIVE-03.4 | 주행 중에는 사이드 미러 접기와 트렁크를 막고, 도어 잠금은 쓸 수 있습니다 | `test_quick_control_mirror_locked_while_driving` | `wait_enabled("qc_mirror", False)`, `assert not qc.can_toggle("trunk")`, 도어 `toggle("door_lock") == "열림"` |
 | DRIVE-03.5 | 접어 둔 사이드 미러를 펴는 것은 주행 중에도 됩니다 | `test_folded_mirror_can_be_unfolded_while_driving` | 주행 중 `assert qc.can_toggle("mirror")`, `toggle("mirror") == "펼침"`, 편 뒤에는 `wait_enabled("qc_mirror", False)` |
+| DRIVE-03.6 | P가 아닌 채 멈춰 있을 때는 글자 입력, 키패드, 사이드 미러와 트렁크를 막지 않습니다 | `test_stopped_in_gear_blocks_only_video` | `assert nav.search_enabled()`, `assert phone.enabled("phone_key_1")`, `assert qc.can_toggle("mirror") and qc.can_toggle("trunk")`, 상단 배지 '정지 중 · 영상만 제한' |
+| DRIVE-03.7 | 속도가 0과 0 초과를 오가면 제한이 그때마다 바뀌고, 그 상태에 머무는 동안 흔들리지 않습니다 | `test_restrictions_follow_stop_and_go_timeline` | P → D 정지 → 3 km/h → 정지 → 60 km/h → N 정지 → P. 단계마다 `wait_value(car.ux_restrictions, ux)`, `wait_enabled("nav_search", typing)`, 배지 문구, 머무는 2~3초 동안 `stays(...)` |
 | ENERGY-02.1 | 30 km 이하에서 경고와 충전소 카드가 뜨고, 31 km에서는 뜨지 않습니다 | `test_low_range_threshold` | 31, 30, 29 km마다 `wait_value(cluster.low_range_warning(), 기대값)`, `assert app.visible("low_range_card") == 기대값` |
 | ENERGY-02.2 | 충전소 카드로 가장 가까운 충전소 안내를 시작합니다. 주행 중에도 누를 수 있습니다 | `test_low_range_card_starts_guidance_to_nearest_charger` | 주행 중 `assert app.text("low_range_charger").startswith("판교 급속 충전소")`, 누른 뒤 `wait_text("nav_dest_name", "판교 급속 충전소")` |
 | ENERGY-02.3 | 알림 센터에 남습니다 | `test_low_range_is_recorded_in_notifications` | `assert panel.titles()[0] == "주행 가능 거리 부족"` |

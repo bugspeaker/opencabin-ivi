@@ -110,7 +110,7 @@ fun Cluster(state: VehicleState, mph: Boolean, cabin: CabinController, cockpit: 
             }
             Text(
                 when {
-                    state.restricted -> "주행 중"
+                    state.moving -> "주행 중"
                     state.gear == Gear.PARK -> "정차 중"
                     state.gear == Gear.REVERSE -> "후진"
                     else -> "대기"

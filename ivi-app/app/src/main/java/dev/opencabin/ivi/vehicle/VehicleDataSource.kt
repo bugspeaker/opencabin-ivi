@@ -12,8 +12,11 @@ data class VehicleState(
     val passengerTempC: Float? = null,
     /** 공조 값을 읽고 쓸 수 있는가. AAOS 에서는 CONTROL_CAR_CLIMATE(signature|privileged) 권한이 있어야 true. */
     val hvacAvailable: Boolean = false,
-    /** 주행 중 UX 제한. true 면 영상 등 주의 분산 기능을 막는다. */
-    val restricted: Boolean = false,
+    /**
+     * 지금 걸린 UX 제한의 종류 (UxRules 비트, CarUxRestrictions 의 활성 제한과 같은 값). 0 이면 제한 없음.
+     * 화면은 주행 상태가 아니라 이 비트를 보고 막는다: 영상은 NO_VIDEO, 글자 입력은 NO_KEYBOARD, 키패드는 NO_DIALPAD.
+     */
+    val uxRestrictions: Int = UxRules.NONE,
     val connected: Boolean = false,
     val error: String? = null,
 
@@ -43,11 +46,57 @@ data class VehicleState(
 ) {
     fun seatHeat(seat: Seat) = if (seat == Seat.DRIVER) driverSeatHeat else passengerSeatHeat
 
+    /** 무엇이든 UX 제한이 걸려 있는가 (상단 배지). P 가 아니면 멈춰 있어도 영상 제한이 걸린다. */
+    val restricted get() = uxRestrictions != UxRules.NONE
+
+    /** 이 종류의 제한이 걸려 있는가. 예: blocks(UxRules.NO_VIDEO) */
+    fun blocks(rule: Int) = (uxRestrictions and rule) != 0
+
+    /**
+     * 차가 움직이는가 (P 가 아니고 속도 > 0). UX 제한에 없는 앱의 차량 제어 잠금(사이드 미러 접기, 트렁크)과
+     * '주행 중' 표시·알림에 쓴다. D 기어로 멈춰 있을 때(신호 대기)는 false 다.
+     */
+    val moving get() = gear != Gear.PARK && speedKmh > 0f
+
     /** 주행 가능 거리가 이 값 이하면 충전소 안내를 권한다. */
     val lowRange get() = rangeKm != null && rangeKm <= LOW_RANGE_KM
 
     companion object {
         const val LOW_RANGE_KM = 30f
+    }
+}
+
+/**
+ * 주행 중 UX 제한의 종류. android.car.drivingstate.CarUxRestrictions 의 UX_RESTRICTIONS_* 와 같은 값이다.
+ * AOSP 는 앱이 주행 상태(정차·정지·주행)가 아니라 이 제한 정보를 보고 기능을 막으라고 권한다. 시장마다 제한이 다를 수 있어서다.
+ * AAOS 에서는 CarUxRestrictionsManager 가 준 값을 그대로 쓰고, 일반 Android(Mock)는 forDriving() 으로 같은 표를 흉내 낸다.
+ * android.car 를 쓰지 않는 순수 Kotlin 이라 JVM 단위 테스트(UxRulesTest)로 표를 확인한다.
+ */
+object UxRules {
+    const val NONE = 0
+    const val NO_DIALPAD = 0x1
+    const val NO_FILTERING = 0x2
+    const val LIMIT_STRING_LENGTH = 0x4
+    const val NO_KEYBOARD = 0x8
+    const val NO_VIDEO = 0x10
+    const val LIMIT_CONTENT = 0x20
+    const val NO_SETUP = 0x40
+    const val NO_TEXT_MESSAGE = 0x80
+    const val NO_VOICE_TRANSCRIPTION = 0x100
+    const val FULLY_RESTRICTED = 0x1ff
+
+    /**
+     * AAOS 에뮬레이터(sdk_gcar_x86_64, API 34)의 car_ux_restrictions_map 과 같은 표.
+     * 2026-11-23 `dumpsys car_service --services CarUxRestrictionsManagerService` 로 확인:
+     * parked 0x0, idling(P 아님, 0 km/h) 0x10 (영상만), moving 0xff (0~5 km/h, 5 km/h~ 같은 값).
+     */
+    const val IDLING = NO_VIDEO
+    const val MOVING = 0xff
+
+    fun forDriving(gear: Gear, speedKmh: Float) = when {
+        gear == Gear.PARK -> NONE
+        speedKmh <= 0f -> IDLING
+        else -> MOVING
     }
 }
 

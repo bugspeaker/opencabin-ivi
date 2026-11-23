@@ -55,6 +55,7 @@ import dev.opencabin.ivi.assistant.Places
 import dev.opencabin.ivi.state.CabinController
 import dev.opencabin.ivi.state.Destination
 import dev.opencabin.ivi.state.Destinations
+import dev.opencabin.ivi.vehicle.UxRules
 import dev.opencabin.ivi.vehicle.VehicleState
 import java.time.format.DateTimeFormatter
 
@@ -77,7 +78,7 @@ fun NavigationPane(state: VehicleState, cabin: CabinController, cockpit: Cockpit
                 Glyph(G.SPLIT, if (cockpit.split) IviColors.AccentSoft else IviColors.TextPrimary, it)
             }
             Text(
-                if (state.restricted) "3D" else "2D",
+                if (state.moving) "3D" else "2D",
                 Modifier.size(48.dp).clip(RoundedCornerShape(14.dp)).background(IviColors.SurfaceHigh).padding(top = 13.dp),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
@@ -89,7 +90,7 @@ fun NavigationPane(state: VehicleState, cabin: CabinController, cockpit: Cockpit
             cabin.guiding && dest != null -> Guidance(state, cabin, dest)
             cabin.arrived && dest != null -> Arrived(dest, Modifier.align(Alignment.Center)) { cabin.stopGuidance() }
             dest != null -> Preview(dest, Modifier.align(Alignment.BottomStart), onStart = { cabin.startGuidance() }, onCancel = { cabin.stopGuidance() })
-            else -> Search(state.restricted, cockpit.split, state.lowRange, Modifier.align(Alignment.BottomStart)) { cabin.preview(it) }
+            else -> Search(state.blocks(UxRules.NO_KEYBOARD), cockpit.split, state.lowRange, Modifier.align(Alignment.BottomStart)) { cabin.preview(it) }
         }
         // 차량 신호(RANGE_REMAINING)가 기준 이하이고 안내 중이 아니면 가까운 충전소를 권한다
         if (state.lowRange && dest == null) {
