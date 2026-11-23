@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.state.CabinController
 import dev.opencabin.ivi.state.Contacts
 import dev.opencabin.ivi.state.DRIVING_LIST_LIMIT
+import dev.opencabin.ivi.vehicle.UxRules
 import dev.opencabin.ivi.vehicle.VehicleState
 
 private enum class PhoneTab(val label: String, val tag: String) {
@@ -52,8 +53,8 @@ fun PhoneScreen(state: VehicleState, cabin: CabinController) {
         Panel(Modifier.weight(0.58f).fillMaxHeight()) {
             when (tab) {
                 PhoneTab.RECENT -> Recent(cabin)
-                PhoneTab.CONTACTS -> ContactList(state.restricted, cabin)
-                PhoneTab.KEYPAD -> Keypad(state.restricted, cabin)
+                PhoneTab.CONTACTS -> ContactList(state.blocks(UxRules.LIMIT_CONTENT), cabin)
+                PhoneTab.KEYPAD -> Keypad(state.blocks(UxRules.NO_DIALPAD), cabin)
             }
         }
     }

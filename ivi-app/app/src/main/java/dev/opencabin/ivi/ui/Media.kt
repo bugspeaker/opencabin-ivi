@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.state.AudioSource
 import dev.opencabin.ivi.state.CabinController
 import dev.opencabin.ivi.state.Tracks
+import dev.opencabin.ivi.vehicle.UxRules
 import dev.opencabin.ivi.vehicle.VehicleState
 
 /** 미디어(블루투스 음악, 가상): 곡 목록 · 지금 재생 · 영상. 라디오를 켜면 일시 정지된다 (오디오 소스는 하나). */
@@ -76,7 +77,7 @@ fun MediaScreen(state: VehicleState, cabin: CabinController, onOpenVideo: () -> 
             Controls(playing = cabin.mediaPlaying, prefix = "", onPrev = { cabin.previousTrack() }, onToggle = { cabin.toggleMedia() }, onNext = { cabin.nextTrack() })
             Button(
                 onClick = onOpenVideo,
-                enabled = !state.restricted,
+                enabled = !state.blocks(UxRules.NO_VIDEO),
                 modifier = Modifier.testTag("open_video").height(46.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -86,11 +87,12 @@ fun MediaScreen(state: VehicleState, cabin: CabinController, onOpenVideo: () -> 
                     disabledContentColor = IviColors.TextSecondary.copy(alpha = 0.5f),
                 ),
             ) {
-                Glyph(G.VIDEO, if (state.restricted) IviColors.TextTertiary else IviColors.TextPrimary, Modifier.size(20.dp))
+                Glyph(G.VIDEO, if (state.blocks(UxRules.NO_VIDEO)) IviColors.TextTertiary else IviColors.TextPrimary, Modifier.size(20.dp))
                 Text("  영상 보기", fontSize = 15.sp)
             }
-            if (state.restricted) {
-                Text("주행 중에는 영상을 볼 수 없습니다", Modifier.testTag("video_restricted_notice"), color = IviColors.Warn, fontSize = 13.sp)
+            if (state.blocks(UxRules.NO_VIDEO)) {
+                // D 기어로 멈춰 있을 때도 영상은 막힌다 (플랫폼 UX 제한 idling = NO_VIDEO)
+                Text(if (state.moving) "주행 중에는 영상을 볼 수 없습니다" else "P 기어에서만 영상을 볼 수 있습니다", Modifier.testTag("video_restricted_notice"), color = IviColors.Warn, fontSize = 13.sp)
             }
         }
     }

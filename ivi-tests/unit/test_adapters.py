@@ -3,7 +3,7 @@ import pytest
 
 from ivi.device import Device
 from ivi.screens import parse_celsius
-from ivi.vehicle import CABIN_DEFAULTS, AaosVehicle, MockVehicle, Prop, Seat, Signal
+from ivi.vehicle import CABIN_DEFAULTS, AaosVehicle, MockVehicle, Prop, Seat, Signal, Ux
 
 
 class FakeAdb:
@@ -64,10 +64,56 @@ def test_aaos_set_temperature_fails_loudly_when_car_service_refuses():
 
 def test_mock_state_is_parsed_from_broadcast_result():
     adb = FakeAdb({"mock.GET": 'Broadcasting: Intent { ... }\nBroadcast completed: result=0, '
-                               'data="speed_kmh=50.0;gear=D;temp_driver=25.0;temp_passenger=22.0;restricted=true"'})
+                               'data="speed_kmh=50.0;gear=D;temp_driver=25.0;temp_passenger=22.0;restricted=true;moving=true;ux=255"'})
     car = MockVehicle(adb)
     assert car.is_restricted() is True
+    assert car.ux_restrictions() == Ux.MOVING
     assert car.temperature(Seat.DRIVER) == 25.0
+
+
+def test_mock_idling_is_restricted_for_video_but_not_moving():
+    """D 기어로 멈춰 있으면 영상 제한(0x10)은 걸려 있지만 '주행 중'은 아니다 (is_restricted 는 주행 중만 뜻한다)."""
+    adb = FakeAdb({"mock.GET": 'Broadcast completed: result=0, data="speed_kmh=0.0;gear=D;restricted=true;moving=false;ux=16"'})
+    car = MockVehicle(adb)
+    assert car.is_restricted() is False
+    assert car.ux_restrictions() == Ux.NO_VIDEO
+
+
+UXR_DUMP = """*CarUxRestrictionsManagerService*
+UX Restrictions Clients:
+Display id: 0 UXR: DO: {do} UxR: {ux} time: 10994804941
+Display id: 3 UXR: DO: true UxR: 511 time: 12298537493
+State:idling num restrictions:1
+Restrictions: 0x10
+"""
+
+
+@pytest.mark.parametrize("do, ux, expected", [("true", 16, 0x10), ("true", 255, 0xff), ("false", 0, 0), ("false", 16, 0)])
+def test_aaos_ux_restrictions_reads_main_display(do, ux, expected):
+    """주 화면(display 0)의 줄만 읽는다. 클러스터(display 3)는 늘 전부 제한(511)이라 섞이면 안 된다. DO 가 false 면 0 이다."""
+    adb = FakeAdb({"CarUxRestrictionsManagerService": UXR_DUMP.format(do=do, ux=ux)})
+    assert AaosVehicle(adb).ux_restrictions() == expected
+
+
+def test_aaos_ux_restrictions_fails_loudly_when_dump_changes():
+    adb = FakeAdb({"CarUxRestrictionsManagerService": "*CarUxRestrictionsManagerService*\n(형식이 바뀜)"})
+    with pytest.raises(RuntimeError, match="UX 제한을 읽지 못했다"):
+        AaosVehicle(adb).ux_restrictions()
+
+
+@pytest.mark.parametrize("gear, vhal", [("D", "8"), ("N", "1"), ("R", "2")])
+def test_aaos_drive_sets_requested_gear(gear, vhal):
+    adb = FakeAdb({"--set": "Set property: VehiclePropValue{...}"})
+    AaosVehicle(adb).drive(0.0, gear=gear)
+    call = [c for c in adb.calls if str(Prop.GEAR_SELECTION) in c][0]
+    assert call[call.index("-i") + 1] == vhal
+
+
+def test_mock_drive_passes_gear_label():
+    adb = MockAppAdb()
+    MockVehicle(adb).drive(0, gear="N")
+    args = adb.calls[0]
+    assert args[args.index("gear") + 1] == "N" and args[args.index("speed_kmh") + 1] == "0.0"
 
 
 def test_mock_state_error_explains_app_must_run():

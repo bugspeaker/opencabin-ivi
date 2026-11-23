@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.assistant.CabinAssistant
 import dev.opencabin.ivi.assistant.Place
 import dev.opencabin.ivi.vehicle.Seat
+import dev.opencabin.ivi.vehicle.UxRules
 import dev.opencabin.ivi.vehicle.VehicleState
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -153,7 +154,7 @@ fun AssistantScreen(state: VehicleState, cockpit: CockpitState, onAsk: (String) 
                 }
             }
             var input by remember { mutableStateOf("") }
-            val typing = !state.restricted
+            val typing = !state.blocks(UxRules.NO_KEYBOARD)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Box(
                     Modifier.weight(1f).height(48.dp).clip(RoundedCornerShape(14.dp)).background(IviColors.Background).padding(horizontal = 14.dp),

@@ -525,8 +525,8 @@ function renderFit({ reqs }) {
 // 반복 실행한 날짜 (run id 앞 YYYYMMDD): "11-18"
 const runDate = (st) => [...new Set(st.run_ids.map((id) => `${id.slice(4, 6)}-${id.slice(6, 8)}`))].join(", ");
 
-// 테스트에서 나온 문제 수: docs/portfolio.md 3장의 표와 GitHub 이슈 #19~#29, 갤럭시 폴드 #42~#44 (결과 자료에는 없는 숫자라 여기 적는다)
-const DEFECTS_RECORDED = 14;
+// 테스트에서 나온 문제 수: docs/portfolio.md 3장의 표와 GitHub 이슈 #19~#29, 갤럭시 폴드 #42~#44, 정지 상태 #47 (결과 자료에는 없는 숫자라 여기 적는다)
+const DEFECTS_RECORDED = 15;
 
 // 두 기기를 같은 run id 로 동시에 시작했으면 병렬 실행이다. 끝까지 걸린 시간 = 가장 늦게 끝난 기기
 function parallelTimes(data) {

@@ -66,6 +66,7 @@ import dev.opencabin.ivi.state.VoiceCommands
 import dev.opencabin.ivi.vehicle.Gear
 import dev.opencabin.ivi.vehicle.HvacSpec
 import dev.opencabin.ivi.vehicle.Seat
+import dev.opencabin.ivi.vehicle.UxRules
 import dev.opencabin.ivi.vehicle.VehicleDataSource
 import dev.opencabin.ivi.vehicle.VehicleState
 import kotlinx.coroutines.delay
@@ -89,6 +90,13 @@ import kotlin.math.roundToInt
  */
 
 val AmbientPalette = listOf(IviColors.Accent, Color(0xFFE8F0F5), IviColors.Warn, Color(0xFF9B7BFF), IviColors.Green)
+
+/**
+ * 상단 제한 배지 문구. 글자 입력까지 막히면 '주행 중', 영상만 막히면 P 가 아닌 채 멈춰 있는 것이다
+ * (플랫폼 UX 제한 idling = NO_VIDEO. 신호 대기처럼 D 기어로 서 있을 때).
+ */
+fun restrictionLabel(state: VehicleState) =
+    if (state.blocks(UxRules.NO_KEYBOARD or UxRules.NO_DIALPAD)) "주행 중 · 일부 기능 제한" else "정지 중 · 영상만 제한"
 
 /** 속도 표시: 설정의 단위(km/h·mph)로 바꾼다. */
 fun speedDisplay(kmh: Float, mph: Boolean) =
@@ -156,7 +164,8 @@ fun IviRoot(
     // AI 어시스턴트가 차를 움직이는 길. 오디오·내비·전화는 6단계 CabinController 를 그대로 쓴다
     val assistant = remember {
         CabinAssistant(object : CabinControls {
-            override val restricted get() = current.restricted
+            override val videoBlocked get() = current.blocks(UxRules.NO_VIDEO)
+            override val moving get() = current.moving
             override val hvacAvailable get() = current.hvacAvailable
             override fun temperature(seat: Seat) = when (seat) { Seat.DRIVER -> current.driverTempC; Seat.PASSENGER -> current.passengerTempC }
             override fun setTemperature(seat: Seat, celsius: Float) = setTemperature(seat, celsius, direct = false)
@@ -262,13 +271,13 @@ private fun ShellEffects(state: VehicleState, cabin: CabinController, cockpit: C
     }
     // 알림 센터에 남길 것: 주행 제한 시작/해제, 경로 안내 시작/도착, 전화
     var previousRestricted by remember { mutableStateOf<Boolean?>(null) }
-    LaunchedEffect(state.restricted) {
+    LaunchedEffect(state.moving) {
         val before = previousRestricted
-        if (before != null && before != state.restricted) {
-            if (state.restricted) cockpit.notify("주행 중 제한", "영상, 글자 입력, 일부 차량 제어를 쓸 수 없습니다.")
+        if (before != null && before != state.moving) {
+            if (state.moving) cockpit.notify("주행 중 제한", "영상, 글자 입력, 일부 차량 제어를 쓸 수 없습니다.")
             else cockpit.notify("주행 제한 해제", "정차했습니다. 모든 기능을 쓸 수 있습니다.")
         }
-        previousRestricted = state.restricted
+        previousRestricted = state.moving
     }
     LaunchedEffect(cabin.guiding, cabin.arrived) {
         val dest = cabin.destination ?: return@LaunchedEffect
@@ -330,12 +339,12 @@ private fun TopBar(source: String, state: VehicleState, settings: Settings, cabi
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
                 if (cabin.voiceResult.isNotEmpty()) Chip(cabin.voiceResult, IviColors.AccentSoft, Modifier.testTag("voice_result").weight(1f, fill = false))
-                if (state.restricted) Chip("주행 중 · 일부 기능 제한", IviColors.Warn, Modifier.testTag("restriction_banner").weight(1f, fill = false))
+                if (state.restricted) Chip(restrictionLabel(state), IviColors.Warn, Modifier.testTag("restriction_banner").weight(1f, fill = false))
             }
         } else {
             Spacer(Modifier.weight(1f))
             if (cabin.voiceResult.isNotEmpty()) Chip(cabin.voiceResult, IviColors.AccentSoft, Modifier.testTag("voice_result").widthIn(max = 320.dp))
-            if (state.restricted) Chip("주행 중 · 일부 기능 제한", IviColors.Warn, Modifier.testTag("restriction_banner"))
+            if (state.restricted) Chip(restrictionLabel(state), IviColors.Warn, Modifier.testTag("restriction_banner"))
             Glyph(G.SIGNAL, IviColors.TextPrimary, Modifier.size(20.dp))
             Glyph(G.VOLUME, IviColors.TextPrimary, Modifier.size(22.dp))
         }

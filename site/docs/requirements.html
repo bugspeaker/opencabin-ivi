@@ -64,12 +64,12 @@
 </tr>
 <tr>
 <td class="nw">DRIVE-02</td>
-<td>주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다.</td>
+<td>P 기어가 아니면(D·N·R로 멈춰 있어도) 영상을 볼 수 없고, P로 바꾸면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다.</td>
 <td>운전자 주의 분산</td>
 </tr>
 <tr>
 <td class="nw">DRIVE-03</td>
-<td>주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다.</td>
+<td>주행 중(P가 아니고 속도가 0보다 클 때)에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다. P가 아닌 채 멈춰 있을 때(신호 대기)는 막지 않습니다.</td>
 <td>운전자 주의 분산</td>
 </tr>
 <tr>
@@ -178,6 +178,7 @@
 <td>기술 검증 (1단계)</td>
 </tr>
 </tbody></table></div>
+<p>DRIVE-02와 DRIVE-03의 &#39;주행 중&#39;은 AAOS의 UX 제한(CarUxRestrictions) 표를 따릅니다. P는 제한이 없고, P가 아닌 채 멈춰 있으면(속도 0) 영상만 막고(NO_VIDEO), 속도가 0보다 크면 모두 막습니다(0xff). 앱은 기어와 속도가 아니라 플랫폼이 알려 준 제한 종류를 보고 기능을 막고, 태블릿의 Mock 차량은 같은 표로 제한을 계산합니다. AOSP 문서가 앱에 권하는 방식이고, 표는 2026-11-23 AAOS 에뮬레이터의 설정(<code>dumpsys car_<wbr>service --services CarUxRestrictionsManagerService</code>)에서 확인했습니다. 그전에는 AAOS 앱이 D 기어로 멈춰 있을 때 검색까지 막고, 태블릿은 영상을 막지 않았습니다(<a href="portfolio.html#플랫폼-설정을-읽다-찾은-정지-상태-결함">3장 13번</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a>).</p>
 <h2 id="복합-요구사항-조건마다-확인하는-곳"><a class="anchor" href="#복합-요구사항-조건마다-확인하는-곳" aria-hidden="true">#</a>복합 요구사항: 조건마다 확인하는 곳</h2>
 <p>요구사항 하나에 조건이 여럿이면, 테스트 이름이 붙어 있다는 것만으로 모든 조건을 확인했다고 할 수 없습니다. 추적표의 &#39;요구사항 ID 연결 누락 0&#39;은 연결이 빠지지 않았다는 뜻이고, 조건별 검증이 충분하다거나 표준을 지켰다는 뜻은 아닙니다. 그래서 조건을 나누고, 조건마다 어느 테스트의 어떤 확인(assert 또는 대기)이 그 조건을 보는지 적었습니다. 확인하지 않는 조건은 &#39;확인하지 않음&#39;으로 남겼습니다.</p>
 <p><code>trace_report.py</code>가 이 표의 테스트가 실제로 있고 그 요구사항 ID를 달고 있는지 검사합니다. 테스트 이름이 바뀌거나 요구사항 표시가 빠지면 CI의 unit job이 실패합니다.</p>
@@ -309,7 +310,7 @@
 </tr>
 <tr>
 <td class="nw">DRIVE-02.3</td>
-<td>차를 세우면 다시 볼 수 있습니다</td>
+<td>P로 바꾸면 다시 볼 수 있습니다</td>
 <td><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a>, <a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>button_<wbr>locked_<wbr>while_<wbr>driving</code></a>, <a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a></td>
 <td>막힌 화면이 <code>wait_<wbr>until(not device.<wbr>video_<wbr>blocked(video))</code> 뒤 <code>wait_<wbr>visible(&quot;video_<wbr>player&quot;)</code>, 영상 버튼 <code>wait_<wbr>enabled(&quot;open_<wbr>video&quot;, True)</code>, 정차 중 재생 시간이 흐릅니다</td>
 </tr>
@@ -324,6 +325,12 @@
 <td>주행 중에도 음악은 고를 수 있습니다</td>
 <td><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>media_<wbr>stays_<wbr>usable_<wbr>while_<wbr>driving</code></a></td>
 <td>주행 제한 표시(<code>restriction_<wbr>banner</code>)가 뜬 상태에서 곡을 고르고 <code>wait_<wbr>text(&quot;now_<wbr>playing_<wbr>title&quot;, title)</code></td>
+</tr>
+<tr>
+<td class="nw">DRIVE-02.6</td>
+<td>P가 아닌 기어(D, N)로 멈춰 있어도 영상 버튼과 영상 화면을 막습니다</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video</code></a>, <a class="test-link" href="test-results.html#test_video_screen_is_blocked_while_stopped_in_drive" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>screen_<wbr>is_<wbr>blocked_<wbr>while_<wbr>stopped_<wbr>in_<wbr>drive</code></a></td>
+<td><code>wait_<wbr>value(car.<wbr>ux_<wbr>restrictions, Ux.<wbr>NO_<wbr>VIDEO)</code>(플랫폼 쪽), <code>wait_<wbr>enabled(&quot;open_<wbr>video&quot;, False)</code>, 바로 연 영상 화면은 <code>wait_<wbr>until(device.<wbr>video_<wbr>blocked(video))</code> 뒤 P에서 <code>wait_<wbr>visible(&quot;video_<wbr>player&quot;)</code></td>
 </tr>
 <tr>
 <td class="nw">DRIVE-03.1</td>
@@ -354,6 +361,18 @@
 <td>접어 둔 사이드 미러를 펴는 것은 주행 중에도 됩니다</td>
 <td><a class="test-link" href="test-results.html#test_folded_mirror_can_be_unfolded_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>folded_<wbr>mirror_<wbr>can_<wbr>be_<wbr>unfolded_<wbr>while_<wbr>driving</code></a></td>
 <td>주행 중 <code>assert qc.<wbr>can_<wbr>toggle(&quot;mirror&quot;)</code>, <code>toggle(&quot;mirror&quot;) == &quot;펼침&quot;</code>, 편 뒤에는 <code>wait_<wbr>enabled(&quot;qc_<wbr>mirror&quot;, False)</code></td>
+</tr>
+<tr>
+<td class="nw">DRIVE-03.6</td>
+<td>P가 아닌 채 멈춰 있을 때는 글자 입력, 키패드, 사이드 미러와 트렁크를 막지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video</code></a></td>
+<td><code>assert nav.<wbr>search_<wbr>enabled()</code>, <code>assert phone.<wbr>enabled(&quot;phone_<wbr>key_<wbr>1&quot;)</code>, <code>assert qc.<wbr>can_<wbr>toggle(&quot;mirror&quot;) and qc.<wbr>can_<wbr>toggle(&quot;trunk&quot;)</code>, 상단 배지 &#39;정지 중 · 영상만 제한&#39;</td>
+</tr>
+<tr>
+<td class="nw">DRIVE-03.7</td>
+<td>속도가 0과 0 초과를 오가면 제한이 그때마다 바뀌고, 그 상태에 머무는 동안 흔들리지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_restrictions_follow_stop_and_go_timeline" title="테스트 결과와 화면 보기"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></td>
+<td>P → D 정지 → 3 km/h → 정지 → 60 km/h → N 정지 → P. 단계마다 <code>wait_<wbr>value(car.<wbr>ux_<wbr>restrictions, ux)</code>, <code>wait_<wbr>enabled(&quot;nav_<wbr>search&quot;, typing)</code>, 배지 문구, 머무는 2~3초 동안 <code>stays(...)</code></td>
 </tr>
 <tr>
 <td class="nw">ENERGY-02.1</td>

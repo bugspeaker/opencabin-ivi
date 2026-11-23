@@ -56,7 +56,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 <tr>
 <td class="nw">테스트 함수</td>
-<td>111개</td>
+<td>114개</td>
 </tr>
 <tr>
 <td class="nw">요구사항이 없는 테스트</td>
@@ -104,21 +104,21 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 <tr>
 <td class="nw">DRIVE-02</td>
-<td>주행 중에는 영상을 볼 수 없고, 차를 세우면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다.</td>
+<td>P 기어가 아니면(D·N·R로 멈춰 있어도) 영상을 볼 수 없고, P로 바꾸면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다.</td>
 <td>운전자 주의 분산</td>
-<td><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>media_<wbr>stays_<wbr>usable_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a><br><a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>button_<wbr>locked_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>is_<wbr>blocked_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a><br><a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></a></td>
-<td>6/6 통과</td>
-<td>6/6 통과</td>
-<td>6/6 통과</td>
+<td><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>media_<wbr>stays_<wbr>usable_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_restrictions_follow_stop_and_go_timeline" title="테스트 결과와 화면 보기"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a><br><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video</code></a><br><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a><br><a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>button_<wbr>locked_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_video_is_blocked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>is_<wbr>blocked_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a><br><a class="test-link" href="test-results.html#test_video_resumes_where_it_stopped" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>resumes_<wbr>where_<wbr>it_<wbr>stopped</code></a><br><a class="test-link" href="test-results.html#test_video_screen_is_blocked_while_stopped_in_drive" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>screen_<wbr>is_<wbr>blocked_<wbr>while_<wbr>stopped_<wbr>in_<wbr>drive</code></a></td>
+<td>10/10 통과</td>
+<td>10/10 통과</td>
+<td>10/10 통과</td>
 </tr>
 <tr>
 <td class="nw">DRIVE-03</td>
-<td>주행 중에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다.</td>
+<td>주행 중(P가 아니고 속도가 0보다 클 때)에는 글자 입력(내비 검색, 키패드, 어시스턴트 입력)과 일부 차량 제어(사이드 미러 접기, 트렁크)를 막습니다. P가 아닌 채 멈춰 있을 때(신호 대기)는 막지 않습니다.</td>
 <td>운전자 주의 분산</td>
-<td><a class="test-link" href="test-results.html#test_category_shortcut_works_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>category_<wbr>shortcut_<wbr>works_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_driving_locks_keypad_and_limits_contacts" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>locks_<wbr>keypad_<wbr>and_<wbr>limits_<wbr>contacts</code></a><br><a class="test-link" href="test-results.html#test_driving_locks_typing_and_refuses_mirror_fold" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>locks_<wbr>typing_<wbr>and_<wbr>refuses_<wbr>mirror_<wbr>fold</code></a><br><a class="test-link" href="test-results.html#test_folded_mirror_can_be_unfolded_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>folded_<wbr>mirror_<wbr>can_<wbr>be_<wbr>unfolded_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_quick_control_mirror_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>control_<wbr>mirror_<wbr>locked_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_search_locked_while_driving_but_favorites_work" title="테스트 결과와 화면 보기"><code>test_<wbr>search_<wbr>locked_<wbr>while_<wbr>driving_<wbr>but_<wbr>favorites_<wbr>work</code></a></td>
-<td>7/7 통과</td>
-<td>7/7 통과</td>
-<td>7/7 통과</td>
+<td><a class="test-link" href="test-results.html#test_category_shortcut_works_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>category_<wbr>shortcut_<wbr>works_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_driving_locks_keypad_and_limits_contacts" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>locks_<wbr>keypad_<wbr>and_<wbr>limits_<wbr>contacts</code></a><br><a class="test-link" href="test-results.html#test_driving_locks_typing_and_refuses_mirror_fold" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>locks_<wbr>typing_<wbr>and_<wbr>refuses_<wbr>mirror_<wbr>fold</code></a><br><a class="test-link" href="test-results.html#test_folded_mirror_can_be_unfolded_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>folded_<wbr>mirror_<wbr>can_<wbr>be_<wbr>unfolded_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_quick_control_mirror_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>control_<wbr>mirror_<wbr>locked_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_restrictions_follow_stop_and_go_timeline" title="테스트 결과와 화면 보기"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a><br><a class="test-link" href="test-results.html#test_search_locked_while_driving_but_favorites_work" title="테스트 결과와 화면 보기"><code>test_<wbr>search_<wbr>locked_<wbr>while_<wbr>driving_<wbr>but_<wbr>favorites_<wbr>work</code></a><br><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video</code></a></td>
+<td>10/10 통과</td>
+<td>10/10 통과</td>
+<td>10/10 통과</td>
 </tr>
 <tr>
 <td class="nw">HVAC-01</td>
@@ -311,7 +311,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 </tbody></table></div>
 <h2 id="복합-요구사항-조건마다-확인하는-곳"><a class="anchor" href="#복합-요구사항-조건마다-확인하는-곳" aria-hidden="true">#</a>복합 요구사항: 조건마다 확인하는 곳</h2>
-<p>조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 <a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>에 적었습니다. 조건 33개 가운데 테스트가 없는 조건은 0개입니다.</p>
+<p>조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 <a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>에 적었습니다. 조건 36개 가운데 테스트가 없는 조건은 0개입니다.</p>
 <div class="table"><table><thead><tr>
 <th>조건</th>
 <th>내용</th>
@@ -503,7 +503,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 <tr>
 <td class="nw">DRIVE-02.3</td>
-<td>차를 세우면 다시 볼 수 있습니다</td>
+<td>P로 바꾸면 다시 볼 수 있습니다</td>
 <td><a class="test-link" href="test-results.html#test_video_blocked_screen_follows_parking" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>blocked_<wbr>screen_<wbr>follows_<wbr>parking</code></a>, <a class="test-link" href="test-results.html#test_video_button_locked_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>button_<wbr>locked_<wbr>while_<wbr>driving</code></a>, <a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a></td>
 <td>막힌 화면이 <code>wait_<wbr>until(not device.<wbr>video_<wbr>blocked(video))</code> 뒤 <code>wait_<wbr>visible(&quot;video_<wbr>player&quot;)</code>, 영상 버튼 <code>wait_<wbr>enabled(&quot;open_<wbr>video&quot;, True)</code>, 정차 중 재생 시간이 흐릅니다</td>
 <td>3/3 통과</td>
@@ -527,6 +527,15 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td>1/1 통과</td>
 <td>1/1 통과</td>
 <td>1/1 통과</td>
+</tr>
+<tr>
+<td class="nw">DRIVE-02.6</td>
+<td>P가 아닌 기어(D, N)로 멈춰 있어도 영상 버튼과 영상 화면을 막습니다</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video</code></a>, <a class="test-link" href="test-results.html#test_video_screen_is_blocked_while_stopped_in_drive" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>screen_<wbr>is_<wbr>blocked_<wbr>while_<wbr>stopped_<wbr>in_<wbr>drive</code></a></td>
+<td><code>wait_<wbr>value(car.<wbr>ux_<wbr>restrictions, Ux.<wbr>NO_<wbr>VIDEO)</code>(플랫폼 쪽), <code>wait_<wbr>enabled(&quot;open_<wbr>video&quot;, False)</code>, 바로 연 영상 화면은 <code>wait_<wbr>until(device.<wbr>video_<wbr>blocked(video))</code> 뒤 P에서 <code>wait_<wbr>visible(&quot;video_<wbr>player&quot;)</code></td>
+<td>3/3 통과</td>
+<td>3/3 통과</td>
+<td>3/3 통과</td>
 </tr>
 <tr>
 <td class="nw">DRIVE-03.1</td>
@@ -569,6 +578,24 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td>접어 둔 사이드 미러를 펴는 것은 주행 중에도 됩니다</td>
 <td><a class="test-link" href="test-results.html#test_folded_mirror_can_be_unfolded_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>folded_<wbr>mirror_<wbr>can_<wbr>be_<wbr>unfolded_<wbr>while_<wbr>driving</code></a></td>
 <td>주행 중 <code>assert qc.<wbr>can_<wbr>toggle(&quot;mirror&quot;)</code>, <code>toggle(&quot;mirror&quot;) == &quot;펼침&quot;</code>, 편 뒤에는 <code>wait_<wbr>enabled(&quot;qc_<wbr>mirror&quot;, False)</code></td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+<td>1/1 통과</td>
+</tr>
+<tr>
+<td class="nw">DRIVE-03.6</td>
+<td>P가 아닌 채 멈춰 있을 때는 글자 입력, 키패드, 사이드 미러와 트렁크를 막지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video</code></a></td>
+<td><code>assert nav.<wbr>search_<wbr>enabled()</code>, <code>assert phone.<wbr>enabled(&quot;phone_<wbr>key_<wbr>1&quot;)</code>, <code>assert qc.<wbr>can_<wbr>toggle(&quot;mirror&quot;) and qc.<wbr>can_<wbr>toggle(&quot;trunk&quot;)</code>, 상단 배지 &#39;정지 중 · 영상만 제한&#39;</td>
+<td>2/2 통과</td>
+<td>2/2 통과</td>
+<td>2/2 통과</td>
+</tr>
+<tr>
+<td class="nw">DRIVE-03.7</td>
+<td>속도가 0과 0 초과를 오가면 제한이 그때마다 바뀌고, 그 상태에 머무는 동안 흔들리지 않습니다</td>
+<td><a class="test-link" href="test-results.html#test_restrictions_follow_stop_and_go_timeline" title="테스트 결과와 화면 보기"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></td>
+<td>P → D 정지 → 3 km/h → 정지 → 60 km/h → N 정지 → P. 단계마다 <code>wait_<wbr>value(car.<wbr>ux_<wbr>restrictions, ux)</code>, <code>wait_<wbr>enabled(&quot;nav_<wbr>search&quot;, typing)</code>, 배지 문구, 머무는 2~3초 동안 <code>stays(...)</code></td>
 <td>1/1 통과</td>
 <td>1/1 통과</td>
 <td>1/1 통과</td>
@@ -652,8 +679,8 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 <tr>
 <td><a class="test-link" href="test-results.html#file-test_driving" title="테스트 결과와 화면 보기"><code>test_driving.py</code></a></td>
-<td>7개</td>
-<td>DRIVE-01, DRIVE-02, MEDIA-02</td>
+<td>10개</td>
+<td>DRIVE-01, DRIVE-02, DRIVE-03, MEDIA-02</td>
 </tr>
 <tr>
 <td><a class="test-link" href="test-results.html#file-test_media" title="테스트 결과와 화면 보기"><code>test_media.py</code></a></td>

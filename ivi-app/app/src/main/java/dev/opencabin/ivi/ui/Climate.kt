@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.vehicle.HvacSpec
 import dev.opencabin.ivi.vehicle.Seat
+import dev.opencabin.ivi.vehicle.UxRules
 import dev.opencabin.ivi.vehicle.VehicleDataSource
 import dev.opencabin.ivi.vehicle.VehicleState
 
@@ -208,7 +209,8 @@ private fun StepButton(text: String, tag: String, enabled: Boolean, onClick: () 
 
 @Composable
 fun VehicleScreen(state: VehicleState, cockpit: CockpitState, vehicle: VehicleDataSource) {
-    val driving = state.restricted
+    // 사이드 미러 접기·트렁크는 UX 제한 종류에 없는 앱의 차량 제어 규칙이라, 차가 실제로 움직일 때만 막는다
+    val driving = state.moving
     Panel(Modifier.fillMaxSize().padding(bottom = 4.dp), padding = 18.dp, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("빠른 제어", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
@@ -301,7 +303,7 @@ fun AppsScreen(state: VehicleState, cockpit: CockpitState, onOpenVideo: () -> Un
             Row(Modifier.fillMaxWidth()) {
                 row.forEach { app ->
                     // 영상은 주행 중 막고, 앱 마켓은 이 데모에 없다 (준비 중)
-                    val enabled = when (app.id) { "video" -> !state.restricted; "market" -> false; else -> true }
+                    val enabled = when (app.id) { "video" -> !state.blocks(UxRules.NO_VIDEO); "market" -> false; else -> true }
                     Column(
                         Modifier
                             .weight(1f)
