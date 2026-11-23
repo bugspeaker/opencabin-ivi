@@ -41,7 +41,7 @@
   <main id="content" class="doc results">
 
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E 129개를 두 기기에서 돌린 결과입니다 (3회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>). 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 테스트 중에 마지막으로 읽은 차량 값(최대 3개)입니다. 이 결과가 어느 코드로 돈 것인지와 그 뒤 바꾼 코드의 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">결과 자료와 검증 시점</a>에 있습니다.</p>
+    <p class="lead">E2E 129개를 세 기기에서 돌린 결과입니다. AAOS 에뮬레이터와 태블릿은 3회 반복한 실행의 마지막 회차(앱 0.4.0 (4))이고, 반복 전체의 통계는 <a href="flaky-report.html">반복 실행 통계</a>에 있습니다. 갤럭시 폴드는 2026-11-23에 따로 돌린 실행(앱 0.4.1 (5))입니다. 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 테스트 중에 마지막으로 읽은 차량 값(최대 3개)입니다. 이 결과가 어느 코드로 돈 것인지와 그 뒤 바꾼 코드의 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">결과 자료와 검증 시점</a>에 있습니다.</p>
     <div class="device-cards">
       <section class="device-card">
         <p class="eyebrow">AAOS 에뮬레이터</p>
@@ -50,6 +50,7 @@
         <p class="device-note">CarService와 에뮬레이터 VHAL을 거칩니다. 화면→신호, 신호→화면을 모두 VHAL 값으로 판정합니다.</p>
         <dl>
           <div><dt>실행</dt><dd>2026-11-21 12:36</dd></div>
+          <div><dt>앱</dt><dd>0.4.0 (4)</dd></div>
           <div><dt>시간</dt><dd>10분 4초</dd></div>
           <div><dt>게이트</dt><dd class="gate-pass">통과</dd></div>
         </dl>
@@ -61,7 +62,20 @@
         <p class="device-note">화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. 차량 값은 앱 안의 Mock이라 VHAL 경로는 AAOS에서만 확인합니다.</p>
         <dl>
           <div><dt>실행</dt><dd>2026-11-21 12:36</dd></div>
+          <div><dt>앱</dt><dd>0.4.0 (4)</dd></div>
           <div><dt>시간</dt><dd>10분 49초</dd></div>
+          <div><dt>게이트</dt><dd class="gate-pass">통과</dd></div>
+        </dl>
+      </section>
+      <section class="device-card">
+        <p class="eyebrow">갤럭시 폴드 (Mock)</p>
+        <p class="device-model">SM-F900F</p>
+        <div class="pills"><span class="pill p-passed">통과 122</span><span class="pill p-skipped">건너뜀 7</span></div>
+        <p class="device-note">펼친 화면을 가로로 눕혀 돌렸습니다. 다른 두 기기보다 좁고 낮은 화면(앱 영역 약 780×513dp)이라 배치가 넘치는지 봅니다. 배치를 고치기 전에는 5개가 실패했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 기록</a>). 차량 값은 앱 안의 Mock입니다.</p>
+        <dl>
+          <div><dt>실행</dt><dd>2026-11-23 14:32</dd></div>
+          <div><dt>앱</dt><dd>0.4.1 (5)</dd></div>
+          <div><dt>시간</dt><dd>11분 50초</dd></div>
           <div><dt>게이트</dt><dd class="gate-pass">통과</dd></div>
         </dl>
       </section></div>
@@ -111,6 +125,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">10.2초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_zone_applies_command_to_speaking_seat.webp" data-caption="test_zone_applies_command_to_speaking_seat · 갤럭시 폴드 (Mock) · 통과 · 11.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_zone_applies_command_to_speaking_seat.webp" alt="갤럭시 폴드 (Mock)에서 test_zone_applies_command_to_speaking_seat 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">11.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_typed_command_sets_vehicle_temperature" data-markers="sanity" data-reqs="e2e integration" data-bad="0">
@@ -130,6 +151,13 @@
                 <img src="../results/img/mock/test_typed_command_sets_vehicle_temperature.webp" alt="태블릿 (Mock)에서 test_typed_command_sets_vehicle_temperature 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_typed_command_sets_vehicle_temperature.webp" data-caption="test_typed_command_sets_vehicle_temperature · 갤럭시 폴드 (Mock) · 통과 · 5.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_typed_command_sets_vehicle_temperature.webp" alt="갤럭시 폴드 (Mock)에서 test_typed_command_sets_vehicle_temperature 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.6초</span></div>
               
               
             </div></div></div></div>
@@ -153,6 +181,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_multiple_commands_in_one_sentence.webp" data-caption="test_multiple_commands_in_one_sentence · 갤럭시 폴드 (Mock) · 통과 · 5.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_multiple_commands_in_one_sentence.webp" alt="갤럭시 폴드 (Mock)에서 test_multiple_commands_in_one_sentence 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_ambiguous_destination_offers_candidates" data-markers="regression" data-reqs="" data-bad="0">
@@ -172,6 +207,13 @@
                 <img src="../results/img/mock/test_ambiguous_destination_offers_candidates.webp" alt="태블릿 (Mock)에서 test_ambiguous_destination_offers_candidates 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.1초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_ambiguous_destination_offers_candidates.webp" data-caption="test_ambiguous_destination_offers_candidates · 갤럭시 폴드 (Mock) · 통과 · 5.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_ambiguous_destination_offers_candidates.webp" alt="갤럭시 폴드 (Mock)에서 test_ambiguous_destination_offers_candidates 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.9초</span></div>
               
               
             </div></div></div></div>
@@ -195,6 +237,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.1초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_driving_locks_typing_and_refuses_mirror_fold.webp" data-caption="test_driving_locks_typing_and_refuses_mirror_fold · 갤럭시 폴드 (Mock) · 통과 · 7.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_driving_locks_typing_and_refuses_mirror_fold.webp" alt="갤럭시 폴드 (Mock)에서 test_driving_locks_typing_and_refuses_mirror_fold 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_voice_popup_and_assistant_share_history" data-markers="regression" data-reqs="" data-bad="0">
@@ -214,6 +263,13 @@
                 <img src="../results/img/mock/test_voice_popup_and_assistant_share_history.webp" alt="태블릿 (Mock)에서 test_voice_popup_and_assistant_share_history 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_voice_popup_and_assistant_share_history.webp" data-caption="test_voice_popup_and_assistant_share_history · 갤럭시 폴드 (Mock) · 통과 · 4.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_voice_popup_and_assistant_share_history.webp" alt="갤럭시 폴드 (Mock)에서 test_voice_popup_and_assistant_share_history 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
               
               
             </div></div></div></div>
@@ -241,6 +297,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_api_signals_drive_the_screen.webp" data-caption="test_api_signals_drive_the_screen · 갤럭시 폴드 (Mock) · 통과 · 6.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_api_signals_drive_the_screen.webp" alt="갤럭시 폴드 (Mock)에서 test_api_signals_drive_the_screen 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.5초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_api_low_range_shows_charger_card" data-markers="regression" data-reqs="rest" data-bad="0">
@@ -262,6 +325,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_api_low_range_shows_charger_card.webp" data-caption="test_api_low_range_shows_charger_card · 갤럭시 폴드 (Mock) · 통과 · 3.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_api_low_range_shows_charger_card.webp" alt="갤럭시 폴드 (Mock)에서 test_api_low_range_shows_charger_card 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_api_rejects_invalid_value_and_leaves_vehicle_alone" data-markers="regression" data-reqs="rest" data-bad="0">
@@ -281,6 +351,13 @@
                 <img src="../results/img/mock/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp" alt="태블릿 (Mock)에서 test_api_rejects_invalid_value_and_leaves_vehicle_alone 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.2초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp" data-caption="test_api_rejects_invalid_value_and_leaves_vehicle_alone · 갤럭시 폴드 (Mock) · 통과 · 2.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp" alt="갤럭시 폴드 (Mock)에서 test_api_rejects_invalid_value_and_leaves_vehicle_alone 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.3초</span></div>
               
               
             </div></div></div></div>
@@ -308,6 +385,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_can_drive_frames_reach_screen.webp" data-caption="test_can_drive_frames_reach_screen · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_can_drive_frames_reach_screen.webp" alt="갤럭시 폴드 (Mock)에서 test_can_drive_frames_reach_screen 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_can_battery_and_door_frames_reach_screen" data-markers="regression" data-reqs="integration network" data-bad="0">
@@ -329,6 +413,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_can_battery_and_door_frames_reach_screen.webp" data-caption="test_can_battery_and_door_frames_reach_screen · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_can_battery_and_door_frames_reach_screen.webp" alt="갤럭시 폴드 (Mock)에서 test_can_battery_and_door_frames_reach_screen 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_climate_button_goes_out_on_can" data-markers="sanity" data-reqs="integration network" data-bad="0">
@@ -348,6 +439,13 @@
                 <img src="../results/img/mock/test_climate_button_goes_out_on_can.webp" alt="태블릿 (Mock)에서 test_climate_button_goes_out_on_can 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_climate_button_goes_out_on_can.webp" data-caption="test_climate_button_goes_out_on_can · 갤럭시 폴드 (Mock) · 통과 · 5.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_climate_button_goes_out_on_can.webp" alt="갤럭시 폴드 (Mock)에서 test_climate_button_goes_out_on_can 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.7초</span></div>
               
               
             </div></div></div></div>
@@ -375,6 +473,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_signal_is_shown_on_climate_and_home_driver.webp" data-caption="test_signal_is_shown_on_climate_and_home [driver] · 갤럭시 폴드 (Mock) · 통과 · 4.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_signal_is_shown_on_climate_and_home_driver.webp" alt="갤럭시 폴드 (Mock)에서 test_signal_is_shown_on_climate_and_home 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.6초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_signal_is_shown_on_climate_and_home_passenger.webp" data-caption="test_signal_is_shown_on_climate_and_home [passenger] · AAOS 에뮬레이터 · 통과 · 3.6초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_signal_is_shown_on_climate_and_home_passenger.webp" alt="AAOS 에뮬레이터에서 test_signal_is_shown_on_climate_and_home 판정 직후 화면" loading="lazy" decoding="async">
@@ -387,6 +492,13 @@
                 <img src="../results/img/mock/test_signal_is_shown_on_climate_and_home_passenger.webp" alt="태블릿 (Mock)에서 test_signal_is_shown_on_climate_and_home 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_signal_is_shown_on_climate_and_home_passenger.webp" data-caption="test_signal_is_shown_on_climate_and_home [passenger] · 갤럭시 폴드 (Mock) · 통과 · 5.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_signal_is_shown_on_climate_and_home_passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_signal_is_shown_on_climate_and_home 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
               
               
             </div></div></div></div>
@@ -410,6 +522,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_button_changes_signal_by_one_step_up-driver.webp" data-caption="test_button_changes_signal_by_one_step [up-driver] · 갤럭시 폴드 (Mock) · 통과 · 4.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_button_changes_signal_by_one_step_up-driver.webp" alt="갤럭시 폴드 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[up-passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_button_changes_signal_by_one_step_up-passenger.webp" data-caption="test_button_changes_signal_by_one_step [up-passenger] · AAOS 에뮬레이터 · 통과 · 3.6초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_button_changes_signal_by_one_step_up-passenger.webp" alt="AAOS 에뮬레이터에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
@@ -422,6 +541,13 @@
                 <img src="../results/img/mock/test_button_changes_signal_by_one_step_up-passenger.webp" alt="태블릿 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_button_changes_signal_by_one_step_up-passenger.webp" data-caption="test_button_changes_signal_by_one_step [up-passenger] · 갤럭시 폴드 (Mock) · 통과 · 5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_button_changes_signal_by_one_step_up-passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5초</span></div>
               
               
             </div></div></div><div class="case"><p class="case-param"><code>[down-driver]</code></p><div class="case-shots"><div class="shot-cell">
@@ -438,6 +564,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_button_changes_signal_by_one_step_down-driver.webp" data-caption="test_button_changes_signal_by_one_step [down-driver] · 갤럭시 폴드 (Mock) · 통과 · 4.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_button_changes_signal_by_one_step_down-driver.webp" alt="갤럭시 폴드 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[down-passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_button_changes_signal_by_one_step_down-passenger.webp" data-caption="test_button_changes_signal_by_one_step [down-passenger] · AAOS 에뮬레이터 · 통과 · 3.5초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_button_changes_signal_by_one_step_down-passenger.webp" alt="AAOS 에뮬레이터에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
@@ -450,6 +583,13 @@
                 <img src="../results/img/mock/test_button_changes_signal_by_one_step_down-passenger.webp" alt="태블릿 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_button_changes_signal_by_one_step_down-passenger.webp" data-caption="test_button_changes_signal_by_one_step [down-passenger] · 갤럭시 폴드 (Mock) · 통과 · 4.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_button_changes_signal_by_one_step_down-passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_button_changes_signal_by_one_step 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
               
               
             </div></div></div></div>
@@ -473,6 +613,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_buttons_disabled_at_limits_driver.webp" data-caption="test_buttons_disabled_at_limits [driver] · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_buttons_disabled_at_limits_driver.webp" alt="갤럭시 폴드 (Mock)에서 test_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_buttons_disabled_at_limits_passenger.webp" data-caption="test_buttons_disabled_at_limits [passenger] · AAOS 에뮬레이터 · 통과 · 3.1초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_buttons_disabled_at_limits_passenger.webp" alt="AAOS 에뮬레이터에서 test_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
@@ -485,6 +632,13 @@
                 <img src="../results/img/mock/test_buttons_disabled_at_limits_passenger.webp" alt="태블릿 (Mock)에서 test_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_buttons_disabled_at_limits_passenger.webp" data-caption="test_buttons_disabled_at_limits [passenger] · 갤럭시 폴드 (Mock) · 통과 · 5.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_buttons_disabled_at_limits_passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.1초</span></div>
               
               
             </div></div></div></div>
@@ -508,6 +662,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">9.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_step_reaches_limit_and_disables_driver.webp" data-caption="test_step_reaches_limit_and_disables [driver] · 갤럭시 폴드 (Mock) · 통과 · 9.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_step_reaches_limit_and_disables_driver.webp" alt="갤럭시 폴드 (Mock)에서 test_step_reaches_limit_and_disables 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">9.8초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_step_reaches_limit_and_disables_passenger.webp" data-caption="test_step_reaches_limit_and_disables [passenger] · AAOS 에뮬레이터 · 통과 · 8.5초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_step_reaches_limit_and_disables_passenger.webp" alt="AAOS 에뮬레이터에서 test_step_reaches_limit_and_disables 판정 직후 화면" loading="lazy" decoding="async">
@@ -520,6 +681,13 @@
                 <img src="../results/img/mock/test_step_reaches_limit_and_disables_passenger.webp" alt="태블릿 (Mock)에서 test_step_reaches_limit_and_disables 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">9.4초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_step_reaches_limit_and_disables_passenger.webp" data-caption="test_step_reaches_limit_and_disables [passenger] · 갤럭시 폴드 (Mock) · 통과 · 11.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_step_reaches_limit_and_disables_passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_step_reaches_limit_and_disables 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">11.1초</span></div>
               
               
             </div></div></div></div>
@@ -543,6 +711,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_out_of_range_signal_is_shown_safely_below_min.webp" data-caption="test_out_of_range_signal_is_shown_safely [below_min] · 갤럭시 폴드 (Mock) · 통과 · 4.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_out_of_range_signal_is_shown_safely_below_min.webp" alt="갤럭시 폴드 (Mock)에서 test_out_of_range_signal_is_shown_safely 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.6초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[above_max]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_out_of_range_signal_is_shown_safely_above_max.webp" data-caption="test_out_of_range_signal_is_shown_safely [above_max] · AAOS 에뮬레이터 · 통과 · 4.1초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_out_of_range_signal_is_shown_safely_above_max.webp" alt="AAOS 에뮬레이터에서 test_out_of_range_signal_is_shown_safely 판정 직후 화면" loading="lazy" decoding="async">
@@ -555,6 +730,13 @@
                 <img src="../results/img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp" alt="태블릿 (Mock)에서 test_out_of_range_signal_is_shown_safely 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_out_of_range_signal_is_shown_safely_above_max.webp" data-caption="test_out_of_range_signal_is_shown_safely [above_max] · 갤럭시 폴드 (Mock) · 통과 · 4.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_out_of_range_signal_is_shown_safely_above_max.webp" alt="갤럭시 폴드 (Mock)에서 test_out_of_range_signal_is_shown_safely 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
               
               
             </div></div></div></div>
@@ -578,6 +760,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_off_grid_signal_steps_back_to_grid_up-22.5.webp" data-caption="test_off_grid_signal_steps_back_to_grid [up-22.5] · 갤럭시 폴드 (Mock) · 통과 · 4.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_off_grid_signal_steps_back_to_grid_up-22.5.webp" alt="갤럭시 폴드 (Mock)에서 test_off_grid_signal_steps_back_to_grid 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[down-22.0]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" data-caption="test_off_grid_signal_steps_back_to_grid [down-22.0] · AAOS 에뮬레이터 · 통과 · 3.5초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" alt="AAOS 에뮬레이터에서 test_off_grid_signal_steps_back_to_grid 판정 직후 화면" loading="lazy" decoding="async">
@@ -590,6 +779,13 @@
                 <img src="../results/img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" alt="태블릿 (Mock)에서 test_off_grid_signal_steps_back_to_grid 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" data-caption="test_off_grid_signal_steps_back_to_grid [down-22.0] · 갤럭시 폴드 (Mock) · 통과 · 4.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_off_grid_signal_steps_back_to_grid_down-22.0.webp" alt="갤럭시 폴드 (Mock)에서 test_off_grid_signal_steps_back_to_grid 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
               
               
             </div></div></div></div>
@@ -611,6 +807,13 @@
                 <img src="../results/img/mock/test_seats_are_independent.webp" alt="태블릿 (Mock)에서 test_seats_are_independent 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.4초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_seats_are_independent.webp" data-caption="test_seats_are_independent · 갤럭시 폴드 (Mock) · 통과 · 5.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_seats_are_independent.webp" alt="갤럭시 폴드 (Mock)에서 test_seats_are_independent 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.6초</span></div>
               
               
             </div></div></div></div>
@@ -638,6 +841,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_bottom_bar_temperature_drives_vehicle_driver.webp" data-caption="test_bottom_bar_temperature_drives_vehicle [driver] · 갤럭시 폴드 (Mock) · 통과 · 4.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_bottom_bar_temperature_drives_vehicle_driver.webp" alt="갤럭시 폴드 (Mock)에서 test_bottom_bar_temperature_drives_vehicle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_bottom_bar_temperature_drives_vehicle_passenger.webp" data-caption="test_bottom_bar_temperature_drives_vehicle [passenger] · AAOS 에뮬레이터 · 통과 · 3.5초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_bottom_bar_temperature_drives_vehicle_passenger.webp" alt="AAOS 에뮬레이터에서 test_bottom_bar_temperature_drives_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -650,6 +860,13 @@
                 <img src="../results/img/mock/test_bottom_bar_temperature_drives_vehicle_passenger.webp" alt="태블릿 (Mock)에서 test_bottom_bar_temperature_drives_vehicle 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_bottom_bar_temperature_drives_vehicle_passenger.webp" data-caption="test_bottom_bar_temperature_drives_vehicle [passenger] · 갤럭시 폴드 (Mock) · 통과 · 4.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_bottom_bar_temperature_drives_vehicle_passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_bottom_bar_temperature_drives_vehicle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
               
               
             </div></div></div></div>
@@ -673,6 +890,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_sync_mirrors_driver_temperature_to_passenger.webp" data-caption="test_sync_mirrors_driver_temperature_to_passenger · 갤럭시 폴드 (Mock) · 통과 · 5.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_sync_mirrors_driver_temperature_to_passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_sync_mirrors_driver_temperature_to_passenger 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_passenger_change_releases_sync" data-markers="regression" data-reqs="services" data-bad="0">
@@ -692,6 +916,13 @@
                 <img src="../results/img/mock/test_passenger_change_releases_sync.webp" alt="태블릿 (Mock)에서 test_passenger_change_releases_sync 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.4초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_passenger_change_releases_sync.webp" data-caption="test_passenger_change_releases_sync · 갤럭시 폴드 (Mock) · 통과 · 7.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_passenger_change_releases_sync.webp" alt="갤럭시 폴드 (Mock)에서 test_passenger_change_releases_sync 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.7초</span></div>
               
               
             </div></div></div></div>
@@ -715,6 +946,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_trip_distance_follows_speed_signal.webp" data-caption="test_trip_distance_follows_speed_signal · 갤럭시 폴드 (Mock) · 통과 · 7.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_trip_distance_follows_speed_signal.webp" alt="갤럭시 폴드 (Mock)에서 test_trip_distance_follows_speed_signal 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.8초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_lane_assist_indicator_follows_speed" data-markers="regression" data-reqs="services injection" data-bad="0">
@@ -734,6 +972,13 @@
                 <img src="../results/img/mock/test_lane_assist_indicator_follows_speed.webp" alt="태블릿 (Mock)에서 test_lane_assist_indicator_follows_speed 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.1초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_lane_assist_indicator_follows_speed.webp" data-caption="test_lane_assist_indicator_follows_speed · 갤럭시 폴드 (Mock) · 통과 · 2.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_lane_assist_indicator_follows_speed.webp" alt="갤럭시 폴드 (Mock)에서 test_lane_assist_indicator_follows_speed 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.5초</span></div>
               
               
             </div></div></div></div>
@@ -757,6 +1002,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_utility_widget_pages.webp" data-caption="test_utility_widget_pages · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_utility_widget_pages.webp" alt="갤럭시 폴드 (Mock)에서 test_utility_widget_pages 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_split_screen_toggle" data-markers="regression" data-reqs="services" data-bad="0">
@@ -776,6 +1028,13 @@
                 <img src="../results/img/mock/test_split_screen_toggle.webp" alt="태블릿 (Mock)에서 test_split_screen_toggle 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_split_screen_toggle.webp" data-caption="test_split_screen_toggle · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_split_screen_toggle.webp" alt="갤럭시 폴드 (Mock)에서 test_split_screen_toggle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
               
             </div></div></div></div>
@@ -799,6 +1058,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_quick_control_mirror_locked_while_driving.webp" data-caption="test_quick_control_mirror_locked_while_driving · 갤럭시 폴드 (Mock) · 통과 · 6.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_quick_control_mirror_locked_while_driving.webp" alt="갤럭시 폴드 (Mock)에서 test_quick_control_mirror_locked_while_driving 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.8초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_notifications_record_guidance_and_restriction" data-markers="regression" data-reqs="services" data-bad="0">
@@ -820,6 +1086,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.2초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_notifications_record_guidance_and_restriction.webp" data-caption="test_notifications_record_guidance_and_restriction · 갤럭시 폴드 (Mock) · 통과 · 5.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_notifications_record_guidance_and_restriction.webp" alt="갤럭시 폴드 (Mock)에서 test_notifications_record_guidance_and_restriction 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_recent_app_slot" data-markers="regression" data-reqs="services" data-bad="0">
@@ -839,6 +1112,13 @@
                 <img src="../results/img/mock/test_recent_app_slot.webp" alt="태블릿 (Mock)에서 test_recent_app_slot 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_recent_app_slot.webp" data-caption="test_recent_app_slot · 갤럭시 폴드 (Mock) · 통과 · 5.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_recent_app_slot.webp" alt="갤럭시 폴드 (Mock)에서 test_recent_app_slot 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.1초</span></div>
               
               
             </div></div></div></div>
@@ -866,6 +1146,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_driving_signals_are_shown.webp" data-caption="test_driving_signals_are_shown · 갤럭시 폴드 (Mock) · 통과 · 3.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_driving_signals_are_shown.webp" alt="갤럭시 폴드 (Mock)에서 test_driving_signals_are_shown 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_video_button_locked_while_driving" data-markers="regression" data-reqs="services injection" data-bad="0">
@@ -885,6 +1172,13 @@
                 <img src="../results/img/mock/test_video_button_locked_while_driving.webp" alt="태블릿 (Mock)에서 test_video_button_locked_while_driving 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_video_button_locked_while_driving.webp" data-caption="test_video_button_locked_while_driving · 갤럭시 폴드 (Mock) · 통과 · 4.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_video_button_locked_while_driving.webp" alt="갤럭시 폴드 (Mock)에서 test_video_button_locked_while_driving 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
               
             </div></div></div></div>
@@ -908,6 +1202,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.2초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_video_is_blocked_while_driving.webp" data-caption="test_video_is_blocked_while_driving · 갤럭시 폴드 (Mock) · 통과 · 3.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_video_is_blocked_while_driving.webp" alt="갤럭시 폴드 (Mock)에서 test_video_is_blocked_while_driving 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_video_plays_when_parked" data-markers="sanity" data-reqs="services injection" data-bad="0">
@@ -927,6 +1228,13 @@
                 <img src="../results/img/mock/test_video_plays_when_parked.webp" alt="태블릿 (Mock)에서 test_video_plays_when_parked 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.2초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_video_plays_when_parked.webp" data-caption="test_video_plays_when_parked · 갤럭시 폴드 (Mock) · 통과 · 3.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_video_plays_when_parked.webp" alt="갤럭시 폴드 (Mock)에서 test_video_plays_when_parked 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
               
               
             </div></div></div></div>
@@ -950,6 +1258,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_video_blocked_screen_follows_parking.webp" data-caption="test_video_blocked_screen_follows_parking · 갤럭시 폴드 (Mock) · 통과 · 4.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_video_blocked_screen_follows_parking.webp" alt="갤럭시 폴드 (Mock)에서 test_video_blocked_screen_follows_parking 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_video_resumes_where_it_stopped" data-markers="regression" data-reqs="services injection" data-bad="0">
@@ -971,6 +1286,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">12.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_video_resumes_where_it_stopped.webp" data-caption="test_video_resumes_where_it_stopped · 갤럭시 폴드 (Mock) · 통과 · 13.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_video_resumes_where_it_stopped.webp" alt="갤럭시 폴드 (Mock)에서 test_video_resumes_where_it_stopped 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">13.6초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_video_next_clip" data-markers="regression" data-reqs="services injection" data-bad="0">
@@ -990,6 +1312,13 @@
                 <img src="../results/img/mock/test_video_next_clip.webp" alt="태블릿 (Mock)에서 test_video_next_clip 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_video_next_clip.webp" data-caption="test_video_next_clip · 갤럭시 폴드 (Mock) · 통과 · 5.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_video_next_clip.webp" alt="갤럭시 폴드 (Mock)에서 test_video_next_clip 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.2초</span></div>
               
               
             </div></div></div></div>
@@ -1017,6 +1346,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_selecting_track_starts_it_0.webp" data-caption="test_selecting_track_starts_it [0] · 갤럭시 폴드 (Mock) · 통과 · 4.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_selecting_track_starts_it_0.webp" alt="갤럭시 폴드 (Mock)에서 test_selecting_track_starts_it 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[2]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_selecting_track_starts_it_2.webp" data-caption="test_selecting_track_starts_it [2] · AAOS 에뮬레이터 · 통과 · 3.4초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_selecting_track_starts_it_2.webp" alt="AAOS 에뮬레이터에서 test_selecting_track_starts_it 판정 직후 화면" loading="lazy" decoding="async">
@@ -1031,6 +1367,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_selecting_track_starts_it_2.webp" data-caption="test_selecting_track_starts_it [2] · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_selecting_track_starts_it_2.webp" alt="갤럭시 폴드 (Mock)에서 test_selecting_track_starts_it 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[4]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_selecting_track_starts_it_4.webp" data-caption="test_selecting_track_starts_it [4] · AAOS 에뮬레이터 · 통과 · 3.4초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_selecting_track_starts_it_4.webp" alt="AAOS 에뮬레이터에서 test_selecting_track_starts_it 판정 직후 화면" loading="lazy" decoding="async">
@@ -1043,6 +1386,13 @@
                 <img src="../results/img/mock/test_selecting_track_starts_it_4.webp" alt="태블릿 (Mock)에서 test_selecting_track_starts_it 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_selecting_track_starts_it_4.webp" data-caption="test_selecting_track_starts_it [4] · 갤럭시 폴드 (Mock) · 통과 · 4.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_selecting_track_starts_it_4.webp" alt="갤럭시 폴드 (Mock)에서 test_selecting_track_starts_it 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
               
             </div></div></div></div>
@@ -1066,6 +1416,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_play_pause_toggles.webp" data-caption="test_play_pause_toggles · 갤럭시 폴드 (Mock) · 통과 · 5.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_play_pause_toggles.webp" alt="갤럭시 폴드 (Mock)에서 test_play_pause_toggles 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.2초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_media_stays_usable_while_driving" data-markers="regression" data-reqs="services" data-bad="0">
@@ -1085,6 +1442,13 @@
                 <img src="../results/img/mock/test_media_stays_usable_while_driving.webp" alt="태블릿 (Mock)에서 test_media_stays_usable_while_driving 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_media_stays_usable_while_driving.webp" data-caption="test_media_stays_usable_while_driving · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_media_stays_usable_while_driving.webp" alt="갤럭시 폴드 (Mock)에서 test_media_stays_usable_while_driving 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
               
               
             </div></div></div></div>
@@ -1112,6 +1476,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">8.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_guidance_counts_down_with_vehicle_speed.webp" data-caption="test_guidance_counts_down_with_vehicle_speed · 갤럭시 폴드 (Mock) · 통과 · 9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_guidance_counts_down_with_vehicle_speed.webp" alt="갤럭시 폴드 (Mock)에서 test_guidance_counts_down_with_vehicle_speed 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_parked_vehicle_does_not_advance_route" data-markers="regression" data-reqs="injection" data-bad="0">
@@ -1131,6 +1502,13 @@
                 <img src="../results/img/mock/test_parked_vehicle_does_not_advance_route.webp" alt="태블릿 (Mock)에서 test_parked_vehicle_does_not_advance_route 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.2초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_parked_vehicle_does_not_advance_route.webp" data-caption="test_parked_vehicle_does_not_advance_route · 갤럭시 폴드 (Mock) · 통과 · 7.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_parked_vehicle_does_not_advance_route.webp" alt="갤럭시 폴드 (Mock)에서 test_parked_vehicle_does_not_advance_route 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.3초</span></div>
               
               
             </div></div></div></div>
@@ -1154,6 +1532,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_search_locked_while_driving_but_favorites_work.webp" data-caption="test_search_locked_while_driving_but_favorites_work · 갤럭시 폴드 (Mock) · 통과 · 4.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_search_locked_while_driving_but_favorites_work.webp" alt="갤럭시 폴드 (Mock)에서 test_search_locked_while_driving_but_favorites_work 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_search_filters_destinations" data-markers="regression" data-reqs="" data-bad="0">
@@ -1173,6 +1558,13 @@
                 <img src="../results/img/mock/test_search_filters_destinations.webp" alt="태블릿 (Mock)에서 test_search_filters_destinations 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_search_filters_destinations.webp" data-caption="test_search_filters_destinations · 갤럭시 폴드 (Mock) · 통과 · 3.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_search_filters_destinations.webp" alt="갤럭시 폴드 (Mock)에서 test_search_filters_destinations 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.2초</span></div>
               
               
             </div></div></div></div>
@@ -1196,6 +1588,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">8.1초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_arrival.webp" data-caption="test_arrival · 갤럭시 폴드 (Mock) · 통과 · 8.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_arrival.webp" alt="갤럭시 폴드 (Mock)에서 test_arrival 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">8.1초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_stop_guidance_returns_to_search_and_clears_cluster_route" data-markers="regression" data-reqs="" data-bad="0">
@@ -1215,6 +1614,13 @@
                 <img src="../results/img/mock/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp" alt="태블릿 (Mock)에서 test_stop_guidance_returns_to_search_and_clears_cluster_route 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp" data-caption="test_stop_guidance_returns_to_search_and_clears_cluster_route · 갤럭시 폴드 (Mock) · 통과 · 6.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp" alt="갤럭시 폴드 (Mock)에서 test_stop_guidance_returns_to_search_and_clears_cluster_route 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.4초</span></div>
               
               
             </div></div></div></div>
@@ -1242,6 +1648,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.1초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_call_contact_shows_call_screen_and_recent.webp" data-caption="test_call_contact_shows_call_screen_and_recent · 갤럭시 폴드 (Mock) · 통과 · 7.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_call_contact_shows_call_screen_and_recent.webp" alt="갤럭시 폴드 (Mock)에서 test_call_contact_shows_call_screen_and_recent 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.1초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_keypad_dial" data-markers="regression" data-reqs="" data-bad="0">
@@ -1261,6 +1674,13 @@
                 <img src="../results/img/mock/test_keypad_dial.webp" alt="태블릿 (Mock)에서 test_keypad_dial 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.5초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_keypad_dial.webp" data-caption="test_keypad_dial · 갤럭시 폴드 (Mock) · 통과 · 8.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_keypad_dial.webp" alt="갤럭시 폴드 (Mock)에서 test_keypad_dial 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">8.3초</span></div>
               
               
             </div></div></div></div>
@@ -1284,6 +1704,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_driving_locks_keypad_and_limits_contacts.webp" data-caption="test_driving_locks_keypad_and_limits_contacts · 갤럭시 폴드 (Mock) · 통과 · 5.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_driving_locks_keypad_and_limits_contacts.webp" alt="갤럭시 폴드 (Mock)에서 test_driving_locks_keypad_and_limits_contacts 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.8초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_call_pauses_radio_then_resumes" data-markers="regression" data-reqs="" data-bad="0">
@@ -1303,6 +1730,13 @@
                 <img src="../results/img/mock/test_call_pauses_radio_then_resumes.webp" alt="태블릿 (Mock)에서 test_call_pauses_radio_then_resumes 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_call_pauses_radio_then_resumes.webp" data-caption="test_call_pauses_radio_then_resumes · 갤럭시 폴드 (Mock) · 통과 · 8.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_call_pauses_radio_then_resumes.webp" alt="갤럭시 폴드 (Mock)에서 test_call_pauses_radio_then_resumes 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">8.5초</span></div>
               
               
             </div></div></div></div>
@@ -1326,6 +1760,11 @@
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0.2초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0.3초</span></div>
               
               
             </div></div></div></div>
@@ -1353,6 +1792,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_power_on_plays_default_station.webp" data-caption="test_power_on_plays_default_station · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_power_on_plays_default_station.webp" alt="갤럭시 폴드 (Mock)에서 test_power_on_plays_default_station 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_tune_and_seek" data-markers="regression" data-reqs="services" data-bad="0">
@@ -1372,6 +1818,13 @@
                 <img src="../results/img/mock/test_tune_and_seek.webp" alt="태블릿 (Mock)에서 test_tune_and_seek 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.4초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_tune_and_seek.webp" data-caption="test_tune_and_seek · 갤럭시 폴드 (Mock) · 통과 · 7.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_tune_and_seek.webp" alt="갤럭시 폴드 (Mock)에서 test_tune_and_seek 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.7초</span></div>
               
               
             </div></div></div></div>
@@ -1395,6 +1848,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_am_band_uses_khz_steps.webp" data-caption="test_am_band_uses_khz_steps · 갤럭시 폴드 (Mock) · 통과 · 5.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_am_band_uses_khz_steps.webp" alt="갤럭시 폴드 (Mock)에서 test_am_band_uses_khz_steps 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.1초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_preset_save_and_recall" data-markers="regression" data-reqs="services" data-bad="0">
@@ -1414,6 +1874,13 @@
                 <img src="../results/img/mock/test_preset_save_and_recall.webp" alt="태블릿 (Mock)에서 test_preset_save_and_recall 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_preset_save_and_recall.webp" data-caption="test_preset_save_and_recall · 갤럭시 폴드 (Mock) · 통과 · 7.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_preset_save_and_recall.webp" alt="갤럭시 폴드 (Mock)에서 test_preset_save_and_recall 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.6초</span></div>
               
               
             </div></div></div></div>
@@ -1437,6 +1904,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">10초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_preset_and_frequency_survive_app_restart.webp" data-caption="test_preset_and_frequency_survive_app_restart · 갤럭시 폴드 (Mock) · 통과 · 10.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_preset_and_frequency_survive_app_restart.webp" alt="갤럭시 폴드 (Mock)에서 test_preset_and_frequency_survive_app_restart 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">10.8초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_radio_and_media_play_one_at_a_time" data-markers="regression" data-reqs="services" data-bad="0">
@@ -1456,6 +1930,13 @@
                 <img src="../results/img/mock/test_radio_and_media_play_one_at_a_time.webp" alt="태블릿 (Mock)에서 test_radio_and_media_play_one_at_a_time 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_radio_and_media_play_one_at_a_time.webp" data-caption="test_radio_and_media_play_one_at_a_time · 갤럭시 폴드 (Mock) · 통과 · 6.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_radio_and_media_play_one_at_a_time.webp" alt="갤럭시 폴드 (Mock)에서 test_radio_and_media_play_one_at_a_time 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.5초</span></div>
               
               
             </div></div></div></div>
@@ -1483,6 +1964,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_reverse_gear_shows_camera.webp" data-caption="test_reverse_gear_shows_camera · 갤럭시 폴드 (Mock) · 통과 · 2.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_reverse_gear_shows_camera.webp" alt="갤럭시 폴드 (Mock)에서 test_reverse_gear_shows_camera 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_camera_returns_to_previous_screen" data-markers="regression" data-reqs="injection" data-bad="0">
@@ -1502,6 +1990,13 @@
                 <img src="../results/img/mock/test_camera_returns_to_previous_screen.webp" alt="태블릿 (Mock)에서 test_camera_returns_to_previous_screen 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_camera_returns_to_previous_screen.webp" data-caption="test_camera_returns_to_previous_screen · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_camera_returns_to_previous_screen.webp" alt="갤럭시 폴드 (Mock)에서 test_camera_returns_to_previous_screen 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
               
             </div></div></div></div>
@@ -1525,6 +2020,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.8초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_gear_value_shows_reverse.webp" data-caption="test_gear_value_shows_reverse · 갤럭시 폴드 (Mock) · 통과 · 3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_gear_value_shows_reverse.webp" alt="갤럭시 폴드 (Mock)에서 test_gear_value_shows_reverse 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_rear_camera_appears_within_two_seconds" data-markers="regression" data-reqs="injection" data-bad="0">
@@ -1545,6 +2047,13 @@
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
               <p class="cell-measure">카메라가 뜨기까지: 0.23, 0.29, 0.30, 0.29, 0.28초</p>
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_rear_camera_appears_within_two_seconds.webp" data-caption="test_rear_camera_appears_within_two_seconds · 갤럭시 폴드 (Mock) · 통과 · 5.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_rear_camera_appears_within_two_seconds.webp" alt="갤럭시 폴드 (Mock)에서 test_rear_camera_appears_within_two_seconds 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.4초</span></div>
+              <p class="cell-measure">카메라가 뜨기까지: 0.38, 0.29, 0.33, 0.28, 0.30초</p>
               
             </div></div></div></div>
         </article>
@@ -1571,6 +2080,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_mph_setting_converts_vehicle_speed.webp" data-caption="test_mph_setting_converts_vehicle_speed · 갤럭시 폴드 (Mock) · 통과 · 5.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_mph_setting_converts_vehicle_speed.webp" alt="갤럭시 폴드 (Mock)에서 test_mph_setting_converts_vehicle_speed 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_volume_steps" data-markers="regression" data-reqs="services" data-bad="0">
@@ -1590,6 +2106,13 @@
                 <img src="../results/img/mock/test_volume_steps.webp" alt="태블릿 (Mock)에서 test_volume_steps 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.8초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_volume_steps.webp" data-caption="test_volume_steps · 갤럭시 폴드 (Mock) · 통과 · 6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_volume_steps.webp" alt="갤럭시 폴드 (Mock)에서 test_volume_steps 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6초</span></div>
               
               
             </div></div></div></div>
@@ -1613,6 +2136,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">10.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_settings_survive_app_restart.webp" data-caption="test_settings_survive_app_restart · 갤럭시 폴드 (Mock) · 통과 · 11.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_settings_survive_app_restart.webp" alt="갤럭시 폴드 (Mock)에서 test_settings_survive_app_restart 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">11.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_reset_restores_defaults" data-markers="regression" data-reqs="services" data-bad="0">
@@ -1634,6 +2164,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.5초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_reset_restores_defaults.webp" data-caption="test_reset_restores_defaults · 갤럭시 폴드 (Mock) · 통과 · 7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_reset_restores_defaults.webp" alt="갤럭시 폴드 (Mock)에서 test_reset_restores_defaults 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_12_hour_clock_on_tablet" data-markers="regression tablet" data-reqs="services" data-bad="0">
@@ -1651,6 +2188,13 @@
                 <img src="../results/img/mock/test_12_hour_clock_on_tablet.webp" alt="태블릿 (Mock)에서 test_12_hour_clock_on_tablet 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_12_hour_clock_on_tablet.webp" data-caption="test_12_hour_clock_on_tablet · 갤럭시 폴드 (Mock) · 통과 · 4.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_12_hour_clock_on_tablet.webp" alt="갤럭시 폴드 (Mock)에서 test_12_hour_clock_on_tablet 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
               
               
             </div></div></div></div>
@@ -1678,6 +2222,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.1초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_app_starts_with_vehicle_source_for_device.webp" data-caption="test_app_starts_with_vehicle_source_for_device · 갤럭시 폴드 (Mock) · 통과 · 2.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_app_starts_with_vehicle_source_for_device.webp" alt="갤럭시 폴드 (Mock)에서 test_app_starts_with_vehicle_source_for_device 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.5초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_parked_on_start" data-markers="smoke" data-reqs="" data-bad="0">
@@ -1697,6 +2248,13 @@
                 <img src="../results/img/mock/test_parked_on_start.webp" alt="태블릿 (Mock)에서 test_parked_on_start 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.8초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_parked_on_start.webp" data-caption="test_parked_on_start · 갤럭시 폴드 (Mock) · 통과 · 3.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_parked_on_start.webp" alt="갤럭시 폴드 (Mock)에서 test_parked_on_start 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.1초</span></div>
               
               
             </div></div></div></div>
@@ -1720,6 +2278,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_home.webp" data-caption="test_each_tab_opens [home] · 갤럭시 폴드 (Mock) · 통과 · 2.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_home.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[navigation]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_each_tab_opens_navigation.webp" data-caption="test_each_tab_opens [navigation] · AAOS 에뮬레이터 · 통과 · 2.7초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_each_tab_opens_navigation.webp" alt="AAOS 에뮬레이터에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
@@ -1732,6 +2297,13 @@
                 <img src="../results/img/mock/test_each_tab_opens_navigation.webp" alt="태블릿 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_navigation.webp" data-caption="test_each_tab_opens [navigation] · 갤럭시 폴드 (Mock) · 통과 · 3.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_navigation.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.1초</span></div>
               
               
             </div></div></div><div class="case"><p class="case-param"><code>[radio]</code></p><div class="case-shots"><div class="shot-cell">
@@ -1748,6 +2320,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_radio.webp" data-caption="test_each_tab_opens [radio] · 갤럭시 폴드 (Mock) · 통과 · 3.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_radio.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[media]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_each_tab_opens_media.webp" data-caption="test_each_tab_opens [media] · AAOS 에뮬레이터 · 통과 · 2.6초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_each_tab_opens_media.webp" alt="AAOS 에뮬레이터에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
@@ -1760,6 +2339,13 @@
                 <img src="../results/img/mock/test_each_tab_opens_media.webp" alt="태블릿 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_media.webp" data-caption="test_each_tab_opens [media] · 갤럭시 폴드 (Mock) · 통과 · 3.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_media.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
               
             </div></div></div><div class="case"><p class="case-param"><code>[phone]</code></p><div class="case-shots"><div class="shot-cell">
@@ -1776,6 +2362,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_phone.webp" data-caption="test_each_tab_opens [phone] · 갤럭시 폴드 (Mock) · 통과 · 3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_phone.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[climate]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_each_tab_opens_climate.webp" data-caption="test_each_tab_opens [climate] · AAOS 에뮬레이터 · 통과 · 2.7초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_each_tab_opens_climate.webp" alt="AAOS 에뮬레이터에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
@@ -1788,6 +2381,13 @@
                 <img src="../results/img/mock/test_each_tab_opens_climate.webp" alt="태블릿 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_climate.webp" data-caption="test_each_tab_opens [climate] · 갤럭시 폴드 (Mock) · 통과 · 3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_climate.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
               
               
             </div></div></div><div class="case"><p class="case-param"><code>[settings]</code></p><div class="case-shots"><div class="shot-cell">
@@ -1804,6 +2404,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_settings.webp" data-caption="test_each_tab_opens [settings] · 갤럭시 폴드 (Mock) · 통과 · 4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_settings.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[assistant]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_each_tab_opens_assistant.webp" data-caption="test_each_tab_opens [assistant] · AAOS 에뮬레이터 · 통과 · 2.6초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_each_tab_opens_assistant.webp" alt="AAOS 에뮬레이터에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
@@ -1816,6 +2423,13 @@
                 <img src="../results/img/mock/test_each_tab_opens_assistant.webp" alt="태블릿 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.5초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_assistant.webp" data-caption="test_each_tab_opens [assistant] · 갤럭시 폴드 (Mock) · 통과 · 3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_assistant.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
               
               
             </div></div></div><div class="case"><p class="case-param"><code>[vehicle_controls]</code></p><div class="case-shots"><div class="shot-cell">
@@ -1832,6 +2446,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_vehicle_controls.webp" data-caption="test_each_tab_opens [vehicle_controls] · 갤럭시 폴드 (Mock) · 통과 · 3.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_vehicle_controls.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.4초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[apps]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_each_tab_opens_apps.webp" data-caption="test_each_tab_opens [apps] · AAOS 에뮬레이터 · 통과 · 2.6초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_each_tab_opens_apps.webp" alt="AAOS 에뮬레이터에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
@@ -1844,6 +2465,13 @@
                 <img src="../results/img/mock/test_each_tab_opens_apps.webp" alt="태블릿 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_each_tab_opens_apps.webp" data-caption="test_each_tab_opens [apps] · 갤럭시 폴드 (Mock) · 통과 · 3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_each_tab_opens_apps.webp" alt="갤럭시 폴드 (Mock)에서 test_each_tab_opens 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
               
               
             </div></div></div></div>
@@ -1865,6 +2493,13 @@
                 <img src="../results/img/mock/test_hvac_is_controllable.webp" alt="태블릿 (Mock)에서 test_hvac_is_controllable 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.8초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_hvac_is_controllable.webp" data-caption="test_hvac_is_controllable · 갤럭시 폴드 (Mock) · 통과 · 4.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_hvac_is_controllable.webp" alt="갤럭시 폴드 (Mock)에서 test_hvac_is_controllable 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.4초</span></div>
               
               
             </div></div></div></div>
@@ -1890,6 +2525,11 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
               
               
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[20.0]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_hvac_signal_is_shown_on_ui_20.0.webp" data-caption="test_hvac_signal_is_shown_on_ui [20.0] · AAOS 에뮬레이터 · 통과 · 2.3초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_hvac_signal_is_shown_on_ui_20.0.webp" alt="AAOS 에뮬레이터에서 test_hvac_signal_is_shown_on_ui 판정 직후 화면" loading="lazy" decoding="async">
@@ -1900,6 +2540,11 @@
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
               
               
             </div></div></div></div>
@@ -1921,6 +2566,11 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
               
               
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[passenger-hvac_increase_button-0.5]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_hvac_ui_tap_changes_signal_passenger-hvac_increase_button-0.5.webp" data-caption="test_hvac_ui_tap_changes_signal [passenger-hvac_increase_button-0.5] · AAOS 에뮬레이터 · 통과 · 3초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_hvac_ui_tap_changes_signal_passenger-hvac_increase_button-0.5.webp" alt="AAOS 에뮬레이터에서 test_hvac_ui_tap_changes_signal 판정 직후 화면" loading="lazy" decoding="async">
@@ -1931,6 +2581,11 @@
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
               
               
             </div></div></div></div>
@@ -1952,6 +2607,11 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
               
               
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_speed_and_gear_change_driving_state" data-markers="spike aaos" data-reqs="e2e injection vhal" data-bad="0">
@@ -1969,6 +2629,11 @@
             </div><div class="shot-cell">
               <div class="shot shot-mock no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)</p></div>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <div class="shot shot-fold no-shot"><p>Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)</p></div>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-skipped">건너뜀</span><span class="cell-time">0초</span></div>
               
               
             </div></div></div></div>
@@ -1996,6 +2661,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_ac_toggle_reaches_every_seat.webp" data-caption="test_ac_toggle_reaches_every_seat · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_ac_toggle_reaches_every_seat.webp" alt="갤럭시 폴드 (Mock)에서 test_ac_toggle_reaches_every_seat 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_ac_signal_is_shown_on_climate_and_bottom_bar" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
@@ -2015,6 +2687,13 @@
                 <img src="../results/img/mock/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp" alt="태블릿 (Mock)에서 test_ac_signal_is_shown_on_climate_and_bottom_bar 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp" data-caption="test_ac_signal_is_shown_on_climate_and_bottom_bar · 갤럭시 폴드 (Mock) · 통과 · 3.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp" alt="갤럭시 폴드 (Mock)에서 test_ac_signal_is_shown_on_climate_and_bottom_bar 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
               
             </div></div></div></div>
@@ -2038,6 +2717,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_fan_button_changes_signal_by_one_up-4.webp" data-caption="test_fan_button_changes_signal_by_one [up-4] · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_fan_button_changes_signal_by_one_up-4.webp" alt="갤럭시 폴드 (Mock)에서 test_fan_button_changes_signal_by_one 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[down-2]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_fan_button_changes_signal_by_one_down-2.webp" data-caption="test_fan_button_changes_signal_by_one [down-2] · AAOS 에뮬레이터 · 통과 · 3.5초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_fan_button_changes_signal_by_one_down-2.webp" alt="AAOS 에뮬레이터에서 test_fan_button_changes_signal_by_one 판정 직후 화면" loading="lazy" decoding="async">
@@ -2050,6 +2736,13 @@
                 <img src="../results/img/mock/test_fan_button_changes_signal_by_one_down-2.webp" alt="태블릿 (Mock)에서 test_fan_button_changes_signal_by_one 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_fan_button_changes_signal_by_one_down-2.webp" data-caption="test_fan_button_changes_signal_by_one [down-2] · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_fan_button_changes_signal_by_one_down-2.webp" alt="갤럭시 폴드 (Mock)에서 test_fan_button_changes_signal_by_one 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
               
               
             </div></div></div></div>
@@ -2073,6 +2766,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp" data-caption="test_fan_buttons_disabled_at_limits [1-climate_fan_down] · 갤럭시 폴드 (Mock) · 통과 · 5.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp" alt="갤럭시 폴드 (Mock)에서 test_fan_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.7초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[7-climate_fan_up]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" data-caption="test_fan_buttons_disabled_at_limits [7-climate_fan_up] · AAOS 에뮬레이터 · 통과 · 4.6초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" alt="AAOS 에뮬레이터에서 test_fan_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
@@ -2085,6 +2785,13 @@
                 <img src="../results/img/mock/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" alt="태블릿 (Mock)에서 test_fan_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" data-caption="test_fan_buttons_disabled_at_limits [7-climate_fan_up] · 갤럭시 폴드 (Mock) · 통과 · 5.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp" alt="갤럭시 폴드 (Mock)에서 test_fan_buttons_disabled_at_limits 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
               
               
             </div></div></div></div>
@@ -2108,6 +2815,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_max_ac_sets_signal_and_coldest_settings.webp" data-caption="test_max_ac_sets_signal_and_coldest_settings · 갤럭시 폴드 (Mock) · 통과 · 6.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_max_ac_sets_signal_and_coldest_settings.webp" alt="갤럭시 폴드 (Mock)에서 test_max_ac_sets_signal_and_coldest_settings 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_max_ac_off_restores_previous_settings" data-markers="regression" data-reqs="services vhal" data-bad="0">
@@ -2127,6 +2841,13 @@
                 <img src="../results/img/mock/test_max_ac_off_restores_previous_settings.webp" alt="태블릿 (Mock)에서 test_max_ac_off_restores_previous_settings 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_max_ac_off_restores_previous_settings.webp" data-caption="test_max_ac_off_restores_previous_settings · 갤럭시 폴드 (Mock) · 통과 · 5.4초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_max_ac_off_restores_previous_settings.webp" alt="갤럭시 폴드 (Mock)에서 test_max_ac_off_restores_previous_settings 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.4초</span></div>
               
               
             </div></div></div></div>
@@ -2150,6 +2871,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_max_ac_signal_is_shown_on_toggle.webp" data-caption="test_max_ac_signal_is_shown_on_toggle · 갤럭시 폴드 (Mock) · 통과 · 3.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_max_ac_signal_is_shown_on_toggle.webp" alt="갤럭시 폴드 (Mock)에서 test_max_ac_signal_is_shown_on_toggle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_manual_fan_releases_max_ac" data-markers="regression" data-reqs="services vhal" data-bad="0">
@@ -2169,6 +2897,13 @@
                 <img src="../results/img/mock/test_manual_fan_releases_max_ac.webp" alt="태블릿 (Mock)에서 test_manual_fan_releases_max_ac 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.2초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_manual_fan_releases_max_ac.webp" data-caption="test_manual_fan_releases_max_ac · 갤럭시 폴드 (Mock) · 통과 · 7.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_manual_fan_releases_max_ac.webp" alt="갤럭시 폴드 (Mock)에서 test_manual_fan_releases_max_ac 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7.2초</span></div>
               
               
             </div></div></div></div>
@@ -2192,6 +2927,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_turning_ac_off_releases_max_ac.webp" data-caption="test_turning_ac_off_releases_max_ac · 갤럭시 폴드 (Mock) · 통과 · 5.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_turning_ac_off_releases_max_ac.webp" alt="갤럭시 폴드 (Mock)에서 test_turning_ac_off_releases_max_ac 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.1초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_manual_fan_releases_auto" data-markers="regression" data-reqs="services vhal" data-bad="0">
@@ -2211,6 +2953,13 @@
                 <img src="../results/img/mock/test_manual_fan_releases_auto.webp" alt="태블릿 (Mock)에서 test_manual_fan_releases_auto 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.5초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_manual_fan_releases_auto.webp" data-caption="test_manual_fan_releases_auto · 갤럭시 폴드 (Mock) · 통과 · 5.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_manual_fan_releases_auto.webp" alt="갤럭시 폴드 (Mock)에서 test_manual_fan_releases_auto 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.2초</span></div>
               
               
             </div></div></div></div>
@@ -2234,6 +2983,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp" data-caption="test_defrost_changes_only_its_window [defrost_front-defrost_front-defrost_rear] · 갤럭시 폴드 (Mock) · 통과 · 6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp" alt="갤럭시 폴드 (Mock)에서 test_defrost_changes_only_its_window 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[defrost_rear-defrost_rear-defrost_front]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" data-caption="test_defrost_changes_only_its_window [defrost_rear-defrost_rear-defrost_front] · AAOS 에뮬레이터 · 통과 · 5.2초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" alt="AAOS 에뮬레이터에서 test_defrost_changes_only_its_window 판정 직후 화면" loading="lazy" decoding="async">
@@ -2246,6 +3002,13 @@
                 <img src="../results/img/mock/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" alt="태블릿 (Mock)에서 test_defrost_changes_only_its_window 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.9초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" data-caption="test_defrost_changes_only_its_window [defrost_rear-defrost_rear-defrost_front] · 갤럭시 폴드 (Mock) · 통과 · 6.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp" alt="갤럭시 폴드 (Mock)에서 test_defrost_changes_only_its_window 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.2초</span></div>
               
               
             </div></div></div></div>
@@ -2269,6 +3032,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.3초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_seat_heat_cycles_levels_on_vehicle_driver.webp" data-caption="test_seat_heat_cycles_levels_on_vehicle [driver] · 갤럭시 폴드 (Mock) · 통과 · 6.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_seat_heat_cycles_levels_on_vehicle_driver.webp" alt="갤럭시 폴드 (Mock)에서 test_seat_heat_cycles_levels_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.5초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[passenger]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" data-caption="test_seat_heat_cycles_levels_on_vehicle [passenger] · AAOS 에뮬레이터 · 통과 · 5.9초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" alt="AAOS 에뮬레이터에서 test_seat_heat_cycles_levels_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
@@ -2281,6 +3051,13 @@
                 <img src="../results/img/mock/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" alt="태블릿 (Mock)에서 test_seat_heat_cycles_levels_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" data-caption="test_seat_heat_cycles_levels_on_vehicle [passenger] · 갤럭시 폴드 (Mock) · 통과 · 7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_seat_heat_cycles_levels_on_vehicle_passenger.webp" alt="갤럭시 폴드 (Mock)에서 test_seat_heat_cycles_levels_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">7초</span></div>
               
               
             </div></div></div></div>
@@ -2304,6 +3081,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.7초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_seat_heat_signal_is_shown_everywhere.webp" data-caption="test_seat_heat_signal_is_shown_everywhere · 갤럭시 폴드 (Mock) · 통과 · 6.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_seat_heat_signal_is_shown_everywhere.webp" alt="갤럭시 폴드 (Mock)에서 test_seat_heat_signal_is_shown_everywhere 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.7초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_bottom_bar_seat_heat_works_from_any_screen" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
@@ -2323,6 +3107,13 @@
                 <img src="../results/img/mock/test_bottom_bar_seat_heat_works_from_any_screen.webp" alt="태블릿 (Mock)에서 test_bottom_bar_seat_heat_works_from_any_screen 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_bottom_bar_seat_heat_works_from_any_screen.webp" data-caption="test_bottom_bar_seat_heat_works_from_any_screen · 갤럭시 폴드 (Mock) · 통과 · 5.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_bottom_bar_seat_heat_works_from_any_screen.webp" alt="갤럭시 폴드 (Mock)에서 test_bottom_bar_seat_heat_works_from_any_screen 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">5.7초</span></div>
               
               
             </div></div></div></div>
@@ -2346,6 +3137,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.6초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_assistant_seat_heat_follows_speaker_zone.webp" data-caption="test_assistant_seat_heat_follows_speaker_zone · 갤럭시 폴드 (Mock) · 통과 · 6.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_assistant_seat_heat_follows_speaker_zone.webp" alt="갤럭시 폴드 (Mock)에서 test_assistant_seat_heat_follows_speaker_zone 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">6.8초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_door_lock_button_drives_every_door" data-markers="sanity" data-reqs="services e2e vhal" data-bad="0">
@@ -2365,6 +3163,13 @@
                 <img src="../results/img/mock/test_door_lock_button_drives_every_door.webp" alt="태블릿 (Mock)에서 test_door_lock_button_drives_every_door 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.6초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_door_lock_button_drives_every_door.webp" data-caption="test_door_lock_button_drives_every_door · 갤럭시 폴드 (Mock) · 통과 · 4.7초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_door_lock_button_drives_every_door.webp" alt="갤럭시 폴드 (Mock)에서 test_door_lock_button_drives_every_door 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
               
               
             </div></div></div></div>
@@ -2388,6 +3193,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_door_lock_signal_is_shown.webp" data-caption="test_door_lock_signal_is_shown · 갤럭시 폴드 (Mock) · 통과 · 3.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_door_lock_signal_is_shown.webp" alt="갤럭시 폴드 (Mock)에서 test_door_lock_signal_is_shown 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_energy_signals_are_shown_on_cluster" data-markers="sanity" data-reqs="services e2e injection vhal" data-bad="0">
@@ -2407,6 +3219,13 @@
                 <img src="../results/img/mock/test_energy_signals_are_shown_on_cluster.webp" alt="태블릿 (Mock)에서 test_energy_signals_are_shown_on_cluster 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_energy_signals_are_shown_on_cluster.webp" data-caption="test_energy_signals_are_shown_on_cluster · 갤럭시 폴드 (Mock) · 통과 · 2.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_energy_signals_are_shown_on_cluster.webp" alt="갤럭시 폴드 (Mock)에서 test_energy_signals_are_shown_on_cluster 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
               
               
             </div></div></div></div>
@@ -2430,6 +3249,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.1초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_low_range_threshold_31.0-False.webp" data-caption="test_low_range_threshold [31.0-False] · 갤럭시 폴드 (Mock) · 통과 · 2.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_low_range_threshold_31.0-False.webp" alt="갤럭시 폴드 (Mock)에서 test_low_range_threshold 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[30.0-True]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_low_range_threshold_30.0-True.webp" data-caption="test_low_range_threshold [30.0-True] · AAOS 에뮬레이터 · 통과 · 2.3초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_low_range_threshold_30.0-True.webp" alt="AAOS 에뮬레이터에서 test_low_range_threshold 판정 직후 화면" loading="lazy" decoding="async">
@@ -2444,6 +3270,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_low_range_threshold_30.0-True.webp" data-caption="test_low_range_threshold [30.0-True] · 갤럭시 폴드 (Mock) · 통과 · 2.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_low_range_threshold_30.0-True.webp" alt="갤럭시 폴드 (Mock)에서 test_low_range_threshold 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
+              
+              
             </div></div></div><div class="case"><p class="case-param"><code>[29.0-True]</code></p><div class="case-shots"><div class="shot-cell">
               <button type="button" class="shot shot-aaos" data-full="../results/img/aaos/test_low_range_threshold_29.0-True.webp" data-caption="test_low_range_threshold [29.0-True] · AAOS 에뮬레이터 · 통과 · 3초" aria-label="AAOS 에뮬레이터 화면 크게 보기">
                 <img src="../results/img/aaos/test_low_range_threshold_29.0-True.webp" alt="AAOS 에뮬레이터에서 test_low_range_threshold 판정 직후 화면" loading="lazy" decoding="async">
@@ -2456,6 +3289,13 @@
                 <img src="../results/img/mock/test_low_range_threshold_29.0-True.webp" alt="태블릿 (Mock)에서 test_low_range_threshold 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.1초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_low_range_threshold_29.0-True.webp" data-caption="test_low_range_threshold [29.0-True] · 갤럭시 폴드 (Mock) · 통과 · 2.6초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_low_range_threshold_29.0-True.webp" alt="갤럭시 폴드 (Mock)에서 test_low_range_threshold 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.6초</span></div>
               
               
             </div></div></div></div>
@@ -2479,6 +3319,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_low_range_card_starts_guidance_to_nearest_charger.webp" data-caption="test_low_range_card_starts_guidance_to_nearest_charger · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_low_range_card_starts_guidance_to_nearest_charger.webp" alt="갤럭시 폴드 (Mock)에서 test_low_range_card_starts_guidance_to_nearest_charger 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_low_range_is_recorded_in_notifications" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
@@ -2498,6 +3345,13 @@
                 <img src="../results/img/mock/test_low_range_is_recorded_in_notifications.webp" alt="태블릿 (Mock)에서 test_low_range_is_recorded_in_notifications 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.3초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_low_range_is_recorded_in_notifications.webp" data-caption="test_low_range_is_recorded_in_notifications · 갤럭시 폴드 (Mock) · 통과 · 3.5초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_low_range_is_recorded_in_notifications.webp" alt="갤럭시 폴드 (Mock)에서 test_low_range_is_recorded_in_notifications 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.5초</span></div>
               
               
             </div></div></div></div>
@@ -2521,6 +3375,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.4초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_range_recovers_after_charging.webp" data-caption="test_range_recovers_after_charging · 갤럭시 폴드 (Mock) · 통과 · 2.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_range_recovers_after_charging.webp" alt="갤럭시 폴드 (Mock)에서 test_range_recovers_after_charging 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">2.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_range_follows_speed_unit_setting" data-markers="regression" data-reqs="services integration vhal" data-bad="0">
@@ -2540,6 +3401,13 @@
                 <img src="../results/img/mock/test_range_follows_speed_unit_setting.webp" alt="태블릿 (Mock)에서 test_range_follows_speed_unit_setting 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_range_follows_speed_unit_setting.webp" data-caption="test_range_follows_speed_unit_setting · 갤럭시 폴드 (Mock) · 통과 · 4.8초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_range_follows_speed_unit_setting.webp" alt="갤럭시 폴드 (Mock)에서 test_range_follows_speed_unit_setting 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.8초</span></div>
               
               
             </div></div></div></div>
@@ -2567,6 +3435,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_voice_sets_driver_temperature_on_vehicle.webp" data-caption="test_voice_sets_driver_temperature_on_vehicle · 갤럭시 폴드 (Mock) · 통과 · 3.9초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_voice_sets_driver_temperature_on_vehicle.webp" alt="갤럭시 폴드 (Mock)에서 test_voice_sets_driver_temperature_on_vehicle 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_voice_turns_on_radio" data-markers="regression" data-reqs="" data-bad="0">
@@ -2586,6 +3461,13 @@
                 <img src="../results/img/mock/test_voice_turns_on_radio.webp" alt="태블릿 (Mock)에서 test_voice_turns_on_radio 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.7초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_voice_turns_on_radio.webp" data-caption="test_voice_turns_on_radio · 갤럭시 폴드 (Mock) · 통과 · 4.2초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_voice_turns_on_radio.webp" alt="갤럭시 폴드 (Mock)에서 test_voice_turns_on_radio 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
               
               
             </div></div></div></div>
@@ -2609,6 +3491,13 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">3.9초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_voice_starts_guidance_home.webp" data-caption="test_voice_starts_guidance_home · 갤럭시 폴드 (Mock) · 통과 · 4.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_voice_starts_guidance_home.webp" alt="갤럭시 폴드 (Mock)에서 test_voice_starts_guidance_home 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
+              
+              
             </div></div></div></div>
         </article>
 <article class="rtest" id="test_voice_panel_closes_after_command" data-markers="regression" data-reqs="" data-bad="0">
@@ -2628,6 +3517,13 @@
                 <img src="../results/img/mock/test_voice_panel_closes_after_command.webp" alt="태블릿 (Mock)에서 test_voice_panel_closes_after_command 판정 직후 화면" loading="lazy" decoding="async">
               </button>
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4초</span></div>
+              
+              
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_voice_panel_closes_after_command.webp" data-caption="test_voice_panel_closes_after_command · 갤럭시 폴드 (Mock) · 통과 · 4.1초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_voice_panel_closes_after_command.webp" alt="갤럭시 폴드 (Mock)에서 test_voice_panel_closes_after_command 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.1초</span></div>
               
               
             </div></div></div></div>
@@ -2651,10 +3547,17 @@
               <div class="cell-meta"><span class="cell-device">태블릿 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.2초</span></div>
               
               
+            </div><div class="shot-cell">
+              <button type="button" class="shot shot-fold" data-full="../results/img/fold/test_voice_calls_contact.webp" data-caption="test_voice_calls_contact · 갤럭시 폴드 (Mock) · 통과 · 4.3초" aria-label="갤럭시 폴드 (Mock) 화면 크게 보기">
+                <img src="../results/img/fold/test_voice_calls_contact.webp" alt="갤럭시 폴드 (Mock)에서 test_voice_calls_contact 판정 직후 화면" loading="lazy" decoding="async">
+              </button>
+              <div class="cell-meta"><span class="cell-device">갤럭시 폴드 (Mock)</span><span class="pill p-passed">통과</span><span class="cell-time">4.3초</span></div>
+              
+              
             </div></div></div></div>
         </article>
       </section>
-    <p class="generated">결과 기록 2026-11-21 12:49 · <code>ivi-tests/tools/publish_results.py</code></p>
+    <p class="generated">결과 기록 2026-11-23 15:11 · <code>ivi-tests/tools/publish_results.py</code></p>
     <dialog id="viewer" aria-label="화면 크게 보기">
       <form method="dialog" class="viewer-bar"><p id="viewer-caption"></p><button class="viewer-close" aria-label="닫기">닫기</button></form>
       <img id="viewer-img" alt="">

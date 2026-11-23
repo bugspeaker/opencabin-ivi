@@ -323,9 +323,27 @@
         <a class="shot" href="docs/test-results.html#test_low_range_card_starts_guidance_to_nearest_charger"><img src="results/img/mock/test_low_range_card_starts_guidance_to_nearest_charger.webp" loading="lazy" width="960" height="600" alt="주행 가능 거리 부족 카드에서 충전소 안내가 시작된 화면 (태블릿)"><span>주행 가능 거리가 부족하면 충전소 안내로 이어지는지 봅니다</span></a>
       </div>
       <p class="note">알려진 결함 1건은 에뮬레이터 기본 화면(SystemUI)에서 운전석 온도 ▲ 버튼이 홈 버튼에 가려 눌리지 않는 문제입니다. <br class="pc">앱에서 고칠 수 없는 플랫폼 쪽 문제라 '알려진 결함'으로 표시해 두었고, 고쳐지면 바로 알 수 있게 했습니다.</p>
+      <article class="card fold-case" aria-labelledby="fold-title">
+        <div class="fold-text">
+          <span class="chip blue">세 번째 기기 · 11-23</span>
+          <h3 id="fold-title">갤럭시 폴드에서는 버튼이 <br class="pc">화면 밖으로 밀려났습니다</h3>
+          <p>같은 테스트 129개를 접는 폰에서 돌리자 5개가 실패했습니다. <br class="pc">화면이 좁고 낮아(앱 영역 약 780×513dp) 라디오의 ⏭ 버튼이 패널 밖으로 밀렸고, <br class="pc">아래 바의 열선 버튼이 가려졌습니다.</p>
+          <p>앱은 가로 전용으로 정하고 좁은 화면용 배치를 더했습니다. <br class="pc">테스트도 거의 가려진 버튼은 누르지 않고 실패로 남기게 고쳤습니다.</p>
+          <ul class="fold-nums">
+            <li><b>수정 전</b><span>통과 115 · 실패 5</span><small>앱 0.4.0</small></li>
+            <li><b>수정 후</b><span>통과 122 · 실패 0</span><small>앱 0.4.1, 폴드를 눕혀서·세워서 각 1회</small></li>
+          </ul>
+          <p class="result">같은 APK로 태블릿과 에뮬레이터도 다시 돌려 모두 Release 게이트를 통과했습니다.</p>
+        </div>
+        <div class="ba fold-ba">
+          <figure><img src="../docs/images/fold/radio-before.png" width="376" height="500" loading="lazy" alt="수정 전 라디오: 아래 줄에 ⏮, -, 재생, +만 보이고 ⏭ 버튼이 없음"><figcaption>수정 전: ⏭ 없음</figcaption></figure>
+          <figure><img src="../docs/images/fold/radio-after.png" width="376" height="500" loading="lazy" alt="수정 후 라디오: 아래 줄에 ⏮, -, +, ⏭ 네 버튼이 모두 보임"><figcaption>수정 후: 네 버튼 모두</figcaption></figure>
+        </div>
+      </article>
       <div class="btn-row more">
         <a class="btn" href="docs/test-results.html">테스트 129개 결과와 화면 보기</a>
         <a class="btn line" href="docs/flaky-report.html">반복 실행 통계</a>
+        <a class="btn line" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 수정 전후 기록</a>
       </div>
     </div>
   </section>
