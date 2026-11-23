@@ -67,6 +67,8 @@ abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--in
 .anchor { position: absolute; left: -24px; width: 20px; color: var(--ink-tertiary); text-decoration: none; opacity: 0; font-weight: 400; }
 .doc h1:hover .anchor, .doc h2:hover .anchor, .doc h3:hover .anchor { opacity: 1; }
 .doc p { margin: 0 0 16px; }
+/* 마지막 줄에 낱말 하나만 남지 않게 (2026-11-23 줄바꿈 점검) */
+.doc p, .doc li, .doc td, .doc .lead { text-wrap: pretty; }
 .doc strong { color: var(--ink); font-weight: 600; }
 .doc a { color: var(--primary-hover); text-decoration: underline; text-decoration-color: rgb(20 71 189 / 0.3); text-underline-offset: 3px; }
 .doc a:hover { text-decoration-color: currentColor; }

@@ -35,6 +35,11 @@ body {
   word-break: keep-all; overflow-wrap: break-word; -webkit-font-smoothing: antialiased;
 }
 img { max-width: 100%; height: auto; }
+/* 줄바꿈: 마지막 줄에 낱말 하나만 남지 않게 하고(text-wrap: pretty), 문장 끝에서 줄을 바꾸는 <br class="pc"> 는 넓은 화면에서만 쓴다 */
+main p, main li, footer p { text-wrap: pretty; }
+br.mo { display: none; }   /* 휴대폰에서만 줄을 바꾸는 자리 */
+/* 짧은 글 덩어리는 줄 길이를 고르게: 끝 줄에 '했습니다' 같은 토막만 남지 않게 */
+main h3, .prob, .sol, .gate-meta, .fqa-seen, .fqa-done, .checks span, .member-list span, .limits li, .career span, .stat-note, .case h3, .case p, .tool p, .prev-body p, .prev-list li, .demo-steps span, .shot span, .link-card span { text-wrap: balance; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid #7aa2ff; outline-offset: 2px; border-radius: 6px; }
 abbr[title] { text-decoration: underline dotted; text-decoration-color: var(--ink-3); text-underline-offset: 3px; cursor: help; }
@@ -116,7 +121,7 @@ a.stat:hover { background: var(--bg-soft); }
 .label::before { content: ""; width: 3px; height: 15px; border-radius: 2px; background: var(--brand); }
 .sec h2, .page-head h1 { margin: 0; font-size: 34px; line-height: 1.38; font-weight: 800; letter-spacing: -0.03em; text-wrap: balance; }
 .sec h2 em, .page-head h1 em { font-style: normal; color: var(--brand); }
-.lead { margin: 16px 0 0; max-width: 680px; font-size: 17px; line-height: 1.75; color: var(--ink-2); }
+.lead { margin: 16px 0 0; max-width: 860px; font-size: 17px; line-height: 1.75; color: var(--ink-2); }
 .sec-head { margin-bottom: 48px; }
 .sec-head.center { text-align: center; }
 .sec-head.center .lead { margin-left: auto; margin-right: auto; }
@@ -351,7 +356,7 @@ a.stat:hover { background: var(--bg-soft); }
 
 /* ---------- 공고 항목별 근거 (fit.html, build-docs.mjs 가 채운다) ---------- */
 .page-head { padding-top: 72px; padding-bottom: 40px; }
-.page-head .lead { max-width: 760px; }
+.page-head .lead { max-width: 860px; }
 .fit { padding-bottom: 96px; }
 .fit-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: start; }
 .fit-col { display: grid; gap: 40px; }
@@ -372,6 +377,7 @@ a.fit-row:hover { border-color: var(--brand); transform: translateY(-2px); }
 
 /* ---------- 좁은 화면 ---------- */
 @media (max-width: 1024px) {
+  br.pc { display: none; }   /* 직접 정한 줄바꿈은 넓은 화면에서만. 좁은 칸에서는 글이 이어서 흐른다 */
   .nav-links { display: none; }
   .hero .wrap { grid-template-columns: 1fr; gap: 56px; padding-top: 56px; }
   .devices { max-width: 640px; }
@@ -394,6 +400,7 @@ a.fit-row:hover { border-color: var(--brand); transform: translateY(-2px); }
   .together-task { background: #fff; }
 }
 @media (max-width: 768px) {
+  br.mo { display: inline; }
   .wrap { padding: 0 16px; }
   .nav-side .btn.line { display: none; }
   .hero h1 { font-size: 40px; }
