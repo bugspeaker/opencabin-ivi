@@ -520,7 +520,7 @@ function renderStats({ stats }, data) {
   // 조건(언제, 몇 번)을 숫자 옆에: '실패 0'만 크게 쓰면 조건 없는 주장처럼 읽힌다 (2026-11-19 검토)
   items.push(st
     ? item(`반복 실행 ${st.executions.toLocaleString("en-US")}건`, `실패 ${st.failed}`, "",
-        `두 기기 × ${st.rounds}회 (${runDate(st)}). 재시도로 통과한 것도 ${st.flaky}건`, "docs/flaky-report.html")
+        `두 기기 × ${st.rounds}회 (${runDate(st)})<br>재시도로 통과한 것도 ${st.flaky}건`, "docs/flaky-report.html")
     : item("실패와 재시도", stats.bad, "건", `두 기기에서 테스트 ${stats.runs}건, 재시도 ${stats.retries}번`, "docs/test-results.html"));
   const { sameRun, wall, serial } = parallelTimes(data);
   if (sameRun) items.push(item("두 기기 병렬 실행", aboutMin(wall), "분", `차례로 돌리면 ${aboutMin(serial)}분`, "#results"));
