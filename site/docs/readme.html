@@ -62,15 +62,15 @@
 <th align="center">테스트에서 나온 문제</th>
 </tr>
 </thead><tbody><tr>
-<td align="center"><strong>129개</strong></td>
-<td align="center"><strong>750건 중 실패 0</strong></td>
-<td align="center"><strong>약 11분</strong></td>
+<td align="center"><strong>140개</strong></td>
+<td align="center"><strong>813건 중 실패 0</strong></td>
+<td align="center"><strong>약 12분</strong></td>
 <td align="center"><strong>14건</strong></td>
 </tr>
 <tr>
 <td align="center">두 기기에서 같은 테스트 코드</td>
-<td align="center">두 기기 × 3회 (2026-11-21)<br>재시도로 통과한 것도 0건</td>
-<td align="center">차례로 돌리면 약 21분</td>
+<td align="center">두 기기 × 3회 (2026-11-23)<br>재시도로 통과한 것도 0건</td>
+<td align="center">차례로 돌리면 약 24분</td>
 <td align="center">원인과 조치를 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue" target="_blank" rel="noopener">이슈</a>로 기록</td>
 </tr>
 </tbody></table></div>
@@ -82,8 +82,8 @@
 <th>도구에 더한 것</th>
 </tr>
 </thead><tbody><tr>
-<td>차례로 돌리면 약 21분 걸렸습니다.</td>
-<td>두 기기를 병렬로 돌려 약 11분으로 줄였습니다.</td>
+<td>차례로 돌리면 약 24분 걸렸습니다.</td>
+<td>두 기기를 병렬로 돌려 약 12분으로 줄였습니다.</td>
 </tr>
 <tr>
 <td>재시도 통과가 흔들림을 가렸습니다.</td>
@@ -106,6 +106,10 @@
 <td>PR마다 Actions가 빌드, 단위 테스트, smoke를 돌리게 했습니다.</td>
 </tr>
 <tr>
+<td>추적 누락 0이어도 확인하지 않은 조건이 있었습니다.</td>
+<td>조건, 화면 요소, 경계값으로 다시 점검해 테스트 11개를 더했습니다.</td>
+</tr>
+<tr>
 <td>좁은 폴드 화면에서 버튼이 가려졌습니다.</td>
 <td>가려진 버튼은 누르지 않고 실패로 남기게 했습니다.</td>
 </tr>
@@ -125,7 +129,11 @@
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">반복 실행 3회</a><br>2026-11-21, 코드 <code>d54741b</code></td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">테스트 범위 보강과 반복 실행 3회</a><br>2026-11-23, 코드 <code>55419f7</code></td>
+<td>빈 곳에 테스트 11개를 더한 140개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다. 폴드도 같은 코드로 한 번 통과했습니다.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">반복 실행 3회 (이전)</a><br>2026-11-21, 코드 <code>d54741b</code></td>
 <td>129개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다.</td>
 </tr>
 <tr>
@@ -137,7 +145,7 @@
 <td>세 번째 기기에서 129개 중 5개가 실패했습니다(좁은 화면의 배치).<br>앱을 고친 뒤(0.4.1) 폴드, 태블릿, 에뮬레이터 모두 게이트를 통과했습니다.</td>
 </tr>
 </tbody></table></div>
-<p>반복 실행은 커밋하지 않은 변경 없이 돌렸습니다. 그 뒤 앱 배치와 테스트의 누르기(<code>Screen.tap</code>)를 고쳤고(<code>7aaab6f</code>, 앱 0.4.1), 이 코드는 세 기기에서 전체를 한 번씩 돌려 확인했습니다(반복 실행은 하지 않았습니다). 그 밖에 바뀐 것은 문서, 소개 사이트, 단위 테스트, CI 설정, 에뮬레이터 설치 스크립트(<code>adb root</code> 재시도)입니다. 이전 실행과 그때의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">결과 원자료 목록</a>에 있습니다.</p>
+<p>반복 실행은 커밋하지 않은 변경 없이 돌렸고, 같은 커밋으로 갤럭시 폴드도 한 번 돌려 통과했습니다. 그 뒤에 바뀐 것은 문서, 소개 사이트, 결과 자료입니다. 이전 실행과 그때의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">결과 원자료 목록</a>에 있습니다.</p>
 <h2 id="한계"><a class="anchor" href="#한계" aria-hidden="true">#</a>한계</h2>
 <ul>
 <li>실제 차량, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</li>
@@ -166,7 +174,7 @@ site/                 소개 사이트 (GitHub Pages)</code></pre>
 </tr>
 <tr>
 <td class="nw"><a href="test-results.html">테스트 결과</a></td>
-<td>테스트 129개의 판정과 판정 직후 화면을 보여 줍니다.</td>
+<td>테스트 140개의 판정과 판정 직후 화면을 보여 줍니다.</td>
 </tr>
 <tr>
 <td class="nw"><a href="flaky-report.html">반복 실행 통계</a></td>
