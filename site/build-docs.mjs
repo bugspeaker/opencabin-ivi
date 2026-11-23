@@ -246,6 +246,37 @@ function countsLine(counts) {
     `<span class="pill p-${k}">${label[k]} ${counts[k]}</span>`).join("");
 }
 
+// 결과 페이지 기기 카드의 설명. 칸(kind)으로 먼저 찾고, 없으면 기기 종류(type)로
+const DEVICE_NOTE = {
+  aaos: "CarService와 에뮬레이터 VHAL을 거칩니다. 화면→신호, 신호→화면을 모두 VHAL 값으로 판정합니다.",
+  mock: "화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. 차량 값은 앱 안의 Mock이라 VHAL 경로는 AAOS에서만 확인합니다.",
+  fold: "펼친 화면을 가로로 눕혀 돌렸습니다. 다른 두 기기보다 좁고 낮은 화면(앱 영역 약 780×513dp)이라 배치가 넘치는지 봅니다. 배치를 고치기 전에는 5개가 실패했습니다(<a href=\"https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md\">폴드 기록</a>). 차량 값은 앱 안의 Mock입니다.",
+};
+const KO_NUM = { 1: "한", 2: "두", 3: "세", 4: "네" };
+const NAME = { aaos: "AAOS 에뮬레이터", mock: "태블릿", fold: "갤럭시 폴드" };
+// 받침이 있으면 앞의 것(은, 과), 없으면 뒤의 것(는, 와)
+const josa = (w, withFinal, without) => { const c = w.charCodeAt(w.length - 1); return c >= 0xac00 && c <= 0xd7a3 && (c - 0xac00) % 28 ? withFinal : without; };
+const names = (devices) => { const n = devices.map((d) => NAME[d.kind] ?? d.label); return n.slice(0, -1).map((w) => w + josa(w, "과 ", "와 ")).join("") + n.at(-1); };
+// 반복 실행의 마지막 회차인 기기 (첫 화면의 '두 기기 × 3회' 수치는 이 기기들로만 낸다)
+const repeatDevices = (data) => data.stability ? data.devices.filter((d) => data.stability.run_ids.includes(d.run_id)) : data.devices;
+const appOf = (devices) => `앱 ${[...new Set(devices.map((d) => d.app?.version ?? "버전 미기록"))].join(", ")}`;
+
+/** 기기마다 어느 실행의 결과인지. publish_results.py 의 run_note 와 같은 문장 */
+function runNote(data) {
+  const st = data.stability;
+  const rep = st ? repeatDevices(data) : [];
+  const parts = [];
+  if (rep.length) {
+    const n = names(rep);
+    parts.push(`${n}${josa(n, "은", "는")} ${st.rounds}회 반복한 실행의 마지막 회차(${esc(appOf(rep))})이고, 반복 전체의 통계는 <a href="flaky-report.html">반복 실행 통계</a>에 있습니다.`);
+  }
+  for (const d of data.devices.filter((x) => !rep.includes(x))) {
+    const n = names([d]);
+    parts.push(`${n}${josa(n, "은", "는")} ${d.time.slice(0, 10)}에 따로 돌린 실행(${esc(appOf([d]))})입니다.`);
+  }
+  return parts.join(" ");
+}
+
 function renderResults(page) {
   const data = RESULTS;
   const kinds = data.devices.map((d) => d.kind);
@@ -261,11 +292,10 @@ function renderResults(page) {
         <p class="eyebrow">${esc(d.label)}</p>
         <p class="device-model">${esc(d.model)}</p>
         <div class="pills">${countsLine(d.counts)}</div>
-        <p class="device-note">${d.kind === "mock"
-          ? "화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. 차량 값은 앱 안의 Mock이라 VHAL 경로는 AAOS에서만 확인합니다."
-          : "CarService와 에뮬레이터 VHAL을 거칩니다. 화면→신호, 신호→화면을 모두 VHAL 값으로 판정합니다."}</p>
+        <p class="device-note">${DEVICE_NOTE[d.kind] ?? DEVICE_NOTE[d.type] ?? ""}</p>
         <dl>
           <div><dt>실행</dt><dd>${esc(d.time.replace("T", " ").slice(0, 16))}</dd></div>
+          <div><dt>앱</dt><dd>${esc(d.app?.version ?? "기록 없음")}</dd></div>
           <div><dt>시간</dt><dd>${fmtTime(d.duration)}</dd></div>
           <div><dt>게이트</dt><dd class="${d.gate === "pass" ? "gate-pass" : "gate-fail"}">${d.gate === "pass" ? "통과" : "실패"}</dd></div>
         </dl>
@@ -324,7 +354,7 @@ function renderResults(page) {
   const markers = [...MARKER_ORDER.filter((m) => used.has(m)), ...[...used].filter((m) => !MARKER_ORDER.includes(m))];
   const body = `
     <h1 id="테스트-결과">테스트 결과</h1>
-    <p class="lead">E2E ${total}개를 두 기기에서 돌린 결과입니다${data.stability ? ` (${data.stability.rounds}회 반복한 실행의 마지막 회차. 반복 전체는 <a href="flaky-report.html">반복 실행 통계</a>)` : ""}. 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 테스트 중에 마지막으로 읽은 차량 값(최대 3개)입니다. 이 결과가 어느 코드로 돈 것인지와 그 뒤 바꾼 코드의 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">결과 자료와 검증 시점</a>에 있습니다.</p>
+    <p class="lead">E2E ${total}개를 ${KO_NUM[data.devices.length] ?? data.devices.length} 기기에서 돌린 결과입니다. ${runNote(data)} 판정 직후 화면을 함께 남겼고, 화면을 누르면 크게 볼 수 있습니다. AAOS 칸 아래의 <code>PROPERTY[area]=값</code>은 테스트 중에 마지막으로 읽은 차량 값(최대 3개)입니다. 이 결과가 어느 코드로 돈 것인지와 그 뒤 바꾼 코드의 확인 방법은 <a href="readme.html#결과-자료와-검증-시점">결과 자료와 검증 시점</a>에 있습니다.</p>
     <div class="device-cards">${devices}</div>
     <section class="req-banner" id="req-banner" aria-live="polite" hidden>
       <div class="req-copy">
@@ -500,10 +530,11 @@ const DEFECTS_RECORDED = 11;
 
 // 두 기기를 같은 run id 로 동시에 시작했으면 병렬 실행이다. 끝까지 걸린 시간 = 가장 늦게 끝난 기기
 function parallelTimes(data) {
-  const sameRun = new Set(data.devices.map((d) => d.run_id)).size === 1 && data.devices.length > 1;
-  const start = Math.min(...data.devices.map((d) => Date.parse(d.time)));
-  const wall = Math.max(...data.devices.map((d) => Date.parse(d.time) / 1000 + d.duration)) - start / 1000;
-  const serial = data.devices.reduce((n, d) => n + d.duration, 0);
+  const devices = repeatDevices(data);
+  const sameRun = new Set(devices.map((d) => d.run_id)).size === 1 && devices.length > 1;
+  const start = Math.min(...devices.map((d) => Date.parse(d.time)));
+  const wall = Math.max(...devices.map((d) => Date.parse(d.time) / 1000 + d.duration)) - start / 1000;
+  const serial = devices.reduce((n, d) => n + d.duration, 0);
   return { sameRun, wall, serial };
 }
 // 첫 화면에는 분 단위로만 적는다. 실행기가 잰 벽시계 시간(10분 51초)과 pytest 시간 합(10분 49초)이 초 단위로 달라서다
@@ -541,7 +572,8 @@ function renderDevices(data) {
     aaos: { title: "AAOS 에뮬레이터", text: "CarService와 가상 VHAL을 거칩니다" },
     mock: { title: "Android 태블릿", text: "앱 안의 Mock 차량을 씁니다. AAOS 전용 테스트는 건너뜁니다" },
   };
-  const rows = data.devices.map((d) => {
+  // 첫 화면의 기기별 결과는 '두 기기 × 3회' 반복의 마지막 회차만. 따로 돌린 기기(폴드)는 결과 페이지와 폴드 사례에서 보여 준다
+  const rows = repeatDevices(data).map((d) => {
     const a = ABOUT[d.kind] ?? { title: d.label, text: "" };
     const parts = ORDER.filter((k) => d.counts[k]).map((k) => [k, d.counts[k]]);
     const said = parts.map(([k, v]) => `${KO[k]} ${v}`).join(", ");

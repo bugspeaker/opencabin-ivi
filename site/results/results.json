@@ -1,7 +1,8 @@
 {
- "generated": "2026-11-21 12:49",
+ "generated": "2026-11-23 15:11",
  "devices": [
   {
+   "type": "aaos",
    "kind": "aaos",
    "label": "AAOS 에뮬레이터",
    "model": "Car on x86_64 emulator",
@@ -24,6 +25,7 @@
    "command": "run_bench.py --repeat 3 --reruns 1 --shots"
   },
   {
+   "type": "mock",
    "kind": "mock",
    "label": "태블릿 (Mock)",
    "model": "DBY-W09",
@@ -43,6 +45,28 @@
     "apk_sha256": "7109e4bd03c811555f8168d08d5ae251ab2186eded77fb98bd0b68ec4f22a5f9"
    },
    "command": "run_bench.py --repeat 3 --reruns 1 --shots"
+  },
+  {
+   "kind": "fold",
+   "type": "mock",
+   "label": "갤럭시 폴드 (Mock)",
+   "model": "SM-F900F",
+   "serial": "R38M309YKQY",
+   "run_id": "20261123-fold-after-landscape",
+   "time": "2026-11-23T14:32:33",
+   "duration": 710.8,
+   "counts": {
+    "passed": 122,
+    "skipped": 7
+   },
+   "gate": "pass",
+   "commit": "7aaab6fd969095b44950931e309deee9f3c6e025",
+   "dirty": false,
+   "app": {
+    "version": "0.4.1 (5)",
+    "apk_sha256": "ccd0001f020ab65ed9a4156135ee46bd4ab4a42da62a87ebf37d5bedeb0362d4"
+   },
+   "command": "pytest --serial R38M309YKQY --reruns 1 --shots --appium-url http://127.0.0.1:4724 --system-port 8210 --run-id 20261123-fold-after-landscape -q"
   }
  ],
  "files": [
@@ -82,6 +106,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 11.7,
+         "message": "",
+         "image": "img/fold/test_zone_applies_command_to_speaking_seat.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -115,6 +149,16 @@
          "duration": 4.4,
          "message": "",
          "image": "img/mock/test_typed_command_sets_vehicle_temperature.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.6,
+         "message": "",
+         "image": "img/fold/test_typed_command_sets_vehicle_temperature.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -152,6 +196,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.7,
+         "message": "",
+         "image": "img/fold/test_multiple_commands_in_one_sentence.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -183,6 +237,16 @@
          "duration": 5.1,
          "message": "",
          "image": "img/mock/test_ambiguous_destination_offers_candidates.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.9,
+         "message": "",
+         "image": "img/fold/test_ambiguous_destination_offers_candidates.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -220,6 +284,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.9,
+         "message": "",
+         "image": "img/fold/test_driving_locks_typing_and_refuses_mirror_fold.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -251,6 +325,16 @@
          "duration": 4.3,
          "message": "",
          "image": "img/mock/test_voice_popup_and_assistant_share_history.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.7,
+         "message": "",
+         "image": "img/fold/test_voice_popup_and_assistant_share_history.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -294,6 +378,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.5,
+         "message": "",
+         "image": "img/fold/test_api_signals_drive_the_screen.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -325,6 +419,16 @@
          "duration": 3.3,
          "message": "",
          "image": "img/mock/test_api_low_range_shows_charger_card.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.3,
+         "message": "",
+         "image": "img/fold/test_api_low_range_shows_charger_card.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -361,6 +465,16 @@
          "duration": 2.2,
          "message": "",
          "image": "img/mock/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.3,
+         "message": "",
+         "image": "img/fold/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -404,6 +518,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_can_drive_frames_reach_screen.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -438,6 +562,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_can_battery_and_door_frames_reach_screen.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -469,6 +603,16 @@
          "duration": 4.8,
          "message": "",
          "image": "img/mock/test_climate_button_goes_out_on_can.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.7,
+         "message": "",
+         "image": "img/fold/test_climate_button_goes_out_on_can.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -512,6 +656,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.6,
+         "message": "",
+         "image": "img/fold/test_signal_is_shown_on_climate_and_home_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -534,6 +688,16 @@
          "duration": 3.9,
          "message": "",
          "image": "img/mock/test_signal_is_shown_on_climate_and_home_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.3,
+         "message": "",
+         "image": "img/fold/test_signal_is_shown_on_climate_and_home_passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -573,6 +737,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.5,
+         "message": "",
+         "image": "img/fold/test_button_changes_signal_by_one_step_up-driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -597,6 +771,16 @@
          "duration": 3.7,
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_up-passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.0,
+         "message": "",
+         "image": "img/fold/test_button_changes_signal_by_one_step_up-passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -627,6 +811,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.4,
+         "message": "",
+         "image": "img/fold/test_button_changes_signal_by_one_step_down-driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -651,6 +845,16 @@
          "duration": 3.7,
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_down-passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.8,
+         "message": "",
+         "image": "img/fold/test_button_changes_signal_by_one_step_down-passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -688,6 +892,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_buttons_disabled_at_limits_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -710,6 +924,16 @@
          "duration": 3.9,
          "message": "",
          "image": "img/mock/test_buttons_disabled_at_limits_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.1,
+         "message": "",
+         "image": "img/fold/test_buttons_disabled_at_limits_passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -749,6 +973,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 9.8,
+         "message": "",
+         "image": "img/fold/test_step_reaches_limit_and_disables_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -773,6 +1007,16 @@
          "duration": 9.4,
          "message": "",
          "image": "img/mock/test_step_reaches_limit_and_disables_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 11.1,
+         "message": "",
+         "image": "img/fold/test_step_reaches_limit_and_disables_passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -812,6 +1056,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.6,
+         "message": "",
+         "image": "img/fold/test_out_of_range_signal_is_shown_safely_below_min.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -836,6 +1090,16 @@
          "duration": 3.8,
          "message": "",
          "image": "img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.7,
+         "message": "",
+         "image": "img/fold/test_out_of_range_signal_is_shown_safely_above_max.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -875,6 +1139,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.4,
+         "message": "",
+         "image": "img/fold/test_off_grid_signal_steps_back_to_grid_up-22.5.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -899,6 +1173,16 @@
          "duration": 3.7,
          "message": "",
          "image": "img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.8,
+         "message": "",
+         "image": "img/fold/test_off_grid_signal_steps_back_to_grid_down-22.0.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -936,6 +1220,16 @@
          "duration": 5.4,
          "message": "",
          "image": "img/mock/test_seats_are_independent.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.6,
+         "message": "",
+         "image": "img/fold/test_seats_are_independent.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -981,6 +1275,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.3,
+         "message": "",
+         "image": "img/fold/test_bottom_bar_temperature_drives_vehicle_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -1005,6 +1309,16 @@
          "duration": 3.6,
          "message": "",
          "image": "img/mock/test_bottom_bar_temperature_drives_vehicle_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.5,
+         "message": "",
+         "image": "img/fold/test_bottom_bar_temperature_drives_vehicle_passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1045,6 +1359,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.3,
+         "message": "",
+         "image": "img/fold/test_sync_mirrors_driver_temperature_to_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1082,6 +1406,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.7,
+         "message": "",
+         "image": "img/fold/test_passenger_change_releases_sync.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1113,6 +1447,16 @@
          "duration": 7.4,
          "message": "",
          "image": "img/mock/test_trip_distance_follows_speed_signal.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.8,
+         "message": "",
+         "image": "img/fold/test_trip_distance_follows_speed_signal.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1150,6 +1494,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.5,
+         "message": "",
+         "image": "img/fold/test_lane_assist_indicator_follows_speed.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1181,6 +1535,16 @@
          "duration": 3.4,
          "message": "",
          "image": "img/mock/test_utility_widget_pages.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_utility_widget_pages.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1218,6 +1582,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_split_screen_toggle.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1249,6 +1623,16 @@
          "duration": 5.6,
          "message": "",
          "image": "img/mock/test_quick_control_mirror_locked_while_driving.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.8,
+         "message": "",
+         "image": "img/fold/test_quick_control_mirror_locked_while_driving.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1286,6 +1670,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.3,
+         "message": "",
+         "image": "img/fold/test_notifications_record_guidance_and_restriction.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1317,6 +1711,16 @@
          "duration": 4.6,
          "message": "",
          "image": "img/mock/test_recent_app_slot.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.1,
+         "message": "",
+         "image": "img/fold/test_recent_app_slot.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1360,6 +1764,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.7,
+         "message": "",
+         "image": "img/fold/test_driving_signals_are_shown.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1391,6 +1805,16 @@
          "duration": 3.3,
          "message": "",
          "image": "img/mock/test_video_button_locked_while_driving.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.1,
+         "message": "",
+         "image": "img/fold/test_video_button_locked_while_driving.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1428,6 +1852,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.7,
+         "message": "",
+         "image": "img/fold/test_video_is_blocked_while_driving.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1459,6 +1893,16 @@
          "duration": 3.2,
          "message": "",
          "image": "img/mock/test_video_plays_when_parked.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.7,
+         "message": "",
+         "image": "img/fold/test_video_plays_when_parked.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1496,6 +1940,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.7,
+         "message": "",
+         "image": "img/fold/test_video_blocked_screen_follows_parking.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1530,6 +1984,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 13.6,
+         "message": "",
+         "image": "img/fold/test_video_resumes_where_it_stopped.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1561,6 +2025,16 @@
          "duration": 3.6,
          "message": "",
          "image": "img/mock/test_video_next_clip.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.2,
+         "message": "",
+         "image": "img/fold/test_video_next_clip.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1604,6 +2078,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.1,
+         "message": "",
+         "image": "img/fold/test_selecting_track_starts_it_0.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -1629,6 +2113,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_selecting_track_starts_it_2.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -1651,6 +2145,16 @@
          "duration": 3.7,
          "message": "",
          "image": "img/mock/test_selecting_track_starts_it_4.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.1,
+         "message": "",
+         "image": "img/fold/test_selecting_track_starts_it_4.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1688,6 +2192,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.2,
+         "message": "",
+         "image": "img/fold/test_play_pause_toggles.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1719,6 +2233,16 @@
          "duration": 3.7,
          "message": "",
          "image": "img/mock/test_media_stays_usable_while_driving.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_media_stays_usable_while_driving.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1762,6 +2286,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 9.0,
+         "message": "",
+         "image": "img/fold/test_guidance_counts_down_with_vehicle_speed.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1793,6 +2327,16 @@
          "duration": 7.2,
          "message": "",
          "image": "img/mock/test_parked_vehicle_does_not_advance_route.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.3,
+         "message": "",
+         "image": "img/fold/test_parked_vehicle_does_not_advance_route.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1830,6 +2374,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.4,
+         "message": "",
+         "image": "img/fold/test_search_locked_while_driving_but_favorites_work.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1861,6 +2415,16 @@
          "duration": 2.9,
          "message": "",
          "image": "img/mock/test_search_filters_destinations.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.2,
+         "message": "",
+         "image": "img/fold/test_search_filters_destinations.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1898,6 +2462,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.1,
+         "message": "",
+         "image": "img/fold/test_arrival.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -1929,6 +2503,16 @@
          "duration": 5.6,
          "message": "",
          "image": "img/mock/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.4,
+         "message": "",
+         "image": "img/fold/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1972,6 +2556,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.1,
+         "message": "",
+         "image": "img/fold/test_call_contact_shows_call_screen_and_recent.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2003,6 +2597,16 @@
          "duration": 7.5,
          "message": "",
          "image": "img/mock/test_keypad_dial.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.3,
+         "message": "",
+         "image": "img/fold/test_keypad_dial.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2040,6 +2644,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.8,
+         "message": "",
+         "image": "img/fold/test_driving_locks_keypad_and_limits_contacts.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2071,6 +2685,16 @@
          "duration": 7.7,
          "message": "",
          "image": "img/mock/test_call_pauses_radio_then_resumes.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.5,
+         "message": "",
+         "image": "img/fold/test_call_pauses_radio_then_resumes.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2120,6 +2744,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.3,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2160,6 +2794,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_power_on_plays_default_station.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2191,6 +2835,16 @@
          "duration": 6.4,
          "message": "",
          "image": "img/mock/test_tune_and_seek.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.7,
+         "message": "",
+         "image": "img/fold/test_tune_and_seek.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2228,6 +2882,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.1,
+         "message": "",
+         "image": "img/fold/test_am_band_uses_khz_steps.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2259,6 +2923,16 @@
          "duration": 7.0,
          "message": "",
          "image": "img/mock/test_preset_save_and_recall.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.6,
+         "message": "",
+         "image": "img/fold/test_preset_save_and_recall.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2296,6 +2970,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 10.8,
+         "message": "",
+         "image": "img/fold/test_preset_and_frequency_survive_app_restart.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2327,6 +3011,16 @@
          "duration": 6.3,
          "message": "",
          "image": "img/mock/test_radio_and_media_play_one_at_a_time.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.5,
+         "message": "",
+         "image": "img/fold/test_radio_and_media_play_one_at_a_time.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2370,6 +3064,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.9,
+         "message": "",
+         "image": "img/fold/test_reverse_gear_shows_camera.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2404,6 +3108,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_camera_returns_to_previous_screen.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2435,6 +3149,16 @@
          "duration": 2.8,
          "message": "",
          "image": "img/mock/test_gear_value_shows_reverse.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.0,
+         "message": "",
+         "image": "img/fold/test_gear_value_shows_reverse.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2474,6 +3198,18 @@
          "reruns": 0,
          "measures": {
           "camera_seconds": "0.23, 0.29, 0.30, 0.29, 0.28"
+         },
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.4,
+         "message": "",
+         "image": "img/fold/test_rear_camera_appears_within_two_seconds.webp",
+         "reruns": 0,
+         "measures": {
+          "camera_seconds": "0.38, 0.29, 0.33, 0.28, 0.30"
          },
          "signals": []
         }
@@ -2516,6 +3252,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.7,
+         "message": "",
+         "image": "img/fold/test_mph_setting_converts_vehicle_speed.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2547,6 +3293,16 @@
          "duration": 5.8,
          "message": "",
          "image": "img/mock/test_volume_steps.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.0,
+         "message": "",
+         "image": "img/fold/test_volume_steps.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2584,6 +3340,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 11.7,
+         "message": "",
+         "image": "img/fold/test_settings_survive_app_restart.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2615,6 +3381,16 @@
          "duration": 6.5,
          "message": "",
          "image": "img/mock/test_reset_restores_defaults.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.0,
+         "message": "",
+         "image": "img/fold/test_reset_restores_defaults.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2650,6 +3426,16 @@
          "duration": 4.6,
          "message": "",
          "image": "img/mock/test_12_hour_clock_on_tablet.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.9,
+         "message": "",
+         "image": "img/fold/test_12_hour_clock_on_tablet.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2693,6 +3479,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.5,
+         "message": "",
+         "image": "img/fold/test_app_starts_with_vehicle_source_for_device.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -2724,6 +3520,16 @@
          "duration": 2.8,
          "message": "",
          "image": "img/mock/test_parked_on_start.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.1,
+         "message": "",
+         "image": "img/fold/test_parked_on_start.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2761,6 +3567,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.9,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_home.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2783,6 +3599,16 @@
          "duration": 2.6,
          "message": "",
          "image": "img/mock/test_each_tab_opens_navigation.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.1,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_navigation.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2811,6 +3637,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.7,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_radio.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2833,6 +3669,16 @@
          "duration": 2.6,
          "message": "",
          "image": "img/mock/test_each_tab_opens_media.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.4,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_media.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2861,6 +3707,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.0,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_phone.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2883,6 +3739,16 @@
          "duration": 2.7,
          "message": "",
          "image": "img/mock/test_each_tab_opens_climate.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.0,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_climate.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2911,6 +3777,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.0,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_settings.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2933,6 +3809,16 @@
          "duration": 2.5,
          "message": "",
          "image": "img/mock/test_each_tab_opens_assistant.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.0,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_assistant.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -2961,6 +3847,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.4,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_vehicle_controls.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -2983,6 +3879,16 @@
          "duration": 2.6,
          "message": "",
          "image": "img/mock/test_each_tab_opens_apps.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.0,
+         "message": "",
+         "image": "img/fold/test_each_tab_opens_apps.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3019,6 +3925,16 @@
          "duration": 3.8,
          "message": "",
          "image": "img/mock/test_hvac_is_controllable.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.4,
+         "message": "",
+         "image": "img/fold/test_hvac_is_controllable.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3065,6 +3981,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.0,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3088,6 +4014,16 @@
          "label": "건너뜀",
          "duration": 0.0,
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.0,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
          "image": null,
          "reruns": 0,
          "measures": {},
@@ -3130,6 +4066,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.0,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3154,6 +4100,16 @@
          "label": "건너뜀",
          "duration": 0.0,
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.0,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
          "image": null,
          "reruns": 0,
          "measures": {},
@@ -3193,6 +4149,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.0,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3224,6 +4190,16 @@
          "label": "건너뜀",
          "duration": 0.0,
          "message": "Skipped: AAOS 전용 (현재 기기: mock:DBY-W09)",
+         "image": null,
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "skipped",
+         "label": "건너뜀",
+         "duration": 0.0,
+         "message": "Skipped: AAOS 전용 (현재 기기: mock:SM-F900F)",
          "image": null,
          "reruns": 0,
          "measures": {},
@@ -3272,6 +4248,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_ac_toggle_reaches_every_seat.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3303,6 +4289,16 @@
          "duration": 3.0,
          "message": "",
          "image": "img/mock/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/fold/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3342,6 +4338,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_fan_button_changes_signal_by_one_up-4.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3366,6 +4372,16 @@
          "duration": 3.6,
          "message": "",
          "image": "img/mock/test_fan_button_changes_signal_by_one_down-2.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_fan_button_changes_signal_by_one_down-2.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3405,6 +4421,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.7,
+         "message": "",
+         "image": "img/fold/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3429,6 +4455,16 @@
          "duration": 4.7,
          "message": "",
          "image": "img/mock/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.3,
+         "message": "",
+         "image": "img/fold/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3470,6 +4506,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.3,
+         "message": "",
+         "image": "img/fold/test_max_ac_sets_signal_and_coldest_settings.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3508,6 +4554,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.4,
+         "message": "",
+         "image": "img/fold/test_max_ac_off_restores_previous_settings.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3539,6 +4595,16 @@
          "duration": 2.9,
          "message": "",
          "image": "img/mock/test_max_ac_signal_is_shown_on_toggle.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/fold/test_max_ac_signal_is_shown_on_toggle.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3580,6 +4646,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.2,
+         "message": "",
+         "image": "img/fold/test_manual_fan_releases_max_ac.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3614,6 +4690,16 @@
          "duration": 4.5,
          "message": "",
          "image": "img/mock/test_turning_ac_off_releases_max_ac.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.1,
+         "message": "",
+         "image": "img/fold/test_turning_ac_off_releases_max_ac.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3654,6 +4740,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.2,
+         "message": "",
+         "image": "img/fold/test_manual_fan_releases_auto.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3691,6 +4787,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.0,
+         "message": "",
+         "image": "img/fold/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3716,6 +4822,16 @@
          "duration": 4.9,
          "message": "",
          "image": "img/mock/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.2,
+         "message": "",
+         "image": "img/fold/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3756,6 +4872,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.5,
+         "message": "",
+         "image": "img/fold/test_seat_heat_cycles_levels_on_vehicle_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -3781,6 +4907,16 @@
          "duration": 6.6,
          "message": "",
          "image": "img/mock/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 7.0,
+         "message": "",
+         "image": "img/fold/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3815,6 +4951,16 @@
          "duration": 5.7,
          "message": "",
          "image": "img/mock/test_seat_heat_signal_is_shown_everywhere.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.7,
+         "message": "",
+         "image": "img/fold/test_seat_heat_signal_is_shown_everywhere.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3855,6 +5001,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.7,
+         "message": "",
+         "image": "img/fold/test_bottom_bar_seat_heat_works_from_any_screen.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3889,6 +5045,16 @@
          "duration": 6.6,
          "message": "",
          "image": "img/mock/test_assistant_seat_heat_follows_speaker_zone.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.8,
+         "message": "",
+         "image": "img/fold/test_assistant_seat_heat_follows_speaker_zone.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3930,6 +5096,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.7,
+         "message": "",
+         "image": "img/fold/test_door_lock_button_drives_every_door.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -3961,6 +5137,16 @@
          "duration": 2.9,
          "message": "",
          "image": "img/mock/test_door_lock_signal_is_shown.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.3,
+         "message": "",
+         "image": "img/fold/test_door_lock_signal_is_shown.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -3998,6 +5184,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.9,
+         "message": "",
+         "image": "img/fold/test_energy_signals_are_shown_on_cluster.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -4032,6 +5228,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.6,
+         "message": "",
+         "image": "img/fold/test_low_range_threshold_31.0-False.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -4057,6 +5263,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.6,
+         "message": "",
+         "image": "img/fold/test_low_range_threshold_30.0-True.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       },
@@ -4079,6 +5295,16 @@
          "duration": 2.1,
          "message": "",
          "image": "img/mock/test_low_range_threshold_29.0-True.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.6,
+         "message": "",
+         "image": "img/fold/test_low_range_threshold_29.0-True.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -4116,6 +5342,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_low_range_card_starts_guidance_to_nearest_charger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -4147,6 +5383,16 @@
          "duration": 3.3,
          "message": "",
          "image": "img/mock/test_low_range_is_recorded_in_notifications.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.5,
+         "message": "",
+         "image": "img/fold/test_low_range_is_recorded_in_notifications.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -4184,6 +5430,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 2.9,
+         "message": "",
+         "image": "img/fold/test_range_recovers_after_charging.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -4215,6 +5471,16 @@
          "duration": 4.7,
          "message": "",
          "image": "img/mock/test_range_follows_speed_unit_setting.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.8,
+         "message": "",
+         "image": "img/fold/test_range_follows_speed_unit_setting.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -4260,6 +5526,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 3.9,
+         "message": "",
+         "image": "img/fold/test_voice_sets_driver_temperature_on_vehicle.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -4291,6 +5567,16 @@
          "duration": 3.7,
          "message": "",
          "image": "img/mock/test_voice_turns_on_radio.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.2,
+         "message": "",
+         "image": "img/fold/test_voice_turns_on_radio.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -4328,6 +5614,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.1,
+         "message": "",
+         "image": "img/fold/test_voice_starts_guidance_home.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -4362,6 +5658,16 @@
          "reruns": 0,
          "measures": {},
          "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.1,
+         "message": "",
+         "image": "img/fold/test_voice_panel_closes_after_command.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
         }
        }
       }
@@ -4393,6 +5699,16 @@
          "duration": 4.2,
          "message": "",
          "image": "img/mock/test_voice_calls_contact.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 4.3,
+         "message": "",
+         "image": "img/fold/test_voice_calls_contact.webp",
          "reruns": 0,
          "measures": {},
          "signals": []

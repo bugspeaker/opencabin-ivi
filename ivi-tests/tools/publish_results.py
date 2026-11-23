@@ -2,8 +2,9 @@
 
     python -m pytest --serial emulator-5554 --shots          # 기기마다 --shots 로 전체 실행
     python -m pytest --serial W3VBB22125209573 --shots
-    python tools/publish_results.py                         # 기기 종류(aaos/mock)마다 가장 최근 --shots 실행을 고른다
+    python tools/publish_results.py                         # 기기 칸(aaos/mock/fold)마다 가장 최근 --shots 실행을 고른다
     python tools/publish_results.py --runs reports/runs/A.json reports/runs/B.json
+    python tools/publish_results.py --add --runs reports/runs/C.json   # 지금 결과는 그대로 두고 그 기기 칸만 넣거나 바꾸기
     python tools/publish_results.py --blur aaos/test_video_resumes_where_it_stopped:800,455,60,28   # 번호판 가리기
     python tools/publish_results.py --repeat-runs "reports/runs/20261118-2*-r*.json"   # 반복 실행 통계도 함께 (사이트 지표 카드)
     python tools/publish_results.py --refresh-docs           # 결과는 그대로 두고 테스트 설명·마커만 다시 읽어 넣기
@@ -11,7 +12,7 @@
 
 만드는 것
   site/results/results.json      테스트마다 기기별 판정 · 시간 · 메시지 · 화면 경로 (사이트 결과 페이지의 원자료)
-  site/results/img/<kind>/*.webp 끝 화면. 가로 960px WebP 로 줄여 저장소에 넣을 수 있는 크기로 (한 장 약 30~60 KB)
+  site/results/img/<칸>/*.webp  끝 화면. 가로 960px WebP 로 줄여 저장소에 넣을 수 있는 크기로 (한 장 약 30~60 KB)
   docs/test-results.md           GitHub 에서 보는 같은 내용의 표 (테스트 이름마다 앵커)
 
 테스트 설명과 마커는 tests/*.py 의 docstring · @pytest.mark 에서 읽는다 (설명을 따로 적지 않는다).
@@ -36,7 +37,10 @@ RUNS = ROOT / "reports" / "runs"
 SITE_RESULTS = REPO / "site" / "results"
 DOC = REPO / "docs" / "test-results.md"
 
-KINDS = {"aaos": "AAOS 에뮬레이터", "mock": "태블릿 (Mock)"}
+# 결과 표의 기기 칸. 같은 종류(mock)라도 모델이 다르면 칸을 나눈다 (태블릿과 폴드가 서로 덮어쓰지 않게)
+COLUMNS = {"aaos": "AAOS 에뮬레이터", "mock": "태블릿 (Mock)", "fold": "갤럭시 폴드 (Mock)"}
+COLUMN_BY_MODEL = {"SM-F900F": "fold"}
+NAMES = {"aaos": "AAOS 에뮬레이터", "mock": "태블릿", "fold": "갤럭시 폴드"}  # 문장 안에서 부르는 이름
 OUTCOME_LABEL = {
     "passed": "통과", "flaky": "재시도 후 통과", "failed": "실패", "error": "오류",
     "skipped": "건너뜀", "xfailed": "알려진 결함", "xpassed": "알려진 결함 통과", "quarantined": "격리",
@@ -78,17 +82,23 @@ def _marks_from_assign(module):
     return []
 
 
+def column(run):
+    """실행 기록이 들어갈 칸. 모델로 정한 칸이 없으면 기기 종류(aaos/mock)."""
+    summary = run["summary"]
+    return COLUMN_BY_MODEL.get(summary.get("model", ""), summary["kind"])
+
+
 def pick_runs(explicit):
-    """기기 종류마다 실행 하나. 지정하지 않으면 화면이 있는 가장 최근 실행."""
+    """기기 칸마다 실행 하나. 지정하지 않으면 화면이 있는 가장 최근 실행."""
     if explicit:
         runs = [json.loads(Path(p).read_text(encoding="utf-8")) for p in explicit]
-        return {run["summary"]["kind"]: run for run in runs}
+        return {column(run): run for run in runs}
     chosen = {}
     for path in sorted(RUNS.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
         run = json.loads(path.read_text(encoding="utf-8"))
-        kind = run["summary"]["kind"]
-        if kind not in chosen and any(t.get("shot") for t in run["tests"]):
-            chosen[kind] = run
+        key = column(run)
+        if key not in chosen and any(t.get("shot") for t in run["tests"]):
+            chosen[key] = run
     return chosen
 
 
@@ -149,23 +159,35 @@ def stability(paths):
     }
 
 
-def build(runs, blur_boxes=None, repeat=None):
+def build(runs, blur_boxes=None, repeat=None, base=None):
+    """runs: {칸: 실행 기록}. base 를 주면 (--add) 그 결과에서 runs 에 없는 칸의 판정과 화면은 그대로 둔다."""
     blur_boxes = blur_boxes or {}
     files = read_tests()
     by_name = {t["name"]: t for f in files for t in f["tests"]}
     cases = {}  # 함수 이름 → {케이스 id → {"param", "results"}}
 
+    kept = {d["kind"]: {"type": d["kind"], **d} for d in (base or {}).get("devices", []) if d["kind"] not in runs}
+    for f in (base or {}).get("files", []):
+        for t in f["tests"]:
+            for c in t["cases"]:
+                entry = cases.setdefault(t["name"], {}).setdefault(c["param"], {"param": c["param"], "results": {}})
+                entry["results"].update({k: v for k, v in c["results"].items() if k in kept})
     if SITE_RESULTS.exists():
-        shutil.rmtree(SITE_RESULTS / "img", ignore_errors=True)
+        for stale in ([SITE_RESULTS / "img" / key for key in runs] if base else [SITE_RESULTS / "img"]):
+            shutil.rmtree(stale, ignore_errors=True)
     devices = []
-    for kind in KINDS:
+    for kind in COLUMNS:
+        if kind in kept:
+            devices.append(kept[kind])
+            continue
         run = runs.get(kind)
         if not run:
             continue
         summary = run["summary"]
         first_time = min((t["time"] for t in run["tests"]), default="")
         devices.append({
-            "kind": kind, "label": KINDS[kind], "model": summary.get("model", ""), "serial": summary.get("serial", ""),
+            # kind 는 결과 표의 칸(aaos/mock/fold), type 은 기기 종류(aaos/mock)
+            "kind": kind, "type": summary["kind"], "label": COLUMNS[kind], "model": summary.get("model", ""), "serial": summary.get("serial", ""),
             "run_id": summary["run_id"], "time": first_time, "duration": summary["duration"],
             "counts": summary["counts"], "gate": summary["gate"],
             # 어느 코드로 돈 결과인지 (2026-11-20 부터 결과 파일에 남는다. 그 전 실행은 빈 값)
@@ -199,6 +221,7 @@ def build(runs, blur_boxes=None, repeat=None):
     files = [f for f in files if f["tests"]]
     missing = sorted(set(cases) - set(by_name))
     data = {"generated": time.strftime("%Y-%m-%d %H:%M"), "devices": devices, "files": files}
+    repeat = repeat or (base or {}).get("stability")
     if repeat:
         data["stability"] = repeat
     SITE_RESULTS.mkdir(parents=True, exist_ok=True)
@@ -211,9 +234,8 @@ def markdown(data):
     lines = [
         "# 테스트 결과",
         "",
-        "기기마다 E2E 전체를 돌린 결과와 판정 직후 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다."
-        + (f" 두 기기에서 {data['stability']['rounds']}회 반복한 실행의 마지막 회차이고, 반복 전체의 통계는 [반복 실행 통계](flaky-report.md)에 있습니다."
-           if data.get("stability") else ""),
+        "기기마다 E2E 전체를 돌린 결과와 판정 직후 화면입니다. 실행 기록을 바탕으로 `ivi-tests/tools/publish_results.py`가 만듭니다. "
+        + run_note(data, "flaky-report.md"),
         "AAOS 칸 아래의 `PROPERTY[area]=값`은 테스트 중에 CarService로 마지막으로 읽은 차량 값(최대 3개)입니다. 판정 직전에 읽은 값이 맨 뒤에 옵니다.",
         "소개 사이트(`site/docs/test-results.html`)에서는 같은 내용을 화면과 함께 볼 수 있습니다.",
         "판정과 화면은 아래 표의 실행에서 나온 것입니다. 그 뒤 바꾼 코드를 무엇으로 확인했는지는 별도 기록인 [README의 '결과 자료와 검증 시점'](../README.md#결과-자료와-검증-시점)에 있습니다.",
@@ -228,11 +250,11 @@ def markdown(data):
         app = d.get("app") or {}
         apk = f"{app.get('version') or '버전 미기록'}, `{app['apk_sha256'][:12]}`" if app.get("apk_sha256") else "기록 없음"
         lines.append(f"| {d['label']} ({d['model']}) | {d['time'].replace('T', ' ')} | {code} | {apk} | {counts} | {fmt_time(d['duration'])} |")
-    lines += ["", DEVICE_NOTE]
+    lines += ["", device_note(data)]
     kinds = [d["kind"] for d in data["devices"]]
     for f in data["files"]:
         lines += ["", f"## {f['file']}", "", f["title"], ""]
-        lines.append("| 테스트 | " + " | ".join(KINDS[k] for k in kinds) + " |")
+        lines.append("| 테스트 | " + " | ".join(COLUMNS[k] for k in kinds) + " |")
         lines.append("|---|" + "---|" * len(kinds))
         for t in f["tests"]:
             for i, case in enumerate(t["cases"]):
@@ -255,10 +277,46 @@ def markdown(data):
     return "\n".join(lines) + "\n"
 
 
-DEVICE_NOTE = ("태블릿 열은 화면 동작과 실기기에서만 나는 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기입니다. "
-               "차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다. "
-               "건너뜀은 그 기기에 해당하지 않는 테스트입니다(태블릿은 AAOS 전용, AAOS는 태블릿 전용 시계). "
-               "Release 게이트는 이 밖의 건너뜀을 막습니다.")
+def _josa(word, with_final, without_final):
+    """받침이 있으면 앞의 것(은, 과), 없으면 뒤의 것(는, 와)."""
+    last = ord(word[-1])
+    return with_final if 0xAC00 <= last <= 0xD7A3 and (last - 0xAC00) % 28 else without_final
+
+
+def _names(devices, topic=True):
+    """['AAOS 에뮬레이터', '태블릿'] → 'AAOS 에뮬레이터와 태블릿은'"""
+    names = [NAMES.get(d["kind"], d["label"]) for d in devices]
+    joined = "".join(n + _josa(n, "과 ", "와 ") for n in names[:-1]) + names[-1]
+    return joined + (_josa(names[-1], "은", "는") if topic else "")
+
+
+def _app(devices):
+    versions = sorted({(d.get("app") or {}).get("version") or "버전 미기록" for d in devices})
+    return "앱 " + ", ".join(versions)
+
+
+def run_note(data, stats_link):
+    """어느 실행의 결과인지. 반복 실행의 마지막 회차인 기기와 따로 돌린 기기를 나눠 적는다."""
+    st = data.get("stability")
+    repeat = [d for d in data["devices"] if st and d["run_id"] in st["run_ids"]]
+    parts = []
+    if repeat:
+        parts.append(f"{_names(repeat)} {st['rounds']}회 반복한 실행의 마지막 회차({_app(repeat)})이고, "
+                     f"반복 전체의 통계는 [반복 실행 통계]({stats_link})에 있습니다.")
+    for d in data["devices"]:
+        if d not in repeat:
+            parts.append(f"{_names([d])} {d['time'][:10]}에 따로 돌린 실행({_app([d])})입니다.")
+    return " ".join(parts)
+
+
+def device_note(data):
+    mock = [d for d in data["devices"] if d.get("type", d["kind"]) == "mock"]
+    note = ""
+    if mock:
+        note = (f"{_names(mock)} 화면 동작과 실기기에서만 나는 문제(터치 지연, 백그라운드 강제 종료, 좁은 화면의 배치)를 보는 기기입니다. "
+                "차량 값은 앱 안의 Mock이라, VHAL 경로는 AAOS 열에서만 확인합니다. ")
+    return note + ("건너뜀은 그 기기에 해당하지 않는 테스트입니다(태블릿 종류는 AAOS 전용, AAOS는 태블릿 전용 시계). "
+                   "Release 게이트는 이 밖의 건너뜀을 막습니다.")
 
 
 def refresh_docs(path=SITE_RESULTS / "results.json"):
@@ -282,7 +340,9 @@ def fmt_time(seconds):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("--runs", nargs="*", help="reports/runs/*.json (기기 종류마다 하나)")
+    parser.add_argument("--runs", nargs="*", help="reports/runs/*.json (기기 칸마다 하나)")
+    parser.add_argument("--add", action="store_true",
+                        help="지금 results.json 의 다른 칸(판정, 화면, 반복 통계)은 그대로 두고 --runs 의 칸만 넣거나 바꾼다")
     parser.add_argument("--repeat-runs", metavar="GLOB", help="반복 실행 기록 (reports/runs/*-r*.json). 안정성 통계를 results.json 에 넣는다")
     parser.add_argument("--blur", action="append", metavar="KIND/TEST:X,Y,W,H",
                         help="흐리게 할 영역 (번호판 등). 올리는 이미지(가로 960px) 기준. 여러 번 줄 수 있다")
@@ -292,12 +352,15 @@ def main():
         refresh_docs()
         print(f"설명과 마커만 다시 읽음 → {SITE_RESULTS / 'results.json'}, {DOC}")
         return
+    if args.add and not args.runs:
+        sys.exit("--add 는 --runs 와 함께 씁니다.")
     runs = pick_runs(args.runs)
     if not runs:
         sys.exit("화면이 있는 실행 기록이 없습니다. pytest 를 --shots 로 돌리세요.")
     boxes = parse_blur(args.blur)
     repeat = stability(sorted(ROOT.glob(args.repeat_runs))) if args.repeat_runs else None
-    data, missing = build(runs, boxes, repeat)
+    base = json.loads((SITE_RESULTS / "results.json").read_text(encoding="utf-8")) if args.add else None
+    data, missing = build(runs, boxes, repeat, base)
     if boxes:
         print(f"주의: 해당하는 화면이 없어 흐리게 하지 못한 항목 {sorted(boxes)}")
     images = sum(1 for _ in (SITE_RESULTS / "img").rglob("*.webp"))
