@@ -334,7 +334,7 @@
 <p>기기를 두 종류로 잡은 이유는 각각 볼 수 있는 것이 달라서입니다. 에뮬레이터로는 CarService와 에뮬레이터 VHAL을 거치는 경로를 검증할 수 있고, 태블릿에서는 터치 지연, 백그라운드 강제 종료, 설치 승인 같은 실기기 문제가 나옵니다. 실제로 원인을 찾는 데 가장 오래 걸린 두 건(3장의 1번, 2번)이 모두 태블릿에서 나왔습니다.</p>
 <hr>
 <h2 id="3-결함과-원인-분석"><a class="anchor" href="#3-결함과-원인-분석" aria-hidden="true">#</a>3. 결함과 원인 분석</h2>
-<p>각 항목은 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated" target="_blank" rel="noopener">GitHub 이슈</a>로도 옮겨 두었습니다(라벨 <code>migrated</code>. 6번은 세 건으로 나눴습니다). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 열린 이슈는 알려진 결함(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a>)과 원인을 모르는 흔들림(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/27" target="_blank" rel="noopener">#27</a>) 두 건입니다.</p>
+<p>1<del>9번은 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue" target="_blank" rel="noopener">GitHub 이슈</a>로도 옮겨 두었습니다(라벨 <code>migrated</code>. 6번은 세 건으로 나눴습니다). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 10</del>12번은 갤럭시 폴드에서 나온 것으로, 처음부터 이슈로 올렸습니다(라벨 <code>device:fold</code>). 열린 이슈는 알려진 결함(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a>)과 원인을 모르는 흔들림(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/27" target="_blank" rel="noopener">#27</a>) 두 건입니다.</p>
 <div class="table"><table><thead><tr>
 <th>번호</th>
 <th>증상</th>
@@ -404,6 +404,27 @@
 <td>UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있었습니다. 계측 프로세스가 죽는 원인은 확인하지 못했습니다.</td>
 <td>테스트를 시작할 때 세션을 확인하고, 끊겼으면 다시 붙이게 했습니다(<code>session_restart</code>로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">확인 기록</a>).</td>
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/29" target="_blank" rel="noopener">#29</a></td>
+</tr>
+<tr>
+<td class="nw">10</td>
+<td>갤럭시 폴드 가로에서 라디오 ⏭를 누르면 0.1 MHz만 올라갔습니다.</td>
+<td>버튼 줄에 약 300dp가 필요한데 폭이 약 235dp라 ⏭가 패널 밖으로 밀렸습니다.</td>
+<td>전원 버튼을 위 줄로 옮기고, 앱을 가로 전용(가장 작은 앱 영역 760×500dp)으로 정했습니다. 세 기기 전체 실행이 게이트를 통과했습니다.</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/42" target="_blank" rel="noopener">#42</a></td>
+</tr>
+<tr>
+<td class="nw">11</td>
+<td>갤럭시 폴드 가로에서 운전석 열선 버튼이 가려졌습니다.</td>
+<td>좁은 화면에서 아래 바가 넘쳤습니다.</td>
+<td>좁은 배치에서는 아래 바의 버튼을 줄였습니다.</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/43" target="_blank" rel="noopener">#43</a></td>
+</tr>
+<tr>
+<td class="nw">12</td>
+<td>갤럭시 폴드 가로에서 후보 카드 대신 아래 칩이 눌렸습니다.</td>
+<td>후보가 10px만 보였는데 테스트가 그대로 눌렀습니다.</td>
+<td>거의 가려진 요소는 스크롤해 보이게 하고, 그래도 가려져 있으면 누르지 않고 실패로 남기게 고쳤습니다.</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/44" target="_blank" rel="noopener">#44</a></td>
 </tr>
 </tbody></table></div>
 <details>
@@ -488,7 +509,7 @@
 </details>
 
 <h3 id="세-번째-기기에서-찾은-배치-결함-갤럭시-폴드"><a class="anchor" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드" aria-hidden="true">#</a>세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</h3>
-<p>2026-11-23에 갤럭시 폴드(1세대, Android 12)를 USB로 붙여 같은 테스트 129개를 돌렸습니다. 기기 설정 코드는 바꾸지 않았고, 태블릿과 같은 Mock 기기로 판별됐습니다. 위 11건과 따로, 원자료와 함께 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 기록</a>에 적었습니다.</p>
+<p>2026-11-23에 갤럭시 폴드(1세대, Android 12)를 USB로 붙여 같은 테스트 129개를 돌렸습니다. 기기 설정 코드는 바꾸지 않았고, 태블릿과 같은 Mock 기기로 판별됐습니다. 위 표의 10~12번(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/42" target="_blank" rel="noopener">#42</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/issues/43" target="_blank" rel="noopener">#43</a>, <a href="https://github.com/bugspeaker/opencabin-ivi/issues/44" target="_blank" rel="noopener">#44</a>)이고, 원자료는 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 기록</a>에 있습니다.</p>
 <div class="table"><table><thead><tr>
 <th>시점</th>
 <th>결과</th>

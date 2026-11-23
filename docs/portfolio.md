@@ -199,7 +199,7 @@ flowchart LR
 
 ## 3. 결함과 원인 분석
 
-각 항목은 [GitHub 이슈](https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue+label%3Amigrated)로도 옮겨 두었습니다(라벨 `migrated`. 6번은 세 건으로 나눴습니다). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 열린 이슈는 알려진 결함([#21](https://github.com/bugspeaker/opencabin-ivi/issues/21))과 원인을 모르는 흔들림([#27](https://github.com/bugspeaker/opencabin-ivi/issues/27)) 두 건입니다.
+1~9번은 [GitHub 이슈](https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue)로도 옮겨 두었습니다(라벨 `migrated`. 6번은 세 건으로 나눴습니다). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 10~12번은 갤럭시 폴드에서 나온 것으로, 처음부터 이슈로 올렸습니다(라벨 `device:fold`). 열린 이슈는 알려진 결함([#21](https://github.com/bugspeaker/opencabin-ivi/issues/21))과 원인을 모르는 흔들림([#27](https://github.com/bugspeaker/opencabin-ivi/issues/27)) 두 건입니다.
 
 | 번호 | 증상 | 원인 | 조치와 결과 | 이슈 |
 |---|---|---|---|---|
@@ -212,6 +212,9 @@ flowchart LR
 | 7 | 영상 차단 테스트가 한 번 흔들렸습니다. | 재현되지 않았습니다. | 반복 실행 5회 × 2기기(10번)에서 다시 나오지 않았습니다. 격리하지 않고 계속 기록합니다. | [#27](https://github.com/bugspeaker/opencabin-ivi/issues/27) |
 | 8 | 차량 온도가 0.5°C 단위가 아니면 온도 버튼이 어긋난 값을 차량에 썼습니다. | 버튼이 '지금 값 ± 0.5'로 계산했습니다. | 0.5 단위에 맞춘 다음 값으로 계산하게 고쳤습니다. 경계값 E2E 6개가 두 기기에서 통과했습니다. | [#28](https://github.com/bugspeaker/opencabin-ivi/issues/28) |
 | 9 | 막 켠 AAOS 에뮬레이터에서 실행하면 테스트 129개가 모두 준비 단계 오류로 끝났습니다. | UiAutomator2 계측 프로세스가 죽었는데, Appium 세션 하나에 모든 테스트가 묶여 있었습니다. 계측 프로세스가 죽는 원인은 확인하지 못했습니다. | 테스트를 시작할 때 세션을 확인하고, 끊겼으면 다시 붙이게 했습니다(`session_restart`로 기록). 일부러 끊은 시험 두 번에서 38개씩 모두 통과했습니다([확인 기록](evidence/2026-11-20-session-recovery/README.md)). | [#29](https://github.com/bugspeaker/opencabin-ivi/issues/29) |
+| 10 | 갤럭시 폴드 가로에서 라디오 ⏭를 누르면 0.1 MHz만 올라갔습니다. | 버튼 줄에 약 300dp가 필요한데 폭이 약 235dp라 ⏭가 패널 밖으로 밀렸습니다. | 전원 버튼을 위 줄로 옮기고, 앱을 가로 전용(가장 작은 앱 영역 760×500dp)으로 정했습니다. 세 기기 전체 실행이 게이트를 통과했습니다. | [#42](https://github.com/bugspeaker/opencabin-ivi/issues/42) |
+| 11 | 갤럭시 폴드 가로에서 운전석 열선 버튼이 가려졌습니다. | 좁은 화면에서 아래 바가 넘쳤습니다. | 좁은 배치에서는 아래 바의 버튼을 줄였습니다. | [#43](https://github.com/bugspeaker/opencabin-ivi/issues/43) |
+| 12 | 갤럭시 폴드 가로에서 후보 카드 대신 아래 칩이 눌렸습니다. | 후보가 10px만 보였는데 테스트가 그대로 눌렀습니다. | 거의 가려진 요소는 스크롤해 보이게 하고, 그래도 가려져 있으면 누르지 않고 실패로 남기게 고쳤습니다. | [#44](https://github.com/bugspeaker/opencabin-ivi/issues/44) |
 
 <details>
 <summary>1번. 탭 한 번에 10초가 걸렸습니다</summary>
@@ -278,7 +281,7 @@ flowchart LR
 
 ### 세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)
 
-2026-11-23에 갤럭시 폴드(1세대, Android 12)를 USB로 붙여 같은 테스트 129개를 돌렸습니다. 기기 설정 코드는 바꾸지 않았고, 태블릿과 같은 Mock 기기로 판별됐습니다. 위 11건과 따로, 원자료와 함께 [폴드 기록](evidence/2026-11-23-fold/README.md)에 적었습니다.
+2026-11-23에 갤럭시 폴드(1세대, Android 12)를 USB로 붙여 같은 테스트 129개를 돌렸습니다. 기기 설정 코드는 바꾸지 않았고, 태블릿과 같은 Mock 기기로 판별됐습니다. 위 표의 10~12번([#42](https://github.com/bugspeaker/opencabin-ivi/issues/42), [#43](https://github.com/bugspeaker/opencabin-ivi/issues/43), [#44](https://github.com/bugspeaker/opencabin-ivi/issues/44))이고, 원자료는 [폴드 기록](evidence/2026-11-23-fold/README.md)에 있습니다.
 
 | 시점 | 결과 |
 |---|---|
