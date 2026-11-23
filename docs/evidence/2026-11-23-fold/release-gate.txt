@@ -1,0 +1,14 @@
+Release 게이트: 1회 (20261123-fold-full-portrait), 기기 1대 (R38M309YKQY)
+  ✗ 1. 실행 완전성: 필수 기기 모두, 지금 코드의 테스트 전부, 정상 종료
+       - 20261123-fold-full-portrait R38M309YKQY: 기기 전용이 아닌데 건너뛴 테스트 2개 (tests/test_driving.py::test_video_next_clip, tests/test_driving.py::test_video_resumes_where_it_stopped)
+  ✗ 2. 모든 회차, 모든 기기 failed·error 0
+       - 20261123-fold-full-portrait R38M309YKQY tests/test_assistant.py::test_ambiguous_destination_offers_candidates: failed
+       - 20261123-fold-full-portrait R38M309YKQY tests/test_radio.py::test_tune_and_seek: failed
+       - 20261123-fold-full-portrait R38M309YKQY tests/test_radio.py::test_preset_save_and_recall: failed
+       - 20261123-fold-full-portrait R38M309YKQY tests/test_radio.py::test_preset_and_frequency_survive_app_restart: failed
+       - 20261123-fold-full-portrait R38M309YKQY tests/test_vehicle_signals.py::test_seat_heat_signal_is_shown_everywhere: failed
+  ✓ 3. 이번 반복 안에서 flaky 0
+  ✓ 4. 격리 목록: 네 칸 모두 있고 2줄 이하
+  ✓ 5. 요구사항 추적 누락 0
+  ✓ 6. xfailed = 알려진 결함 목록
+결과: 막음 (조건 1, 2)

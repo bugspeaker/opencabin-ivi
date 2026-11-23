@@ -1,0 +1,79 @@
+# tests/test_assistant.py::test_ambiguous_destination_offers_candidates
+
+## 실패 메시지 (마지막 시도)
+ivi.waits.WaitTimeout: 10초 안에 'nav_dest_name' = '판교역'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)
+
+## 1번째 시도: 실패 순간의 요소 위치 (UiAutomator, 화면 2152x1536 가로)
+  assistant_listening                [1345,263][1706,336]       운전석에서 듣는 중…
+  assistant_zone_driver              [1740,245][1905,371]       운전석
+  assistant_zone_passenger           [1905,245][2070,371]       조수석
+  assistant_old_candidate_2_2        [781,399][1884,427]        
+  assistant_user_3                   [1606,453][2078,568]       에어컨 켜고 음악 틀어줘
+  assistant_reply                    [781,594][1457,709]        에어컨을 켰어요. 음악을 재생할게요.
+  assistant_chip_0                   [771,763][1066,884]        22도로 맞춰줘
+  assistant_chip_1                   [1087,763][1273,889]       나 더워
+  assistant_chip_2                   [1294,763][1733,889]       에어컨 켜고 음악 틀어줘
+  assistant_chip_3                   [1754,763][1973,889]       판교 가자
+  assistant_chip_4                   [771,884][1123,1010]       엄마에게 전화해줘
+  assistant_chip_5                   [1144,884][1506,1010]      사이드 미러 접어줘
+  assistant_input                    [808,1021][1904,1147]      
+  assistant_hint                     [808,1052][1163,1115]      말하듯이 입력해 보세요
+  assistant_send                     [1962,1020][2088,1146]     
+
+## 1번째 시도: 찾은 요소, 클릭, 터치 (logcat 발췌, 마지막 40줄)
+  11:28:16.000 찾음 playback_state Rect(1727, 635 - 1839, 698) 재생 중
+  11:28:17.312 찾음 source_badge Rect(1024, 102 - 1184, 187) Mock
+  11:28:18.039 찾음 nav_assistant Rect(1314, 1224 - 1466, 1376)
+  11:28:18.061 Appium click
+  11:28:18.073 찾음 nav_assistant Rect(1314, 1224 - 1466, 1376)
+  11:28:18.102 터치 누름 (창 기준 x -104 보정)
+  11:28:18.113 터치 뗌 (창 기준 x -104 보정)
+  11:28:18.798 찾음 assistant_reply Rect(781, 431 - 1884, 609) 무엇을 도와드릴까요? 아래 추천 명령을 누르거나 직접 입력해 보세요.
+  11:28:19.030 찾음 assistant_chip_3 Rect(1754, 763 - 1973, 889) 판교 가자
+  11:28:19.051 Appium click
+  11:28:19.061 찾음 assistant_chip_3 Rect(1754, 763 - 1973, 889) 판교 가자
+  11:28:19.094 터치 누름 (창 기준 x -104 보정)
+  11:28:19.105 터치 뗌 (창 기준 x -104 보정)
+  11:28:20.109 찾음 assistant_reply Rect(781, 431 - 1657, 546) 판교 검색 결과가 3곳이에요. 어디로 안내할까요?
+  11:28:20.351 찾음 assistant_candidate_2 Rect(1066, 794 - 1754, 804)
+  11:28:20.371 Appium click
+  11:28:20.381 찾음 assistant_candidate_2 Rect(1066, 794 - 1754, 804)
+  11:28:20.405 터치 누름 (창 기준 x -104 보정)
+  11:28:20.416 터치 뗌 (창 기준 x -104 보정)
+
+## 2번째 시도: 실패 순간의 요소 위치 (UiAutomator, 화면 2152x1536 가로)
+  assistant_listening                [1345,263][1706,336]       운전석에서 듣는 중…
+  assistant_zone_driver              [1740,245][1905,371]       운전석
+  assistant_zone_passenger           [1905,245][2070,371]       조수석
+  assistant_old_candidate_2_2        [781,399][1884,427]        
+  assistant_user_3                   [1606,453][2078,568]       에어컨 켜고 음악 틀어줘
+  assistant_reply                    [781,594][1457,709]        에어컨을 켰어요. 음악을 재생할게요.
+  assistant_chip_0                   [771,763][1066,884]        22도로 맞춰줘
+  assistant_chip_1                   [1087,763][1273,889]       나 더워
+  assistant_chip_2                   [1294,763][1733,889]       에어컨 켜고 음악 틀어줘
+  assistant_chip_3                   [1754,763][1973,889]       판교 가자
+  assistant_chip_4                   [771,884][1123,1010]       엄마에게 전화해줘
+  assistant_chip_5                   [1144,884][1506,1010]      사이드 미러 접어줘
+  assistant_input                    [808,1021][1904,1147]      
+  assistant_hint                     [808,1052][1163,1115]      말하듯이 입력해 보세요
+  assistant_send                     [1962,1020][2088,1146]     
+
+## 2번째 시도: 찾은 요소, 클릭, 터치 (logcat 발췌, 마지막 40줄)
+  11:28:34.366 찾음 source_badge Rect(1024, 102 - 1184, 187) Mock
+  11:28:35.099 찾음 nav_assistant Rect(1314, 1224 - 1466, 1376)
+  11:28:35.118 Appium click
+  11:28:35.129 찾음 nav_assistant Rect(1314, 1224 - 1466, 1376)
+  11:28:35.166 터치 누름 (창 기준 x -104 보정)
+  11:28:35.178 터치 뗌 (창 기준 x -104 보정)
+  11:28:35.866 찾음 assistant_reply Rect(781, 431 - 1884, 609) 무엇을 도와드릴까요? 아래 추천 명령을 누르거나 직접 입력해 보세요.
+  11:28:36.068 찾음 assistant_chip_3 Rect(1754, 763 - 1973, 889) 판교 가자
+  11:28:36.088 Appium click
+  11:28:36.097 찾음 assistant_chip_3 Rect(1754, 763 - 1973, 889) 판교 가자
+  11:28:36.124 터치 누름 (창 기준 x -104 보정)
+  11:28:36.135 터치 뗌 (창 기준 x -104 보정)
+  11:28:36.819 찾음 assistant_reply Rect(781, 431 - 1657, 546) 판교 검색 결과가 3곳이에요. 어디로 안내할까요?
+  11:28:37.053 찾음 assistant_candidate_2 Rect(1066, 794 - 1754, 804)
+  11:28:37.070 Appium click
+  11:28:37.079 찾음 assistant_candidate_2 Rect(1066, 794 - 1754, 804)
+  11:28:37.117 터치 누름 (창 기준 x -104 보정)
+  11:28:37.128 터치 뗌 (창 기준 x -104 보정)

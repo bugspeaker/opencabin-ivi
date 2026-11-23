@@ -1,0 +1,44 @@
+# tests/test_vehicle_signals.py::test_seat_heat_signal_is_shown_everywhere
+
+## 실패 메시지 (마지막 시도)
+ivi.waits.WaitTimeout: 10초 안에 아래 바 운전석 열선 단계 1이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)
+
+## 1번째 시도: 실패 순간의 요소 위치 (UiAutomator, 화면 2152x1536 가로)
+  bar_driver_temp_down               [262,1221][388,1379]       
+  bar_driver_temp                    [391,1230][541,1307]       22.0°
+  bar_driver_temp_up                 [541,1221][667,1379]       
+  bar_seat_heat_driver               [579,1235][642,1366]       
+  bar_seat_heat_passenger            [1613,1235][1739,1366]     
+  bar_seat_heat_passenger_level      [1731,1298][1739,1366]     
+  bar_passenger_temp_down            [1739,1221][1865,1379]     
+  bar_passenger_temp                 [1868,1230][2019,1307]     22.0°
+  bar_passenger_temp_up              [2019,1221][2145,1379]     
+
+## 1번째 시도: 찾은 요소, 클릭, 터치 (logcat 발췌, 마지막 40줄)
+  11:37:26.765 찾음 source_badge Rect(1024, 102 - 1184, 187) Mock
+  11:37:27.453 찾음 nav_climate Rect(642, 1224 - 794, 1376)
+  11:37:27.465 Appium click
+  11:37:27.472 찾음 nav_climate Rect(642, 1224 - 794, 1376)
+  11:37:27.489 터치 누름 (창 기준 x -104 보정)
+  11:37:27.500 터치 뗌 (창 기준 x -104 보정)
+  11:37:28.424 찾음 seat_heat_driver_value Rect(925, 1036 - 1070, 1099) 열선 1단
+
+## 2번째 시도: 실패 순간의 요소 위치 (UiAutomator, 화면 2152x1536 가로)
+  bar_driver_temp_down               [262,1221][388,1379]       
+  bar_driver_temp                    [391,1230][541,1307]       22.0°
+  bar_driver_temp_up                 [541,1221][667,1379]       
+  bar_seat_heat_driver               [579,1235][642,1366]       
+  bar_seat_heat_passenger            [1613,1235][1739,1366]     
+  bar_seat_heat_passenger_level      [1731,1298][1739,1366]     
+  bar_passenger_temp_down            [1739,1221][1865,1379]     
+  bar_passenger_temp                 [1868,1230][2019,1307]     22.0°
+  bar_passenger_temp_up              [2019,1221][2145,1379]     
+
+## 2번째 시도: 찾은 요소, 클릭, 터치 (logcat 발췌, 마지막 40줄)
+  11:37:41.912 찾음 source_badge Rect(1024, 102 - 1184, 187) Mock
+  11:37:42.584 찾음 nav_climate Rect(642, 1224 - 794, 1376)
+  11:37:42.598 Appium click
+  11:37:42.605 찾음 nav_climate Rect(642, 1224 - 794, 1376)
+  11:37:42.636 터치 누름 (창 기준 x -104 보정)
+  11:37:42.650 터치 뗌 (창 기준 x -104 보정)
+  11:37:43.929 찾음 seat_heat_driver_value Rect(925, 1036 - 1070, 1099) 열선 1단
