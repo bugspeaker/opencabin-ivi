@@ -21,10 +21,12 @@
 
         <uses-library android:name="android.car" android:required="false" />
 
-        <!-- 주행 중에도 쓰는 화면: Distraction Optimized -->
+        <!-- 주행 중에도 쓰는 화면: Distraction Optimized.
+             가로 전용이다. 지원하는 최소 앱 영역은 가로 760x500dp (ui/ScreenSize.kt). 세로로 든 폴드에서도 가로로 돈다 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|density|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +38,7 @@
         <!-- 영상: DO 가 아니다. AAOS 는 주행 중에 시스템이 막고, 태블릿(Mock)에서는 앱이 직접 막는다 -->
         <activity
             android:name=".VideoActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="sensorLandscape" />
     </application>
 </manifest>

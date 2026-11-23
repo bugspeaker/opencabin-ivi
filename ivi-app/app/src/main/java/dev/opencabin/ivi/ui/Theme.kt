@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -145,6 +146,7 @@ fun Chip(text: String, color: Color, modifier: Modifier = Modifier) {
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
+        overflow = TextOverflow.Ellipsis,  // 폭이 모자라면 글자를 자르지 않고 … 로 줄인다 (좁은 화면의 상단 바)
     )
 }
 

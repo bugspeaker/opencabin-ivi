@@ -40,6 +40,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.assistant.CabinAssistant
@@ -86,7 +88,9 @@ fun AssistantScreen(state: VehicleState, cockpit: CockpitState, onAsk: (String) 
         ) {
             AppTile(TileColors.Assistant, 30.dp) { Glyph(G.SPARK, Color.White, it) }
             Text("AI 어시스턴트", fontSize = 17.sp, fontWeight = FontWeight.Bold)
-            Text("|  대화 내역", color = IviColors.TextSecondary, fontSize = 15.sp, modifier = Modifier.weight(1f))
+            // 좁은 화면(폭 1000dp 미만)에서는 뺀다. 폴드 가로(780dp)에서 '대화 / 내역' 두 줄로 꺾였다 (2026-11-23)
+            if (LocalScreenSize.current.compactWidth) Box(Modifier.weight(1f))
+            else Text("|  대화 내역", color = IviColors.TextSecondary, fontSize = 15.sp, modifier = Modifier.weight(1f))
             Text(
                 "${CabinAssistant.seatName(cockpit.speaker)}에서 듣는 중…",
                 Modifier.testTag("assistant_listening").clip(RoundedCornerShape(50)).background(IviColors.Accent).padding(horizontal = 12.dp, vertical = 5.dp),
@@ -115,17 +119,20 @@ fun AssistantScreen(state: VehicleState, cockpit: CockpitState, onAsk: (String) 
         // 대화
         val listState = rememberLazyListState()
         // 마지막 말의 '시작'으로 내린다. 끝으로 내리면 낮은 화면(AAOS 1024x768)에서 후보 카드가 대답 글을 밀어 올려
-        // 대답이 화면 밖으로 나간다 (7단계 회귀에서 발견) → 후보 카드는 한 줄로 작게 그려 대답과 같이 보이게 한다
+        // 대답이 화면 밖으로 나간다 (7단계 회귀에서 발견) → 후보 카드는 한 줄로 작게 그려 대답과 같이 보이게 한다.
+        // 더 낮은 화면(높이 600dp 미만)에서는 한 줄 카드 세 장도 다 들어가지 않는다. 폴드 가로(513dp)에서 세 번째 카드가
+        // 10px 만 보였다 (2026-11-23) → 이때는 후보를 가로로 늘어놓는다
+        val short = LocalScreenSize.current.compactHeight
         LaunchedEffect(cockpit.chat.size) { if (cockpit.chat.isNotEmpty()) listState.scrollToItem(cockpit.chat.lastIndex) }
         val lastReply = cockpit.chat.indexOfLast { !it.fromUser }
         LazyColumn(
             Modifier.weight(1f).fillMaxWidth().padding(horizontal = 16.dp),
             state = listState,
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = if (short) 8.dp else 12.dp),
         ) {
             itemsIndexed(cockpit.chat, key = { _, m -> m.id }) { index, message ->
-                if (message.fromUser) UserBubble(message) else AssistantBubble(message, index == lastReply, onChoose)
+                if (message.fromUser) UserBubble(message) else AssistantBubble(message, index == lastReply, short, onChoose)
             }
         }
 
@@ -210,7 +217,7 @@ private fun UserBubble(message: ChatMessage) {
 }
 
 @Composable
-private fun AssistantBubble(message: ChatMessage, latest: Boolean, onChoose: (dev.opencabin.ivi.assistant.Place) -> Unit) {
+private fun AssistantBubble(message: ChatMessage, latest: Boolean, short: Boolean, onChoose: (dev.opencabin.ivi.assistant.Place) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
@@ -227,10 +234,48 @@ private fun AssistantBubble(message: ChatMessage, latest: Boolean, onChoose: (de
             )
             Text("  ${message.time.format(timeFormat)}", color = IviColors.TextTertiary, fontSize = 11.sp)
         }
-        message.candidates.forEachIndexed { i, place ->
-            Box(Modifier.widthIn(max = 420.dp)) {
-                PlaceRow(place, if (latest) "assistant_candidate_$i" else "assistant_old_candidate_${message.id}_$i", index = i + 1) { onChoose(place) }
+        fun tag(i: Int) = if (latest) "assistant_candidate_$i" else "assistant_old_candidate_${message.id}_$i"
+        if (short && message.candidates.isNotEmpty()) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                message.candidates.forEachIndexed { i, place ->
+                    PlaceCard(place, tag(i), index = i + 1, Modifier.weight(1f)) { onChoose(place) }
+                }
             }
+        } else {
+            message.candidates.forEachIndexed { i, place ->
+                Box(Modifier.widthIn(max = 420.dp)) {
+                    PlaceRow(place, tag(i), index = i + 1) { onChoose(place) }
+                }
+            }
+        }
+    }
+}
+
+/** 목적지 후보 한 장 (낮은 화면에서 가로로 늘어놓을 때). 위: 번호 · 이름, 아래: 거리 · 주소. */
+@Composable
+private fun PlaceCard(place: Place, tag: String, index: Int, modifier: Modifier, onClick: () -> Unit) {
+    Column(
+        modifier
+            .testTag(tag)
+            .clip(RoundedCornerShape(12.dp))
+            .background(IviColors.SurfaceHigh)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                "$index",
+                Modifier.size(20.dp).clip(CircleShape).background(IviColors.Accent),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
+            Text(place.name, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(kmText(place.distanceKm), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = IviColors.AccentSoft)
+            Text(place.address, fontSize = 13.sp, color = IviColors.TextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

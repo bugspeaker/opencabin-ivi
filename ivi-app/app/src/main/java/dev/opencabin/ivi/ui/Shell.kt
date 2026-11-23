@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -26,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -48,6 +50,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.assistant.CabinAssistant
@@ -182,53 +185,56 @@ fun IviRoot(
 
     ShellEffects(state, cabin, cockpit)
 
-    Box(
+    BoxWithConstraints(
         Modifier
             .fillMaxSize()
             .background(IviColors.Background)
             .semantics { testTagsAsResourceId = true },
     ) {
-        Column(Modifier.fillMaxSize()) {
-            // 무드등 색 (설정)
-            Box(Modifier.fillMaxWidth().height(3.dp).background(AmbientPalette[settings.ambient % AmbientPalette.size].copy(alpha = 0.7f)))
-            Row(Modifier.weight(1f).fillMaxWidth()) {
-                Cluster(state, settings.mph, cabin, cockpit, Modifier.weight(0.31f).fillMaxHeight())
-                Column(Modifier.weight(0.69f).fillMaxHeight().padding(end = 12.dp)) {
-                    TopBar(source, state, settings, cabin, cockpit, showClock = source != "AAOS")
-                    Box(Modifier.weight(1f).fillMaxWidth()) {
-                        when (cockpit.tab) {
-                            Tab.HOME -> HomeScreen(state, settings, cabin, cockpit)
-                            Tab.RADIO -> RadioScreen(settings, cabin)
-                            Tab.MEDIA -> MediaScreen(state, cabin, onOpenVideo)
-                            Tab.PHONE -> PhoneScreen(state, cabin)
-                            Tab.CLIMATE -> ClimateScreen(state, cockpit, vehicle, ::setTemperature, ::setSync, ::setMaxAc, ::releaseMaxAc)
-                            Tab.SETTINGS -> SettingsScreen(settings, store)
-                            Tab.ASSISTANT -> AssistantScreen(state, cockpit, onAsk = ::ask) { place ->
-                                cockpit.say(false, assistant.choose(place).text, null)
+        // 앱 영역 크기에 따라 좁은 배치를 쓴다 (ScreenSize.kt). 폭 1024dp 기기는 원래 배치
+        CompositionLocalProvider(LocalScreenSize provides ScreenSize.of(maxWidth, maxHeight)) {
+            Column(Modifier.fillMaxSize()) {
+                // 무드등 색 (설정)
+                Box(Modifier.fillMaxWidth().height(3.dp).background(AmbientPalette[settings.ambient % AmbientPalette.size].copy(alpha = 0.7f)))
+                Row(Modifier.weight(1f).fillMaxWidth()) {
+                    Cluster(state, settings.mph, cabin, cockpit, Modifier.weight(0.31f).fillMaxHeight())
+                    Column(Modifier.weight(0.69f).fillMaxHeight().padding(end = 12.dp)) {
+                        TopBar(source, state, settings, cabin, cockpit, showClock = source != "AAOS")
+                        Box(Modifier.weight(1f).fillMaxWidth()) {
+                            when (cockpit.tab) {
+                                Tab.HOME -> HomeScreen(state, settings, cabin, cockpit)
+                                Tab.RADIO -> RadioScreen(settings, cabin)
+                                Tab.MEDIA -> MediaScreen(state, cabin, onOpenVideo)
+                                Tab.PHONE -> PhoneScreen(state, cabin)
+                                Tab.CLIMATE -> ClimateScreen(state, cockpit, vehicle, ::setTemperature, ::setSync, ::setMaxAc, ::releaseMaxAc)
+                                Tab.SETTINGS -> SettingsScreen(settings, store)
+                                Tab.ASSISTANT -> AssistantScreen(state, cockpit, onAsk = ::ask) { place ->
+                                    cockpit.say(false, assistant.choose(place).text, null)
+                                }
+                                Tab.VEHICLE -> VehicleScreen(state, cockpit, vehicle)
+                                Tab.APPS -> AppsScreen(state, cockpit, onOpenVideo)
                             }
-                            Tab.VEHICLE -> VehicleScreen(state, cockpit, vehicle)
-                            Tab.APPS -> AppsScreen(state, cockpit, onOpenVideo)
+                            cabin.call?.let { CallOverlay(it.name, it.number, it.startedAt) { cabin.endCall() } }
+                            if (cockpit.voiceOpen) {
+                                // 명령을 처리하면 팝업은 바로 닫는다. 결과는 상단 바에 잠깐 보인다
+                                // (팝업이 남아 있으면 안내·통화 화면을 가린다 — 6단계 회귀에서 발견)
+                                VoicePopup(cockpit, onCommand = { index ->
+                                    cabin.showVoiceResult(ask(VoiceCommands[index]).text)
+                                    cockpit.voiceOpen = false
+                                }, onOpenAssistant = { cockpit.voiceOpen = false; cockpit.open(Tab.ASSISTANT) }, onClose = { cockpit.voiceOpen = false })
+                            }
+                            if (cockpit.notificationsOpen) NotificationPanel(cockpit, Modifier.align(Alignment.TopEnd))
+                            // 후방 카메라: 기어 R 이면 앱 화면 위에 뜬다 (주행 정보는 그대로 보인다)
+                            if (state.gear == Gear.REVERSE) RearCamera()
                         }
-                        cabin.call?.let { CallOverlay(it.name, it.number, it.startedAt) { cabin.endCall() } }
-                        if (cockpit.voiceOpen) {
-                            // 명령을 처리하면 팝업은 바로 닫는다. 결과는 상단 바에 잠깐 보인다
-                            // (팝업이 남아 있으면 안내·통화 화면을 가린다 — 6단계 회귀에서 발견)
-                            VoicePopup(cockpit, onCommand = { index ->
-                                cabin.showVoiceResult(ask(VoiceCommands[index]).text)
-                                cockpit.voiceOpen = false
-                            }, onOpenAssistant = { cockpit.voiceOpen = false; cockpit.open(Tab.ASSISTANT) }, onClose = { cockpit.voiceOpen = false })
-                        }
-                        if (cockpit.notificationsOpen) NotificationPanel(cockpit, Modifier.align(Alignment.TopEnd))
-                        // 후방 카메라: 기어 R 이면 앱 화면 위에 뜬다 (주행 정보는 그대로 보인다)
-                        if (state.gear == Gear.REVERSE) RearCamera()
                     }
                 }
+                BottomBar(state, cockpit, vehicle, ::setTemperature)
             }
-            BottomBar(state, cockpit, vehicle, ::setTemperature)
+            // 화면 밝기 (설정): 어둡게 덮는다. 터치는 막지 않는다
+            val dim = (Settings.BRIGHTNESS_MAX - settings.brightness).coerceAtLeast(0) * 0.025f
+            if (dim > 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = dim)))
         }
-        // 화면 밝기 (설정): 어둡게 덮는다. 터치는 막지 않는다
-        val dim = (Settings.BRIGHTNESS_MAX - settings.brightness).coerceAtLeast(0) * 0.025f
-        if (dim > 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = dim)))
     }
 }
 
@@ -285,6 +291,7 @@ const val DRIVER_NAME = "조예훈"
 
 @Composable
 private fun TopBar(source: String, state: VehicleState, settings: Settings, cabin: CabinController, cockpit: CockpitState, showClock: Boolean) {
+    val compact = LocalScreenSize.current.compactWidth
     Row(
         Modifier.fillMaxWidth().height(56.dp).padding(start = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -314,11 +321,24 @@ private fun TopBar(source: String, state: VehicleState, settings: Settings, cabi
         Chip(source, IviColors.AccentSoft, Modifier.testTag("source_badge"))
         if (!state.connected) Chip("차량 연결 안 됨", IviColors.Warn, Modifier.testTag("vehicle_disconnected"))
         state.error?.let { Chip(it, IviColors.Warn, Modifier.testTag("vehicle_error")) }
-        Spacer(Modifier.weight(1f))
-        if (cabin.voiceResult.isNotEmpty()) Chip(cabin.voiceResult, IviColors.AccentSoft, Modifier.testTag("voice_result").widthIn(max = 320.dp))
-        if (state.restricted) Chip("주행 중 · 일부 기능 제한", IviColors.Warn, Modifier.testTag("restriction_banner"))
-        Glyph(G.SIGNAL, IviColors.TextPrimary, Modifier.size(20.dp))
-        Glyph(G.VOLUME, IviColors.TextPrimary, Modifier.size(22.dp))
+        if (compact) {
+            // 좁은 화면 (폭 1000dp 미만): 음성 결과·주행 제한 글자는 남는 폭 안에서 줄이고(…), 신호·음량 기호는 뺀다.
+            // 넘침 처리가 없으면 맨 끝의 시계가 밀려 그려지지 않는다 (2026-11-23 폴드 세로 585dp 에서 발견)
+            Row(
+                Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            ) {
+                if (cabin.voiceResult.isNotEmpty()) Chip(cabin.voiceResult, IviColors.AccentSoft, Modifier.testTag("voice_result").weight(1f, fill = false))
+                if (state.restricted) Chip("주행 중 · 일부 기능 제한", IviColors.Warn, Modifier.testTag("restriction_banner").weight(1f, fill = false))
+            }
+        } else {
+            Spacer(Modifier.weight(1f))
+            if (cabin.voiceResult.isNotEmpty()) Chip(cabin.voiceResult, IviColors.AccentSoft, Modifier.testTag("voice_result").widthIn(max = 320.dp))
+            if (state.restricted) Chip("주행 중 · 일부 기능 제한", IviColors.Warn, Modifier.testTag("restriction_banner"))
+            Glyph(G.SIGNAL, IviColors.TextPrimary, Modifier.size(20.dp))
+            Glyph(G.VOLUME, IviColors.TextPrimary, Modifier.size(22.dp))
+        }
         // 음성 호출 버튼 (실제 차량의 음성 버튼 자리). 누르면 '듣는 중' 팝업
         Row(
             Modifier
@@ -334,16 +354,17 @@ private fun TopBar(source: String, state: VehicleState, settings: Settings, cabi
             Glyph(G.MIC, Color.White, Modifier.size(18.dp))
             Text("AI", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
-        // 로그인한 운전자 프로필
+        // 로그인한 운전자 프로필. 좁은 화면에서는 얼굴 기호만
         Row(
-            Modifier.testTag("top_profile").height(38.dp).clip(RoundedCornerShape(19.dp)).background(IviColors.SurfaceHigh).padding(start = 4.dp, end = 12.dp),
+            Modifier.testTag("top_profile").height(38.dp).clip(RoundedCornerShape(19.dp)).background(IviColors.SurfaceHigh)
+                .padding(start = 4.dp, end = if (compact) 4.dp else 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Box(Modifier.size(30.dp).clip(CircleShape).background(IviColors.SurfaceHigher), contentAlignment = Alignment.Center) {
                 Glyph(G.PROFILE, IviColors.TextSecondary, Modifier.size(20.dp))
             }
-            Text(DRIVER_NAME, Modifier.testTag("top_profile_name"), fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1)
+            if (!compact) Text(DRIVER_NAME, Modifier.testTag("top_profile_name"), fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1)
         }
         // AAOS 는 시스템 바가 시계를 이미 보여 주므로 앱은 태블릿(Mock)에서만 그린다
         if (showClock) Clock(settings.clock24)
@@ -411,32 +432,54 @@ private fun NotificationPanel(cockpit: CockpitState, modifier: Modifier) {
 
 // ---------------- 하단 바 (컨트롤 영역) ----------------
 
+/**
+ * 아래 바의 버튼 크기와 간격. 넓은 화면은 7단계 그대로다.
+ * 좁은 화면(폭 1000dp 미만)은 최소 폭 760dp 에 맞췄다: 운전석 묶음 224 + 가운데 335('이전 앱' 포함) + 조수석 묶음 172 = 731dp (쓸 수 있는 폭 736dp).
+ * 원래 크기로는 폴드 가로(780dp)에서 운전석 열선 버튼이 공조 타일 밑으로 들어가고 단계 숫자가 사라졌다 (2026-11-23).
+ * sideGap: 온도 ‹ › 옆 간격. Compose 는 48dp 보다 작은 버튼의 터치 영역을 48dp 로 넓힌다. 32dp ‹ 는 양옆으로 8dp 씩 넓어져
+ * 간격이 2dp 면 옆 열선 버튼 오른쪽 6dp 를 덮고, 거기 있던 단계 숫자(bar_seat_heat_passenger_level)가 접근성 트리에서 빠졌다.
+ */
+private class BarMetrics(
+    val toggle: Dp, val glyph: Dp, val app: Dp, val tile: Dp, val appGap: Dp, val sideGap: Dp,
+    val chevronWidth: Dp, val chevronHeight: Dp, val tempWidth: Dp, val tempFont: TextUnit,
+) {
+    companion object {
+        val Wide = BarMetrics(50.dp, 28.dp, 58.dp, 44.dp, 6.dp, 2.dp, 40.dp, 60.dp, 72.dp, 25.sp)
+        val Compact = BarMetrics(44.dp, 26.dp, 46.dp, 38.dp, 2.dp, 8.dp, 32.dp, 56.dp, 56.dp, 21.sp)
+    }
+}
+
 @Composable
 private fun BottomBar(state: VehicleState, cockpit: CockpitState, vehicle: VehicleDataSource, setTemperature: (Seat, Float, Boolean) -> Unit) {
+    val compact = LocalScreenSize.current.compactWidth
+    val m = if (compact) BarMetrics.Compact else BarMetrics.Wide
+    // 넓은 화면: 양쪽 묶음이 같은 폭(weight)을 나눠 가져 가운데 앱 버튼이 정확히 가운데 온다.
+    // 좁은 화면: 같은 폭으로 나누면 차량 버튼이 더 있는 운전석 쪽이 넘친다. 묶음마다 제 폭만 쓰고 사이를 벌린다
     Row(
         Modifier.fillMaxWidth().height(84.dp).padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = if (compact) Arrangement.SpaceBetween else Arrangement.Start,
     ) {
-        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-            BarToggle(G.CAR, "nav_vehicle", cockpit.tab == Tab.VEHICLE, IviColors.AccentSoft) { cockpit.open(Tab.VEHICLE) }
-            BarTemperature(Seat.DRIVER, state, state.acOn, "A/C", setTemperature)
-            SeatHeatButton(Seat.DRIVER, state, vehicle)
+        Row(if (compact) Modifier else Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(m.sideGap)) {
+            BarToggle(G.CAR, "nav_vehicle", cockpit.tab == Tab.VEHICLE, IviColors.AccentSoft, m) { cockpit.open(Tab.VEHICLE) }
+            BarTemperature(Seat.DRIVER, state, state.acOn, "A/C", m, setTemperature)
+            SeatHeatButton(Seat.DRIVER, state, vehicle, m)
         }
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            AppButton(Tab.CLIMATE, cockpit)
-            AppButton(Tab.MEDIA, cockpit)
-            AppButton(Tab.PHONE, cockpit)
-            AppButton(Tab.HOME, cockpit)
-            AppButton(Tab.ASSISTANT, cockpit)
-            BarToggle(G.GRID, "nav_apps", cockpit.tab == Tab.APPS, IviColors.TextPrimary) { cockpit.open(Tab.APPS) }
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(m.appGap)) {
+            AppButton(Tab.CLIMATE, cockpit, m)
+            AppButton(Tab.MEDIA, cockpit, m)
+            AppButton(Tab.PHONE, cockpit, m)
+            AppButton(Tab.HOME, cockpit, m)
+            AppButton(Tab.ASSISTANT, cockpit, m)
+            BarToggle(G.GRID, "nav_apps", cockpit.tab == Tab.APPS, IviColors.TextPrimary, m) { cockpit.open(Tab.APPS) }
             cockpit.recent?.let { recent ->
                 Box(Modifier.width(1.dp).height(36.dp).background(IviColors.Line))
-                AppButton(recent, cockpit, tag = "nav_recent")
+                AppButton(recent, cockpit, m, tag = "nav_recent")
             }
         }
-        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.End)) {
-            SeatHeatButton(Seat.PASSENGER, state, vehicle)
-            BarTemperature(Seat.PASSENGER, state, cockpit.sync, "SYNC", setTemperature)
+        Row(if (compact) Modifier else Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(m.sideGap, Alignment.End)) {
+            SeatHeatButton(Seat.PASSENGER, state, vehicle, m)
+            BarTemperature(Seat.PASSENGER, state, cockpit.sync, "SYNC", m, setTemperature)
         }
     }
 }
@@ -465,47 +508,47 @@ fun tileGlyph(tab: Tab) = when (tab) {
 }
 
 @Composable
-private fun AppButton(tab: Tab, cockpit: CockpitState, tag: String = tab.tag) {
+private fun AppButton(tab: Tab, cockpit: CockpitState, m: BarMetrics, tag: String = tab.tag) {
     val on = cockpit.tab == tab
     Box(
         Modifier
             .testTag(tag)
-            .size(58.dp)
+            .size(m.app)
             .clip(RoundedCornerShape(18.dp))
             .background(if (on) IviColors.SurfaceHigher else Color.Transparent)
             .clickable { cockpit.open(tab) },
         contentAlignment = Alignment.Center,
-    ) { AppTile(tileColors(tab), 44.dp) { Glyph(tileGlyph(tab), Color.White, it) } }
+    ) { AppTile(tileColors(tab), m.tile) { Glyph(tileGlyph(tab), Color.White, it) } }
 }
 
 @Composable
-private fun BarToggle(g: G, tag: String, on: Boolean, onColor: Color, size: Dp = 50.dp, onClick: () -> Unit) {
+private fun BarToggle(g: G, tag: String, on: Boolean, onColor: Color, m: BarMetrics, onClick: () -> Unit) {
     Box(
         Modifier
             .testTag(tag)
-            .size(size)
+            .size(m.toggle)
             .clip(RoundedCornerShape(16.dp))
             .background(if (on) onColor.copy(alpha = 0.16f) else Color.Transparent)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
-    ) { Glyph(g, if (on) onColor else IviColors.TextPrimary, Modifier.size(28.dp)) }
+    ) { Glyph(g, if (on) onColor else IviColors.TextPrimary, Modifier.size(m.glyph)) }
 }
 
 /** 아래 바의 좌석 열선: 누를 때마다 꺼짐 → 2단 → 1단 → 꺼짐. 차량 신호 HVAC_SEAT_TEMPERATURE 를 쓰고, 단계 숫자를 옆에 보여 준다. */
 @Composable
-private fun SeatHeatButton(seat: Seat, state: VehicleState, vehicle: VehicleDataSource) {
+private fun SeatHeatButton(seat: Seat, state: VehicleState, vehicle: VehicleDataSource, m: BarMetrics) {
     val level = state.seatHeat(seat)
     val on = level > 0
     Box(
         Modifier
             .testTag("bar_seat_heat_${seat.tag}")
-            .size(50.dp)
+            .size(m.toggle)
             .clip(RoundedCornerShape(16.dp))
             .background(if (on) IviColors.Warm.copy(alpha = 0.16f) else Color.Transparent)
             .clickable(enabled = state.hvacAvailable) { vehicle.setSeatHeat(seat, HvacSpec.nextSeatHeat(level)) },
         contentAlignment = Alignment.Center,
     ) {
-        Glyph(G.SEAT_HEAT, if (on) IviColors.Warm else IviColors.TextPrimary, Modifier.size(28.dp))
+        Glyph(G.SEAT_HEAT, if (on) IviColors.Warm else IviColors.TextPrimary, Modifier.size(m.glyph))
         Text(
             if (on) level.toString() else "",
             Modifier.testTag("bar_seat_heat_${seat.tag}_level").align(Alignment.BottomEnd).padding(end = 5.dp, bottom = 2.dp),
@@ -518,27 +561,27 @@ private fun SeatHeatButton(seat: Seat, state: VehicleState, vehicle: VehicleData
 
 /** 아래 바의 좌석 온도: ‹ 22.0° › 와 상태 글자(A/C, SYNC). 실제 차량 신호(HVAC_TEMPERATURE_SET)를 바꾼다. */
 @Composable
-private fun BarTemperature(seat: Seat, state: VehicleState, flag: Boolean, flagLabel: String, setTemperature: (Seat, Float, Boolean) -> Unit) {
+private fun BarTemperature(seat: Seat, state: VehicleState, flag: Boolean, flagLabel: String, m: BarMetrics, setTemperature: (Seat, Float, Boolean) -> Unit) {
     val celsius = if (seat == Seat.DRIVER) state.driverTempC else state.passengerTempC
     val usable = state.hvacAvailable && celsius != null
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Chevron(G.CHEVRON_LEFT, "bar_${seat.tag}_temp_down", usable && celsius!! > HvacSpec.MIN_C, IviColors.Cool) {
+        Chevron(G.CHEVRON_LEFT, "bar_${seat.tag}_temp_down", usable && celsius!! > HvacSpec.MIN_C, IviColors.Cool, m) {
             setTemperature(seat, HvacSpec.stepDown(celsius!!), true)
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(72.dp)) {
-            Text(tempShort(celsius), Modifier.testTag("bar_${seat.tag}_temp"), fontSize = 25.sp, fontWeight = FontWeight.Medium)
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(m.tempWidth)) {
+            Text(tempShort(celsius), Modifier.testTag("bar_${seat.tag}_temp"), fontSize = m.tempFont, fontWeight = FontWeight.Medium, maxLines = 1)
             Text(flagLabel, color = if (flag) IviColors.Green else IviColors.TextTertiary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         }
-        Chevron(G.CHEVRON_RIGHT, "bar_${seat.tag}_temp_up", usable && celsius!! < HvacSpec.MAX_C, IviColors.Warm) {
+        Chevron(G.CHEVRON_RIGHT, "bar_${seat.tag}_temp_up", usable && celsius!! < HvacSpec.MAX_C, IviColors.Warm, m) {
             setTemperature(seat, HvacSpec.stepUp(celsius!!), true)
         }
     }
 }
 
 @Composable
-private fun Chevron(g: G, tag: String, enabled: Boolean, color: Color, onClick: () -> Unit) {
+private fun Chevron(g: G, tag: String, enabled: Boolean, color: Color, m: BarMetrics, onClick: () -> Unit) {
     Box(
-        Modifier.testTag(tag).size(width = 40.dp, height = 60.dp).clip(RoundedCornerShape(12.dp)).clickable(enabled = enabled, onClick = onClick),
+        Modifier.testTag(tag).size(width = m.chevronWidth, height = m.chevronHeight).clip(RoundedCornerShape(12.dp)).clickable(enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { Glyph(g, if (enabled) color else IviColors.TextTertiary.copy(alpha = 0.5f), Modifier.size(22.dp)) }
 }

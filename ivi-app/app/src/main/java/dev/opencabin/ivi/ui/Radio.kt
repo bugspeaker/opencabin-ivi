@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.state.AudioSource
@@ -40,11 +42,24 @@ import dev.opencabin.ivi.state.Stations
 fun RadioScreen(settings: Settings, cabin: CabinController) {
     var saving by remember { mutableStateOf(false) }
     val station = Stations.firstOrNull { it.band == settings.band && it.freq == settings.freq }
+    // 좁은 화면(폭 1000dp 미만): 아래 줄에 버튼 다섯 개(56dp×4 + 76dp = 300dp)가 들어가지 않는다.
+    // 폴드 가로(780dp)에서는 줄 폭이 약 231dp 라 ⏭ 가 패널 밖으로 밀리고 그 자리에 + 가 그려졌다 (2026-11-23).
+    // 그래서 켜기/끄기는 대역 버튼 줄 오른쪽으로 옮기고, 아래 줄은 찾기·미세 조정 네 개(52dp)만 둔다
+    val compact = LocalScreenSize.current.compactWidth
+    val step = if (compact) 52.dp else 56.dp
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         Panel(Modifier.weight(1.1f).fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                if (compact) Modifier.fillMaxWidth() else Modifier,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 PillButton("FM", "radio_band_fm", selected = settings.band == Band.FM) { cabin.setBand(Band.FM) }
                 PillButton("AM", "radio_band_am", selected = settings.band == Band.AM) { cabin.setBand(Band.AM) }
+                if (compact) {
+                    Spacer(Modifier.weight(1f))
+                    RadioPower(cabin, 56.dp)
+                }
             }
             Column {
                 Text(settings.band.format(settings.freq), Modifier.testTag("radio_freq"), fontSize = 48.sp, fontWeight = FontWeight.Light)
@@ -52,11 +67,11 @@ fun RadioScreen(settings: Settings, cabin: CabinController) {
                 Text(cabin.playbackLabel(AudioSource.RADIO), Modifier.testTag("radio_state"), color = IviColors.TextSecondary, fontSize = 15.sp)
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                RoundButton("⏮", "radio_seek_down", size = 56.dp) { cabin.seek(-1) }
-                RoundButton("−", "radio_tune_down", size = 56.dp) { cabin.tune(-1) }
-                RoundButton(if (cabin.radioOn) "■" else "▶", "radio_power", filled = cabin.radioOn) { cabin.setRadio(!cabin.radioOn) }
-                RoundButton("+", "radio_tune_up", size = 56.dp) { cabin.tune(1) }
-                RoundButton("⏭", "radio_seek_up", size = 56.dp) { cabin.seek(1) }
+                RoundButton("⏮", "radio_seek_down", size = step) { cabin.seek(-1) }
+                RoundButton("−", "radio_tune_down", size = step) { cabin.tune(-1) }
+                if (!compact) RadioPower(cabin, 76.dp)
+                RoundButton("+", "radio_tune_up", size = step) { cabin.tune(1) }
+                RoundButton("⏭", "radio_seek_up", size = step) { cabin.seek(1) }
             }
         }
         Panel(Modifier.weight(1f).fillMaxHeight()) {
@@ -99,4 +114,10 @@ fun RadioScreen(settings: Settings, cabin: CabinController) {
             }
         }
     }
+}
+
+/** 라디오 켜기/끄기. 넓은 화면은 아래 줄 가운데(76dp), 좁은 화면은 대역 버튼 줄 오른쪽(56dp). */
+@Composable
+private fun RadioPower(cabin: CabinController, size: Dp) {
+    RoundButton(if (cabin.radioOn) "■" else "▶", "radio_power", filled = cabin.radioOn, size = size) { cabin.setRadio(!cabin.radioOn) }
 }
