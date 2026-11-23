@@ -10,6 +10,20 @@ from ivi.waits import polling, wait_until
 
 TIMEOUT = 10.0
 
+# 누를 요소가 이보다 좁게(가로나 세로) 보이면 거의 가려진 것으로 본다. 그 가운데를 누르면 가린 요소가 대신 눌린다
+# (2026-11-23 갤럭시 폴드 가로: 후보 카드가 높이 10px 만 보였고, 가운데를 누르자 바로 아래 추천 칩이 눌렸다).
+MIN_VISIBLE_DP = 16
+SCROLL_TRIES = 3          # 가려진 요소를 보이게 하려고 목록을 넘겨 보는 횟수
+SCROLL_PERCENT = 0.3      # 한 번에 목록 높이(폭)의 30% 만큼 넘긴다
+SCROLLABLE = AppiumBy.ANDROID_UIAUTOMATOR, "new UiSelector().scrollable(true)"
+
+_density = {}  # Appium 세션 → 1dp 의 px 수
+
+
+class HiddenElement(AssertionError):
+    """누를 요소가 거의 가려져 있고, 목록을 넘겨도 보이지 않는다.
+    AssertionError 라서 대기(wait_until) 안에서 누를 때는 '아직 아님'으로 보고 다시 본다."""
+
 
 def by_tag(tag):
     return AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().resourceId("{tag}")'
@@ -61,11 +75,70 @@ class Screen:
                    what=f"'{tag}' {'활성' if expected else '비활성'}")
 
     def tap(self, tag):
-        element = self.find(tag)
+        element = self._tappable(tag)
         if self.tapper is None:
             element.click()
         else:
             self.tapper(element)
+
+    def _tappable(self, tag):
+        """누를 요소. UiAutomator 가 주는 위치는 '보이는 부분'이라, 거의 가려진 요소도 찾기는 된다.
+        보이는 부분이 MIN_VISIBLE_DP 보다 좁으면 그 요소를 감싼 스크롤 목록을 잘린 쪽으로 넘겨 본다.
+        그래도 좁으면 누르지 않고 HiddenElement 로 실패한다 (다른 요소가 눌려 엉뚱한 단계에서 실패하지 않게)."""
+        element = self.find(tag)
+        least = MIN_VISIBLE_DP * self._px_per_dp()
+        for attempt in range(SCROLL_TRIES + 1):
+            rect = element.rect
+            if min(rect["width"], rect["height"]) >= least or self._cut_by_screen(rect):
+                return element
+            if attempt == SCROLL_TRIES or not self._scroll_toward(rect):
+                break
+            element = self.find(tag)
+        raise HiddenElement(
+            f"'{tag}' 이(가) 거의 가려져 있어 누르지 않는다: 보이는 부분 {rect['width']}x{rect['height']}px "
+            f"(최소 {MIN_VISIBLE_DP}dp = {least:.0f}px). 화면 배치가 넘쳤거나 다른 요소에 덮였는지 확인")
+
+    def _cut_by_screen(self, rect):
+        """UiAutomator 가 아는 화면 가장자리에서 잘렸는가. 이때는 다른 요소에 덮인 것이 아니라서, 보이는 부분 가운데를 눌러도
+        그 요소가 눌린다. 갤럭시 폴드 가로는 앱이 카메라 컷아웃(104px)만큼 오른쪽으로 밀렸는데 UiAutomator 는 위치를
+        표시 영역 폭(2048px)에서 자른다. 그래서 맨 오른쪽 버튼(아래 바 조수석 온도 ›)은 화면에 다 보여도 폭 33px 로 나온다."""
+        screen = self.driver.get_window_size()
+        return (rect["x"] <= 0 or rect["y"] <= 0
+                or rect["x"] + rect["width"] >= screen["width"]
+                or rect["y"] + rect["height"] >= screen["height"])
+
+    def _px_per_dp(self):
+        session = getattr(self.driver, "session_id", None)
+        if session not in _density:
+            _density[session] = self.driver.get_display_density() / 160
+        return _density[session]
+
+    def _scroll_toward(self, rect):
+        """rect 를 감싼 가장 안쪽 스크롤 목록을, rect 가 잘린 쪽으로 조금 넘긴다. 넘길 목록이 없으면 False."""
+        def inside(outer):
+            return (outer["x"] <= rect["x"] and outer["y"] <= rect["y"]
+                    and rect["x"] + rect["width"] <= outer["x"] + outer["width"]
+                    and rect["y"] + rect["height"] <= outer["y"] + outer["height"])
+
+        containers = [(c, c.rect) for c in self.driver.find_elements(*SCROLLABLE)]
+        containers = [(c, r) for c, r in containers if inside(r)]
+        if not containers:
+            return False
+        container, box = min(containers, key=lambda pair: pair[1]["width"] * pair[1]["height"])
+        edge = 4 * self._px_per_dp()
+        if rect["y"] + rect["height"] >= box["y"] + box["height"] - edge:
+            direction = "down"    # 목록 아래 끝에 걸림 → 아래 내용을 올린다
+        elif rect["y"] <= box["y"] + edge:
+            direction = "up"
+        elif rect["x"] + rect["width"] >= box["x"] + box["width"] - edge:
+            direction = "right"
+        elif rect["x"] <= box["x"] + edge:
+            direction = "left"
+        else:
+            return False          # 목록 가장자리가 아니라 다른 요소에 덮였다. 넘겨도 소용없다
+        self.driver.execute_script("mobile: scrollGesture",
+                                   {"elementId": container.id, "direction": direction, "percent": SCROLL_PERCENT})
+        return True
 
 
 class IviApp(Screen):

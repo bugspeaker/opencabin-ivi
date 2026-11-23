@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.BuildConfig
@@ -28,8 +29,13 @@ import dev.opencabin.ivi.state.SettingsStore
 /** 설정: 소리 · 화면 · 차량 · 시스템. 모두 저장되어 앱을 다시 켜도 남는다. */
 @Composable
 fun SettingsScreen(settings: Settings, store: SettingsStore) {
+    // 낮은 화면(높이 600dp 미만): 줄 간격을 줄인다. 폴드 가로(513dp)에서 '소프트웨어' 줄이 패널 밑으로 밀려 2px 만 보였다.
+    // 좁은 화면(폭 1000dp 미만): 무드등 색 다섯 개(52dp)가 패널 폭을 넘어 다섯째 색이 잘렸다 (2026-11-23) → 40dp 로 줄인다
+    val screen = LocalScreenSize.current
+    val rows = Arrangement.spacedBy(if (screen.compactHeight) 4.dp else 10.dp)
+    val swatch = if (screen.compactWidth) 40.dp else 52.dp
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Panel(Modifier.weight(1f).fillMaxHeight()) {
+        Panel(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = rows) {
             Label("소리 · 화면")
             StepperRow("볼륨", "settings_volume", settings.volume.toString(),
                 canDecrease = settings.volume > 0, canIncrease = settings.volume < Settings.VOLUME_MAX,
@@ -45,7 +51,7 @@ fun SettingsScreen(settings: Settings, store: SettingsStore) {
             InfoRow("블루투스", "내 휴대폰 · 연결됨", "settings_bluetooth")
             InfoRow("소프트웨어", BuildConfig.VERSION_NAME, "settings_version")
         }
-        Panel(Modifier.weight(1f).fillMaxHeight()) {
+        Panel(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = rows) {
             Label("차량")
             ToggleRow("속도 단위 mph", "settings_unit_mph", settings.mph) { on -> store.update { it.copy(mph = on) } }
             ToggleRow("도어 자동 잠금", "settings_autolock", settings.autoLock) { on -> store.update { it.copy(autoLock = on) } }
@@ -55,7 +61,7 @@ fun SettingsScreen(settings: Settings, store: SettingsStore) {
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 AmbientPalette.forEachIndexed { index, color ->
-                    Swatch(color, index == settings.ambient, "settings_ambient_$index") { store.update { it.copy(ambient = index) } }
+                    Swatch(color, index == settings.ambient, "settings_ambient_$index", swatch) { store.update { it.copy(ambient = index) } }
                 }
             }
             Box(Modifier.weight(1f))
@@ -74,16 +80,16 @@ private fun InfoRow(label: String, value: String, tag: String) {
 }
 
 @Composable
-private fun Swatch(color: Color, selected: Boolean, tag: String, onClick: () -> Unit) {
+private fun Swatch(color: Color, selected: Boolean, tag: String, size: Dp, onClick: () -> Unit) {
     Box(
         Modifier
             .testTag(tag)
-            .size(52.dp)
+            .size(size)
             .clip(CircleShape)
             .border(3.dp, if (selected) IviColors.TextPrimary else Color.Transparent, CircleShape)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Box(Modifier.size(36.dp).clip(CircleShape).background(color))
+        Box(Modifier.size(size * 36 / 52).clip(CircleShape).background(color))
     }
 }

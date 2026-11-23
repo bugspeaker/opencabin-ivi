@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opencabin.ivi.state.CabinController
@@ -92,11 +93,15 @@ fun Cluster(state: VehicleState, mph: Boolean, cabin: CabinController, cockpit: 
         UtilityWidget(cabin, cockpit)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.size(7.dp).clip(CircleShape).background(if (state.connected) IviColors.Green else IviColors.Warn))
+            // 좁은 화면(폭 1000dp 미만)에서는 '차량' 을 뺀다. 폴드 가로(780dp)에서 외기 온도와 붙어 보였다 (2026-11-23)
+            val vehicle = if (LocalScreenSize.current.compactWidth) "" else "차량 "
             Text(
-                if (state.connected) "  차량 신호 수신 중" else "  차량 신호 없음",
+                if (state.connected) "  ${vehicle}신호 수신 중" else "  ${vehicle}신호 없음",
                 color = IviColors.TextSecondary,
                 fontSize = 13.sp,
-                modifier = Modifier.weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f).padding(end = 6.dp),
             )
             // 외기 온도: 차량 신호 ENV_OUTSIDE_TEMPERATURE
             state.outsideTempC?.let {
