@@ -43,9 +43,9 @@
 <blockquote class="callout callout-tip"><p class="callout-title">안내</p>
 <p>짧게 보려면 <a href="https://bugspeaker.github.io/opencabin-ivi/" target="_blank" rel="noopener">포트폴리오 첫 화면</a>을 먼저 보세요. 이 문서는 근거를 모두 적은 상세 문서입니다.</p>
 </blockquote>
-<p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>결과 기준: 2026-11-23 실행(커밋 <code>55419f7</code>, 테스트 140개, 두 기기 × 3회). 세 번째 기기 갤럭시 폴드는 같은 커밋으로 한 번 돌렸습니다(<a href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">3장 끝</a>). 이전 실행과 그때의 코드 시점은 <a href="readme.html#결과-자료와-검증-시점">README의 &#39;결과 자료와 검증 시점&#39;</a>에 있습니다.</p>
+<p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>결과 기준: 2026-11-23 저녁 실행(커밋 <code>de9d062</code>, 앱 0.4.2, 테스트 144개, 두 기기 × 3회). 세 번째 기기 갤럭시 폴드는 같은 커밋으로 한 번 돌렸습니다(<a href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">3장 끝</a>). 이전 실행과 그때의 코드 시점은 <a href="readme.html#결과-자료와-검증-시점">README의 &#39;결과 자료와 검증 시점&#39;</a>에 있습니다.</p>
 <p><img data-md src="../../docs/images/p9-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
-<p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트 140개를 AAOS 에뮬레이터와 화웨이 태블릿에서 돌리고, 2026-11-23에는 갤럭시 폴드를 세 번째 기기로 붙였습니다. 에뮬레이터에서는 CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다. 실제 차량, HIL, CAN 장비는 쓰지 않았습니다.</p>
+<p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트 144개를 AAOS 에뮬레이터와 화웨이 태블릿에서 돌리고, 2026-11-23에는 갤럭시 폴드를 세 번째 기기로 붙였습니다. 에뮬레이터에서는 CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다. 실제 차량, HIL, CAN 장비는 쓰지 않았습니다.</p>
 <h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
 <ul>
 <li>경력: 게임 QA 8년차(2017.12부터 약 7년 8개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&amp;D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩(코드는 AI가 작성)으로 만들었습니다. 게임 QA에서 쓰던 BVT 문서 양식을 바탕으로 엑셀 BVT 문서를 브랜치·플랫폼별로 관리하는 대시보드에 Playwright·pytest UI 자동화를 붙여, 공개 웹 서비스(타입캐스트)의 BVT 70개 중 47개를 Chrome에서 한 번에 약 6분에 돌리고, 실패하면 화면·녹화·메시지를 남깁니다(2026-11-03 실행). Jira 처리량 캘린더와 Claude로 검수 리포트·이슈 초안을 만드는 TC 관리 도구(Bugspeaker Zone)도 바이브 코딩으로 만들어 업무에 씁니다. 모바일 자동화는 Appium으로 실습해 본 경험이 있고, 이 프로젝트에서 AAOS까지 넓혀 게이트, 반복 실행, CI를 갖춘 업무 수준으로 적용했습니다.</li>
@@ -165,6 +165,21 @@
 </tbody></table></div>
 <h4 id="11-18-우대사항-3개가-비어-있었습니다"><a class="anchor" href="#11-18-우대사항-3개가-비어-있었습니다" aria-hidden="true">#</a>11-18 우대사항 3개가 비어 있었습니다</h4>
 <p>차량 네트워크, REST·원격 전원, 기능 안전 항목이 비어 있어 지금 방법으로는 정말 안 되는지 물었습니다. Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 &#39;일부&#39;로 표시했습니다. <a href="phase9-bench.html">9단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6" target="_blank" rel="noopener"><code>84b63d6</code></a></p>
+<h4 id="11-23-테스트-범위가-충분한지-다시-봐-달라고-했습니다"><a class="anchor" href="#11-23-테스트-범위가-충분한지-다시-봐-달라고-했습니다" aria-hidden="true">#</a>11-23 테스트 범위가 충분한지 다시 봐 달라고 했습니다</h4>
+<p>요구사항 조건, 앱의 화면 요소(testTag), 주행 중 제한의 허용 쪽, 경계값, 기기·화면, 단위 테스트 커버리지로 다시 대 보게 했습니다. 테스트가 없던 조건 2개와 화면 요소 약 30개를 찾아 E2E 11개를 더했고, 추적표 도구가 폴드 칸 때문에 멈춰 있던 것도 이때 드러나 고쳤습니다. 테스트가 늘었으니 헤드라인도 새 실행으로 바꾸자고 해서, 두 기기 × 3회를 다시 돌리고 이전 반복 자료는 그대로 남겼습니다. <a href="#4-4-테스트-범위-점검">4-4</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/55419f7" target="_blank" rel="noopener"><code>55419f7</code></a></p>
+<h4 id="11-23-aaos-qa-자료를-찾아-더-볼-곳이-있는지-물었습니다"><a class="anchor" href="#11-23-aaos-qa-자료를-찾아-더-볼-곳이-있는지-물었습니다" aria-hidden="true">#</a>11-23 AAOS QA 자료를 찾아 더 볼 곳이 있는지 물었습니다</h4>
+<p>AOSP의 주행 중 UX 제한 문서와 차량 앱 품질 기준을 찾아보고, 에뮬레이터에서 후보 12가지를 직접 돌려 봤습니다. 그중 UX 제한 설정을 읽다가 D 기어로 멈춰 있을 때(신호 대기) 플랫폼은 영상만 막는데, AAOS 앱은 검색까지 막고 태블릿은 영상을 막지 않는 결함을 찾았습니다. 규칙은 플랫폼을 따르기로 정했고, 앱이 제한 종류를 보고 막게 고쳤습니다(앱 0.4.2). <a href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">3장 13번</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/de9d062" target="_blank" rel="noopener"><code>de9d062</code></a></p>
+<div class="table"><table><thead><tr>
+<th>전 (0.4.1, D 기어 0 km/h)</th>
+<th>후 (0.4.2, D 기어 0 km/h)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/fqa/1123-stopped-before.png" width="400" alt="수정 전: D 기어 0 km/h에서 '주행 중 · 일부 기능 제한' 배지와 '주행 중 검색 제한'"></td>
+<td><img src="../../docs/images/fqa/1123-stopped-after.png" width="400" alt="수정 후: D 기어 0 km/h에서 '정지 중 · 영상만 제한' 배지, 검색 칸은 '어디로 갈까요?'로 쓸 수 있음"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-23-0-kmh-한-점만-볼-것-같아-시간을-바꿔-가며-보자고-했습니다"><a class="anchor" href="#11-23-0-kmh-한-점만-볼-것-같아-시간을-바꿔-가며-보자고-했습니다" aria-hidden="true">#</a>11-23 0 km/h 한 점만 볼 것 같아 시간을 바꿔 가며 보자고 했습니다</h4>
+<p>속도와 기어를 시간에 따라 바꾸는 신호 대기 시나리오 테스트를 더했습니다. P → D 정지(3초) → 3 km/h(2초) → 정지(3초) → 60 km/h(3초) → N 정지(2초) → P 순서로, 단계마다 UX 제한, 검색 입력, 상단 배지가 바로 바뀌는지 보고 머무는 동안 흔들리지 않는지 봅니다. 신호를 넣고 화면이 따라오기까지 걸린 시간을 결과에 남겨, 마지막 반복에서 세 기기 모두 단계마다 0.2~0.9초였습니다. <a href="test-results.html#test_restrictions_follow_stop_and_go_timeline"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></p>
 <p>지적은 대부분 외부 검토(AI 검토 포함)와 기기 실행에서 나왔습니다. 지적마다 반영할지는 제가 정했고, 반영한 것은 위처럼 코드와 기록으로 남겼습니다. 같은 종류의 실수가 다시 들어오지 않도록 링크 검사, 추적 검사, 게이트 조건을 CI와 게이트에 넣었습니다.</p>
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
@@ -173,23 +188,23 @@
 </tr>
 </thead><tbody><tr>
 <td class="nw">AAOS 에뮬레이터</td>
-<td>138개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (3회차 11분 38초)</td>
+<td>142개 통과, 1개 건너뜀, 1개 알려진 결함, 재시도 0 (3회차 12분 10초)</td>
 </tr>
 <tr>
 <td>화웨이 태블릿 (Mock)</td>
-<td>132개 통과, AAOS 전용 8개 건너뜀, 재시도 0 (3회차 11분 56초). 차량 값은 앱 안 Mock이라 화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기이고, VHAL 경로는 AAOS에서만 확인합니다</td>
+<td>132개 통과, AAOS 전용 8개 건너뜀, 재시도 0 (3회차 12분 41초). 차량 값은 앱 안 Mock이라 화면 동작과 실기기 문제(터치 지연, 백그라운드 강제 종료)를 보는 기기이고, VHAL 경로는 AAOS에서만 확인합니다</td>
 </tr>
 <tr>
 <td class="nw">두 기기 병렬</td>
-<td>같은 시각에 시작해 끝까지 11분 58초. 차례로 돌렸다면 약 23분 35초 (3회차)</td>
+<td>같은 시각에 시작해 끝까지 12분 43초. 차례로 돌렸다면 약 24분 52초 (3회차)</td>
 </tr>
 <tr>
 <td class="nw">반복 실행</td>
-<td>2026-11-23 테스트 140개로 두 기기에서 3회씩, 테스트 813건(AAOS 417, 태블릿 396) 실행. 기기 전용이라 건너뛴 것은 빼고, 알려진 결함으로 xfail된 3건은 넣은 수입니다. 재시도로 통과한 것(flaky) 0건, 실패 0건, Release 게이트 여섯 조건을 <code>--commit 55419f7</code>로 통과. 같은 커밋으로 갤럭시 폴드도 한 번 돌려 132개 통과(AAOS 전용 8개 건너뜀). 이전에는 2026-11-21에 129개로 3회 750건, 2026-11-18에 그때 코드로 5회 1,250건이 모두 flaky 0, 실패 0이었습니다 (<a href="flaky-report.html">반복 실행 통계와 원자료</a>)</td>
+<td>2026-11-23 저녁, 정지 상태 결함을 고친 앱 0.4.2와 테스트 144개로 두 기기에서 3회씩, 테스트 837건(AAOS 429, 태블릿 408) 실행. 기기 전용이라 건너뛴 것은 빼고, 알려진 결함으로 xfail된 3건은 넣은 수입니다. 재시도로 통과한 것(flaky) 0건, 실패 0건, Release 게이트 여섯 조건을 <code>--commit de9d062</code>로 통과. 같은 커밋으로 갤럭시 폴드도 한 번 돌려 136개 통과(AAOS 전용 8개 건너뜀). 이전에는 같은 날 오후 140개(앱 0.4.1)로 3회 813건, 2026-11-21에 129개로 3회 750건, 2026-11-18에 그때 코드로 5회 1,250건이 모두 flaky 0, 실패 0이었습니다 (<a href="flaky-report.html">반복 실행 통계와 원자료</a>)</td>
 </tr>
 <tr>
 <td class="nw">단위 테스트</td>
-<td>프레임워크 185개, 앱 26개 모두 통과</td>
+<td>프레임워크 195개, 앱 33개 모두 통과</td>
 </tr>
 <tr>
 <td class="nw">테스트별 결과</td>
@@ -197,7 +212,7 @@
 </tr>
 <tr>
 <td class="nw">요구사항 추적</td>
-<td>요구사항 26개 ↔ 테스트 함수 111개(매개변수 조합까지 140개), 조건 33개 모두 확인하는 테스트가 있습니다. 빠진 곳이 있으면 CI의 unit job이 실패합니다: <a href="traceability.html">추적표</a></td>
+<td>요구사항 26개 ↔ 테스트 함수 114개(매개변수 조합까지 144개), 조건 36개 모두 확인하는 테스트가 있습니다. 빠진 곳이 있으면 CI의 unit job이 실패합니다: <a href="traceability.html">추적표</a></td>
 </tr>
 <tr>
 <td>GitHub Actions</td>
@@ -275,11 +290,11 @@
 </tr>
 <tr>
 <td>Android/AAOS 자동화 구축과 운영</td>
-<td>AAOS 에뮬레이터와 실제 태블릿에서 E2E 140개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 판정 직후 화면도 남깁니다.</td>
+<td>AAOS 에뮬레이터와 실제 태블릿에서 E2E 144개를 돌리고, 결과를 누적해서 기록합니다. 테스트마다 판정 직후 화면도 남깁니다.</td>
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
-<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 185개 있습니다.</td>
+<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 195개 있습니다.</td>
 </tr>
 <tr>
 <td>Appium 등 UI 자동화 도구</td>
@@ -431,6 +446,13 @@
 <td>거의 가려진 요소는 스크롤해 보이게 하고, 그래도 가려져 있으면 누르지 않고 실패로 남기게 고쳤습니다.</td>
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/44" target="_blank" rel="noopener">#44</a></td>
 </tr>
+<tr>
+<td class="nw">13</td>
+<td>D 기어로 멈춰 있을 때(신호 대기) AAOS 앱은 내비 검색과 키패드까지 막고, 태블릿은 영상을 막지 않았습니다.</td>
+<td>앱이 플랫폼의 제한 종류를 보지 않고 &#39;제한 있음&#39; 하나로 판단했고, Mock은 속도가 0보다 클 때만 제한했습니다. 요구사항도 정차(P)와 정지(D, 0 km/h)를 나누지 않았습니다.</td>
+<td>앱이 제한 종류(영상, 글자 입력, 키패드, 목록 길이)를 보고 막게 하고, Mock도 플랫폼과 같은 표를 쓰게 했습니다(앱 0.4.2). 시간에 따라 속도를 바꾸는 신호 대기 시나리오를 포함한 E2E 4개를 더했습니다.</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a></td>
+</tr>
 </tbody></table></div>
 <details>
 <summary>1번. 탭 한 번에 10초가 걸렸습니다</summary>
@@ -559,6 +581,38 @@
 <td><img src="../../docs/images/fold/radio-after.png" width="300" alt="수정 후 라디오: 아래 줄에 ⏮, -, +, ⏭ 네 버튼이 모두 보임"></td>
 </tr>
 </tbody></table></div>
+<h3 id="플랫폼-설정을-읽다-찾은-정지-상태-결함"><a class="anchor" href="#플랫폼-설정을-읽다-찾은-정지-상태-결함" aria-hidden="true">#</a>플랫폼 설정을 읽다 찾은 정지 상태 결함</h3>
+<p>2026-11-23에 AAOS 테스트 자료를 찾아보고 에뮬레이터의 UX 제한 설정을 읽었습니다. 플랫폼은 P가 아닌 채 멈춰 있으면(idling) 영상만 막는데(<code>0x10</code>), 앱은 두 기기에서 서로 다르게, 둘 다 플랫폼과 다르게 동작했습니다. 위 표의 13번(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a>)이고, 원자료는 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-idling/README.md">정지 상태 기록</a>에 있습니다.</p>
+<div class="table"><table><thead><tr>
+<th>상태</th>
+<th>플랫폼 UX 제한</th>
+<th>수정 전 AAOS 앱</th>
+<th>수정 전 태블릿</th>
+<th>수정 후 (두 기기)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">P</td>
+<td>없음 (<code>0x0</code>)</td>
+<td>제한 없음</td>
+<td>제한 없음</td>
+<td>제한 없음</td>
+</tr>
+<tr>
+<td class="nw">D·N, 0 km/h</td>
+<td>영상만 (<code>0x10</code>)</td>
+<td>전부 막음</td>
+<td>아무것도 막지 않음</td>
+<td>영상만 막음</td>
+</tr>
+<tr>
+<td class="nw">D, 0 km/h 초과</td>
+<td>전부 (<code>0xff</code>)</td>
+<td>전부 막음</td>
+<td>전부 막음</td>
+<td>전부 막음</td>
+</tr>
+</tbody></table></div>
+<p>앱은 기어와 속도가 아니라 플랫폼이 알려 준 제한 종류를 보고 막게 고쳤습니다. AOSP 문서도 시장마다 제한이 다를 수 있으니 주행 상태가 아니라 제한 정보를 보라고 권합니다. 테스트는 0 km/h 한 점만 보지 않도록, P → D 정지 → 3 km/h → 정지 → 60 km/h → N 정지 → P를 단계마다 2~3초씩 유지하며 제한과 화면이 바로 바뀌고 흔들리지 않는지 봅니다.</p>
 <hr>
 <h2 id="4-검증-전략"><a class="anchor" href="#4-검증-전략" aria-hidden="true">#</a>4. 검증 전략</h2>
 <h3 id="4-1-게이트-단계와-기준"><a class="anchor" href="#4-1-게이트-단계와-기준" aria-hidden="true">#</a>4-1. 게이트 단계와 기준</h3>
@@ -570,7 +624,7 @@
 <th>통과 조건</th>
 </tr>
 </thead><tbody><tr>
-<td class="nw"><strong>unit</strong><br>185개</td>
+<td class="nw"><strong>unit</strong><br>195개</td>
 <td>테스트 도구 자체가 맞는지 봅니다(기기 없이).</td>
 <td>약 20초</td>
 <td>모든 PR, push</td>
@@ -591,9 +645,9 @@
 <td>failed, error 0. 재시도로 통과한 것은 flaky로 기록합니다.</td>
 </tr>
 <tr>
-<td><strong>regression</strong><br>96개</td>
+<td><strong>regression</strong><br>100개</td>
 <td>경계값, 조합, 예전 결함의 재발, 대표가 아닌 경로를 봅니다.</td>
-<td>약 8분~8분 50초</td>
+<td>약 8분 40초~9분 30초</td>
 <td>Nightly</td>
 <td>위와 같습니다.</td>
 </tr>
@@ -605,21 +659,21 @@
 <td>알려진 결함은 strict xfail로 둡니다.</td>
 </tr>
 <tr>
-<td class="nw"><strong>Release</strong><br>140개</td>
+<td class="nw"><strong>Release</strong><br>144개</td>
 <td>전체를 반복해서 돌립니다.</td>
-<td>약 10분 15초~11분 25초<br>× 반복</td>
+<td>약 11분~12분<br>× 반복</td>
 <td>릴리스 후보</td>
 <td>아래 여섯 가지 조건</td>
 </tr>
 </tbody></table></div>
-<p>시간은 테스트마다 잰 시간의 합입니다. regression과 Release는 2026-11-23 140개 실행(두 기기 × 3회), smoke와 sanity는 개수가 그대로라 2026-11-18 값입니다.</p>
+<p>시간은 테스트마다 잰 시간의 합입니다. regression과 Release는 2026-11-23 저녁 144개 실행(두 기기 × 3회), smoke와 sanity는 개수가 그대로라 2026-11-18 값입니다.</p>
 <p>Release 후보는 <code>workflow_<wbr>dispatch</code>로 markers를 비우고 repeat 3으로 돌립니다. 반복이 끝나면 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/tools/release_gate.py"><code>tools/<wbr>release_<wbr>gate.<wbr>py</code></a>가 이번 실행의 결과 파일(<code>reports/<wbr>runs/<wbr>*.<wbr>json</code>)을 읽어 아래 여섯 조건을 확인하고, 하나라도 어기면 이유를 출력하고 실패합니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/.github/workflows/ivi-ci.yml">ivi-ci.yml</a>의 &#39;Release 게이트&#39; 단계). 조건마다 통과 사례와 막는 사례를 단위 테스트로 확인했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/unit/test_release_gate.py"><code>unit/<wbr>test_<wbr>release_<wbr>gate.<wbr>py</code></a>).</p>
 <div class="table"><table><thead><tr>
 <th>조건</th>
 <th>검사하는 곳</th>
 </tr>
 </thead><tbody><tr>
-<td>1. 실행 완전성. 회차마다 필수 기기(AAOS, 태블릿)의 결과가 모두 있고, 각 결과에 지금 코드에서 수집한 테스트 140개가 빠짐없이 판정과 함께 있으며, pytest 종료 코드가 0이어야 합니다. 건너뜀은 기기 전용 마커(<code>aaos</code>, <code>tablet</code>)로 정한 것만 받습니다. 같은 회차·기기의 결과가 둘이거나 같은 테스트가 두 번 있으면 막습니다. 결과에 적힌 APK가 회차·기기마다 같아야 합니다. CI에서는 모든 결과가 이번 커밋에서, 커밋하지 않은 변경 없이 돈 것이어야 합니다.</td>
+<td>1. 실행 완전성. 회차마다 필수 기기(AAOS, 태블릿)의 결과가 모두 있고, 각 결과에 지금 코드에서 수집한 테스트 144개가 빠짐없이 판정과 함께 있으며, pytest 종료 코드가 0이어야 합니다. 건너뜀은 기기 전용 마커(<code>aaos</code>, <code>tablet</code>)로 정한 것만 받습니다. 같은 회차·기기의 결과가 둘이거나 같은 테스트가 두 번 있으면 막습니다. 결과에 적힌 APK가 회차·기기마다 같아야 합니다. CI에서는 모든 결과가 이번 커밋에서, 커밋하지 않은 변경 없이 돈 것이어야 합니다.</td>
 <td><code>release_gate.py</code>가 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/tools/collect_tests.py"><code>tools/<wbr>collect_<wbr>tests.<wbr>py</code></a>로 테스트 목록을 기기 없이 다시 모아 결과와 맞춥니다. 결과 파일의 목록만 보면 <code>-m smoke</code>로 일부만 돌렸거나 중간에 멈춘 실행을 알 수 없기 때문입니다.</td>
 </tr>
 <tr>
@@ -680,7 +734,7 @@
 <td><strong>미디어</strong><br>MEDIA-01, 02<br>DRIVE-02</td>
 <td>주행 중에 영상이 재생되거나(운전자 주의 분산), 소리가 겹칠 수 있습니다.</td>
 <td><strong>신호→화면</strong> 주행 중에는 영상을 막고, 정차하면 이어 보는지 봅니다.<br><strong>앱 안</strong> 음악, 라디오, 통화가 한 번에 하나만 소리를 내는지 봅니다.</td>
-<td>0 / 4 / 18</td>
+<td>0 / 4 / 22</td>
 <td>실제 스피커 출력, 블루투스 기기, 차량 오디오 시스템</td>
 </tr>
 </tbody></table></div>
@@ -694,21 +748,21 @@
 </tr>
 </thead><tbody><tr>
 <td class="nw">1. 앱 단위 테스트</td>
-<td>JVM 테스트 (<code>HvacSpecTest</code>, <code>CabinAssistantTest</code>, <code>ScreenSizeTest</code>)</td>
-<td>공조 값의 범위와 단계 규칙, 말 → 동작 규칙, 화면 크기별 배치 등급</td>
-<td>26개<br>PR마다 GitHub에서</td>
+<td>JVM 테스트 (<code>HvacSpecTest</code>, <code>CabinAssistantTest</code>, <code>ScreenSizeTest</code>, <code>UxRulesTest</code>)</td>
+<td>공조 값의 범위와 단계 규칙, 말 → 동작 규칙, 화면 크기별 배치 등급, 주행 중 제한 표</td>
+<td>33개<br>PR마다 GitHub에서</td>
 </tr>
 <tr>
 <td>2. 프레임워크 단위 테스트</td>
 <td>기기 없이 pytest (<code>ivi-tests/unit</code>)</td>
 <td>어댑터 명령 조립, 대기와 판정, 크래시 판정, Release 게이트 규칙, 요구사항 추적, 문서 링크</td>
-<td>185개<br>PR마다 GitHub에서</td>
+<td>195개<br>PR마다 GitHub에서</td>
 </tr>
 <tr>
 <td>3. 에뮬레이터·태블릿 E2E</td>
 <td>AAOS 에뮬레이터(CarService, 가상 VHAL)와 태블릿(앱 안 Mock 차량)</td>
 <td>화면 ↔ 차량 신호, 위 표의 서비스별 위험</td>
-<td>140개 × 2기기<br>Test Bench(작업 PC)에서</td>
+<td>144개 × 2기기<br>Test Bench(작업 PC)에서</td>
 </tr>
 <tr>
 <td class="nw">4. HIL, 실차</td>
@@ -807,7 +861,7 @@
 <td>도구를 고치고, 추적표가 코드와 다르면 unit job이 실패하게 했습니다.</td>
 </tr>
 </tbody></table></div>
-<p>조건 표는 27개에서 33개가 됐고 테스트가 없는 조건은 0개입니다. E2E는 129개에서 140개(regression 85 → 96)가 됐습니다. 앱의 <code>CabinController</code> 규칙을 JVM 단위 테스트로 옮기는 것은 앱 코드를 고쳐야 해서 남겼습니다. 점검 표와 기기별 결과는 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">원자료</a>에 있습니다.</p>
+<p>조건 표는 27개에서 33개가 됐고 테스트가 없는 조건은 0개입니다. E2E는 129개에서 140개(regression 85 → 96)가 됐습니다. 같은 날 저녁 AAOS 자료를 더 찾아보다 정지 상태 결함(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a>)을 찾아, 조건 3개와 E2E 4개를 더 넣어 지금은 조건 36개, E2E 144개입니다. 앱의 <code>CabinController</code> 규칙을 JVM 단위 테스트로 옮기는 것은 앱 코드를 고쳐야 해서 남겼습니다. 점검 표와 기기별 결과는 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">원자료</a>에 있습니다.</p>
 <hr>
 <h2 id="5-e2e-테스트-설계"><a class="anchor" href="#5-e2e-테스트-설계" aria-hidden="true">#</a>5. E2E 테스트 설계</h2>
 <h3 id="5-1-양방향-검증과-area-단위-판정"><a class="anchor" href="#5-1-양방향-검증과-area-단위-판정" aria-hidden="true">#</a>5-1. 양방향 검증과 area 단위 판정</h3>
@@ -1088,8 +1142,8 @@
 <li><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a>는 기기마다 기대값이 다릅니다. AAOS는 VHAL에 범위 밖 값을 바로 넣어 화면이 15.5°C를 그대로 보여 주는지, ▲ 한 번에 차량 값이 16.0°C가 되는지 봅니다. 태블릿의 Mock 차량은 받은 값을 16.0~28.0°C로 잘라 두므로 15.5°C는 16.0°C가 되고, ▲ 한 번에 16.5°C가 되는지만 봅니다. 범위 밖 값 표시는 AAOS에서만 확인한 것입니다.</li>
 <li>테스트 쪽 차량 어댑터는 좌석 area를 에뮬레이터 값으로 고정했습니다(<code>SEAT_AREAS</code>, <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/ivi-tests/ivi/vehicle.py"><code>ivi/vehicle.py</code></a>). 앱이 <code>CarPropertyConfig</code>에서 읽은 area와 출처가 다른 기대값으로 두어, 설정이 틀렸을 때 앱과 테스트가 같이 틀리지 않게 하려는 것입니다. 다른 차종에서는 <code>cmd car_<wbr>service get-property-config</code>로 읽은 area와 이 목록을 먼저 맞춰 봐야 합니다.</li>
 <li>앱의 온도 범위(16.0~28.0°C)와 0.5°C 증분은 앱 코드(<code>HvacSpec</code>)에 고정했습니다. 좌석 area는 <code>CarPropertyConfig</code>에서 읽지만 범위와 증분은 읽지 않습니다. 차종마다 다르면 area별 최소·최대 값과 <code>HVAC_<wbr>TEMPERATURE_<wbr>SET</code>의 <code>configArray</code>에서 읽어야 합니다.</li>
-<li>반복 실행은 2026-11-18 5회, 11-21 3회, 11-23 3회이고 모두 같은 PC입니다. 기간에 걸친 flaky 추세는 아직 없습니다.</li>
-<li>위 E2E 결과는 2026-11-23 커밋 <code>55419f7</code>로 돌린 것입니다(두 기기 × 3회와 폴드 1회, 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK, 종료 코드 기록, 앱 0.4.1). 그 뒤에 바뀐 것은 문서, 사이트, 결과 자료입니다. 이전 실행들의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">원자료 목록</a>에 있습니다.</li>
+<li>반복 실행은 2026-11-18 5회, 11-21 3회, 11-23 두 번(각 3회)이고 모두 같은 PC입니다. 기간에 걸친 flaky 추세는 아직 없습니다.</li>
+<li>위 E2E 결과는 2026-11-23 커밋 <code>de9d062</code>로 돌린 것입니다(두 기기 × 3회와 폴드 1회, 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK, 종료 코드 기록, 앱 0.4.2). 그 뒤에 바뀐 것은 문서, 사이트, 결과 자료입니다. 이전 실행들의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">원자료 목록</a>에 있습니다.</li>
 <li>2026-11-21 첫 반복에서 전원 테스트가 다시 켠 에뮬레이터를 기다리다 실패했습니다. PC 화면이 꺼진 상태에서 창 모드로 켠 에뮬레이터가 멈춘 것이라 창 없이 켜게 고쳤습니다. 재시도는 꺼진 에뮬레이터를 켜지 못하는 약점(AVD 이름을 켜진 에뮬레이터에서만 읽음)은 남아 있습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md#첫-시도-전원-테스트가-멈춘-에뮬레이터를-기다리다-실패">원자료</a>).</li>
 <li>막 켠 AAOS 에뮬레이터에서 UiAutomator2 계측 프로세스가 스스로 죽는 원인은 확인하지 못했습니다(2026-11-19, 11-20 두 번). 세션을 다시 붙여 그 뒤 테스트는 이어지지만, 그때 돌던 테스트는 재시도에서야 통과합니다.</li>
 <li>사이드 미러, 트렁크, 차일드 락, 실내등, 전조등은 차량 신호에 연결하지 않은 화면 상태입니다.</li>
@@ -1185,7 +1239,7 @@
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l3" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l3" href="#4-4-테스트-범위-점검">4-4. 테스트 범위 점검</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l3" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</a><a class="l3" href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">플랫폼 설정을 읽다 찾은 정지 상태 결함</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l3" href="#4-4-테스트-범위-점검">4-4. 테스트 범위 점검</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

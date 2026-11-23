@@ -62,15 +62,15 @@
 <th align="center">테스트에서 나온 문제</th>
 </tr>
 </thead><tbody><tr>
-<td align="center"><strong>140개</strong></td>
-<td align="center"><strong>813건 중 실패 0</strong></td>
-<td align="center"><strong>약 12분</strong></td>
-<td align="center"><strong>14건</strong></td>
+<td align="center"><strong>144개</strong></td>
+<td align="center"><strong>837건 중 실패 0</strong></td>
+<td align="center"><strong>약 13분</strong></td>
+<td align="center"><strong>15건</strong></td>
 </tr>
 <tr>
 <td align="center">두 기기에서 같은 테스트 코드</td>
 <td align="center">두 기기 × 3회 (2026-11-23)<br>재시도로 통과한 것도 0건</td>
-<td align="center">차례로 돌리면 약 24분</td>
+<td align="center">차례로 돌리면 약 25분</td>
 <td align="center">원인과 조치를 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue" target="_blank" rel="noopener">이슈</a>로 기록</td>
 </tr>
 </tbody></table></div>
@@ -82,8 +82,8 @@
 <th>도구에 더한 것</th>
 </tr>
 </thead><tbody><tr>
-<td>차례로 돌리면 약 24분 걸렸습니다.</td>
-<td>두 기기를 병렬로 돌려 약 12분으로 줄였습니다.</td>
+<td>차례로 돌리면 약 25분 걸렸습니다.</td>
+<td>두 기기를 병렬로 돌려 약 13분으로 줄였습니다.</td>
 </tr>
 <tr>
 <td>재시도 통과가 흔들림을 가렸습니다.</td>
@@ -110,6 +110,10 @@
 <td>조건, 화면 요소, 경계값으로 다시 점검해 테스트 11개를 더했습니다.</td>
 </tr>
 <tr>
+<td>D 기어로 멈춰 있을 때 기기마다 제한이 달랐습니다.</td>
+<td>플랫폼이 알려 준 제한 종류를 따르게 하고, 속도를 시간에 따라 바꾸는 시나리오로 확인했습니다.</td>
+</tr>
+<tr>
 <td>좁은 폴드 화면에서 버튼이 가려졌습니다.</td>
 <td>가려진 버튼은 누르지 않고 실패로 남기게 했습니다.</td>
 </tr>
@@ -129,7 +133,11 @@
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
-<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">테스트 범위 보강과 반복 실행 3회</a><br>2026-11-23, 코드 <code>55419f7</code></td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-idling/README.md">정지 상태 결함 수정 후 반복 실행 3회</a><br>2026-11-23 저녁, 코드 <code>de9d062</code></td>
+<td>D 기어로 멈춘 상태의 제한 결함(#47)을 고친 앱 0.4.2와 테스트 144개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다. 폴드도 같은 코드로 한 번 통과했습니다.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">테스트 범위 보강과 반복 실행 3회</a><br>2026-11-23 오후, 코드 <code>55419f7</code></td>
 <td>빈 곳에 테스트 11개를 더한 140개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다. 폴드도 같은 코드로 한 번 통과했습니다.</td>
 </tr>
 <tr>
@@ -174,7 +182,7 @@ site/                 소개 사이트 (GitHub Pages)</code></pre>
 </tr>
 <tr>
 <td class="nw"><a href="test-results.html">테스트 결과</a></td>
-<td>테스트 140개의 판정과 판정 직후 화면을 보여 줍니다.</td>
+<td>테스트 144개의 판정과 판정 직후 화면을 보여 줍니다.</td>
 </tr>
 <tr>
 <td class="nw"><a href="flaky-report.html">반복 실행 통계</a></td>

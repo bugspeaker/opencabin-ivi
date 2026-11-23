@@ -38,6 +38,57 @@ D 기어, 0 km/h(VHAL에 기어 8, 속도 0을 넣음)에서 AAOS 앱은 상단�
 
 앱 JVM 테스트 `UxRulesTest` 6개와 `CabinAssistantTest`의 정지 상태 1개, 어댑터 단위 테스트 10개(`ux_restrictions()` 읽기, 기어 지정)도 더했습니다.
 
+## 수정 후 (앱 0.4.2)
+
+같은 상태(D 기어, 0 km/h)에서 상단 배지는 '정지 중 · 영상만 제한'이고, 내비 검색('어디로 갈까요?')을 쓸 수 있습니다.
+
+![수정 후 AAOS 앱: D 기어 0 km/h에서 '정지 중 · 영상만 제한', 검색 가능](images/aaos-0.4.2-stopped-in-drive.png)
+
 ## 기기 실행
 
-(실행 뒤 채웁니다)
+### 첫 확인 (AAOS 에뮬레이터)
+
+커밋 전 작업 트리에서 주행 제한과 관련된 기존 테스트 17개와 새 테스트 4개를 돌렸습니다(`20261123-ux-aaos`, [runs-first](runs-first/)). 21개 모두 통과했고, 1개(`test_driving_locks_typing_and_refuses_mirror_fold`)는 막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽어 세션을 다시 붙인 뒤 재시도에서 통과했습니다.
+
+### 두 기기 × 3회와 폴드 1회
+
+커밋 `de9d062`(커밋하지 않은 변경 없음, 앱 0.4.2 (6) APK sha256 `c977c9069411…`)에서 돌렸습니다. 태블릿은 설치할 때 기기 화면의 보안 확인을 사용자가 눌렀습니다.
+
+```powershell
+.venv\Scripts\python tools\run_bench.py --devices emulator-5554,W3VBB22125209573 --repeat 3 --reruns 1 --shots
+.venv\Scripts\python -m pytest --serial R38M309YKQY --reruns 1 --shots --run-id 20261123-fold-144
+```
+
+| 회차 (run id) | AAOS 에뮬레이터 | 태블릿 (Mock) | 병렬 실행 |
+|---|---|---|---|
+| `20261123-211828-r1` | 142 통과, 1 건너뜀, 1 알려진 결함 (738초) | 136 통과, 8 건너뜀 (769초) | 770초 |
+| `20261123-213119-r2` | 142 통과, 1 건너뜀, 1 알려진 결함 (739초) | 136 통과, 8 건너뜀 (769초) | 770초 |
+| `20261123-214409-r3` | 142 통과, 1 건너뜀, 1 알려진 결함 (730초) | 136 통과, 8 건너뜀 (761초) | 763초 |
+| `20261123-fold-144` (폴드, 따로 1회) | | 갤럭시 폴드: 136 통과, 8 건너뜀 (763초) | |
+
+- 실행한 테스트 837건(AAOS 429건, 태블릿 408건), 재시도 0번, flaky 0건, 실패 0건, 세션 재연결 0번입니다([runs](runs/), [runs-fold](runs-fold/)).
+- Release 게이트 여섯 조건을 `--commit de9d062`로 확인해 모두 통과했습니다([release-gate.txt](release-gate.txt)). 폴드 1회도 따로 확인해 통과했습니다([release-gate-fold.txt](release-gate-fold.txt)).
+- 신호 대기 시나리오에서 신호를 넣고 화면이 따라오기까지 걸린 시간(3회차, 단계 순서대로)입니다. 세 기기 모두 단계마다 1초 안이었습니다.
+
+| 기기 | P | D 정지 | 3 km/h | 정지 | 60 km/h | N 정지 | P |
+|---|---|---|---|---|---|---|---|
+| AAOS 에뮬레이터 | 0.2초 | 0.6초 | 0.6초 | 0.2초 | 0.2초 | 0.7초 | 0.6초 |
+| 태블릿 | 0.3초 | 0.4초 | 0.3초 | 0.4초 | 0.4초 | 0.4초 | 0.4초 |
+| 갤럭시 폴드 | 0.4초 | 0.4초 | 0.9초 | 0.4초 | 0.4초 | 0.4초 | 0.5초 |
+
+- [결과 페이지](../../test-results.md)의 판정과 화면은 3회차와 폴드 1회입니다. 영상 화면 세 장(`test_video_resumes_where_it_stopped`)은 앞차 번호판을 흐리게 해서 올렸습니다.
+
+다시 세는 방법 (`ivi-tests`에서):
+
+```powershell
+.venv\Scripts\python tools\flaky_report.py --runs-dir ..\docs\evidence\2026-11-23-idling\runs
+.venv\Scripts\python tools\release_gate.py --runs-dir ..\docs\evidence\2026-11-23-idling\runs --expect 3 --commit de9d062
+```
+
+## 이 실행 뒤에 바뀐 것
+
+이 실행 뒤의 커밋은 문서, 소개 사이트, 결과 자료입니다. E2E 테스트 코드(`ivi-tests/tests`, `ivi-tests/ivi`)와 앱(`ivi-app`)은 `de9d062`와 같습니다.
+
+```powershell
+git diff --stat de9d062 HEAD -- ivi-tests/tests ivi-tests/ivi ivi-app
+```
