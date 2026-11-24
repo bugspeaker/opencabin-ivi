@@ -49,22 +49,22 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 </thead><tbody><tr>
 <td class="nw">요구사항</td>
-<td>26개</td>
+<td>27개</td>
 </tr>
 <tr>
 <td class="nw">테스트가 있는 요구사항</td>
-<td>26개</td>
+<td>27개</td>
 </tr>
 <tr>
 <td class="nw">테스트 함수</td>
-<td>114개</td>
+<td>119개</td>
 </tr>
 <tr>
 <td class="nw">요구사항이 없는 테스트</td>
 <td>0개</td>
 </tr>
 </tbody></table></div>
-<p>&#39;요구사항이 없는 테스트 0개&#39;, &#39;테스트가 있는 요구사항 26개&#39;는 요구사항 ID 연결이 빠지지 않았다는 수치입니다. 조건별 검증이 충분하다거나 표준(ISO 26262, A-SPICE)을 지켰다는 뜻은 아닙니다. 조건별로 어디까지 확인했는지는 아래 &#39;복합 요구사항&#39; 표에 있습니다.</p>
+<p>&#39;요구사항이 없는 테스트 0개&#39;, &#39;테스트가 있는 요구사항 27개&#39;는 요구사항 ID 연결이 빠지지 않았다는 수치입니다. 조건별 검증이 충분하다거나 표준(ISO 26262, A-SPICE)을 지켰다는 뜻은 아닙니다. 조건별로 어디까지 확인했는지는 아래 &#39;복합 요구사항&#39; 표에 있습니다.</p>
 <p>결과 열은 결과 페이지에 실은 최신 실행이고, parametrize 케이스까지 센 것입니다. 알려진 결함은 플랫폼(AAOS SystemUI) 쪽 문제라 xfail로 걸어 둔 결함이고, 건너뜀은 그 기기에서 의미가 없는 테스트입니다. &#39;결과 없는 테스트&#39;는 그 실행 뒤에 더해서 결과 페이지에 아직 결과가 없는 테스트입니다.</p>
 <h2 id="요구사항에서-테스트로"><a class="anchor" href="#요구사항에서-테스트로" aria-hidden="true">#</a>요구사항에서 테스트로</h2>
 <div class="table"><table><thead><tr>
@@ -84,6 +84,15 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td>4/4 통과</td>
 <td>3/4 통과<br>건너뜀 1</td>
 <td>3/4 통과<br>건너뜀 1</td>
+</tr>
+<tr>
+<td class="nw">SYS-02</td>
+<td>한 기능(음악, 경로 안내, 통화)이 도는 동안 다른 기능(공조, 주행)을 조작해도 앞 기능의 상태는 그대로입니다. 화면 조작과 차량 쪽 변경이 겹쳐도 화면과 차량 신호는 같은 값으로 끝나고, 버튼을 빠르게 눌러도 누른 만큼 바뀝니다.</td>
+<td>기능 (동시 조작)</td>
+<td><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code><br><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code><br><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code><br><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied</code><br><code>test_<wbr>screen_<wbr>and_<wbr>vehicle_<wbr>changes_<wbr>at_<wbr>once_<wbr>end_<wbr>in_<wbr>same_<wbr>value</code></td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
 </tr>
 <tr>
 <td class="nw">UI-01</td>
@@ -125,19 +134,19 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td class="nw">HVAC-01</td>
 <td>운전석과 조수석 온도는 화면과 차량 신호가 같은 값을 가집니다. 한쪽이 바뀌면 다른 쪽이 따라옵니다.</td>
 <td>기능</td>
-<td><a class="test-link" href="test-results.html#test_bottom_bar_temperature_drives_vehicle" title="테스트 결과와 화면 보기"><code>test_<wbr>bottom_<wbr>bar_<wbr>temperature_<wbr>drives_<wbr>vehicle</code></a><br><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_<wbr>button_<wbr>changes_<wbr>signal_<wbr>by_<wbr>one_<wbr>step</code></a><br><a class="test-link" href="test-results.html#test_climate_button_goes_out_on_can" title="테스트 결과와 화면 보기"><code>test_<wbr>climate_<wbr>button_<wbr>goes_<wbr>out_<wbr>on_<wbr>can</code></a><br><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_<wbr>hvac_<wbr>is_<wbr>controllable</code></a><br><a class="test-link" href="test-results.html#test_seats_are_independent" title="테스트 결과와 화면 보기"><code>test_<wbr>seats_<wbr>are_<wbr>independent</code></a><br><a class="test-link" href="test-results.html#test_signal_is_shown_on_climate_and_home" title="테스트 결과와 화면 보기"><code>test_<wbr>signal_<wbr>is_<wbr>shown_<wbr>on_<wbr>climate_<wbr>and_<wbr>home</code></a><br><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_<wbr>typed_<wbr>command_<wbr>sets_<wbr>vehicle_<wbr>temperature</code></a><br><a class="test-link" href="test-results.html#test_voice_sets_driver_temperature_on_vehicle" title="테스트 결과와 화면 보기"><code>test_<wbr>voice_<wbr>sets_<wbr>driver_<wbr>temperature_<wbr>on_<wbr>vehicle</code></a><br><a class="test-link" href="test-results.html#test_zone_applies_command_to_speaking_seat" title="테스트 결과와 화면 보기"><code>test_<wbr>zone_<wbr>applies_<wbr>command_<wbr>to_<wbr>speaking_<wbr>seat</code></a></td>
-<td>14/14 통과</td>
-<td>14/14 통과</td>
-<td>14/14 통과</td>
+<td><a class="test-link" href="test-results.html#test_bottom_bar_temperature_drives_vehicle" title="테스트 결과와 화면 보기"><code>test_<wbr>bottom_<wbr>bar_<wbr>temperature_<wbr>drives_<wbr>vehicle</code></a><br><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_<wbr>button_<wbr>changes_<wbr>signal_<wbr>by_<wbr>one_<wbr>step</code></a><br><a class="test-link" href="test-results.html#test_climate_button_goes_out_on_can" title="테스트 결과와 화면 보기"><code>test_<wbr>climate_<wbr>button_<wbr>goes_<wbr>out_<wbr>on_<wbr>can</code></a><br><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code><br><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code><br><a class="test-link" href="test-results.html#test_hvac_is_controllable" title="테스트 결과와 화면 보기"><code>test_<wbr>hvac_<wbr>is_<wbr>controllable</code></a><br><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code><br><code>test_<wbr>screen_<wbr>and_<wbr>vehicle_<wbr>changes_<wbr>at_<wbr>once_<wbr>end_<wbr>in_<wbr>same_<wbr>value</code><br><a class="test-link" href="test-results.html#test_seats_are_independent" title="테스트 결과와 화면 보기"><code>test_<wbr>seats_<wbr>are_<wbr>independent</code></a><br><a class="test-link" href="test-results.html#test_signal_is_shown_on_climate_and_home" title="테스트 결과와 화면 보기"><code>test_<wbr>signal_<wbr>is_<wbr>shown_<wbr>on_<wbr>climate_<wbr>and_<wbr>home</code></a><br><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_<wbr>typed_<wbr>command_<wbr>sets_<wbr>vehicle_<wbr>temperature</code></a><br><a class="test-link" href="test-results.html#test_voice_sets_driver_temperature_on_vehicle" title="테스트 결과와 화면 보기"><code>test_<wbr>voice_<wbr>sets_<wbr>driver_<wbr>temperature_<wbr>on_<wbr>vehicle</code></a><br><a class="test-link" href="test-results.html#test_zone_applies_command_to_speaking_seat" title="테스트 결과와 화면 보기"><code>test_<wbr>zone_<wbr>applies_<wbr>command_<wbr>to_<wbr>speaking_<wbr>seat</code></a></td>
+<td>14/14 통과<br>결과 없는 테스트 4</td>
+<td>14/14 통과<br>결과 없는 테스트 4</td>
+<td>14/14 통과<br>결과 없는 테스트 4</td>
 </tr>
 <tr>
 <td class="nw">HVAC-02</td>
 <td>온도는 16.0~28.0°C 범위에서 0.5°C 단위로 바뀌고, 끝에 닿으면 그 방향 버튼이 꺼집니다. 차량 쪽에서 범위 밖 값이나 0.5°C 단위가 아닌 값이 와도 앱은 멈추지 않고 그 값을 보여 주며, 범위 밖으로 더 가는 버튼은 꺼집니다. 버튼을 누르면 범위 안의 0.5°C 단위 값으로 맞춰 차량에 씁니다.</td>
 <td>기능</td>
-<td><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_<wbr>button_<wbr>changes_<wbr>signal_<wbr>by_<wbr>one_<wbr>step</code></a><br><a class="test-link" href="test-results.html#test_buttons_disabled_at_limits" title="테스트 결과와 화면 보기"><code>test_<wbr>buttons_<wbr>disabled_<wbr>at_<wbr>limits</code></a><br><a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_<wbr>off_<wbr>grid_<wbr>signal_<wbr>steps_<wbr>back_<wbr>to_<wbr>grid</code></a><br><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a><br><a class="test-link" href="test-results.html#test_step_reaches_limit_and_disables" title="테스트 결과와 화면 보기"><code>test_<wbr>step_<wbr>reaches_<wbr>limit_<wbr>and_<wbr>disables</code></a></td>
-<td>12/12 통과</td>
-<td>12/12 통과</td>
-<td>12/12 통과</td>
+<td><a class="test-link" href="test-results.html#test_button_changes_signal_by_one_step" title="테스트 결과와 화면 보기"><code>test_<wbr>button_<wbr>changes_<wbr>signal_<wbr>by_<wbr>one_<wbr>step</code></a><br><a class="test-link" href="test-results.html#test_buttons_disabled_at_limits" title="테스트 결과와 화면 보기"><code>test_<wbr>buttons_<wbr>disabled_<wbr>at_<wbr>limits</code></a><br><a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_<wbr>off_<wbr>grid_<wbr>signal_<wbr>steps_<wbr>back_<wbr>to_<wbr>grid</code></a><br><a class="test-link" href="test-results.html#test_out_of_range_signal_is_shown_safely" title="테스트 결과와 화면 보기"><code>test_<wbr>out_<wbr>of_<wbr>range_<wbr>signal_<wbr>is_<wbr>shown_<wbr>safely</code></a><br><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied</code><br><a class="test-link" href="test-results.html#test_step_reaches_limit_and_disables" title="테스트 결과와 화면 보기"><code>test_<wbr>step_<wbr>reaches_<wbr>limit_<wbr>and_<wbr>disables</code></a></td>
+<td>12/12 통과<br>결과 없는 테스트 1</td>
+<td>12/12 통과<br>결과 없는 테스트 1</td>
+<td>12/12 통과<br>결과 없는 테스트 1</td>
 </tr>
 <tr>
 <td class="nw">HVAC-03</td>
@@ -224,28 +233,28 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td class="nw">NAV-01</td>
 <td>목적지를 찾아 안내를 시작하고, 남은 거리는 차량 속도 신호를 따라 줄며, 도착하거나 끝내면 안내를 거둡니다.</td>
 <td>기능</td>
-<td><a class="test-link" href="test-results.html#test_ambiguous_destination_offers_candidates" title="테스트 결과와 화면 보기"><code>test_<wbr>ambiguous_<wbr>destination_<wbr>offers_<wbr>candidates</code></a><br><a class="test-link" href="test-results.html#test_arrival" title="테스트 결과와 화면 보기"><code>test_arrival</code></a><br><a class="test-link" href="test-results.html#test_cancel_preview_returns_to_search" title="테스트 결과와 화면 보기"><code>test_<wbr>cancel_<wbr>preview_<wbr>returns_<wbr>to_<wbr>search</code></a><br><a class="test-link" href="test-results.html#test_category_shortcut_works_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>category_<wbr>shortcut_<wbr>works_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_guidance_counts_down_with_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>counts_<wbr>down_<wbr>with_<wbr>vehicle_<wbr>speed</code></a><br><a class="test-link" href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>card_<wbr>starts_<wbr>guidance_<wbr>to_<wbr>nearest_<wbr>charger</code></a><br><a class="test-link" href="test-results.html#test_parked_vehicle_does_not_advance_route" title="테스트 결과와 화면 보기"><code>test_<wbr>parked_<wbr>vehicle_<wbr>does_<wbr>not_<wbr>advance_<wbr>route</code></a><br><a class="test-link" href="test-results.html#test_search_filters_destinations" title="테스트 결과와 화면 보기"><code>test_<wbr>search_<wbr>filters_<wbr>destinations</code></a><br><a class="test-link" href="test-results.html#test_stop_guidance_returns_to_search_and_clears_cluster_route" title="테스트 결과와 화면 보기"><code>test_<wbr>stop_<wbr>guidance_<wbr>returns_<wbr>to_<wbr>search_<wbr>and_<wbr>clears_<wbr>cluster_<wbr>route</code></a><br><a class="test-link" href="test-results.html#test_voice_starts_guidance_home" title="테스트 결과와 화면 보기"><code>test_<wbr>voice_<wbr>starts_<wbr>guidance_<wbr>home</code></a></td>
-<td>11/11 통과</td>
-<td>11/11 통과</td>
-<td>11/11 통과</td>
+<td><a class="test-link" href="test-results.html#test_ambiguous_destination_offers_candidates" title="테스트 결과와 화면 보기"><code>test_<wbr>ambiguous_<wbr>destination_<wbr>offers_<wbr>candidates</code></a><br><a class="test-link" href="test-results.html#test_arrival" title="테스트 결과와 화면 보기"><code>test_arrival</code></a><br><a class="test-link" href="test-results.html#test_cancel_preview_returns_to_search" title="테스트 결과와 화면 보기"><code>test_<wbr>cancel_<wbr>preview_<wbr>returns_<wbr>to_<wbr>search</code></a><br><a class="test-link" href="test-results.html#test_category_shortcut_works_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>category_<wbr>shortcut_<wbr>works_<wbr>while_<wbr>driving</code></a><br><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code><br><a class="test-link" href="test-results.html#test_guidance_counts_down_with_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>counts_<wbr>down_<wbr>with_<wbr>vehicle_<wbr>speed</code></a><br><a class="test-link" href="test-results.html#test_low_range_card_starts_guidance_to_nearest_charger" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>card_<wbr>starts_<wbr>guidance_<wbr>to_<wbr>nearest_<wbr>charger</code></a><br><a class="test-link" href="test-results.html#test_parked_vehicle_does_not_advance_route" title="테스트 결과와 화면 보기"><code>test_<wbr>parked_<wbr>vehicle_<wbr>does_<wbr>not_<wbr>advance_<wbr>route</code></a><br><a class="test-link" href="test-results.html#test_search_filters_destinations" title="테스트 결과와 화면 보기"><code>test_<wbr>search_<wbr>filters_<wbr>destinations</code></a><br><a class="test-link" href="test-results.html#test_stop_guidance_returns_to_search_and_clears_cluster_route" title="테스트 결과와 화면 보기"><code>test_<wbr>stop_<wbr>guidance_<wbr>returns_<wbr>to_<wbr>search_<wbr>and_<wbr>clears_<wbr>cluster_<wbr>route</code></a><br><a class="test-link" href="test-results.html#test_voice_starts_guidance_home" title="테스트 결과와 화면 보기"><code>test_<wbr>voice_<wbr>starts_<wbr>guidance_<wbr>home</code></a></td>
+<td>11/11 통과<br>결과 없는 테스트 1</td>
+<td>11/11 통과<br>결과 없는 테스트 1</td>
+<td>11/11 통과<br>결과 없는 테스트 1</td>
 </tr>
 <tr>
 <td class="nw">MEDIA-01</td>
 <td>음악, 라디오, 통화는 한 번에 하나만 소리를 냅니다. 통화가 끝나면 듣던 것이 다시 나옵니다.</td>
 <td>기능</td>
-<td><a class="test-link" href="test-results.html#test_call_pauses_radio_then_resumes" title="테스트 결과와 화면 보기"><code>test_<wbr>call_<wbr>pauses_<wbr>radio_<wbr>then_<wbr>resumes</code></a><br><a class="test-link" href="test-results.html#test_radio_and_media_play_one_at_a_time" title="테스트 결과와 화면 보기"><code>test_<wbr>radio_<wbr>and_<wbr>media_<wbr>play_<wbr>one_<wbr>at_<wbr>a_<wbr>time</code></a></td>
-<td>2/2 통과</td>
-<td>2/2 통과</td>
-<td>2/2 통과</td>
+<td><a class="test-link" href="test-results.html#test_call_pauses_radio_then_resumes" title="테스트 결과와 화면 보기"><code>test_<wbr>call_<wbr>pauses_<wbr>radio_<wbr>then_<wbr>resumes</code></a><br><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code><br><a class="test-link" href="test-results.html#test_radio_and_media_play_one_at_a_time" title="테스트 결과와 화면 보기"><code>test_<wbr>radio_<wbr>and_<wbr>media_<wbr>play_<wbr>one_<wbr>at_<wbr>a_<wbr>time</code></a></td>
+<td>2/2 통과<br>결과 없는 테스트 1</td>
+<td>2/2 통과<br>결과 없는 테스트 1</td>
+<td>2/2 통과<br>결과 없는 테스트 1</td>
 </tr>
 <tr>
 <td class="nw">MEDIA-02</td>
 <td>음악과 영상 재생, 라디오 조정과 프리셋, 전화 걸기가 동작합니다.</td>
 <td>기능</td>
-<td><a class="test-link" href="test-results.html#test_am_band_uses_khz_steps" title="테스트 결과와 화면 보기"><code>test_<wbr>am_<wbr>band_<wbr>uses_<wbr>khz_<wbr>steps</code></a><br><a class="test-link" href="test-results.html#test_call_contact_shows_call_screen_and_recent" title="테스트 결과와 화면 보기"><code>test_<wbr>call_<wbr>contact_<wbr>shows_<wbr>call_<wbr>screen_<wbr>and_<wbr>recent</code></a><br><a class="test-link" href="test-results.html#test_each_band_keeps_its_own_frequency" title="테스트 결과와 화면 보기"><code>test_<wbr>each_<wbr>band_<wbr>keeps_<wbr>its_<wbr>own_<wbr>frequency</code></a><br><a class="test-link" href="test-results.html#test_keypad_dial" title="테스트 결과와 화면 보기"><code>test_<wbr>keypad_<wbr>dial</code></a><br><a class="test-link" href="test-results.html#test_keypad_limits_length_and_edits" title="테스트 결과와 화면 보기"><code>test_<wbr>keypad_<wbr>limits_<wbr>length_<wbr>and_<wbr>edits</code></a><br><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>media_<wbr>stays_<wbr>usable_<wbr>while_<wbr>driving</code></a><br><a class="test-link" href="test-results.html#test_play_pause_toggles" title="테스트 결과와 화면 보기"><code>test_<wbr>play_<wbr>pause_<wbr>toggles</code></a><br><a class="test-link" href="test-results.html#test_power_on_plays_default_station" title="테스트 결과와 화면 보기"><code>test_<wbr>power_<wbr>on_<wbr>plays_<wbr>default_<wbr>station</code></a><br><a class="test-link" href="test-results.html#test_preset_save_and_recall" title="테스트 결과와 화면 보기"><code>test_<wbr>preset_<wbr>save_<wbr>and_<wbr>recall</code></a><br><a class="test-link" href="test-results.html#test_seek_wraps_around_band_ends" title="테스트 결과와 화면 보기"><code>test_<wbr>seek_<wbr>wraps_<wbr>around_<wbr>band_<wbr>ends</code></a><br><a class="test-link" href="test-results.html#test_selecting_track_starts_it" title="테스트 결과와 화면 보기"><code>test_<wbr>selecting_<wbr>track_<wbr>starts_<wbr>it</code></a><br><a class="test-link" href="test-results.html#test_tune_and_seek" title="테스트 결과와 화면 보기"><code>test_<wbr>tune_<wbr>and_<wbr>seek</code></a><br><a class="test-link" href="test-results.html#test_video_next_clip" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>next_<wbr>clip</code></a><br><a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a></td>
-<td>16/16 통과</td>
-<td>16/16 통과</td>
-<td>16/16 통과</td>
+<td><a class="test-link" href="test-results.html#test_am_band_uses_khz_steps" title="테스트 결과와 화면 보기"><code>test_<wbr>am_<wbr>band_<wbr>uses_<wbr>khz_<wbr>steps</code></a><br><a class="test-link" href="test-results.html#test_call_contact_shows_call_screen_and_recent" title="테스트 결과와 화면 보기"><code>test_<wbr>call_<wbr>contact_<wbr>shows_<wbr>call_<wbr>screen_<wbr>and_<wbr>recent</code></a><br><a class="test-link" href="test-results.html#test_each_band_keeps_its_own_frequency" title="테스트 결과와 화면 보기"><code>test_<wbr>each_<wbr>band_<wbr>keeps_<wbr>its_<wbr>own_<wbr>frequency</code></a><br><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code><br><a class="test-link" href="test-results.html#test_keypad_dial" title="테스트 결과와 화면 보기"><code>test_<wbr>keypad_<wbr>dial</code></a><br><a class="test-link" href="test-results.html#test_keypad_limits_length_and_edits" title="테스트 결과와 화면 보기"><code>test_<wbr>keypad_<wbr>limits_<wbr>length_<wbr>and_<wbr>edits</code></a><br><a class="test-link" href="test-results.html#test_media_stays_usable_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>media_<wbr>stays_<wbr>usable_<wbr>while_<wbr>driving</code></a><br><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code><br><a class="test-link" href="test-results.html#test_play_pause_toggles" title="테스트 결과와 화면 보기"><code>test_<wbr>play_<wbr>pause_<wbr>toggles</code></a><br><a class="test-link" href="test-results.html#test_power_on_plays_default_station" title="테스트 결과와 화면 보기"><code>test_<wbr>power_<wbr>on_<wbr>plays_<wbr>default_<wbr>station</code></a><br><a class="test-link" href="test-results.html#test_preset_save_and_recall" title="테스트 결과와 화면 보기"><code>test_<wbr>preset_<wbr>save_<wbr>and_<wbr>recall</code></a><br><a class="test-link" href="test-results.html#test_seek_wraps_around_band_ends" title="테스트 결과와 화면 보기"><code>test_<wbr>seek_<wbr>wraps_<wbr>around_<wbr>band_<wbr>ends</code></a><br><a class="test-link" href="test-results.html#test_selecting_track_starts_it" title="테스트 결과와 화면 보기"><code>test_<wbr>selecting_<wbr>track_<wbr>starts_<wbr>it</code></a><br><a class="test-link" href="test-results.html#test_tune_and_seek" title="테스트 결과와 화면 보기"><code>test_<wbr>tune_<wbr>and_<wbr>seek</code></a><br><a class="test-link" href="test-results.html#test_video_next_clip" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>next_<wbr>clip</code></a><br><a class="test-link" href="test-results.html#test_video_plays_when_parked" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>plays_<wbr>when_<wbr>parked</code></a></td>
+<td>16/16 통과<br>결과 없는 테스트 2</td>
+<td>16/16 통과<br>결과 없는 테스트 2</td>
+<td>16/16 통과<br>결과 없는 테스트 2</td>
 </tr>
 <tr>
 <td class="nw">VOICE-01</td>
@@ -312,7 +321,7 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 </tr>
 </tbody></table></div>
 <h2 id="복합-요구사항-조건마다-확인하는-곳"><a class="anchor" href="#복합-요구사항-조건마다-확인하는-곳" aria-hidden="true">#</a>복합 요구사항: 조건마다 확인하는 곳</h2>
-<p>조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 <a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>에 적었습니다. 조건 36개 가운데 테스트가 없는 조건은 0개입니다.</p>
+<p>조건이 여럿인 요구사항은 조건마다 어느 확인이 그 조건을 보는지 <a href="requirements.html#복합-요구사항-조건마다-확인하는-곳">요구사항</a>에 적었습니다. 조건 42개 가운데 테스트가 없는 조건은 0개입니다.</p>
 <div class="table"><table><thead><tr>
 <th>조건</th>
 <th>내용</th>
@@ -357,6 +366,60 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td>1/1 통과</td>
 <td>0/1 통과<br>건너뜀 1</td>
 <td>0/1 통과<br>건너뜀 1</td>
+</tr>
+<tr>
+<td class="nw">SYS-02.1</td>
+<td>음악을 틀어 둔 채 공조(두 좌석 온도, 풍량, A/C)를 바꾸면 값은 모두 차량에 들어가고, 음악은 같은 곡으로 재생 중입니다</td>
+<td><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code></td>
+<td>차량 <code>wait_value</code> 22.5·21.5°C, <code>wait_signal</code> 풍량 4·A/C 꺼짐, 음악 화면 <code>wait_<wbr>text(&quot;now_<wbr>playing_<wbr>title&quot;, title)</code>와 <code>wait_<wbr>text(&quot;playback_<wbr>state&quot;, &quot;재생 중&quot;)</code></td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+</tr>
+<tr>
+<td class="nw">SYS-02.2</td>
+<td>음악 화면을 보는 동안 차량 쪽 온도가 바뀌어도 재생은 그대로입니다</td>
+<td><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code></td>
+<td><code>car.<wbr>set_<wbr>temperature(Seat.<wbr>DRIVER, 24.<wbr>0)</code> 뒤 아래 바 <code>wait_<wbr>temperature(24.<wbr>0)</code>, 1.5초 동안 <code>stays(재생 중이고 같은 곡)</code></td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+</tr>
+<tr>
+<td class="nw">SYS-02.3</td>
+<td>경로 안내와 음악 중에 달리며 아래 바로 온도를 바꾸면, 온도는 차량에 들어가고 안내는 같은 목적지로 계속 줄고 음악은 재생 중입니다</td>
+<td><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code></td>
+<td>120 km/h에서 차량 <code>wait_value</code> 22.5·21.5°C, 주행 정보 경로가 &#39;회사&#39;로 시작하고 8.5 km 이하로 <code>wait_until</code>, 음악 <code>wait_text</code>, 내비 <code>destination() == &quot;회사&quot;</code></td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+</tr>
+<tr>
+<td class="nw">SYS-02.4</td>
+<td>통화 중에 공조를 바꾸면 차량에 들어가고 통화는 이어지며, 끝나면 듣던 곡이 다시 나오고 공조 값은 그대로입니다</td>
+<td><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code></td>
+<td>차량 <code>wait_value</code> 22.5°C와 풍량 4, 음악 &#39;통화 중&#39;, 통화 시간이 늘어나는지 <code>wait_until</code>, 끊은 뒤 &#39;재생 중&#39;과 같은 곡, <code>assert car.<wbr>temperature(Seat.<wbr>DRIVER) == 22.<wbr>5</code></td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+</tr>
+<tr>
+<td class="nw">SYS-02.5</td>
+<td>화면 조작과 차량 쪽 변경이 겹쳐도 화면과 차량 신호가 같은 값으로 끝나고, 다른 좌석은 그대로입니다</td>
+<td><code>test_<wbr>screen_<wbr>and_<wbr>vehicle_<wbr>changes_<wbr>at_<wbr>once_<wbr>end_<wbr>in_<wbr>same_<wbr>value</code></td>
+<td>다른 스레드가 차량 쪽에 25.0·24.0·26.0°C를 쓰는 동안 + 세 번, <code>wait_<wbr>until(화면 == 차량)</code>과 1.5초 <code>stays</code>, 범위와 0.5°C 단위, 조수석 22.0°C</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+</tr>
+<tr>
+<td class="nw">SYS-02.6</td>
+<td>버튼을 빠르게(누름 사이 0.1초) 네 번 누르면 네 번 모두 차량에 들어갑니다</td>
+<td><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied</code></td>
+<td>adb 셸 한 번에 <code>input tap</code> 네 번, 차량 <code>wait_<wbr>value(24.<wbr>0)</code>, 화면 <code>wait_<wbr>temperature(24.<wbr>0)</code>, 1.5초 <code>stays</code>. 좌석 2</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
+<td>결과 없음</td>
 </tr>
 <tr>
 <td class="nw">HVAC-02.1</td>
@@ -677,6 +740,11 @@ A-SPICE가 요구하는 요구사항–시험 양방향 추적을 개인 프로�
 <td><a class="test-link" href="test-results.html#file-test_cockpit" title="테스트 결과와 화면 보기"><code>test_cockpit.py</code></a></td>
 <td>12개</td>
 <td>DRIVE-01, DRIVE-03, HVAC-01, HVAC-06, UI-01</td>
+</tr>
+<tr>
+<td><code>test_<wbr>concurrency.<wbr>py</code></td>
+<td>5개</td>
+<td>HVAC-01, HVAC-02, MEDIA-01, MEDIA-02, NAV-01, SYS-02</td>
 </tr>
 <tr>
 <td><a class="test-link" href="test-results.html#file-test_driving" title="테스트 결과와 화면 보기"><code>test_driving.py</code></a></td>

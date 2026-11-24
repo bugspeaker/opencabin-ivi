@@ -106,6 +106,11 @@
 <td>못 읽으면 다른 읽기처럼 오류를 내게 고치고 단위 테스트 6개를 더한 뒤, 두 기기 × 3회를 다시 돌렸습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/300b081" target="_blank" rel="noopener"><code>300b081</code></a></td>
 </tr>
 <tr>
+<td>Test Bench API가 같은 기기의 실행 요청을 동시에 받으면 둘 다 시작했고, 테스트가 도는 기기에도 신호·전원 변경을 받았습니다. 실행 파일이 없으면 작업이 &#39;running&#39;에 남아 그 기기를 다시 쓸 수 없었습니다. CAN 게이트웨이는 차량 쪽이 느리면 프레임이 쌓여 최신 값이 약 1.7초 늦게 들어갔습니다.</td>
+<td>동작이 아니라 예외 상황을 찾아 달라고 따로 요청한 외부 검토가 실행 순서를 맞춘 재현 코드로 보였습니다(2026-11-24).</td>
+<td>기기 점유를 한 잠금 안에서 정하고, 테스트 중 변경은 409로 거절하고, 실패와 시간 초과도 점유를 풀게 했습니다. 게이트웨이는 상태 신호를 최신 값으로 합치고 기어와 도어는 순서대로 넣어, 같은 조건에서 약 50 ms가 됐습니다. 다시 읽어 네 가지를 더 고치고, 음악·안내·통화 중 공조 조작 같은 동시 조작 E2E 6개를 더했습니다.<br><a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a></td>
+</tr>
+<tr>
 <td>게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었습니다. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈췄습니다.</td>
 <td>두 기기에서 전체를 다시 돌렸습니다(2026-11-21).</td>
 <td>창 없이 다시 켜게 고치고, 처음부터 3회 돌려 750건이 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
@@ -270,7 +275,7 @@
 </tr>
 <tr>
 <td class="nw">단위 테스트</td>
-<td>프레임워크 195개, 앱 33개 모두 통과</td>
+<td>프레임워크 223개, 앱 33개 모두 통과</td>
 </tr>
 <tr>
 <td class="nw">테스트별 결과</td>
@@ -278,7 +283,7 @@
 </tr>
 <tr>
 <td class="nw">요구사항 추적</td>
-<td>요구사항 26개 ↔ 테스트 함수 114개(매개변수 조합까지 144개), 조건 36개 모두 확인하는 테스트가 있습니다. 빠진 곳이 있으면 CI의 unit job이 실패합니다: <a href="traceability.html">추적표</a></td>
+<td>요구사항 27개 ↔ 테스트 함수 119개(매개변수 조합까지 150개), 조건 42개 모두 확인하는 테스트가 있습니다. 빠진 곳이 있으면 CI의 unit job이 실패합니다: <a href="traceability.html">추적표</a></td>
 </tr>
 <tr>
 <td>GitHub Actions</td>
@@ -360,7 +365,7 @@
 </tr>
 <tr>
 <td>Python 테스트 프레임워크 (Pytest)</td>
-<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 195개 있습니다.</td>
+<td>훅, 픽스처, 마커와 결과 기록용 플러그인을 만들었습니다. 프레임워크 단위 테스트가 223개 있습니다.</td>
 </tr>
 <tr>
 <td>Appium 등 UI 자동화 도구</td>
@@ -394,7 +399,7 @@
 </tr>
 <tr>
 <td>ISO 26262, A-SPICE</td>
-<td>개념만 적용해 봤습니다. 요구사항 26개와 테스트를 양방향으로 잇는 <a href="traceability.html">추적표</a>를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없고 더 공부해야 합니다.</td>
+<td>개념만 적용해 봤습니다. 요구사항 27개와 테스트를 양방향으로 잇는 <a href="traceability.html">추적표</a>를 만들고, 빠진 곳이 있으면 CI의 unit job이 실패하게 했습니다. 인증이나 심사 경험은 없고 더 공부해야 합니다.</td>
 </tr>
 </tbody></table></div>
 <hr>
@@ -822,7 +827,7 @@
 <td>2. 프레임워크 단위 테스트</td>
 <td>기기 없이 pytest (<code>ivi-tests/unit</code>)</td>
 <td>어댑터 명령 조립, 대기와 판정, 크래시 판정, Release 게이트 규칙, 요구사항 추적, 문서 링크</td>
-<td>195개<br>PR마다 GitHub에서</td>
+<td>223개<br>PR마다 GitHub에서</td>
 </tr>
 <tr>
 <td>3. 에뮬레이터·태블릿 E2E</td>

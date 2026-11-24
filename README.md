@@ -97,7 +97,7 @@ site/                 소개 사이트 (GitHub Pages)
 | [반복 실행 통계](docs/flaky-report.md) | 두 기기 × 3회 실행의 테스트별 불안정률입니다. |
 | [전체 실행 기록](docs/run-history.md) | 원자료가 남은 E2E 실행을 모두 합친 수와, 실패·재시도 통과마다 원인입니다. |
 | [결정 기록](docs/decisions.md) | 고른 것과 버린 것, 근거가 된 측정값을 적었습니다. |
-| [요구사항](docs/requirements.md) | 요구사항 26개와 조건별 확인입니다. |
+| [요구사항](docs/requirements.md) | 요구사항 27개와 조건별 확인입니다. |
 | [추적표](docs/traceability.md) | 요구사항과 테스트를 양쪽으로 이었습니다. |
 
 단계별 기록: [1 기술 검증](docs/phase1-spike.md) · [2 앱](docs/phase2-app.md) · [3 프레임워크](docs/phase3-framework.md) · [4 운영](docs/phase4-operations.md) · [5 재점검](docs/phase5-design.md) · [6 기능 확장](docs/phase6-features.md) · [7 화면 개편](docs/phase7-layout.md) · [8 차량 신호](docs/phase8-signals.md) · [9 Test Bench](docs/phase9-bench.md)
