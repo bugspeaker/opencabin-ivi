@@ -325,6 +325,14 @@ a.stat:hover { background: var(--bg-soft); }
 .fqa-seen { margin: 0; font-size: 15px; color: var(--ink-2); }
 .fqa-done { margin: 0; font-size: 15.5px; font-weight: 700; display: flex; gap: 8px; }
 .fqa-done::before { content: "→"; color: var(--brand); }
+/* 추천과 다르게 정한 것: 화면 비율이 서로 달라(세로 폴드, 16:10 태블릿) 자르지 않고 다 보이게 */
+.ba.whole figure { aspect-ratio: 4 / 3; min-height: 0; overflow: hidden; border-radius: 10px; background: #0c0f14; }
+/* 그림을 흐름에서 빼야 세로 사진의 원래 높이가 줄 높이를 늘리지 않는다 */
+.ba.whole img { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; }
+.fqa .card.wide { grid-column: 1 / -1; }
+.wide-shot { margin: 0; }
+.wide-shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); }
+.fqa-seen b { margin-right: 8px; font-weight: 700; color: var(--ink); }
 .checklist { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
 .checklist li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; padding: 18px 22px; border-radius: 14px; background: var(--bg-soft); font-size: 15px; }
 .checklist .wrong { color: var(--ink-2); }

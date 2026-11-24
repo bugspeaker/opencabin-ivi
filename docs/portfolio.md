@@ -59,6 +59,18 @@ Claude가 보기와 추천을 내면 제가 골랐습니다. 아래는 추천과
 | 11-23 | 테스트가 140개로 늘어도 첫 화면 헤드라인은 11-21 결과로 둡니다. | **140개 × 3회를 다시 돌리기.** 첫 화면 숫자가 지금 코드로 돌린 결과가 아니면 안 된다고 보고, 1시간 넘게 걸려도 다시 돌렸습니다. | 813건 중 실패 0으로 헤드라인을 바꿨습니다. 그 뒤 4개를 더했을 때도 다시 돌렸습니다(837건).<br>[#46](https://github.com/bugspeaker/opencabin-ivi/pull/46) · [#48](https://github.com/bugspeaker/opencabin-ivi/pull/48) |
 | 11-21 | Claude가 쓴 역할 문구에 'Test Bench에서 E2E를 직접 돌려 확인'이 들어 있었습니다. | **고르지 않음.** 하지 않은 일을 역할에 적으면 면접에서 사실과 달라지므로 뺐습니다. | README, 포트폴리오, 사이트 세 곳에서 뺐습니다.<br>[`7fe2df3`](https://github.com/bugspeaker/opencabin-ivi/commit/7fe2df3) |
 
+화면으로 보면 이렇습니다.
+
+| 세로 폴드 (세로까지 지원하려던 화면) | 가로 760×500dp (고른 범위) |
+|---|---|
+| <img src="images/override/fold-portrait.png" width="250" alt="세로로 든 갤럭시 폴드에서 아래 바가 겹치고 시계가 사라진 홈 화면"> | <img src="images/override/emulator-760x500dp.png" width="400" alt="760×500dp로 줄인 에뮬레이터에서 제대로 보이는 빠른 제어 화면"> |
+
+| 에뮬레이터 (추천: 이것으로 대신) | 태블릿 (직접 연결해 확인) |
+|---|---|
+| <img src="images/override/radio-emulator.webp" width="380" alt="에뮬레이터의 라디오 화면"> | <img src="images/override/radio-tablet.webp" width="380" alt="태블릿의 라디오 화면"> |
+
+<img src="images/override/results-3-devices.png" width="760" alt="결과 페이지에서 같은 라디오 테스트의 에뮬레이터, 태블릿, 갤럭시 폴드 화면이 나란히 보이는 칸">
+
 ### 직접 써 보며 준 피드백 (FQA)
 
 초기 버전부터 앱을 태블릿과 에뮬레이터에서 직접 써 보며, 새로 필요한 기능과 지금 기능이 제대로 도는지, 사용자로서 어색한 곳이 없는지 보고 고칠 것을 정했습니다. 아래는 작업 기록에 남은 것과 그때의 화면입니다(날짜는 2026년).
