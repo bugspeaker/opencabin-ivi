@@ -63,15 +63,15 @@
 <th align="center">테스트에서 나온 문제</th>
 </tr>
 </thead><tbody><tr>
-<td align="center"><strong>144개</strong></td>
-<td align="center"><strong>837건 중 실패 0</strong></td>
-<td align="center"><strong>약 13분</strong></td>
+<td align="center"><strong>150개</strong></td>
+<td align="center"><strong>873건 중 실패 0</strong></td>
+<td align="center"><strong>약 14분</strong></td>
 <td align="center"><strong>15건</strong></td>
 </tr>
 <tr>
 <td align="center">두 기기에서 같은 테스트 코드</td>
 <td align="center">두 기기 × 3회 (2026-11-24)<br>재시도로 통과한 것도 0건</td>
-<td align="center">차례로 돌리면 약 25분</td>
+<td align="center">차례로 돌리면 약 27분</td>
 <td align="center">원인과 조치를 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue" target="_blank" rel="noopener">이슈</a>로 기록</td>
 </tr>
 </tbody></table></div>
@@ -83,8 +83,8 @@
 <th>도구에 더한 것</th>
 </tr>
 </thead><tbody><tr>
-<td>차례로 돌리면 약 25분 걸렸습니다.</td>
-<td>두 기기를 병렬로 돌려 약 13분으로 줄였습니다.</td>
+<td>차례로 돌리면 약 27분 걸렸습니다.</td>
+<td>두 기기를 병렬로 돌려 약 14분으로 줄였습니다.</td>
 </tr>
 <tr>
 <td>재시도 통과가 흔들림을 가렸습니다.</td>
@@ -126,7 +126,7 @@
 <li><strong>이전에 만든 도구</strong>: 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩으로 만들었습니다. 엑셀 BVT 대시보드에 Playwright·pytest를 붙여 공개 웹 서비스의 BVT 70개 중 47개를 자동화했습니다(<a href="portfolio.html#만든-사람과-만든-방식">데모</a>). 업무에 쓰는 TC 관리 도구 Bugspeaker Zone에는 이 프로젝트의 결과를 읽어 들이는 화면을 붙였습니다(같은 곳에 GIF). 모바일 자동화는 Appium 실습 경험을 바탕으로 이 프로젝트에서 AAOS까지 넓혀 업무 수준으로 적용했습니다.</li>
 <li><strong>기간</strong>: 2026-11-13부터, 혼자 진행했습니다.</li>
 <li><strong>역할</strong>: AI 코딩 도구 Claude Code로 앱과 테스트 도구를 만들었습니다. 무엇을 만들지 정하고, E2E 테스트 설계는 Claude와 함께 했습니다. AI가 낸 변경과 외부 검토 항목은 기기 실행 기록과 자동 검사로 확인하여 반영 여부를 결정했고, PR을 병합했습니다. 무엇을 고르고 버렸는지는 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
-<li><strong>AI 결과 검증</strong>: AI의 &#39;통과&#39;는 기기 실행 결과 파일, Release 게이트, CI의 추적·링크 검사로만 받아들였습니다. 검증에서 잡혀 고친 사례 7건, Claude의 추천과 다르게 정한 사례 5건, 앱을 직접 써 보며 준 피드백 6건은 <a href="portfolio.html#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a>에 있습니다.</li>
+<li><strong>AI 결과 검증</strong>: AI의 &#39;통과&#39;는 기기 실행 결과 파일, Release 게이트, CI의 추적·링크 검사로만 받아들였습니다. 검증에서 잡혀 고친 사례 8건, Claude의 추천과 다르게 정한 사례 5건, 앱을 직접 써 보며 준 피드백 6건은 <a href="portfolio.html#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a>에 있습니다.</li>
 </ul>
 <h2 id="결과-자료와-검증-시점"><a class="anchor" href="#결과-자료와-검증-시점" aria-hidden="true">#</a>결과 자료와 검증 시점</h2>
 <div class="table"><table><thead><tr>
@@ -134,6 +134,10 @@
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-concurrency/README.md">예외 경로 수정과 동시 조작 테스트 뒤 반복 실행 3회</a><br>2026-11-24 오후, 코드 <code>101de99</code></td>
+<td>외부 검토가 찾은 예외 경로(같은 기기 동시 실행, 끝나지 않는 작업, CAN 프레임 지연)를 고치고, 동시 조작 테스트 6개를 더한 150개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다. 폴드도 같은 코드로 한 번 통과했습니다.</td>
+</tr>
+<tr>
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">주행 상태 읽기 수정 후 반복 실행 3회</a><br>2026-11-24, 코드 <code>300b081</code></td>
 <td>주행 상태를 못 읽으면 &#39;제한 없음&#39;으로 처리하던 테스트 도구를 고친 뒤, 테스트 144개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다. 폴드도 같은 코드로 한 번 통과했습니다. 첫 시도는 USB 창 때문에 1회차 태블릿이 실패해 그대로 남겼습니다.</td>
 </tr>
@@ -187,7 +191,7 @@ site/                 소개 사이트 (GitHub Pages)</code></pre>
 </tr>
 <tr>
 <td class="nw"><a href="test-results.html">테스트 결과</a></td>
-<td>테스트 144개의 판정과 판정 직후 화면을 보여 줍니다.</td>
+<td>테스트 150개의 판정과 판정 직후 화면을 보여 줍니다.</td>
 </tr>
 <tr>
 <td class="nw"><a href="flaky-report.html">반복 실행 통계</a></td>

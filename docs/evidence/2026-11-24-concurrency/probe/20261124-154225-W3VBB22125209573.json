@@ -1,0 +1,79 @@
+{
+  "summary": {
+    "run_id": "20261124-154225",
+    "serial": "W3VBB22125209573",
+    "kind": "mock",
+    "model": "DBY-W09",
+    "commit": "410a0526da45491bebc5da3c1e6d8655be703933",
+    "dirty": true,
+    "app": {
+      "version": "0.4.2 (6)",
+      "apk_sha256": "c977c9069411cf122116510eb94ddd431d1164efb9c1de3632e99530be89bd30"
+    },
+    "command": "pytest tests/test_zz_probe_taps.py --serial W3VBB22125209573 --system-port 8200 -p no:randomly",
+    "launcher": "",
+    "duration": 23.9,
+    "counts": {
+      "passed": 3
+    },
+    "relaunches": 0,
+    "infra_retries": 0,
+    "session_restarts": 0,
+    "exitstatus": 0,
+    "collected": 3,
+    "gate": "pass"
+  },
+  "tests": [
+    {
+      "run_id": "20261124-154225",
+      "time": "2026-11-24T15:42:26",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_zz_probe_taps.py::test_probe[0.05]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 9.725,
+      "message": "",
+      "first_error": "",
+      "quarantined": false
+    },
+    {
+      "run_id": "20261124-154225",
+      "time": "2026-11-24T15:42:26",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_zz_probe_taps.py::test_probe[0.03]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 7.01,
+      "message": "",
+      "first_error": "",
+      "quarantined": false
+    },
+    {
+      "run_id": "20261124-154225",
+      "time": "2026-11-24T15:42:26",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_zz_probe_taps.py::test_probe[0.0]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 6.983,
+      "message": "",
+      "first_error": "",
+      "quarantined": false
+    }
+  ]
+}

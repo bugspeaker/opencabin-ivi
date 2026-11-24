@@ -40,6 +40,10 @@ PURPOSE = {
     "2026-11-24-driving-state/attempt1/runs": ("반복 3회의 첫 시도 (1회차 태블릿 실패)", False),
     "2026-11-24-driving-state/runs": ("반복 3회 (144개)", False),
     "2026-11-24-driving-state/runs-fold": ("폴드 1회 (144개)", False),
+    "2026-11-24-concurrency/runs-first": ("동시 조작 테스트 첫 확인 (커밋 전)", False),
+    "2026-11-24-concurrency/probe": ("빠른 누름 간격 줄여 보기 (저장소에 넣지 않은 임시 테스트)", False),
+    "2026-11-24-concurrency/runs": ("반복 3회 (150개)", False),
+    "2026-11-24-concurrency/runs-fold": ("폴드 1회 (150개)", False),
 }
 
 # 실행 id → 그 실행의 실패·오류·재시도 통과의 원인. 원인 분류는 사이트의 결함 분류와 같은 말을 쓴다
@@ -55,6 +59,8 @@ CAUSES = {
     "20261123-ux-aaos": ("테스트 도구", "막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상)."),
     "20261124-driving-state-aaos": ("테스트 도구", "막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상)."),
     "20261124-110716-r1": ("환경", "실행을 시작할 무렵 USB를 연결해 태블릿에 뜬 시스템 창(USB 연결 방식 선택)이 앱을 가렸습니다. 첫 시도로 남기고 3회를 다시 돌렸습니다."),
+    "20261124-153908": ("테스트 도구", "AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. adb input tap으로 바꿔 통과했습니다."),
+    "20261124-154050": ("테스트 도구", "AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다."),
 }
 
 

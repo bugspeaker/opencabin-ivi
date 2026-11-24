@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "run_id": "20261124-154200",
+    "serial": "emulator-5554",
+    "kind": "aaos",
+    "model": "Car on x86_64 emulator",
+    "commit": "410a0526da45491bebc5da3c1e6d8655be703933",
+    "dirty": true,
+    "app": {
+      "version": "0.4.2 (6)",
+      "apk_sha256": "c977c9069411cf122116510eb94ddd431d1164efb9c1de3632e99530be89bd30"
+    },
+    "command": "pytest tests/test_zz_probe_taps.py --serial emulator-5554 --system-port 8200 -p no:randomly",
+    "launcher": "",
+    "duration": 24.6,
+    "counts": {
+      "passed": 3
+    },
+    "relaunches": 0,
+    "infra_retries": 0,
+    "session_restarts": 0,
+    "exitstatus": 0,
+    "collected": 3,
+    "gate": "pass"
+  },
+  "tests": [
+    {
+      "run_id": "20261124-154200",
+      "time": "2026-11-24T15:42:00",
+      "serial": "emulator-5554",
+      "kind": "aaos",
+      "model": "Car on x86_64 emulator",
+      "nodeid": "tests/test_zz_probe_taps.py::test_probe[0.05]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 11.107,
+      "message": "",
+      "first_error": "",
+      "quarantined": false,
+      "signals": [
+        "HVAC_TEMPERATURE_SET[0x1]=24.0"
+      ]
+    },
+    {
+      "run_id": "20261124-154200",
+      "time": "2026-11-24T15:42:00",
+      "serial": "emulator-5554",
+      "kind": "aaos",
+      "model": "Car on x86_64 emulator",
+      "nodeid": "tests/test_zz_probe_taps.py::test_probe[0.03]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 6.521,
+      "message": "",
+      "first_error": "",
+      "quarantined": false,
+      "signals": [
+        "HVAC_TEMPERATURE_SET[0x1]=24.0"
+      ]
+    },
+    {
+      "run_id": "20261124-154200",
+      "time": "2026-11-24T15:42:00",
+      "serial": "emulator-5554",
+      "kind": "aaos",
+      "model": "Car on x86_64 emulator",
+      "nodeid": "tests/test_zz_probe_taps.py::test_probe[0.0]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 6.724,
+      "message": "",
+      "first_error": "",
+      "quarantined": false,
+      "signals": [
+        "HVAC_TEMPERATURE_SET[0x1]=24.0"
+      ]
+    }
+  ]
+}

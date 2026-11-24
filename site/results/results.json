@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-24 12:44",
+ "generated": "2026-11-24 21:00",
  "devices": [
   {
    "kind": "aaos",
@@ -7,16 +7,16 @@
    "label": "AAOS 에뮬레이터",
    "model": "Car on x86_64 emulator",
    "serial": "emulator-5554",
-   "run_id": "20261124-122909-r3",
-   "time": "2026-11-24T12:29:10",
-   "duration": 719.6,
+   "run_id": "20261124-162540-r3",
+   "time": "2026-11-24T16:25:40",
+   "duration": 781.4,
    "counts": {
-    "passed": 142,
+    "passed": 148,
     "skipped": 1,
     "xfailed": 1
    },
    "gate": "pass",
-   "commit": "300b081c3900d27da737f40ce399830a0dce6693",
+   "commit": "101de998f8fcb7b35105501239ddf799ff7c69aa",
    "dirty": false,
    "app": {
     "version": "0.4.2 (6)",
@@ -30,15 +30,15 @@
    "label": "태블릿 (Mock)",
    "model": "DBY-W09",
    "serial": "W3VBB22125209573",
-   "run_id": "20261124-122909-r3",
-   "time": "2026-11-24T12:29:10",
-   "duration": 763.8,
+   "run_id": "20261124-162540-r3",
+   "time": "2026-11-24T16:25:41",
+   "duration": 815.0,
    "counts": {
-    "passed": 136,
+    "passed": 142,
     "skipped": 8
    },
    "gate": "pass",
-   "commit": "300b081c3900d27da737f40ce399830a0dce6693",
+   "commit": "101de998f8fcb7b35105501239ddf799ff7c69aa",
    "dirty": false,
    "app": {
     "version": "0.4.2 (6)",
@@ -52,21 +52,21 @@
    "label": "갤럭시 폴드 (Mock)",
    "model": "SM-F900F",
    "serial": "R38M309YKQY",
-   "run_id": "20261124-fold-144",
-   "time": "2026-11-24T11:49:11",
-   "duration": 839.1,
+   "run_id": "20261124-fold-150",
+   "time": "2026-11-24T20:42:46",
+   "duration": 863.9,
    "counts": {
-    "passed": 136,
+    "passed": 142,
     "skipped": 8
    },
    "gate": "pass",
-   "commit": "300b081c3900d27da737f40ce399830a0dce6693",
+   "commit": "101de998f8fcb7b35105501239ddf799ff7c69aa",
    "dirty": false,
    "app": {
     "version": "0.4.2 (6)",
     "apk_sha256": "c977c9069411cf122116510eb94ddd431d1164efb9c1de3632e99530be89bd30"
    },
-   "command": "pytest --serial R38M309YKQY --reruns 1 --shots --run-id 20261124-fold-144 -q"
+   "command": "pytest --serial R38M309YKQY --reruns 1 --shots --run-id 20261124-fold-150 -q -p no:cacheprovider"
   }
  ],
  "files": [
@@ -87,7 +87,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 11.6,
+         "duration": 11.9,
          "message": "",
          "image": "img/aaos/test_zone_applies_command_to_speaking_seat.webp",
          "reruns": 0,
@@ -100,7 +100,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.4,
+         "duration": 10.1,
          "message": "",
          "image": "img/mock/test_zone_applies_command_to_speaking_seat.webp",
          "reruns": 0,
@@ -110,7 +110,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 12.5,
+         "duration": 11.3,
          "message": "",
          "image": "img/fold/test_zone_applies_command_to_speaking_seat.webp",
          "reruns": 0,
@@ -134,7 +134,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 4.0,
          "message": "",
          "image": "img/aaos/test_typed_command_sets_vehicle_temperature.webp",
          "reruns": 0,
@@ -156,7 +156,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 5.1,
          "message": "",
          "image": "img/fold/test_typed_command_sets_vehicle_temperature.webp",
          "reruns": 0,
@@ -180,7 +180,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.8,
          "message": "",
          "image": "img/aaos/test_multiple_commands_in_one_sentence.webp",
          "reruns": 0,
@@ -190,7 +190,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 5.0,
          "message": "",
          "image": "img/mock/test_multiple_commands_in_one_sentence.webp",
          "reruns": 0,
@@ -224,7 +224,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_ambiguous_destination_offers_candidates.webp",
          "reruns": 0,
@@ -234,7 +234,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.0,
+         "duration": 5.1,
          "message": "",
          "image": "img/mock/test_ambiguous_destination_offers_candidates.webp",
          "reruns": 0,
@@ -244,7 +244,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.5,
+         "duration": 5.6,
          "message": "",
          "image": "img/fold/test_ambiguous_destination_offers_candidates.webp",
          "reruns": 0,
@@ -268,7 +268,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.7,
+         "duration": 7.5,
          "message": "",
          "image": "img/aaos/test_driving_locks_typing_and_refuses_mirror_fold.webp",
          "reruns": 0,
@@ -288,7 +288,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.1,
+         "duration": 8.2,
          "message": "",
          "image": "img/fold/test_driving_locks_typing_and_refuses_mirror_fold.webp",
          "reruns": 0,
@@ -312,7 +312,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 4.1,
          "message": "",
          "image": "img/aaos/test_voice_popup_and_assistant_share_history.webp",
          "reruns": 0,
@@ -322,7 +322,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/mock/test_voice_popup_and_assistant_share_history.webp",
          "reruns": 0,
@@ -372,7 +372,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.0,
+         "duration": 5.1,
          "message": "",
          "image": "img/mock/test_api_signals_drive_the_screen.webp",
          "reruns": 0,
@@ -382,7 +382,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.2,
+         "duration": 5.9,
          "message": "",
          "image": "img/fold/test_api_signals_drive_the_screen.webp",
          "reruns": 0,
@@ -406,7 +406,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_api_low_range_shows_charger_card.webp",
          "reruns": 0,
@@ -416,7 +416,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.2,
+         "duration": 2.7,
          "message": "",
          "image": "img/mock/test_api_low_range_shows_charger_card.webp",
          "reruns": 0,
@@ -426,7 +426,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.2,
+         "duration": 2.7,
          "message": "",
          "image": "img/fold/test_api_low_range_shows_charger_card.webp",
          "reruns": 0,
@@ -450,7 +450,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.0,
+         "duration": 2.1,
          "message": "",
          "image": "img/aaos/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp",
          "reruns": 0,
@@ -462,7 +462,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.3,
+         "duration": 1.8,
          "message": "",
          "image": "img/mock/test_api_rejects_invalid_value_and_leaves_vehicle_alone.webp",
          "reruns": 0,
@@ -502,7 +502,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_can_drive_frames_reach_screen.webp",
          "reruns": 0,
@@ -512,7 +512,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_can_drive_frames_reach_screen.webp",
          "reruns": 0,
@@ -522,7 +522,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.5,
          "message": "",
          "image": "img/fold/test_can_drive_frames_reach_screen.webp",
          "reruns": 0,
@@ -556,7 +556,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.0,
          "message": "",
          "image": "img/mock/test_can_battery_and_door_frames_reach_screen.webp",
          "reruns": 0,
@@ -610,7 +610,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.5,
+         "duration": 5.3,
          "message": "",
          "image": "img/fold/test_climate_button_goes_out_on_can.webp",
          "reruns": 0,
@@ -640,7 +640,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_signal_is_shown_on_climate_and_home_driver.webp",
          "reruns": 0,
@@ -650,7 +650,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.9,
          "message": "",
          "image": "img/mock/test_signal_is_shown_on_climate_and_home_driver.webp",
          "reruns": 0,
@@ -660,7 +660,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.4,
          "message": "",
          "image": "img/fold/test_signal_is_shown_on_climate_and_home_driver.webp",
          "reruns": 0,
@@ -719,7 +719,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_button_changes_signal_by_one_step_up-driver.webp",
          "reruns": 0,
@@ -741,7 +741,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_button_changes_signal_by_one_step_up-driver.webp",
          "reruns": 0,
@@ -778,7 +778,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.4,
          "message": "",
          "image": "img/fold/test_button_changes_signal_by_one_step_up-passenger.webp",
          "reruns": 0,
@@ -793,7 +793,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_button_changes_signal_by_one_step_down-driver.webp",
          "reruns": 0,
@@ -805,7 +805,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_button_changes_signal_by_one_step_down-driver.webp",
          "reruns": 0,
@@ -852,7 +852,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/fold/test_button_changes_signal_by_one_step_down-passenger.webp",
          "reruns": 0,
@@ -876,7 +876,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_buttons_disabled_at_limits_driver.webp",
          "reruns": 0,
@@ -886,7 +886,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_buttons_disabled_at_limits_driver.webp",
          "reruns": 0,
@@ -896,7 +896,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.0,
          "message": "",
          "image": "img/fold/test_buttons_disabled_at_limits_driver.webp",
          "reruns": 0,
@@ -911,7 +911,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.2,
          "message": "",
          "image": "img/aaos/test_buttons_disabled_at_limits_passenger.webp",
          "reruns": 0,
@@ -921,7 +921,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.9,
          "message": "",
          "image": "img/mock/test_buttons_disabled_at_limits_passenger.webp",
          "reruns": 0,
@@ -955,7 +955,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.2,
+         "duration": 8.4,
          "message": "",
          "image": "img/aaos/test_step_reaches_limit_and_disables_driver.webp",
          "reruns": 0,
@@ -967,7 +967,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.2,
+         "duration": 8.9,
          "message": "",
          "image": "img/mock/test_step_reaches_limit_and_disables_driver.webp",
          "reruns": 0,
@@ -977,7 +977,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.1,
+         "duration": 9.8,
          "message": "",
          "image": "img/fold/test_step_reaches_limit_and_disables_driver.webp",
          "reruns": 0,
@@ -992,7 +992,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.5,
+         "duration": 8.7,
          "message": "",
          "image": "img/aaos/test_step_reaches_limit_and_disables_passenger.webp",
          "reruns": 0,
@@ -1004,7 +1004,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.5,
+         "duration": 9.3,
          "message": "",
          "image": "img/mock/test_step_reaches_limit_and_disables_passenger.webp",
          "reruns": 0,
@@ -1014,7 +1014,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.8,
+         "duration": 10.3,
          "message": "",
          "image": "img/fold/test_step_reaches_limit_and_disables_passenger.webp",
          "reruns": 0,
@@ -1050,7 +1050,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.9,
          "message": "",
          "image": "img/mock/test_out_of_range_signal_is_shown_safely_below_min.webp",
          "reruns": 0,
@@ -1060,7 +1060,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/fold/test_out_of_range_signal_is_shown_safely_below_min.webp",
          "reruns": 0,
@@ -1087,7 +1087,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.8,
          "message": "",
          "image": "img/mock/test_out_of_range_signal_is_shown_safely_above_max.webp",
          "reruns": 0,
@@ -1097,7 +1097,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.0,
+         "duration": 4.5,
          "message": "",
          "image": "img/fold/test_out_of_range_signal_is_shown_safely_above_max.webp",
          "reruns": 0,
@@ -1121,7 +1121,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_off_grid_signal_steps_back_to_grid_up-22.5.webp",
          "reruns": 0,
@@ -1133,7 +1133,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_off_grid_signal_steps_back_to_grid_up-22.5.webp",
          "reruns": 0,
@@ -1143,7 +1143,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.3,
          "message": "",
          "image": "img/fold/test_off_grid_signal_steps_back_to_grid_up-22.5.webp",
          "reruns": 0,
@@ -1170,7 +1170,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.6,
          "message": "",
          "image": "img/mock/test_off_grid_signal_steps_back_to_grid_down-22.0.webp",
          "reruns": 0,
@@ -1180,7 +1180,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_off_grid_signal_steps_back_to_grid_down-22.0.webp",
          "reruns": 0,
@@ -1204,7 +1204,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.2,
          "message": "",
          "image": "img/aaos/test_seats_are_independent.webp",
          "reruns": 0,
@@ -1227,7 +1227,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.3,
+         "duration": 5.6,
          "message": "",
          "image": "img/fold/test_seats_are_independent.webp",
          "reruns": 0,
@@ -1279,7 +1279,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_bottom_bar_temperature_drives_vehicle_driver.webp",
          "reruns": 0,
@@ -1294,7 +1294,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_bottom_bar_temperature_drives_vehicle_passenger.webp",
          "reruns": 0,
@@ -1306,7 +1306,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_bottom_bar_temperature_drives_vehicle_passenger.webp",
          "reruns": 0,
@@ -1340,7 +1340,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_sync_mirrors_driver_temperature_to_passenger.webp",
          "reruns": 0,
@@ -1353,7 +1353,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.8,
          "message": "",
          "image": "img/mock/test_sync_mirrors_driver_temperature_to_passenger.webp",
          "reruns": 0,
@@ -1363,7 +1363,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 5.3,
          "message": "",
          "image": "img/fold/test_sync_mirrors_driver_temperature_to_passenger.webp",
          "reruns": 0,
@@ -1387,7 +1387,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.5,
+         "duration": 6.6,
          "message": "",
          "image": "img/aaos/test_passenger_change_releases_sync.webp",
          "reruns": 0,
@@ -1400,7 +1400,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.4,
+         "duration": 6.2,
          "message": "",
          "image": "img/mock/test_passenger_change_releases_sync.webp",
          "reruns": 0,
@@ -1410,7 +1410,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.7,
+         "duration": 7.5,
          "message": "",
          "image": "img/fold/test_passenger_change_releases_sync.webp",
          "reruns": 0,
@@ -1434,7 +1434,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.5,
+         "duration": 7.6,
          "message": "",
          "image": "img/aaos/test_trip_distance_follows_speed_signal.webp",
          "reruns": 0,
@@ -1454,7 +1454,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.8,
+         "duration": 7.1,
          "message": "",
          "image": "img/fold/test_trip_distance_follows_speed_signal.webp",
          "reruns": 0,
@@ -1478,7 +1478,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_lane_assist_indicator_follows_speed.webp",
          "reruns": 0,
@@ -1488,7 +1488,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 2.0,
          "message": "",
          "image": "img/mock/test_lane_assist_indicator_follows_speed.webp",
          "reruns": 0,
@@ -1566,7 +1566,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_split_screen_toggle.webp",
          "reruns": 0,
@@ -1576,7 +1576,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_split_screen_toggle.webp",
          "reruns": 0,
@@ -1586,7 +1586,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.0,
          "message": "",
          "image": "img/fold/test_split_screen_toggle.webp",
          "reruns": 0,
@@ -1610,7 +1610,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.8,
+         "duration": 6.4,
          "message": "",
          "image": "img/aaos/test_quick_control_mirror_locked_while_driving.webp",
          "reruns": 0,
@@ -1620,7 +1620,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.5,
+         "duration": 5.6,
          "message": "",
          "image": "img/mock/test_quick_control_mirror_locked_while_driving.webp",
          "reruns": 0,
@@ -1630,7 +1630,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.6,
+         "duration": 6.2,
          "message": "",
          "image": "img/fold/test_quick_control_mirror_locked_while_driving.webp",
          "reruns": 0,
@@ -1654,7 +1654,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 4.5,
          "message": "",
          "image": "img/aaos/test_folded_mirror_can_be_unfolded_while_driving.webp",
          "reruns": 0,
@@ -1664,7 +1664,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_folded_mirror_can_be_unfolded_while_driving.webp",
          "reruns": 0,
@@ -1674,7 +1674,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.0,
          "message": "",
          "image": "img/fold/test_folded_mirror_can_be_unfolded_while_driving.webp",
          "reruns": 0,
@@ -1698,7 +1698,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.3,
          "message": "",
          "image": "img/aaos/test_notifications_record_guidance_and_restriction.webp",
          "reruns": 0,
@@ -1708,7 +1708,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.2,
          "message": "",
          "image": "img/mock/test_notifications_record_guidance_and_restriction.webp",
          "reruns": 0,
@@ -1718,7 +1718,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 5.7,
          "message": "",
          "image": "img/fold/test_notifications_record_guidance_and_restriction.webp",
          "reruns": 0,
@@ -1742,7 +1742,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.2,
+         "duration": 5.5,
          "message": "",
          "image": "img/aaos/test_clearing_notifications_leaves_empty_panel.webp",
          "reruns": 0,
@@ -1752,7 +1752,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 5.2,
          "message": "",
          "image": "img/mock/test_clearing_notifications_leaves_empty_panel.webp",
          "reruns": 0,
@@ -1796,7 +1796,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 4.7,
          "message": "",
          "image": "img/mock/test_recent_app_slot.webp",
          "reruns": 0,
@@ -1806,9 +1806,287 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.0,
+         "duration": 4.9,
          "message": "",
          "image": "img/fold/test_recent_app_slot.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "test_concurrency.py",
+   "title": "한 기능을 쓰는 동안 다른 기능을 조작해도 서로의 상태가 바뀌지 않는지 확인합니다 (동시 조작).",
+   "tests": [
+    {
+     "name": "test_music_keeps_playing_while_climate_is_operated",
+     "doc": "음악을 틀어 둔 채 공조 화면에서 두 좌석 온도, 풍량, A/C를 바꿉니다. 값은 모두 차량에 들어가고, 음악은 같은 곡으로 계속 재생 중입니다. 음악 화면을 보는 동안 차량 쪽에서 온도가 바뀌어도 재생은 그대로입니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.3,
+         "message": "",
+         "image": "img/aaos/test_music_keeps_playing_while_climate_is_operated.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=21.5",
+          "HVAC_FAN_SPEED[0x1]=4",
+          "HVAC_AC_ON[0x1]=0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 9.5,
+         "message": "",
+         "image": "img/mock/test_music_keeps_playing_while_climate_is_operated.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 10.2,
+         "message": "",
+         "image": "img/fold/test_music_keeps_playing_while_climate_is_operated.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_guidance_and_music_continue_while_temperature_changes_on_the_move",
+     "doc": "경로 안내를 받고 음악을 들으며 120 km/h로 달리는 중에 아래 바로 두 좌석 온도를 바꿉니다. 온도는 차량에 들어가고, 안내는 같은 목적지로 계속 줄고, 음악은 같은 곡으로 재생 중입니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 10.2,
+         "message": "",
+         "image": "img/aaos/test_guidance_and_music_continue_while_temperature_changes_on_the_move.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5",
+          "HVAC_TEMPERATURE_SET[0x4]=21.5"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 11.0,
+         "message": "",
+         "image": "img/mock/test_guidance_and_music_continue_while_temperature_changes_on_the_move.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 11.3,
+         "message": "",
+         "image": "img/fold/test_guidance_and_music_continue_while_temperature_changes_on_the_move.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_climate_works_during_call_and_music_resumes_after",
+     "doc": "음악을 듣다가 전화를 겁니다. 통화하는 동안 공조 화면에서 온도와 풍량을 바꾸면 차량에 들어가고, 통화는 이어지고, 음악은 '통화 중'으로 멈춰 있습니다. 통화를 끝내면 같은 곡이 다시 나오고 바꾼 공조 값은 그대로입니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 8.6,
+         "message": "",
+         "image": "img/aaos/test_climate_works_during_call_and_music_resumes_after.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=22.5",
+          "HVAC_FAN_SPEED[0x1]=4"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 10.5,
+         "message": "",
+         "image": "img/mock/test_climate_works_during_call_and_music_resumes_after.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 10.9,
+         "message": "",
+         "image": "img/fold/test_climate_works_during_call_and_music_resumes_after.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_screen_and_vehicle_changes_at_once_end_in_same_value",
+     "doc": "화면에서 운전석 +를 세 번 누르는 동안 차량 쪽에서도 운전석 온도를 세 번 바꿉니다(다른 스레드). 어느 쪽이 마지막이든 화면과 차량 신호는 같은 값으로 끝나야 하고, 조수석은 그대로여야 합니다. 둘이 다른 값에 머물면 화면이 차량과 어긋난 것입니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.7,
+         "message": "",
+         "image": "img/aaos/test_screen_and_vehicle_changes_at_once_end_in_same_value.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=27.5",
+          "HVAC_TEMPERATURE_SET[0x4]=22.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.5,
+         "message": "",
+         "image": "img/mock/test_screen_and_vehicle_changes_at_once_end_in_same_value.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.7,
+         "message": "",
+         "image": "img/fold/test_screen_and_vehicle_changes_at_once_end_in_same_value.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "test_quick_taps_are_all_applied",
+     "doc": "+를 빠르게 네 번 누르면 네 번 모두 차량에 들어가 24.0°C가 되고 화면도 24.0°C입니다. 앱이 차량에서 값이 돌아오기 전의 옛 값으로 다음 값을 계산하면 누른 것이 사라집니다.",
+     "markers": [
+      "regression"
+     ],
+     "cases": [
+      {
+       "param": "driver",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.1,
+         "message": "",
+         "image": "img/aaos/test_quick_taps_are_all_applied_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x1]=24.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.0,
+         "message": "",
+         "image": "img/mock/test_quick_taps_are_all_applied_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.8,
+         "message": "",
+         "image": "img/fold/test_quick_taps_are_all_applied_driver.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        }
+       }
+      },
+      {
+       "param": "passenger",
+       "results": {
+        "aaos": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.2,
+         "message": "",
+         "image": "img/aaos/test_quick_taps_are_all_applied_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": [
+          "HVAC_TEMPERATURE_SET[0x4]=24.0"
+         ]
+        },
+        "mock": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 5.3,
+         "message": "",
+         "image": "img/mock/test_quick_taps_are_all_applied_passenger.webp",
+         "reruns": 0,
+         "measures": {},
+         "signals": []
+        },
+        "fold": {
+         "outcome": "passed",
+         "label": "통과",
+         "duration": 6.3,
+         "message": "",
+         "image": "img/fold/test_quick_taps_are_all_applied_passenger.webp",
          "reruns": 0,
          "measures": {},
          "signals": []
@@ -1836,7 +2114,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 4.5,
          "message": "",
          "image": "img/aaos/test_driving_signals_are_shown.webp",
          "reruns": 0,
@@ -1846,7 +2124,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.3,
          "message": "",
          "image": "img/mock/test_driving_signals_are_shown.webp",
          "reruns": 0,
@@ -1856,7 +2134,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.7,
          "message": "",
          "image": "img/fold/test_driving_signals_are_shown.webp",
          "reruns": 0,
@@ -1880,7 +2158,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.5,
          "message": "",
          "image": "img/aaos/test_video_button_locked_while_driving.webp",
          "reruns": 0,
@@ -1890,7 +2168,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_video_button_locked_while_driving.webp",
          "reruns": 0,
@@ -1900,7 +2178,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.9,
          "message": "",
          "image": "img/fold/test_video_button_locked_while_driving.webp",
          "reruns": 0,
@@ -1924,7 +2202,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.3,
          "message": "",
          "image": "img/aaos/test_video_is_blocked_while_driving.webp",
          "reruns": 0,
@@ -1934,7 +2212,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.2,
          "message": "",
          "image": "img/mock/test_video_is_blocked_while_driving.webp",
          "reruns": 0,
@@ -1968,7 +2246,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 4.0,
          "message": "",
          "image": "img/aaos/test_video_plays_when_parked.webp",
          "reruns": 0,
@@ -1978,7 +2256,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.0,
          "message": "",
          "image": "img/mock/test_video_plays_when_parked.webp",
          "reruns": 0,
@@ -2012,7 +2290,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_video_blocked_screen_follows_parking.webp",
          "reruns": 0,
@@ -2022,7 +2300,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.2,
          "message": "",
          "image": "img/mock/test_video_blocked_screen_follows_parking.webp",
          "reruns": 0,
@@ -2032,7 +2310,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/fold/test_video_blocked_screen_follows_parking.webp",
          "reruns": 0,
@@ -2056,7 +2334,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 12.5,
+         "duration": 12.9,
          "message": "",
          "image": "img/aaos/test_video_resumes_where_it_stopped.webp",
          "reruns": 0,
@@ -2066,7 +2344,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 12.9,
+         "duration": 13.5,
          "message": "",
          "image": "img/mock/test_video_resumes_where_it_stopped.webp",
          "reruns": 0,
@@ -2100,7 +2378,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_video_next_clip.webp",
          "reruns": 0,
@@ -2110,7 +2388,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_video_next_clip.webp",
          "reruns": 0,
@@ -2120,7 +2398,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.2,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_video_next_clip.webp",
          "reruns": 0,
@@ -2144,7 +2422,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.8,
+         "duration": 7.9,
          "message": "",
          "image": "img/aaos/test_stopped_in_gear_blocks_only_video_D.webp",
          "reruns": 0,
@@ -2154,7 +2432,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.0,
+         "duration": 7.8,
          "message": "",
          "image": "img/mock/test_stopped_in_gear_blocks_only_video_D.webp",
          "reruns": 0,
@@ -2164,7 +2442,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.3,
+         "duration": 9.2,
          "message": "",
          "image": "img/fold/test_stopped_in_gear_blocks_only_video_D.webp",
          "reruns": 0,
@@ -2179,7 +2457,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.6,
+         "duration": 7.8,
          "message": "",
          "image": "img/aaos/test_stopped_in_gear_blocks_only_video_N.webp",
          "reruns": 0,
@@ -2189,7 +2467,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.1,
+         "duration": 7.9,
          "message": "",
          "image": "img/mock/test_stopped_in_gear_blocks_only_video_N.webp",
          "reruns": 0,
@@ -2199,7 +2477,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.1,
+         "duration": 9.0,
          "message": "",
          "image": "img/fold/test_stopped_in_gear_blocks_only_video_N.webp",
          "reruns": 0,
@@ -2223,7 +2501,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_video_screen_is_blocked_while_stopped_in_drive.webp",
          "reruns": 0,
@@ -2233,7 +2511,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.9,
          "message": "",
          "image": "img/mock/test_video_screen_is_blocked_while_stopped_in_drive.webp",
          "reruns": 0,
@@ -2267,36 +2545,36 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 26.8,
+         "duration": 25.6,
          "message": "",
          "image": "img/aaos/test_restrictions_follow_stop_and_go_timeline.webp",
          "reruns": 0,
          "measures": {
-          "restriction_seconds": "P 0 km/h 0.3s, D 0 km/h 0.6s, D 3 km/h 0.6s, D 0 km/h 0.6s, D 60 km/h 0.7s, N 0 km/h 1.1s, P 0 km/h 0.6s"
+          "restriction_seconds": "P 0 km/h 0.3s, D 0 km/h 0.6s, D 3 km/h 0.6s, D 0 km/h 0.2s, D 60 km/h 0.7s, N 0 km/h 0.7s, P 0 km/h 0.7s"
          },
          "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 24.6,
+         "duration": 24.4,
          "message": "",
          "image": "img/mock/test_restrictions_follow_stop_and_go_timeline.webp",
          "reruns": 0,
          "measures": {
-          "restriction_seconds": "P 0 km/h 0.4s, D 0 km/h 0.4s, D 3 km/h 0.5s, D 0 km/h 0.4s, D 60 km/h 0.4s, N 0 km/h 0.4s, P 0 km/h 0.4s"
+          "restriction_seconds": "P 0 km/h 0.4s, D 0 km/h 0.4s, D 3 km/h 0.4s, D 0 km/h 0.4s, D 60 km/h 0.5s, N 0 km/h 0.5s, P 0 km/h 0.4s"
          },
          "signals": []
         },
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 26.9,
+         "duration": 28.1,
          "message": "",
          "image": "img/fold/test_restrictions_follow_stop_and_go_timeline.webp",
          "reruns": 0,
          "measures": {
-          "restriction_seconds": "P 0 km/h 0.5s, D 0 km/h 0.5s, D 3 km/h 0.5s, D 0 km/h 0.5s, D 60 km/h 0.6s, N 0 km/h 0.5s, P 0 km/h 0.6s"
+          "restriction_seconds": "P 0 km/h 0.5s, D 0 km/h 0.5s, D 3 km/h 0.5s, D 0 km/h 0.5s, D 60 km/h 1.0s, N 0 km/h 0.5s, P 0 km/h 0.7s"
          },
          "signals": []
         }
@@ -2323,7 +2601,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.4,
+         "duration": 3.5,
          "message": "",
          "image": "img/aaos/test_selecting_track_starts_it_0.webp",
          "reruns": 0,
@@ -2378,7 +2656,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.0,
          "message": "",
          "image": "img/fold/test_selecting_track_starts_it_2.webp",
          "reruns": 0,
@@ -2437,7 +2715,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_play_pause_toggles.webp",
          "reruns": 0,
@@ -2447,7 +2725,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.8,
          "message": "",
          "image": "img/mock/test_play_pause_toggles.webp",
          "reruns": 0,
@@ -2457,7 +2735,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.7,
+         "duration": 5.2,
          "message": "",
          "image": "img/fold/test_play_pause_toggles.webp",
          "reruns": 0,
@@ -2481,7 +2759,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_media_stays_usable_while_driving.webp",
          "reruns": 0,
@@ -2491,7 +2769,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 4.1,
          "message": "",
          "image": "img/mock/test_media_stays_usable_while_driving.webp",
          "reruns": 0,
@@ -2501,7 +2779,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.1,
          "message": "",
          "image": "img/fold/test_media_stays_usable_while_driving.webp",
          "reruns": 0,
@@ -2531,7 +2809,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.7,
+         "duration": 8.5,
          "message": "",
          "image": "img/aaos/test_guidance_counts_down_with_vehicle_speed.webp",
          "reruns": 0,
@@ -2541,7 +2819,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.9,
+         "duration": 8.7,
          "message": "",
          "image": "img/mock/test_guidance_counts_down_with_vehicle_speed.webp",
          "reruns": 0,
@@ -2551,7 +2829,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.0,
+         "duration": 8.9,
          "message": "",
          "image": "img/fold/test_guidance_counts_down_with_vehicle_speed.webp",
          "reruns": 0,
@@ -2575,7 +2853,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.7,
+         "duration": 6.6,
          "message": "",
          "image": "img/aaos/test_parked_vehicle_does_not_advance_route.webp",
          "reruns": 0,
@@ -2585,7 +2863,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.1,
+         "duration": 7.0,
          "message": "",
          "image": "img/mock/test_parked_vehicle_does_not_advance_route.webp",
          "reruns": 0,
@@ -2595,7 +2873,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.4,
+         "duration": 7.3,
          "message": "",
          "image": "img/fold/test_parked_vehicle_does_not_advance_route.webp",
          "reruns": 0,
@@ -2619,7 +2897,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_search_locked_while_driving_but_favorites_work.webp",
          "reruns": 0,
@@ -2629,7 +2907,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.1,
          "message": "",
          "image": "img/mock/test_search_locked_while_driving_but_favorites_work.webp",
          "reruns": 0,
@@ -2663,7 +2941,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.2,
+         "duration": 5.1,
          "message": "",
          "image": "img/aaos/test_category_shortcut_works_while_driving_charger-nearest0-6.webp",
          "reruns": 0,
@@ -2673,7 +2951,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.0,
          "message": "",
          "image": "img/mock/test_category_shortcut_works_while_driving_charger-nearest0-6.webp",
          "reruns": 0,
@@ -2683,7 +2961,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 5.8,
          "message": "",
          "image": "img/fold/test_category_shortcut_works_while_driving_charger-nearest0-6.webp",
          "reruns": 0,
@@ -2698,7 +2976,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.3,
+         "duration": 5.1,
          "message": "",
          "image": "img/aaos/test_category_shortcut_works_while_driving_parking-nearest1-8.webp",
          "reruns": 0,
@@ -2718,7 +2996,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.1,
+         "duration": 5.7,
          "message": "",
          "image": "img/fold/test_category_shortcut_works_while_driving_parking-nearest1-8.webp",
          "reruns": 0,
@@ -2762,7 +3040,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.5,
+         "duration": 6.8,
          "message": "",
          "image": "img/fold/test_cancel_preview_returns_to_search.webp",
          "reruns": 0,
@@ -2830,7 +3108,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.7,
+         "duration": 8.8,
          "message": "",
          "image": "img/aaos/test_arrival.webp",
          "reruns": 0,
@@ -2850,7 +3128,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.9,
+         "duration": 8.5,
          "message": "",
          "image": "img/fold/test_arrival.webp",
          "reruns": 0,
@@ -2874,7 +3152,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 5.0,
          "message": "",
          "image": "img/aaos/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
          "reruns": 0,
@@ -2884,7 +3162,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 6.0,
          "message": "",
          "image": "img/mock/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
          "reruns": 0,
@@ -2894,7 +3172,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.5,
+         "duration": 6.1,
          "message": "",
          "image": "img/fold/test_stop_guidance_returns_to_search_and_clears_cluster_route.webp",
          "reruns": 0,
@@ -2924,7 +3202,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.5,
+         "duration": 5.6,
          "message": "",
          "image": "img/aaos/test_call_contact_shows_call_screen_and_recent.webp",
          "reruns": 0,
@@ -2934,7 +3212,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.6,
+         "duration": 6.5,
          "message": "",
          "image": "img/mock/test_call_contact_shows_call_screen_and_recent.webp",
          "reruns": 0,
@@ -2944,7 +3222,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.1,
+         "duration": 6.5,
          "message": "",
          "image": "img/fold/test_call_contact_shows_call_screen_and_recent.webp",
          "reruns": 0,
@@ -2968,7 +3246,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.6,
+         "duration": 6.7,
          "message": "",
          "image": "img/aaos/test_keypad_dial.webp",
          "reruns": 0,
@@ -2978,7 +3256,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.8,
+         "duration": 7.6,
          "message": "",
          "image": "img/mock/test_keypad_dial.webp",
          "reruns": 0,
@@ -2988,7 +3266,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.0,
+         "duration": 7.9,
          "message": "",
          "image": "img/fold/test_keypad_dial.webp",
          "reruns": 0,
@@ -3012,7 +3290,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.5,
+         "duration": 9.6,
          "message": "",
          "image": "img/aaos/test_keypad_limits_length_and_edits.webp",
          "reruns": 0,
@@ -3022,7 +3300,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 11.7,
+         "duration": 11.6,
          "message": "",
          "image": "img/mock/test_keypad_limits_length_and_edits.webp",
          "reruns": 0,
@@ -3032,7 +3310,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 11.8,
+         "duration": 11.6,
          "message": "",
          "image": "img/fold/test_keypad_limits_length_and_edits.webp",
          "reruns": 0,
@@ -3056,7 +3334,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.5,
          "message": "",
          "image": "img/aaos/test_driving_locks_keypad_and_limits_contacts.webp",
          "reruns": 0,
@@ -3100,7 +3378,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.3,
+         "duration": 6.5,
          "message": "",
          "image": "img/aaos/test_call_pauses_radio_then_resumes.webp",
          "reruns": 0,
@@ -3120,7 +3398,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.7,
+         "duration": 8.0,
          "message": "",
          "image": "img/fold/test_call_pauses_radio_then_resumes.webp",
          "reruns": 0,
@@ -3151,7 +3429,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 35.7,
+         "duration": 35.8,
          "message": "",
          "image": "img/aaos/test_power_cycle_brings_back_app_and_cabin_defaults.webp",
          "reruns": 0,
@@ -3226,7 +3504,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_power_on_plays_default_station.webp",
          "reruns": 0,
@@ -3260,7 +3538,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 6.1,
          "message": "",
          "image": "img/mock/test_tune_and_seek.webp",
          "reruns": 0,
@@ -3270,7 +3548,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.8,
+         "duration": 6.6,
          "message": "",
          "image": "img/fold/test_tune_and_seek.webp",
          "reruns": 0,
@@ -3294,7 +3572,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_am_band_uses_khz_steps.webp",
          "reruns": 0,
@@ -3304,7 +3582,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 5.3,
          "message": "",
          "image": "img/mock/test_am_band_uses_khz_steps.webp",
          "reruns": 0,
@@ -3314,7 +3592,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.2,
+         "duration": 5.1,
          "message": "",
          "image": "img/fold/test_am_band_uses_khz_steps.webp",
          "reruns": 0,
@@ -3338,7 +3616,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 4.5,
          "message": "",
          "image": "img/aaos/test_seek_wraps_around_band_ends.webp",
          "reruns": 0,
@@ -3358,7 +3636,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.3,
+         "duration": 5.5,
          "message": "",
          "image": "img/fold/test_seek_wraps_around_band_ends.webp",
          "reruns": 0,
@@ -3382,7 +3660,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.2,
          "message": "",
          "image": "img/aaos/test_each_band_keeps_its_own_frequency.webp",
          "reruns": 0,
@@ -3392,7 +3670,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 5.8,
          "message": "",
          "image": "img/mock/test_each_band_keeps_its_own_frequency.webp",
          "reruns": 0,
@@ -3402,7 +3680,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.4,
+         "duration": 6.1,
          "message": "",
          "image": "img/fold/test_each_band_keeps_its_own_frequency.webp",
          "reruns": 0,
@@ -3426,7 +3704,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 6.0,
          "message": "",
          "image": "img/aaos/test_preset_save_and_recall.webp",
          "reruns": 0,
@@ -3436,7 +3714,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.1,
+         "duration": 7.0,
          "message": "",
          "image": "img/mock/test_preset_save_and_recall.webp",
          "reruns": 0,
@@ -3446,7 +3724,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.5,
+         "duration": 7.4,
          "message": "",
          "image": "img/fold/test_preset_save_and_recall.webp",
          "reruns": 0,
@@ -3470,7 +3748,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 9.8,
+         "duration": 11.2,
          "message": "",
          "image": "img/aaos/test_preset_and_frequency_survive_app_restart.webp",
          "reruns": 0,
@@ -3490,7 +3768,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 11.3,
+         "duration": 10.4,
          "message": "",
          "image": "img/fold/test_preset_and_frequency_survive_app_restart.webp",
          "reruns": 0,
@@ -3514,7 +3792,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 6.0,
          "message": "",
          "image": "img/aaos/test_radio_and_media_play_one_at_a_time.webp",
          "reruns": 0,
@@ -3534,7 +3812,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.0,
+         "duration": 6.6,
          "message": "",
          "image": "img/fold/test_radio_and_media_play_one_at_a_time.webp",
          "reruns": 0,
@@ -3574,7 +3852,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.4,
+         "duration": 2.3,
          "message": "",
          "image": "img/mock/test_reverse_gear_shows_camera.webp",
          "reruns": 0,
@@ -3584,7 +3862,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.7,
          "message": "",
          "image": "img/fold/test_reverse_gear_shows_camera.webp",
          "reruns": 0,
@@ -3608,7 +3886,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_camera_returns_to_previous_screen.webp",
          "reruns": 0,
@@ -3618,7 +3896,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.1,
          "message": "",
          "image": "img/mock/test_camera_returns_to_previous_screen.webp",
          "reruns": 0,
@@ -3652,7 +3930,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.2,
          "message": "",
          "image": "img/aaos/test_gear_value_shows_reverse.webp",
          "reruns": 0,
@@ -3672,7 +3950,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.2,
+         "duration": 3.0,
          "message": "",
          "image": "img/fold/test_gear_value_shows_reverse.webp",
          "reruns": 0,
@@ -3696,36 +3974,36 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.5,
+         "duration": 7.6,
          "message": "",
          "image": "img/aaos/test_rear_camera_appears_within_two_seconds.webp",
          "reruns": 0,
          "measures": {
-          "camera_seconds": "0.64, 0.61, 0.62, 0.62, 0.62"
+          "camera_seconds": "0.64, 0.63, 0.63, 0.63, 0.63"
          },
          "signals": []
         },
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.5,
          "message": "",
          "image": "img/mock/test_rear_camera_appears_within_two_seconds.webp",
          "reruns": 0,
          "measures": {
-          "camera_seconds": "0.28, 0.34, 0.35, 0.36, 0.24"
+          "camera_seconds": "0.27, 0.33, 0.28, 0.30, 0.33"
          },
          "signals": []
         },
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 5.0,
          "message": "",
          "image": "img/fold/test_rear_camera_appears_within_two_seconds.webp",
          "reruns": 0,
          "measures": {
-          "camera_seconds": "0.38, 0.33, 0.29, 0.32, 0.40"
+          "camera_seconds": "0.29, 0.32, 0.32, 0.36, 0.29"
          },
          "signals": []
         }
@@ -3752,7 +4030,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 5.1,
          "message": "",
          "image": "img/aaos/test_mph_setting_converts_vehicle_speed.webp",
          "reruns": 0,
@@ -3762,7 +4040,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.1,
+         "duration": 5.5,
          "message": "",
          "image": "img/mock/test_mph_setting_converts_vehicle_speed.webp",
          "reruns": 0,
@@ -3772,7 +4050,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 5.2,
          "message": "",
          "image": "img/fold/test_mph_setting_converts_vehicle_speed.webp",
          "reruns": 0,
@@ -3796,7 +4074,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 5.2,
          "message": "",
          "image": "img/aaos/test_volume_steps.webp",
          "reruns": 0,
@@ -3806,7 +4084,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 5.5,
          "message": "",
          "image": "img/mock/test_volume_steps.webp",
          "reruns": 0,
@@ -3816,7 +4094,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.7,
+         "duration": 5.6,
          "message": "",
          "image": "img/fold/test_volume_steps.webp",
          "reruns": 0,
@@ -3840,7 +4118,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 11.0,
+         "duration": 12.1,
          "message": "",
          "image": "img/aaos/test_settings_survive_app_restart.webp",
          "reruns": 0,
@@ -3850,7 +4128,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 10.7,
+         "duration": 10.5,
          "message": "",
          "image": "img/mock/test_settings_survive_app_restart.webp",
          "reruns": 0,
@@ -3860,7 +4138,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 12.5,
+         "duration": 11.3,
          "message": "",
          "image": "img/fold/test_settings_survive_app_restart.webp",
          "reruns": 0,
@@ -3884,7 +4162,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 6.1,
          "message": "",
          "image": "img/aaos/test_reset_restores_defaults.webp",
          "reruns": 0,
@@ -3894,7 +4172,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.1,
+         "duration": 6.6,
          "message": "",
          "image": "img/mock/test_reset_restores_defaults.webp",
          "reruns": 0,
@@ -3904,7 +4182,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.9,
+         "duration": 7.6,
          "message": "",
          "image": "img/fold/test_reset_restores_defaults.webp",
          "reruns": 0,
@@ -3939,7 +4217,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/mock/test_12_hour_clock_on_tablet.webp",
          "reruns": 0,
@@ -3949,7 +4227,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.4,
+         "duration": 4.9,
          "message": "",
          "image": "img/fold/test_12_hour_clock_on_tablet.webp",
          "reruns": 0,
@@ -3989,7 +4267,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.1,
+         "duration": 2.0,
          "message": "",
          "image": "img/mock/test_app_starts_with_vehicle_source_for_device.webp",
          "reruns": 0,
@@ -4023,7 +4301,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 2.8,
          "message": "",
          "image": "img/aaos/test_parked_on_start.webp",
          "reruns": 0,
@@ -4033,7 +4311,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.8,
+         "duration": 2.7,
          "message": "",
          "image": "img/mock/test_parked_on_start.webp",
          "reruns": 0,
@@ -4043,7 +4321,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.0,
          "message": "",
          "image": "img/fold/test_parked_on_start.webp",
          "reruns": 0,
@@ -4087,7 +4365,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.9,
          "message": "",
          "image": "img/fold/test_each_tab_opens_home.webp",
          "reruns": 0,
@@ -4122,7 +4400,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.0,
          "message": "",
          "image": "img/fold/test_each_tab_opens_navigation.webp",
          "reruns": 0,
@@ -4137,7 +4415,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_radio.webp",
          "reruns": 0,
@@ -4157,7 +4435,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.4,
+         "duration": 3.7,
          "message": "",
          "image": "img/fold/test_each_tab_opens_radio.webp",
          "reruns": 0,
@@ -4172,7 +4450,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.6,
+         "duration": 2.7,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_media.webp",
          "reruns": 0,
@@ -4182,7 +4460,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.6,
          "message": "",
          "image": "img/mock/test_each_tab_opens_media.webp",
          "reruns": 0,
@@ -4242,7 +4520,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.6,
+         "duration": 2.7,
          "message": "",
          "image": "img/aaos/test_each_tab_opens_climate.webp",
          "reruns": 0,
@@ -4287,7 +4565,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.4,
          "message": "",
          "image": "img/mock/test_each_tab_opens_settings.webp",
          "reruns": 0,
@@ -4297,7 +4575,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.6,
          "message": "",
          "image": "img/fold/test_each_tab_opens_settings.webp",
          "reruns": 0,
@@ -4322,7 +4600,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.7,
+         "duration": 2.5,
          "message": "",
          "image": "img/mock/test_each_tab_opens_assistant.webp",
          "reruns": 0,
@@ -4332,7 +4610,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 2.9,
          "message": "",
          "image": "img/fold/test_each_tab_opens_assistant.webp",
          "reruns": 0,
@@ -4367,7 +4645,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.9,
          "message": "",
          "image": "img/fold/test_each_tab_opens_vehicle_controls.webp",
          "reruns": 0,
@@ -4392,7 +4670,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.6,
+         "duration": 2.5,
          "message": "",
          "image": "img/mock/test_each_tab_opens_apps.webp",
          "reruns": 0,
@@ -4402,7 +4680,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.9,
          "message": "",
          "image": "img/fold/test_each_tab_opens_apps.webp",
          "reruns": 0,
@@ -4426,7 +4704,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 4.2,
          "message": "",
          "image": "img/aaos/test_hvac_is_controllable.webp",
          "reruns": 0,
@@ -4438,7 +4716,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_hvac_is_controllable.webp",
          "reruns": 0,
@@ -4448,7 +4726,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.8,
          "message": "",
          "image": "img/fold/test_hvac_is_controllable.webp",
          "reruns": 0,
@@ -4479,7 +4757,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 1.9,
+         "duration": 2.4,
          "message": "",
          "image": "img/aaos/test_hvac_signal_is_shown_on_ui_25.0.webp",
          "reruns": 0,
@@ -4516,7 +4794,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.3,
+         "duration": 2.4,
          "message": "",
          "image": "img/aaos/test_hvac_signal_is_shown_on_ui_20.0.webp",
          "reruns": 0,
@@ -4563,7 +4841,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.6,
          "message": "",
          "image": "img/aaos/test_hvac_ui_tap_changes_signal_driver-hvac_decrease_button--0.5.webp",
          "reruns": 0,
@@ -4601,7 +4879,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.5,
          "message": "",
          "image": "img/aaos/test_hvac_ui_tap_changes_signal_passenger-hvac_increase_button-0.5.webp",
          "reruns": 0,
@@ -4649,7 +4927,7 @@
         "aaos": {
          "outcome": "xfailed",
          "label": "알려진 결함",
-         "duration": 1.4,
+         "duration": 1.3,
          "message": "알려진 결함 3 (이슈 #21): 1024x768 에서 운전석 온도 ▲ 가 홈 버튼에 가려 탭이 홈으로 간다 (docs/phase1-spike.md)",
          "image": "img/aaos/test_driver_temp_up_is_not_covered_by_home.webp",
          "reruns": 0,
@@ -4694,7 +4972,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 1.5,
+         "duration": 0.9,
          "message": "",
          "image": "img/aaos/test_speed_and_gear_change_driving_state.webp",
          "reruns": 0,
@@ -4758,7 +5036,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_ac_toggle_reaches_every_seat.webp",
          "reruns": 0,
@@ -4768,7 +5046,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.1,
          "message": "",
          "image": "img/fold/test_ac_toggle_reaches_every_seat.webp",
          "reruns": 0,
@@ -4792,7 +5070,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
          "reruns": 0,
@@ -4802,7 +5080,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 2.8,
          "message": "",
          "image": "img/mock/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
          "reruns": 0,
@@ -4812,7 +5090,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.4,
          "message": "",
          "image": "img/fold/test_ac_signal_is_shown_on_climate_and_bottom_bar.webp",
          "reruns": 0,
@@ -4858,7 +5136,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.2,
+         "duration": 4.1,
          "message": "",
          "image": "img/fold/test_fan_button_changes_signal_by_one_up-4.webp",
          "reruns": 0,
@@ -4873,7 +5151,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.8,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_fan_button_changes_signal_by_one_down-2.webp",
          "reruns": 0,
@@ -4885,7 +5163,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.5,
          "message": "",
          "image": "img/mock/test_fan_button_changes_signal_by_one_down-2.webp",
          "reruns": 0,
@@ -4895,7 +5173,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_fan_button_changes_signal_by_one_down-2.webp",
          "reruns": 0,
@@ -4919,7 +5197,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp",
          "reruns": 0,
@@ -4931,7 +5209,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.6,
          "message": "",
          "image": "img/mock/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp",
          "reruns": 0,
@@ -4941,7 +5219,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.3,
+         "duration": 5.1,
          "message": "",
          "image": "img/fold/test_fan_buttons_disabled_at_limits_1-climate_fan_down.webp",
          "reruns": 0,
@@ -4956,7 +5234,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
          "reruns": 0,
@@ -4968,7 +5246,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 5.0,
          "message": "",
          "image": "img/mock/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
          "reruns": 0,
@@ -4978,7 +5256,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.3,
+         "duration": 5.1,
          "message": "",
          "image": "img/fold/test_fan_buttons_disabled_at_limits_7-climate_fan_up.webp",
          "reruns": 0,
@@ -5002,7 +5280,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_max_ac_sets_signal_and_coldest_settings.webp",
          "reruns": 0,
@@ -5026,7 +5304,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 5.6,
          "message": "",
          "image": "img/fold/test_max_ac_sets_signal_and_coldest_settings.webp",
          "reruns": 0,
@@ -5064,7 +5342,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.2,
          "message": "",
          "image": "img/mock/test_max_ac_off_restores_previous_settings.webp",
          "reruns": 0,
@@ -5098,7 +5376,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 3.1,
          "message": "",
          "image": "img/aaos/test_max_ac_signal_is_shown_on_toggle.webp",
          "reruns": 0,
@@ -5108,7 +5386,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.0,
          "message": "",
          "image": "img/mock/test_max_ac_signal_is_shown_on_toggle.webp",
          "reruns": 0,
@@ -5118,7 +5396,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.4,
          "message": "",
          "image": "img/fold/test_max_ac_signal_is_shown_on_toggle.webp",
          "reruns": 0,
@@ -5156,7 +5434,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 6.1,
          "message": "",
          "image": "img/mock/test_manual_fan_releases_max_ac.webp",
          "reruns": 0,
@@ -5166,7 +5444,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.9,
+         "duration": 6.6,
          "message": "",
          "image": "img/fold/test_manual_fan_releases_max_ac.webp",
          "reruns": 0,
@@ -5190,7 +5468,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.8,
          "message": "",
          "image": "img/aaos/test_turning_ac_off_releases_max_ac.webp",
          "reruns": 0,
@@ -5203,7 +5481,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.4,
          "message": "",
          "image": "img/mock/test_turning_ac_off_releases_max_ac.webp",
          "reruns": 0,
@@ -5213,7 +5491,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 5.0,
          "message": "",
          "image": "img/fold/test_turning_ac_off_releases_max_ac.webp",
          "reruns": 0,
@@ -5237,7 +5515,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.9,
+         "duration": 6.1,
          "message": "",
          "image": "img/aaos/test_manual_temperature_releases_max_ac.webp",
          "reruns": 0,
@@ -5251,7 +5529,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 5.9,
          "message": "",
          "image": "img/mock/test_manual_temperature_releases_max_ac.webp",
          "reruns": 0,
@@ -5285,7 +5563,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.6,
          "message": "",
          "image": "img/aaos/test_turning_auto_on_releases_max_ac.webp",
          "reruns": 0,
@@ -5333,7 +5611,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_manual_fan_releases_auto.webp",
          "reruns": 0,
@@ -5346,7 +5624,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.5,
+         "duration": 4.4,
          "message": "",
          "image": "img/mock/test_manual_fan_releases_auto.webp",
          "reruns": 0,
@@ -5356,7 +5634,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.6,
+         "duration": 4.9,
          "message": "",
          "image": "img/fold/test_manual_fan_releases_auto.webp",
          "reruns": 0,
@@ -5393,7 +5671,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 5.0,
          "message": "",
          "image": "img/mock/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp",
          "reruns": 0,
@@ -5403,7 +5681,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 5.8,
          "message": "",
          "image": "img/fold/test_defrost_changes_only_its_window_defrost_front-defrost_front-defrost_rear.webp",
          "reruns": 0,
@@ -5431,7 +5709,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.9,
+         "duration": 5.1,
          "message": "",
          "image": "img/mock/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp",
          "reruns": 0,
@@ -5441,7 +5719,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.1,
+         "duration": 5.9,
          "message": "",
          "image": "img/fold/test_defrost_changes_only_its_window_defrost_rear-defrost_rear-defrost_front.webp",
          "reruns": 0,
@@ -5465,7 +5743,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.1,
+         "duration": 5.7,
          "message": "",
          "image": "img/aaos/test_seat_heat_cycles_levels_on_vehicle_driver.webp",
          "reruns": 0,
@@ -5478,7 +5756,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.4,
+         "duration": 6.2,
          "message": "",
          "image": "img/mock/test_seat_heat_cycles_levels_on_vehicle_driver.webp",
          "reruns": 0,
@@ -5488,7 +5766,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.5,
+         "duration": 6.4,
          "message": "",
          "image": "img/fold/test_seat_heat_cycles_levels_on_vehicle_driver.webp",
          "reruns": 0,
@@ -5503,7 +5781,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.8,
+         "duration": 5.9,
          "message": "",
          "image": "img/aaos/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
          "reruns": 0,
@@ -5516,7 +5794,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.2,
+         "duration": 6.5,
          "message": "",
          "image": "img/mock/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
          "reruns": 0,
@@ -5526,7 +5804,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.0,
+         "duration": 6.8,
          "message": "",
          "image": "img/fold/test_seat_heat_cycles_levels_on_vehicle_passenger.webp",
          "reruns": 0,
@@ -5550,7 +5828,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.3,
+         "duration": 5.4,
          "message": "",
          "image": "img/aaos/test_seat_heat_signal_is_shown_everywhere.webp",
          "reruns": 0,
@@ -5560,7 +5838,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.7,
+         "duration": 5.6,
          "message": "",
          "image": "img/mock/test_seat_heat_signal_is_shown_everywhere.webp",
          "reruns": 0,
@@ -5607,7 +5885,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.2,
+         "duration": 5.0,
          "message": "",
          "image": "img/mock/test_bottom_bar_seat_heat_works_from_any_screen.webp",
          "reruns": 0,
@@ -5617,7 +5895,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.1,
+         "duration": 5.7,
          "message": "",
          "image": "img/fold/test_bottom_bar_seat_heat_works_from_any_screen.webp",
          "reruns": 0,
@@ -5641,7 +5919,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.0,
+         "duration": 6.1,
          "message": "",
          "image": "img/aaos/test_assistant_seat_heat_follows_speaker_zone.webp",
          "reruns": 0,
@@ -5654,7 +5932,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 6.6,
+         "duration": 6.3,
          "message": "",
          "image": "img/mock/test_assistant_seat_heat_follows_speaker_zone.webp",
          "reruns": 0,
@@ -5664,7 +5942,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 7.6,
+         "duration": 7.0,
          "message": "",
          "image": "img/fold/test_assistant_seat_heat_follows_speaker_zone.webp",
          "reruns": 0,
@@ -5688,7 +5966,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.7,
          "message": "",
          "image": "img/aaos/test_door_lock_button_drives_every_door.webp",
          "reruns": 0,
@@ -5712,7 +5990,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.9,
          "message": "",
          "image": "img/fold/test_door_lock_button_drives_every_door.webp",
          "reruns": 0,
@@ -5736,7 +6014,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_door_lock_signal_is_shown.webp",
          "reruns": 0,
@@ -5756,7 +6034,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.3,
          "message": "",
          "image": "img/fold/test_door_lock_signal_is_shown.webp",
          "reruns": 0,
@@ -5780,7 +6058,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.3,
+         "duration": 3.4,
          "message": "",
          "image": "img/aaos/test_energy_signals_are_shown_on_cluster.webp",
          "reruns": 0,
@@ -5800,7 +6078,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.8,
+         "duration": 2.7,
          "message": "",
          "image": "img/fold/test_energy_signals_are_shown_on_cluster.webp",
          "reruns": 0,
@@ -5824,7 +6102,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.4,
          "message": "",
          "image": "img/aaos/test_low_range_threshold_31.0-False.webp",
          "reruns": 0,
@@ -5834,7 +6112,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 1.9,
+         "duration": 2.0,
          "message": "",
          "image": "img/mock/test_low_range_threshold_31.0-False.webp",
          "reruns": 0,
@@ -5859,7 +6137,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.9,
+         "duration": 3.0,
          "message": "",
          "image": "img/aaos/test_low_range_threshold_30.0-True.webp",
          "reruns": 0,
@@ -5869,7 +6147,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.0,
+         "duration": 2.2,
          "message": "",
          "image": "img/mock/test_low_range_threshold_30.0-True.webp",
          "reruns": 0,
@@ -5879,7 +6157,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.0,
+         "duration": 2.5,
          "message": "",
          "image": "img/fold/test_low_range_threshold_30.0-True.webp",
          "reruns": 0,
@@ -5904,7 +6182,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 1.9,
+         "duration": 2.0,
          "message": "",
          "image": "img/mock/test_low_range_threshold_29.0-True.webp",
          "reruns": 0,
@@ -5938,7 +6216,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 4.4,
          "message": "",
          "image": "img/aaos/test_low_range_card_starts_guidance_to_nearest_charger.webp",
          "reruns": 0,
@@ -5948,7 +6226,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.7,
          "message": "",
          "image": "img/mock/test_low_range_card_starts_guidance_to_nearest_charger.webp",
          "reruns": 0,
@@ -5982,7 +6260,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.1,
+         "duration": 3.2,
          "message": "",
          "image": "img/aaos/test_low_range_is_recorded_in_notifications.webp",
          "reruns": 0,
@@ -6002,7 +6280,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.6,
          "message": "",
          "image": "img/fold/test_low_range_is_recorded_in_notifications.webp",
          "reruns": 0,
@@ -6026,7 +6304,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.7,
+         "duration": 4.9,
          "message": "",
          "image": "img/aaos/test_range_recovers_after_charging.webp",
          "reruns": 0,
@@ -6036,7 +6314,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.4,
+         "duration": 2.3,
          "message": "",
          "image": "img/mock/test_range_recovers_after_charging.webp",
          "reruns": 0,
@@ -6046,7 +6324,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 2.8,
+         "duration": 2.7,
          "message": "",
          "image": "img/fold/test_range_recovers_after_charging.webp",
          "reruns": 0,
@@ -6071,7 +6349,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 8.3,
+         "duration": 9.4,
          "message": "",
          "image": "img/aaos/test_signal_without_permission_shows_no_value.webp",
          "reruns": 0,
@@ -6115,7 +6393,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 5.7,
+         "duration": 7.1,
          "message": "",
          "image": "img/aaos/test_range_follows_speed_unit_setting.webp",
          "reruns": 0,
@@ -6125,7 +6403,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.6,
+         "duration": 4.7,
          "message": "",
          "image": "img/mock/test_range_follows_speed_unit_setting.webp",
          "reruns": 0,
@@ -6165,7 +6443,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_voice_sets_driver_temperature_on_vehicle.webp",
          "reruns": 0,
@@ -6187,7 +6465,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 4.2,
          "message": "",
          "image": "img/fold/test_voice_sets_driver_temperature_on_vehicle.webp",
          "reruns": 0,
@@ -6211,7 +6489,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.6,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_voice_turns_on_radio.webp",
          "reruns": 0,
@@ -6255,7 +6533,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.7,
          "message": "",
          "image": "img/aaos/test_voice_starts_guidance_home.webp",
          "reruns": 0,
@@ -6265,7 +6543,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.9,
+         "duration": 3.8,
          "message": "",
          "image": "img/mock/test_voice_starts_guidance_home.webp",
          "reruns": 0,
@@ -6299,7 +6577,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.5,
+         "duration": 3.6,
          "message": "",
          "image": "img/aaos/test_voice_panel_closes_after_command.webp",
          "reruns": 0,
@@ -6309,7 +6587,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.0,
+         "duration": 3.9,
          "message": "",
          "image": "img/mock/test_voice_panel_closes_after_command.webp",
          "reruns": 0,
@@ -6319,7 +6597,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.8,
+         "duration": 4.1,
          "message": "",
          "image": "img/fold/test_voice_panel_closes_after_command.webp",
          "reruns": 0,
@@ -6343,7 +6621,7 @@
         "aaos": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 3.7,
+         "duration": 3.8,
          "message": "",
          "image": "img/aaos/test_voice_calls_contact.webp",
          "reruns": 0,
@@ -6353,7 +6631,7 @@
         "mock": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.1,
+         "duration": 4.0,
          "message": "",
          "image": "img/mock/test_voice_calls_contact.webp",
          "reruns": 0,
@@ -6363,7 +6641,7 @@
         "fold": {
          "outcome": "passed",
          "label": "통과",
-         "duration": 4.3,
+         "duration": 4.4,
          "message": "",
          "image": "img/fold/test_voice_calls_contact.webp",
          "reruns": 0,
@@ -6381,14 +6659,14 @@
   "rounds": 3,
   "devices": 2,
   "run_ids": [
-   "20261124-120332-r1",
-   "20261124-121620-r2",
-   "20261124-122909-r3"
+   "20261124-155827-r1",
+   "20261124-161206-r2",
+   "20261124-162540-r3"
   ],
-  "executions": 837,
+  "executions": 873,
   "executions_by_kind": {
-   "aaos": 429,
-   "mock": 408
+   "aaos": 447,
+   "mock": 426
   },
   "flaky": 0,
   "failed": 0,
