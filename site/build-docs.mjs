@@ -19,6 +19,7 @@ const SITE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SITE, "..");
 const OUT = path.join(SITE, "docs");
 const RESULTS_JSON = path.join(SITE, "results", "results.json");
+const HISTORY_JSON = path.join(SITE, "results", "history.json");  // ivi-tests/tools/run_history.py 가 만드는 전체 실행 기록
 const INDEX = path.join(SITE, "index.html");
 const FIT = path.join(SITE, "fit.html");
 // 사이트(GitHub Pages)에는 site/ 와 docs/images/ 만 올린다. 소스 코드와 원문 .md 는 GitHub 화면으로 잇는다.
@@ -36,6 +37,7 @@ const PAGES = [
   { src: "docs/portfolio.md", out: "portfolio.html", nav: "포트폴리오" },
   { src: "docs/test-results.md", out: "test-results.html", nav: "테스트 결과", results: true },
   { src: "docs/flaky-report.md", out: "flaky-report.html", nav: "반복 실행 통계" },
+  { src: "docs/run-history.md", out: "run-history.html", nav: "전체 실행 기록", wide: true },
   { src: "docs/decisions.md", out: "decisions.html", nav: "결정 기록" },
   { src: "docs/traceability.md", out: "traceability.html", nav: "요구사항 추적표", wide: true },
   { src: "docs/requirements.md", out: "requirements.html", nav: "요구사항" },
@@ -58,6 +60,7 @@ const stripTags = (s) => s.replace(/<[^>]*>/g, "");
 const unesc = (s) => s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 
 const RESULTS = existsSync(RESULTS_JSON) ? JSON.parse(readFileSync(RESULTS_JSON, "utf8")) : null;
+const HISTORY = existsSync(HISTORY_JSON) ? JSON.parse(readFileSync(HISTORY_JSON, "utf8")) : null;
 // 문서 본문의 `test_이름` · `test_파일.py` 를 결과 페이지로 잇는다
 const TEST_LINKS = new Map();
 for (const f of RESULTS?.files ?? []) {
@@ -591,6 +594,25 @@ function renderDevices(data) {
       </div>`;
 }
 
+// 원자료가 남은 E2E 실행을 모두 합친 수 (history.json). 반복 실행 헤드라인과 달리 실패·재시도 통과가 있는 실행도 다 넣는다
+function renderHistory(h) {
+  const t = h.total;
+  const n = (v) => v.toLocaleString("en-US");
+  const item = (num, unit, label) => `<li><b>${num}<small>${unit}</small></b><span>${label}</span></li>`;
+  return `<div class="card history">
+        <div class="history-head">
+          <p class="history-title">원자료가 남은 E2E 실행을 모두 합치면 <span>(${esc(h.first)}~${esc(h.last)}, 첫 시도와 확인용 실행 포함)</span></p>
+          <a class="history-link" href="docs/run-history.html">전체 실행 기록 <span aria-hidden="true">→</span></a>
+        </div>
+        <ul class="history-nums">
+          ${item(n(t.sessions), "회", "기기별 실행")}
+          ${item(n(t.executed), "건", "테스트 실행")}
+          ${item(n(t.bad), "건", "실패·오류, 원인 모두 기록")}
+          ${item(n(t.flaky), "건", "재시도 후 통과")}
+        </ul>
+      </div>`;
+}
+
 // <!-- 이름:start --> ~ <!-- 이름:end --> 사이를 새로 만든 것으로 바꾼다
 function fillBlocks(file, blocks) {
   let html = readFileSync(file, "utf8");
@@ -604,7 +626,8 @@ function fillBlocks(file, blocks) {
 
 function writeIndex() {
   const idx = reqIndex(RESULTS);
-  fillBlocks(INDEX, [["stats", renderStats(idx, RESULTS)], ["devices", renderDevices(RESULTS)]]);
+  fillBlocks(INDEX, [["stats", renderStats(idx, RESULTS)], ["devices", renderDevices(RESULTS)],
+    ...(HISTORY ? [["history", renderHistory(HISTORY)]] : [])]);
   fillBlocks(FIT, [["fit", renderFit(idx)]]);
   console.log("site/results/results.json + site/requirements.mjs → site/index.html (숫자 띠, 기기별 결과), site/fit.html (공고 항목별 근거)");
 }

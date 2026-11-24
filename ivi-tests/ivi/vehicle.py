@@ -129,7 +129,7 @@ class Area:
 
 
 class DrivingState:
-    UNKNOWN = -1
+    UNKNOWN = -1  # 플랫폼이 알려 주는 '알 수 없음' (CarDrivingStateEvent). 출력을 못 읽은 것과는 다르다
     PARKED = 0
     IDLING = 1
     MOVING = 2
@@ -360,9 +360,15 @@ class AaosVehicle(VehicleController):
         return [self._from_vhal(name, self.get_property(prop, area)) for area in areas]
 
     def driving_state(self):
+        """CarDrivingStateService 가 보는 주행 상태(DrivingState). 상태 줄을 못 찾으면 RuntimeError 를 낸다.
+        예전에는 못 찾으면 UNKNOWN 을 돌려줘서 is_restricted() 가 '제한 없음'으로 읽고, wait_restricted(False) 가
+        기다리지 않고 지나갔다(2026-11-24). get_property, ux_restrictions 처럼 못 읽으면 시끄럽게 실패한다.
+        RuntimeError 는 대기가 다시 보는 예외라, 잠깐 못 읽은 것은 다시 읽고 끝까지 못 읽으면 출력과 함께 남는다."""
         out = self.adb.shell("dumpsys", "car_service", "--services", "CarDrivingStateService")
         found = re.search(r"Current Driving State: (-?\d+)", out)
-        return int(found.group(1)) if found else DrivingState.UNKNOWN
+        if not found:
+            raise RuntimeError(f"주행 상태를 읽지 못했다: {out.strip()[:200]}")
+        return int(found.group(1))
 
     # ---- 공통 동작 ----
     def drive(self, kmh=50.0, gear="D"):
@@ -400,16 +406,17 @@ class AaosVehicle(VehicleController):
         return int(found.group(2)) if found.group(1) == "true" else Ux.NONE
 
     def dump(self):
-        rows = [
-            f"speed_mps={self.get_property(Prop.PERF_VEHICLE_SPEED)}",
-            f"gear={self.get_property(Prop.GEAR_SELECTION)}",
-            f"driving_state={self.driving_state()}",
-        ] + [f"temp_{seat.tag}={self.temperature(seat)}" for seat in Seat]
-        for name in CABIN_DEFAULTS:
+        reads = [("speed_mps", lambda: self.get_property(Prop.PERF_VEHICLE_SPEED)),
+                 ("gear", lambda: self.get_property(Prop.GEAR_SELECTION)),
+                 ("driving_state", self.driving_state)]
+        reads += [(f"temp_{seat.tag}", lambda seat=seat: self.temperature(seat)) for seat in Seat]
+        reads += [(name, lambda name=name: self.signal_all(name)) for name in CABIN_DEFAULTS]
+        rows = []
+        for label, read in reads:
             try:
-                rows.append(f"{name}={self.signal_all(name)}")
+                rows.append(f"{label}={read()}")
             except RuntimeError as error:  # 실패 자료를 모으는 중이라 하나가 안 읽혀도 계속한다
-                rows.append(f"{name}=<{error}>")
+                rows.append(f"{label}=<{error}>")
         return "\n".join(rows)
 
 

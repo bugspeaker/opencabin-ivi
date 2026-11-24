@@ -3,7 +3,8 @@ import pytest
 
 from ivi.device import Device
 from ivi.screens import parse_celsius
-from ivi.vehicle import CABIN_DEFAULTS, AaosVehicle, MockVehicle, Prop, Seat, Signal, Ux
+from ivi.vehicle import CABIN_DEFAULTS, AaosVehicle, DrivingState, MockVehicle, Prop, Seat, Signal, Ux
+from ivi.waits import WaitTimeout
 
 
 class FakeAdb:
@@ -60,6 +61,44 @@ def test_aaos_set_temperature_fails_loudly_when_car_service_refuses():
     adb = FakeAdb({"set-property-value": "Failed to set property: SecurityException"})
     with pytest.raises(RuntimeError, match="쓰기 실패"):
         AaosVehicle(adb).set_temperature(Seat.PASSENGER, 25.0)
+
+
+DRIVING_DUMP = """*CarDrivingStateService*
+Driving state change log:
+Current Driving State: {state}
+Current Gear: 8
+"""
+
+
+def test_aaos_driving_state_is_read_from_car_service():
+    car = AaosVehicle(FakeAdb({"CarDrivingStateService": DRIVING_DUMP.format(state=2)}))
+    assert car.driving_state() == DrivingState.MOVING
+    assert car.is_restricted() is True
+
+
+@pytest.mark.parametrize("out", ["", "Can't find service: CarDrivingStateService", "Current Driving State: moving"])
+def test_aaos_unreadable_driving_state_fails_loudly(out):
+    """상태 줄을 못 읽으면 '제한 없음'(False)이 아니라 오류다. 예전에는 UNKNOWN 을 돌려줘 is_restricted() 가 False 였다."""
+    car = AaosVehicle(FakeAdb({"CarDrivingStateService": out}))
+    with pytest.raises(RuntimeError, match="주행 상태를 읽지 못했다"):
+        car.driving_state()
+    with pytest.raises(RuntimeError, match="주행 상태를 읽지 못했다"):
+        car.is_restricted()
+
+
+def test_wait_restricted_false_does_not_pass_when_state_is_unreadable():
+    """정차를 기다리는 동기화 지점(wait_restricted(False))이 못 읽은 상태를 '제한 없음'으로 보고 바로 지나가지 않는다."""
+    car = AaosVehicle(FakeAdb({"CarDrivingStateService": "Can't find service"}))
+    with pytest.raises(WaitTimeout, match="주행 중 제한 꺼짐") as caught:
+        car.wait_restricted(False, timeout=0.3)
+    assert "주행 상태를 읽지 못했다" in str(caught.value.error)
+
+
+def test_aaos_dump_keeps_going_when_driving_state_is_unreadable():
+    """실패 자료(dump)는 하나가 안 읽혀도 나머지를 모은다."""
+    dump = AaosVehicle(FakeAdb({})).dump()
+    assert "driving_state=<주행 상태를 읽지 못했다" in dump
+    assert dump.splitlines()[0].startswith("speed_mps=")
 
 
 def test_mock_state_is_parsed_from_broadcast_result():
