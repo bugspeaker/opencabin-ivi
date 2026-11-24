@@ -47,212 +47,36 @@
 <p>지원 직무: 42dot Test Automation Engineer (IVI System)<br>결과 기준: 2026-11-24 실행(커밋 <code>101de99</code>, 앱 0.4.2, 테스트 150개, 두 기기 × 3회). 세 번째 기기 갤럭시 폴드는 같은 커밋으로 한 번 돌렸습니다(<a href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">3장 끝</a>). 이전 실행과 그때의 코드 시점은 <a href="readme.html#결과-자료와-검증-시점">README의 &#39;결과 자료와 검증 시점&#39;</a>에 있습니다.</p>
 <p><img data-md src="../../docs/images/p9-guidance.png" alt="주행 중 경로 안내" loading="lazy"></p>
 <p>화면을 누르면 CarProperty/VHAL 값이 바뀌는지, 차량 신호가 바뀌면 화면이 따라오는지를 E2E로 확인하는 pytest 프레임워크입니다. 테스트 대상은 이 프로젝트에서 만든 가상 IVI 앱이고, 같은 테스트 150개를 AAOS 에뮬레이터와 화웨이 태블릿에서 돌리고, 2026-11-23에는 갤럭시 폴드를 세 번째 기기로 붙였습니다. 에뮬레이터에서는 CarService와 에뮬레이터의 VHAL(가상 차량 값)을 거치고, 태블릿에서는 앱 안에 둔 Mock 차량 서비스를 씁니다. 실제 차량, HIL, CAN 장비는 쓰지 않았습니다.</p>
-<h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
-<ul>
-<li>경력: 게임 QA 8년차(2017.12부터 약 7년 10개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&amp;D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩(코드는 AI가 작성)으로 만들었습니다. 게임 QA에서 쓰던 BVT 문서 양식을 바탕으로 엑셀 BVT 문서를 브랜치·플랫폼별로 관리하는 대시보드에 Playwright·pytest UI 자동화를 붙여, 공개 웹 서비스(타입캐스트)의 BVT 70개 중 47개를 Chrome에서 한 번에 약 6분에 돌리고, 실패하면 화면·녹화·메시지를 남깁니다(2026-11-03 실행). Jira 처리량 캘린더와 Claude로 검수 리포트·이슈 초안을 만드는 TC 관리 도구(Bugspeaker Zone)도 바이브 코딩으로 만들어 업무에 씁니다. 모바일 자동화는 Appium으로 실습해 본 경험이 있고, 이 프로젝트에서 AAOS까지 넓혀 게이트, 반복 실행, CI를 갖춘 업무 수준으로 적용했습니다.</li>
-<li>기간: 2026-11-13부터, 혼자 진행했습니다.</li>
-<li>역할: AI 코딩 도구 Claude Code로 앱과 테스트 도구를 만들었습니다. 무엇을 만들지 정하고, E2E 테스트 설계는 Claude와 함께 했습니다. AI가 낸 변경과 외부 검토 항목은 기기 실행 기록과 자동 검사로 확인하여 반영 여부를 결정했고, PR을 병합했습니다.</li>
-<li>기기 구성, 신호 주입 방식, 판정과 재시도 규칙, 결함 원인 분석에서 무엇을 고르고 무엇을 버렸는지와 그 근거가 된 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
-</ul>
-<p>이전에 만든 웹 BVT 도구(바이브 코딩, 개인 포트폴리오)의 실행 모습입니다. BVT 문서에서 자동화를 실행하면 Playwright가 타입캐스트 웹을 돌리며 표에 결과를 채우고(빨리 감기), 끝나면 실패한 No.64의 실패 순간 화면, 녹화, 메시지를 보여 줍니다. 타입캐스트 계정 정보는 흐리게 했습니다.</p>
-<img src="../../docs/images/web-bvt-demo.gif" width="760" alt="웹 BVT 도구에서 자동화를 실행해 타입캐스트 웹을 Playwright로 돌리고, 47건 중 실패한 1건의 화면과 녹화, 오류 메시지를 확인하는 모습">
-
-<p>업무에 쓰는 TC 관리 도구 Bugspeaker Zone(바이브 코딩)에는 이 프로젝트의 결과 파일을 읽어 들이는 화면을 붙였습니다. 아래 화면은 2026-11-21 결과를 읽은 것으로, TC 101개(케이스 129개)마다 두 기기의 판정과 판정 직후 화면, 차량 값을 보여 주고, 요구사항 26개와 연결된 테스트, 회차별 flaky 통계를 보여 줍니다. 판정은 실행 원자료의 값을 그대로 씁니다. 연결 코드는 Claude Code가 작성했고, 무엇을 보여 줄지와 반영 여부는 제가 정했습니다. 회사 데이터와 섞이지 않게, OpenCabin 메뉴만 보이는 데모 모드에서 2026-11-21 실행 자료로 찍었습니다. 실행을 거는 화면(Test Bench API)은 아직 없습니다.</p>
-<img src="../../docs/images/bugspeaker-zone-opencabin.gif" width="760" alt="Bugspeaker Zone 의 OpenCabin 화면: TC마다 AAOS와 태블릿 판정과 판정 직후 화면, smoke 거르기, 알려진 결함, 요구사항 추적, 조건별 확인, 회차 3번의 실행 750건 flaky 0 통계를 차례로 넘겨 보는 모습">
-
-<h2 id="ai-결과를-어떻게-검증했나"><a class="anchor" href="#ai-결과를-어떻게-검증했나" aria-hidden="true">#</a>AI 결과를 어떻게 검증했나</h2>
-<p>이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 &#39;직접 써 보며 준 피드백&#39;). 지적마다 반영할지는 제가 정했고, Claude의 추천과 다르게 정한 경우는 아래 &#39;추천을 따르지 않은 사례&#39;에 있습니다.</p>
-<h3 id="원칙"><a class="anchor" href="#원칙" aria-hidden="true">#</a>원칙</h3>
-<ol>
-<li><strong>&#39;통과&#39;는 기기 실행 결과 파일로만 받아들입니다.</strong> 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK sha256, 종료 코드가 남고, Release 게이트가 <code>--commit</code>으로 그 커밋의 결과인지 확인합니다. 단위 테스트 통과는 기기 실행을 대신하지 않습니다.</li>
-<li><strong>&#39;실패 0&#39;과 &#39;정한 범위를 끝까지 돌렸다&#39;를 따로 봅니다.</strong> 범위가 줄었거나 중간에 멈춘 실행이 통과로 보이지 않도록 Release 게이트에 실행 완전성 조건을 두었습니다(<a href="#4-1-게이트-단계와-기준">4-1</a>).</li>
-<li><strong>문서의 주장은 코드와 검사로 확인합니다.</strong> 요구사항↔테스트 연결이나 문서·사이트의 내부 링크가 끊기면 CI의 unit job이 실패합니다. 문서에는 코드에서 찾아 확인할 수 있는 문장만 씁니다.</li>
-<li><strong>수치는 원자료에서 다시 셉니다.</strong> 실행 결과 파일을 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">evidence</a>에 남기고, 다시 세는 명령을 함께 적습니다.</li>
-<li><strong>코드를 쓴 AI와 다른 AI에게 검토를 맡깁니다.</strong> 2026-11-24에는 Codex에게 동작이 아니라 예외 상황만 찾아 달라고 따로 맡겼습니다. Codex가 재현 코드와 함께 보인 5건을 Claude Code가 고치며 같은 범위를 다시 읽어 4건을 더 찾았고, 모두 고치기 전에는 실패하고 고친 뒤 통과하는 단위 테스트로 남겼습니다. 반영은 두 기기 × 3회 실행과 Release 게이트를 본 뒤 정했습니다(<a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a>).</li>
-</ol>
-<h3 id="검증에서-잡혀-고친-사례"><a class="anchor" href="#검증에서-잡혀-고친-사례" aria-hidden="true">#</a>검증에서 잡혀 고친 사례</h3>
+<h2 id="한눈에-보기"><a class="anchor" href="#한눈에-보기" aria-hidden="true">#</a>한눈에 보기</h2>
+<p><strong>문제.</strong> 화면만 보는 UI 테스트는 A/C 버튼이 &#39;꺼짐&#39;으로 바뀌면 통과로 봅니다. 앱이 운전석 값만 끄고 나머지 좌석은 켜 둬도 그렇습니다.</p>
+<p><strong>해결 방향.</strong> 화면과 차량 신호(AAOS는 VHAL, 태블릿은 앱 안 Mock)를 따로 읽어 둘 다 맞아야 통과로 봅니다. 실차가 없어 차량 쪽은 에뮬레이터의 가상 VHAL과 Mock으로 대신했고, 같은 테스트를 두 기기에서 동시에 돌립니다.</p>
+<p><strong>테스트 하나의 흐름.</strong></p>
 <div class="table"><table><thead><tr>
-<th>무엇이 틀렸나</th>
-<th>어떻게 드러났나</th>
-<th>고친 것</th>
+<th>1. 조작</th>
+<th>2. 읽기</th>
+<th>3. 판정</th>
+<th>4. 반복</th>
+<th>5. 게이트</th>
 </tr>
 </thead><tbody><tr>
-<td>문서에는 &#39;Release 게이트 다섯 조건&#39;, &#39;고정 sleep은 쓰지 않습니다&#39;라고 썼는데, 조건 셋은 검사하는 코드가 없었고 sleep이 3곳 있었습니다.</td>
-<td>외부 검토가 문서와 코드를 대조했습니다(2026-11-19).</td>
-<td>게이트가 결과 파일로 조건을 모두 확인하게 하고, sleep 3곳을 <code>stays</code>로 바꿨습니다.<br><a href="phase9-bench.html#7-외부-검토-반영-2026-11-19">9단계 기록 7절</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/9870972" target="_blank" rel="noopener"><code>9870972</code></a></td>
+<td>화면을 누르거나 신호를 넣습니다.</td>
+<td>화면과 신호를 따로 읽습니다.</td>
+<td>둘 다 맞아야 통과로 봅니다.</td>
+<td>두 기기에서 3회 돌립니다.</td>
+<td>여섯 조건을 모두 봅니다.</td>
 </tr>
 <tr>
-<td>반복 실행 통계가 5회 원자료가 아니라 누적 기록을 읽어, 따로 돌린 15개짜리 실행이 섞였습니다.</td>
-<td>원자료를 저장소에 남기고 다시 세다가 찾았습니다.</td>
-<td>원자료 10개만 읽게 다시 만들고 정정 기록을 남겼습니다.<br><a href="flaky-report.html#읽는-법과-한계">반복 실행 통계의 정정</a></td>
-</tr>
-<tr>
-<td><code>run_<wbr>bench.<wbr>py --repeat 0</code>이 아무것도 돌리지 않고 종료 코드 0으로 끝났습니다. 게이트는 실패 수만 보고 실행이 끝까지 됐는지는 보지 않았습니다. 알려진 결함의 xfail이 어떤 오류든 &#39;알려진 결함&#39;으로 받았습니다.</td>
-<td>외부 검토(2026-11-20)에서 나왔습니다.</td>
-<td>실행 완전성 조건을 더하고, 반복 횟수는 1 이상만 받게 했습니다. xfail은 <code>raises=DefectReproduced</code>로 증상일 때만 받습니다.<br><a href="phase9-bench.html#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위">9단계 기록 8절</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/de733dd" target="_blank" rel="noopener"><code>de733dd</code></a></td>
-</tr>
-<tr>
-<td>README에 &quot;&#39;바뀌지 않아야 함&#39;은 1.5초 동안 계속 본다&quot;고 썼지만 10곳은 한 번만 읽었습니다.</td>
-<td>외부 검토가 코드에서 해당 줄을 찾아 대조했습니다(2026-11-21).</td>
-<td>10곳을 <code>stays</code>로 바꿨습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/commit/d41337a" target="_blank" rel="noopener"><code>d41337a</code></a></td>
-</tr>
-<tr>
-<td>결과 페이지에 폴드 칸을 더한 뒤 추적표 도구만 그 칸 이름을 몰라 멈췄고, 추적표는 두 기기 칸으로 남았습니다. 표를 다시 만들어 보는 검사가 없어 CI는 통과했습니다.</td>
-<td>테스트 범위를 다시 점검하다 찾았습니다(2026-11-23).</td>
-<td>칸 이름을 맞추고, 두 도구의 칸 이름이 다르거나 추적표가 코드와 다르면 unit job이 실패하게 했습니다. 결과가 아직 없는 테스트는 따로 셉니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/55419f7" target="_blank" rel="noopener"><code>55419f7</code></a></td>
-</tr>
-<tr>
-<td>테스트 도구가 에뮬레이터의 주행 상태를 못 읽으면 &#39;제한 없음&#39;으로 처리해, 정차를 기다리는 단계가 기다리지 않고 지나갔습니다.</td>
-<td>외부 리뷰의 예상 질문(출력을 정규식으로 읽는 방식의 한계)에 답을 정리하며 코드와 대조하다 찾았습니다(2026-11-24).</td>
-<td>못 읽으면 다른 읽기처럼 오류를 내게 고치고 단위 테스트 6개를 더한 뒤, 두 기기 × 3회를 다시 돌렸습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/300b081" target="_blank" rel="noopener"><code>300b081</code></a></td>
-</tr>
-<tr>
-<td>Test Bench API가 같은 기기의 실행 요청을 동시에 받으면 둘 다 시작했고, 테스트가 도는 기기에도 신호·전원 변경을 받았습니다. 실행 파일이 없으면 작업이 &#39;running&#39;에 남아 그 기기를 다시 쓸 수 없었습니다. CAN 게이트웨이는 차량 쪽이 느리면 프레임이 쌓여 최신 값이 약 1.7초 늦게 들어갔습니다.</td>
-<td>동작이 아니라 예외 상황을 찾아 달라고 따로 요청한 외부 검토가 실행 순서를 맞춘 재현 코드로 보였습니다(2026-11-24).</td>
-<td>기기 점유를 한 잠금 안에서 정하고, 테스트 중 변경은 409로 거절하고, 실패와 시간 초과도 점유를 풀게 했습니다. 게이트웨이는 상태 신호를 최신 값으로 합치고 기어와 도어는 순서대로 넣어, 같은 조건에서 약 50 ms가 됐습니다. 다시 읽어 네 가지를 더 고치고, 음악·안내·통화 중 공조 조작 같은 동시 조작 E2E 6개를 더했습니다.<br><a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a></td>
-</tr>
-<tr>
-<td>게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었습니다. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈췄습니다.</td>
-<td>두 기기에서 전체를 다시 돌렸습니다(2026-11-21).</td>
-<td>창 없이 다시 켜게 고치고, 처음부터 3회 돌려 750건이 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
+<td class="nw">Appium, adb</td>
+<td>UiAutomator2, VHAL, Mock</td>
+<td>pytest</td>
+<td><code>run_bench.py</code></td>
+<td><code>release_gate.py</code></td>
 </tr>
 </tbody></table></div>
-<h3 id="추천을-따르지-않은-사례"><a class="anchor" href="#추천을-따르지-않은-사례" aria-hidden="true">#</a>추천을 따르지 않은 사례</h3>
-<p>Claude가 보기와 추천을 내면 제가 골랐습니다. 아래는 추천과 다르게 정한 경우이고, 무엇을 골랐는지는 작업 기록과 커밋에 남아 있습니다(날짜는 2026년).</p>
-<div class="table"><table><thead><tr>
-<th>언제</th>
-<th>Claude의 추천</th>
-<th>고른 것과 이유</th>
-<th>결과</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw">11-23</td>
-<td>앱이 지원할 가장 작은 화면을 폭 580·높이 500dp로 정해 세로 화면까지 지원합니다.</td>
-<td><strong>폭 760·높이 500dp, 가로만.</strong> 차량 IVI 화면은 가로가 기본이라, 세로까지 지원하는 큰 변경보다 가로로 범위를 좁혀 확실히 검증하는 쪽을 골랐습니다.</td>
-<td>앱을 가로 전용으로 정하고 배치를 고쳤습니다. 760×500dp 화면에서 140개를 돌려 앱 테스트가 모두 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/40" target="_blank" rel="noopener">#40</a> · <a href="#4-4-테스트-범위-점검">4-4</a></td>
-</tr>
-<tr>
-<td class="nw">11-23</td>
-<td>태블릿 확인은 에뮬레이터로 대신합니다. 화면 폭이 같아 같은 배치를 쓰기 때문입니다.</td>
-<td><strong>태블릿을 연결해 확인.</strong> 폭이 같으니 결과도 같을 것이라는 추정 대신, 실제 기기의 결과 파일로 확인하는 쪽을 골랐습니다.</td>
-<td>같은 APK로 태블릿에서 122개가 통과하고 Release 게이트를 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 기록</a></td>
-</tr>
-<tr>
-<td class="nw">11-23</td>
-<td>결과 페이지에는 폴드 칸 없이 사례로만 보여 줍니다.</td>
-<td><strong>폴드 칸 추가.</strong> 사례로만 두면 같은 테스트의 기기별 화면을 나란히 비교할 수 없어서, 도구를 고쳐 칸을 나눴습니다.</td>
-<td>결과 도구가 같은 Mock 기기끼리 서로 덮어쓰던 구조를 모델별 칸으로 나눴습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/41" target="_blank" rel="noopener">#41</a></td>
-</tr>
-<tr>
-<td class="nw">11-23</td>
-<td>테스트가 140개로 늘어도 첫 화면 헤드라인은 11-21 결과로 둡니다.</td>
-<td><strong>140개 × 3회를 다시 돌리기.</strong> 첫 화면 숫자가 지금 코드로 돌린 결과가 아니면 안 된다고 보고, 1시간 넘게 걸려도 다시 돌렸습니다.</td>
-<td>813건 중 실패 0으로 헤드라인을 바꿨습니다. 그 뒤 4개를 더했을 때(837건)와 동시 조작 6개를 더했을 때(873건)도 다시 돌렸습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/46" target="_blank" rel="noopener">#46</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/pull/48" target="_blank" rel="noopener">#48</a></td>
-</tr>
-<tr>
-<td class="nw">11-21</td>
-<td>Claude가 쓴 역할 문구에 &#39;Test Bench에서 E2E를 직접 돌려 확인&#39;이 들어 있었습니다.</td>
-<td><strong>고르지 않음.</strong> 하지 않은 일을 역할에 적으면 면접에서 사실과 달라지므로 뺐습니다.</td>
-<td>README, 포트폴리오, 사이트 세 곳에서 뺐습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/commit/7fe2df3" target="_blank" rel="noopener"><code>7fe2df3</code></a></td>
-</tr>
-</tbody></table></div>
-<p>화면으로 보면 이렇습니다.</p>
-<div class="table"><table><thead><tr>
-<th>세로 폴드 (세로까지 지원하려던 화면)</th>
-<th>가로 760×500dp (고른 범위)</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/override/fold-portrait.png" width="250" alt="세로로 든 갤럭시 폴드에서 아래 바가 겹치고 시계가 사라진 홈 화면"></td>
-<td><img src="../../docs/images/override/emulator-760x500dp.png" width="400" alt="760×500dp로 줄인 에뮬레이터에서 제대로 보이는 빠른 제어 화면"></td>
-</tr>
-</tbody></table></div>
-<div class="table"><table><thead><tr>
-<th>에뮬레이터 (추천: 이것으로 대신)</th>
-<th>태블릿 (직접 연결해 확인)</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/override/radio-emulator.webp" width="380" alt="에뮬레이터의 라디오 화면"></td>
-<td><img src="../../docs/images/override/radio-tablet.webp" width="380" alt="태블릿의 라디오 화면"></td>
-</tr>
-</tbody></table></div>
-<img src="../../docs/images/override/results-3-devices.png" width="760" alt="결과 페이지에서 같은 라디오 테스트의 에뮬레이터, 태블릿, 갤럭시 폴드 화면이 나란히 보이는 칸">
-
-<h3 id="직접-써-보며-준-피드백-fqa"><a class="anchor" href="#직접-써-보며-준-피드백-fqa" aria-hidden="true">#</a>직접 써 보며 준 피드백 (FQA)</h3>
-<p>초기 버전부터 앱을 태블릿과 에뮬레이터에서 직접 써 보며, 새로 필요한 기능과 지금 기능이 제대로 도는지, 사용자로서 어색한 곳이 없는지 보고 고칠 것을 정했습니다. 아래는 작업 기록에 남은 것과 그때의 화면입니다(날짜는 2026년).</p>
-<p><strong>앱 첫 화면이 바뀐 과정</strong> (AAOS 에뮬레이터)</p>
-<div class="table"><table><thead><tr>
-<th>11-13 재점검 전 (2~4단계)</th>
-<th>11-13 재점검 뒤 (5단계, 주행 중)</th>
-<th>11-14 3영역 개편 (7단계)</th>
-<th>11-18 지금 (9단계)</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/before-home.png" width="230" alt="재점검 전 홈 화면: 속도와 기어 카드, 비어 있는 공조 카드, 아래 시스템 바는 화씨 70°와 61°"></td>
-<td><img src="../../docs/images/home-driving.png" width="230" alt="재점검 뒤 홈 화면: 속도 게이지, 미디어 카드, 공조 카드"></td>
-<td><img src="../../docs/images/p7-home.png" width="230" alt="3영역으로 바꾼 홈 화면: 왼쪽 주행 정보, 가운데 지도, 오른쪽 미디어, 아래 공조 바"></td>
-<td><img src="../../docs/images/p9-home.png" width="230" alt="지금 홈 화면: 목적지 검색, 아래 시스템 바 대신 앱의 공조 바"></td>
-</tr>
-</tbody></table></div>
-<h4 id="11-14-공조-온도가-태블릿과-다르게-보였습니다"><a class="anchor" href="#11-14-공조-온도가-태블릿과-다르게-보였습니다" aria-hidden="true">#</a>11-14 공조 온도가 태블릿과 다르게 보였습니다</h4>
-<p>에뮬레이터에서는 앱이 16.0°C, 아래 시스템 바가 화씨 61°로 보였습니다. 운전석·조수석을 22.0°C, 섭씨로 맞췄습니다. 이 변경으로 화씨를 가정하던 1단계 테스트 4개가 실패해, 표시 단위를 읽어 기대값을 계산하게 고쳤습니다. <a href="phase7-layout.html#에뮬레이터-공조-값을-태블릿과-같게">7단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/7590d42" target="_blank" rel="noopener"><code>7590d42</code></a></p>
-<div class="table"><table><thead><tr>
-<th>전</th>
-<th>후</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/fqa/1114-climate-before.png" width="400" alt="앱은 16.0°C, 아래 시스템 바는 화씨 61°로 보이는 공조 화면"></td>
-<td><img src="../../docs/images/p7-climate.png" width="400" alt="운전석, 조수석, 아래 시스템 바가 모두 22.0°C로 보이는 공조 화면"></td>
-</tr>
-</tbody></table></div>
-<h4 id="11-16-고쳤던-온도가-재부팅-뒤-다시-63로-돌아왔습니다"><a class="anchor" href="#11-16-고쳤던-온도가-재부팅-뒤-다시-63로-돌아왔습니다" aria-hidden="true">#</a>11-16 고쳤던 온도가 재부팅 뒤 다시 63°로 돌아왔습니다</h4>
-<p>같은 지적을 다시 했습니다. 지금 값만 바꾸던 방식을 VHAL 초기값 덮어쓰기로 바꿔, 에뮬레이터를 다시 켜도 22.0°C가 유지되게 했습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/5d95212" target="_blank" rel="noopener"><code>5d95212</code></a></p>
-<h4 id="11-16-공조에-최대-냉방full이-없었습니다"><a class="anchor" href="#11-16-공조에-최대-냉방full이-없었습니다" aria-hidden="true">#</a>11-16 공조에 최대 냉방(FULL)이 없었습니다</h4>
-<p>FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍량을 바꾸면 풀림)를 더했습니다. FULL을 켜면 온도는 16.0°C, 풍량은 7이 됩니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/3c60f2d" target="_blank" rel="noopener"><code>3c60f2d</code></a></p>
-<div class="table"><table><thead><tr>
-<th>전</th>
-<th>후 (FULL 켬)</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/p8-climate.png" width="400" alt="FULL 버튼이 없는 공조 화면: A/C, AUTO, SYNC"></td>
-<td><img src="../../docs/images/p9-climate-full.png" width="400" alt="FULL을 켠 공조 화면: 16.0°C, 풍량 7"></td>
-</tr>
-</tbody></table></div>
-<h4 id="11-16-영상-화면-아래에-블랙박스-제품-이름이-보였습니다"><a class="anchor" href="#11-16-영상-화면-아래에-블랙박스-제품-이름이-보였습니다" aria-hidden="true">#</a>11-16 영상 화면 아래에 블랙박스 제품 이름이 보였습니다</h4>
-<p>영상 아래 줄을 잘라 내고 재생하게 했습니다. 영상은 직접 찍은 블랙박스 주행 영상입니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/9b36711" target="_blank" rel="noopener"><code>9b36711</code></a></p>
-<div class="table"><table><thead><tr>
-<th>후</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/p9-video.png" width="400" alt="아래 줄을 잘라 낸 블랙박스 주행 영상 화면"></td>
-</tr>
-</tbody></table></div>
-<h4 id="11-16-11-18-테스트-결과를-글자로만-확인할-수-있었습니다"><a class="anchor" href="#11-16-11-18-테스트-결과를-글자로만-확인할-수-있었습니다" aria-hidden="true">#</a>11-16, 11-18 테스트 결과를 글자로만 확인할 수 있었습니다</h4>
-<p>테스트마다 판정 직후 화면을 남기고, 결과 페이지에서 두 기기의 화면을 나란히 보게 했습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/0aa184f" target="_blank" rel="noopener"><code>0aa184f</code></a> · <a href="test-results.html">테스트 결과</a></p>
-<div class="table"><table><thead><tr>
-<th>후 (지금 결과 페이지)</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/fqa/results-page.png" width="640" alt="테스트 결과 페이지: 기기별 요약과, 테스트마다 AAOS와 태블릿의 판정 직후 화면"></td>
-</tr>
-</tbody></table></div>
-<h4 id="11-18-우대사항-3개가-비어-있었습니다"><a class="anchor" href="#11-18-우대사항-3개가-비어-있었습니다" aria-hidden="true">#</a>11-18 우대사항 3개가 비어 있었습니다</h4>
-<p>차량 네트워크, REST·원격 전원, 기능 안전 항목이 비어 있어 지금 방법으로는 정말 안 되는지 물었습니다. Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 &#39;일부&#39;로 표시했습니다. <a href="phase9-bench.html">9단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6" target="_blank" rel="noopener"><code>84b63d6</code></a></p>
-<h4 id="11-23-테스트-범위가-충분한지-다시-봐-달라고-했습니다"><a class="anchor" href="#11-23-테스트-범위가-충분한지-다시-봐-달라고-했습니다" aria-hidden="true">#</a>11-23 테스트 범위가 충분한지 다시 봐 달라고 했습니다</h4>
-<p>요구사항 조건, 앱의 화면 요소(testTag), 주행 중 제한의 허용 쪽, 경계값, 기기·화면, 단위 테스트 커버리지로 다시 대 보게 했습니다. 테스트가 없던 조건 2개와 화면 요소 약 30개를 찾아 E2E 11개를 더했고, 추적표 도구가 폴드 칸 때문에 멈춰 있던 것도 이때 드러나 고쳤습니다. 테스트가 늘었으니 헤드라인도 새 실행으로 바꾸자고 해서, 두 기기 × 3회를 다시 돌리고 이전 반복 자료는 그대로 남겼습니다. <a href="#4-4-테스트-범위-점검">4-4</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/55419f7" target="_blank" rel="noopener"><code>55419f7</code></a></p>
-<h4 id="11-23-aaos-qa-자료를-찾아-더-볼-곳이-있는지-물었습니다"><a class="anchor" href="#11-23-aaos-qa-자료를-찾아-더-볼-곳이-있는지-물었습니다" aria-hidden="true">#</a>11-23 AAOS QA 자료를 찾아 더 볼 곳이 있는지 물었습니다</h4>
-<p>AOSP의 주행 중 UX 제한 문서와 차량 앱 품질 기준을 찾아보고, 에뮬레이터에서 후보 12가지를 직접 돌려 봤습니다. 그중 UX 제한 설정을 읽다가 D 기어로 멈춰 있을 때(신호 대기) 플랫폼은 영상만 막는데, AAOS 앱은 검색까지 막고 태블릿은 영상을 막지 않는 결함을 찾았습니다. 규칙은 플랫폼을 따르기로 정했고, 앱이 제한 종류를 보고 막게 고쳤습니다(앱 0.4.2). <a href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">3장 13번</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/de9d062" target="_blank" rel="noopener"><code>de9d062</code></a></p>
-<div class="table"><table><thead><tr>
-<th>전 (0.4.1, D 기어 0 km/h)</th>
-<th>후 (0.4.2, D 기어 0 km/h)</th>
-</tr>
-</thead><tbody><tr>
-<td class="nw"><img src="../../docs/images/fqa/1123-stopped-before.png" width="400" alt="수정 전: D 기어 0 km/h에서 '주행 중 · 일부 기능 제한' 배지와 '주행 중 검색 제한'"></td>
-<td><img src="../../docs/images/fqa/1123-stopped-after.png" width="400" alt="수정 후: D 기어 0 km/h에서 '정지 중 · 영상만 제한' 배지, 검색 칸은 '어디로 갈까요?'로 쓸 수 있음"></td>
-</tr>
-</tbody></table></div>
-<h4 id="11-23-0-kmh-한-점만-볼-것-같아-시간을-바꿔-가며-보자고-했습니다"><a class="anchor" href="#11-23-0-kmh-한-점만-볼-것-같아-시간을-바꿔-가며-보자고-했습니다" aria-hidden="true">#</a>11-23 0 km/h 한 점만 볼 것 같아 시간을 바꿔 가며 보자고 했습니다</h4>
-<p>속도와 기어를 시간에 따라 바꾸는 신호 대기 시나리오 테스트를 더했습니다. P → D 정지(3초) → 3 km/h(2초) → 정지(3초) → 60 km/h(3초) → N 정지(2초) → P 순서로, 단계마다 UX 제한, 검색 입력, 상단 배지가 바로 바뀌는지 보고 머무는 동안 흔들리지 않는지 봅니다. 신호를 넣고 화면이 따라오기까지 걸린 시간을 결과에 남겨, 마지막 반복에서 세 기기 모두 단계마다 0.2~0.9초였습니다. <a href="test-results.html#test_restrictions_follow_stop_and_go_timeline"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></p>
-<p>지적은 대부분 외부 검토(AI 검토 포함)와 기기 실행에서 나왔습니다. 지적마다 반영할지는 제가 정했고, 반영한 것은 위처럼 코드와 기록으로 남겼습니다. 같은 종류의 실수가 다시 들어오지 않도록 링크 검사, 추적 검사, 게이트 조건을 CI와 게이트에 넣었습니다.</p>
+<p><strong>주행.</strong> IVI는 구동이나 제동을 제어하지 않으므로, 속도와 기어 신호를 넣어 주행 상태가 바뀔 때 화면이 지킬 규칙을 봅니다. 테스트 150개 중 34개가 속도나 기어 신호를 넣고, 주행 중 제한, 후방 카메라 2.0초, 속도·기어 표시, 안내 거리를 확인합니다(<a href="#4-2-서비스별-검증">4-2</a>). 구동, 제동, ADAS 제어는 범위 밖입니다.</p>
+<p><strong>결함.</strong> 테스트에서 나온 문제 15건을 원인과 조치까지 GitHub 이슈로 남겼습니다. 새 테스트를 쓰며 5건, 새 기기·설정에서 4건, 실행 기록을 분석하며 5건, 플랫폼 자료와 대조하며 1건이 나왔습니다. 반복 실행은 이미 통과한 테스트가 흔들리지 않는지 보는 실행이라 실패 0이 목표입니다(<a href="#3-결함과-원인-분석">3장</a>).</p>
+<p><strong>AI와 역할.</strong> 앱과 테스트 코드는 AI 코딩 도구로 만들었고, 무엇을 받아들일지는 기기 실행 결과와 자동 검사로 정했습니다. 검증 원칙과 사례는 <a href="#9-ai-결과를-어떻게-검증했나">9장</a>에 있습니다.</p>
+<h3 id="결과"><a class="anchor" href="#결과" aria-hidden="true">#</a>결과</h3>
 <p>차량 신호는 12종을 연결했습니다. 화면에서 바꾼 값이 신호로 나가는지, 신호가 바뀌면 화면이 따라오는지를 둘 다 봅니다. 좌석이나 문처럼 area가 여러 개인 신호는 area마다 값을 확인합니다.</p>
 <div class="table"><table><thead><tr>
 <th>항목</th>
@@ -272,7 +96,7 @@
 </tr>
 <tr>
 <td class="nw">반복 실행</td>
-<td>2026-11-24 오후, 외부 검토의 예외 경로를 고치고 동시 조작 테스트 6개를 더한 코드와 앱 0.4.2, 테스트 150개로 두 기기에서 3회씩, 테스트 873건(AAOS 447, 태블릿 426) 실행. 기기 전용이라 건너뛴 것은 빼고, 알려진 결함으로 xfail된 3건은 넣은 수입니다. 재시도로 통과한 것(flaky) 0건, 실패 0건, Release 게이트 여섯 조건을 <code>--commit 101de99</code>로 통과. 같은 커밋으로 갤럭시 폴드도 한 번 돌려 142개 통과(AAOS 전용 8개 건너뜀). 이전에는 같은 날 오전 주행 상태 읽기를 고친 144개(<code>300b081</code>)로 3회 837건, 2026-11-23 저녁 144개(<code>de9d062</code>)로 3회 837건, 같은 날 오후 140개(앱 0.4.1)로 3회 813건, 2026-11-21에 129개로 3회 750건, 2026-11-18에 그때 코드로 5회 1,250건이 모두 flaky 0, 실패 0이었습니다 (<a href="flaky-report.html">반복 실행 통계와 원자료</a>)</td>
+<td>2026-11-24 오후, 외부 검토의 예외 경로를 고치고 동시 조작 테스트 6개를 더한 코드와 앱 0.4.2, 테스트 150개로 두 기기에서 3회씩, 테스트 873건(AAOS 447, 태블릿 426)을 실행했습니다. 기기 전용이라 건너뛴 것은 빼고, 알려진 결함으로 xfail된 3건은 넣은 수입니다. 재시도로 통과한 것(flaky)과 실패는 0건이고, Release 게이트 여섯 조건을 <code>--commit 101de99</code>로 통과했습니다. 같은 커밋으로 갤럭시 폴드도 한 번 돌려 142개가 통과했습니다(AAOS 전용 8개 건너뜀). 이전에는 같은 날 오전 주행 상태 읽기를 고친 144개(<code>300b081</code>)로 3회 837건, 2026-11-23 저녁 144개(<code>de9d062</code>)로 3회 837건, 같은 날 오후 140개(앱 0.4.1)로 3회 813건, 2026-11-21에 129개로 3회 750건, 2026-11-18에 그때 코드로 5회 1,250건이 모두 flaky 0, 실패 0이었습니다 (<a href="flaky-report.html">반복 실행 통계와 원자료</a>)</td>
 </tr>
 <tr>
 <td class="nw">단위 테스트</td>
@@ -292,8 +116,20 @@
 </tr>
 </tbody></table></div>
 <p>알려진 결함 1건은 AAOS 에뮬레이터 기본 SystemUI(1024×768, <code>automotive_<wbr>1024p_<wbr>landscape</code>)에서 운전석 온도 ▲ 버튼이 홈 버튼과 72×76px 겹쳐 눌리지 않는 문제입니다. 플랫폼(SystemUI) 쪽 문제라 앱에서 고칠 수 없어 <code>xfail(strict=True, raises=DefectReproduced)</code>로 걸어 두었습니다. 두 버튼이 겹치는 증상일 때만 xfailed가 되고, 버튼을 못 찾는 등 다른 이유의 실패는 그대로 실패입니다. 고쳐지면 이 테스트가 실패로 바뀌어 바로 알 수 있습니다. 건너뛴 테스트는 그 기기에 해당하지 않는 테스트입니다(태블릿: AAOS 전용 8개, AAOS: 태블릿 전용 시계 1개). Release 게이트는 이 밖의 건너뜀을 막습니다.</p>
-<p>2026-11-18 저녁에 경계값 테스트를 더하다가 앱 결함 1건을 찾아 고쳤습니다. 차량 쪽 온도가 22.3°C처럼 0.5°C 단위가 아니면, 온도 버튼이 22.8°C나 21.8°C를 그대로 차량에 썼습니다(<a href="#3-결함과-원인-분석">3장 8번</a>).</p>
-<p>위 결과는 2026-11-23에 두 기기를 병렬로 3회 반복한 실행의 마지막 회차입니다. 갤럭시 폴드는 같은 커밋으로 한 번 돌렸습니다. 테스트가 끝날 때마다 화면을 남겼고, <a href="test-results.html">테스트 결과</a>에서 테스트별로 볼 수 있습니다. 영상 화면에는 직접 찍은 블랙박스 영상이 나오고, 다른 차 번호판이 읽히는 화면은 흐리게 처리했습니다.</p>
+<p>위 결과는 2026-11-24에 두 기기를 병렬로 3회 반복한 실행의 마지막 회차입니다. 갤럭시 폴드는 같은 커밋으로 한 번 돌렸습니다. 테스트가 끝날 때마다 화면을 남겼고, <a href="test-results.html">테스트 결과</a>에서 테스트별로 볼 수 있습니다. 영상 화면에는 직접 찍은 블랙박스 영상이 나오고, 다른 차 번호판이 읽히는 화면은 흐리게 처리했습니다.</p>
+<h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
+<ul>
+<li>경력: 게임 QA 8년차(2017.12부터 약 7년 10개월, 회사 4곳)입니다. 모바일·PC·Steam Deck 멀티플랫폼 호환성 검증, 라이브 서비스 정기 업데이트와 BM 검수, 글로벌 현지화와 마켓 규제 검수, 외부 QA사·퍼블리셔와의 이슈 창구를 맡았고, 지금 회사에서는 AI R&amp;D 조직과 테스트 현황 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다. 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩(코드는 AI가 작성)으로 만들었습니다. 게임 QA에서 쓰던 BVT 문서 양식을 바탕으로 엑셀 BVT 문서를 브랜치·플랫폼별로 관리하는 대시보드에 Playwright·pytest UI 자동화를 붙여, 공개 웹 서비스(타입캐스트)의 BVT 70개 중 47개를 Chrome에서 한 번에 약 6분에 돌리고, 실패하면 화면·녹화·메시지를 남깁니다(2026-11-03 실행). Jira 처리량 캘린더와 Claude로 검수 리포트·이슈 초안을 만드는 TC 관리 도구(Bugspeaker Zone)도 바이브 코딩으로 만들어 업무에 씁니다. 모바일 자동화는 Appium으로 실습해 본 경험이 있고, 이 프로젝트에서 AAOS까지 넓혀 게이트, 반복 실행, CI를 갖춘 업무 수준으로 적용했습니다.</li>
+<li>기간: 2026-11-13부터, 혼자 진행했습니다.</li>
+<li>역할: AI 코딩 도구 Claude Code로 앱과 테스트 도구를 만들었습니다. 무엇을 만들지 정하고, E2E 테스트 설계는 Claude와 함께 했습니다. AI가 낸 변경과 외부 검토 항목은 기기 실행 기록과 자동 검사로 확인하여 반영 여부를 결정했고, PR을 병합했습니다.</li>
+<li>기기 구성, 신호 주입 방식, 판정과 재시도 규칙, 결함 원인 분석에서 무엇을 고르고 무엇을 버렸는지와 그 근거가 된 측정값은 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
+</ul>
+<p>이전에 만든 웹 BVT 도구(바이브 코딩, 개인 포트폴리오)의 실행 모습입니다. BVT 문서에서 자동화를 실행하면 Playwright가 타입캐스트 웹을 돌리며 표에 결과를 채우고(빨리 감기), 끝나면 실패한 No.64의 실패 순간 화면, 녹화, 메시지를 보여 줍니다. 타입캐스트 계정 정보는 흐리게 했습니다.</p>
+<img src="../../docs/images/web-bvt-demo.gif" width="760" alt="웹 BVT 도구에서 자동화를 실행해 타입캐스트 웹을 Playwright로 돌리고, 47건 중 실패한 1건의 화면과 녹화, 오류 메시지를 확인하는 모습">
+
+<p>업무에 쓰는 TC 관리 도구 Bugspeaker Zone(바이브 코딩)에는 이 프로젝트의 결과 파일을 읽어 들이는 화면을 붙였습니다. 아래 화면은 2026-11-21 결과를 읽은 것으로, TC 101개(케이스 129개)마다 두 기기의 판정과 판정 직후 화면, 차량 값을 보여 주고, 요구사항 26개와 연결된 테스트, 회차별 flaky 통계를 보여 줍니다. 판정은 실행 원자료의 값을 그대로 씁니다. 연결 코드는 Claude Code가 작성했고, 무엇을 보여 줄지와 반영 여부는 제가 정했습니다. 회사 데이터와 섞이지 않게, OpenCabin 메뉴만 보이는 데모 모드에서 2026-11-21 실행 자료로 찍었습니다. 실행을 거는 화면(Test Bench API)은 아직 없습니다.</p>
+<img src="../../docs/images/bugspeaker-zone-opencabin.gif" width="760" alt="Bugspeaker Zone 의 OpenCabin 화면: TC마다 AAOS와 태블릿 판정과 판정 직후 화면, smoke 거르기, 알려진 결함, 요구사항 추적, 조건별 확인, 회차 3번의 실행 750건 flaky 0 통계를 차례로 넘겨 보는 모습">
+
 <h2 id="목차"><a class="anchor" href="#목차" aria-hidden="true">#</a>목차</h2>
 <ol>
 <li><a href="#1-공고-요구사항과-한-일">공고 요구사항과 한 일</a></li>
@@ -304,8 +140,9 @@
 <li><a href="#6-테스트하기-쉽게-앱을-바꾼-점">테스트하기 쉽게 앱을 바꾼 점</a></li>
 <li><a href="#7-기술-스택">기술 스택</a></li>
 <li><a href="#8-운영과-ci">운영과 CI</a></li>
-<li><a href="#9-한계와-다음-단계">한계와 다음 단계</a></li>
-<li><a href="#10-저장소-안내">저장소 안내</a></li>
+<li><a href="#9-ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a></li>
+<li><a href="#10-한계와-다음-단계">한계와 다음 단계</a></li>
+<li><a href="#11-저장소-안내">저장소 안내</a></li>
 </ol>
 <hr>
 <h2 id="1-공고-요구사항과-한-일"><a class="anchor" href="#1-공고-요구사항과-한-일" aria-hidden="true">#</a>1. 공고 요구사항과 한 일</h2>
@@ -1236,7 +1073,201 @@
 <p>앱 단위 테스트는 CI에서 처음으로 Gradle로 돌았습니다. 작업 PC는 사용자 폴더가 한글 경로라 Gradle 테스트 실행기가 죽어서, 그동안은 <code>java</code>로 직접 돌려 확인했습니다.</p>
 <p><img data-md src="../../docs/images/ci-runs.png" alt="GitHub Actions 실행 목록 (2026-11-16에 찍은 처음 4회)" loading="lazy"></p>
 <hr>
-<h2 id="9-한계와-다음-단계"><a class="anchor" href="#9-한계와-다음-단계" aria-hidden="true">#</a>9. 한계와 다음 단계</h2>
+<h2 id="9-ai-결과를-어떻게-검증했나"><a class="anchor" href="#9-ai-결과를-어떻게-검증했나" aria-hidden="true">#</a>9. AI 결과를 어떻게 검증했나</h2>
+<p>이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 &#39;직접 써 보며 준 피드백&#39;). 지적마다 반영할지는 제가 정했고, Claude의 추천과 다르게 정한 경우는 아래 &#39;추천을 따르지 않은 사례&#39;에 있습니다.</p>
+<h3 id="원칙"><a class="anchor" href="#원칙" aria-hidden="true">#</a>원칙</h3>
+<ol>
+<li><strong>&#39;통과&#39;는 기기 실행 결과 파일로만 받아들입니다.</strong> 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK sha256, 종료 코드가 남고, Release 게이트가 <code>--commit</code>으로 그 커밋의 결과인지 확인합니다. 단위 테스트 통과는 기기 실행을 대신하지 않습니다.</li>
+<li><strong>&#39;실패 0&#39;과 &#39;정한 범위를 끝까지 돌렸다&#39;를 따로 봅니다.</strong> 범위가 줄었거나 중간에 멈춘 실행이 통과로 보이지 않도록 Release 게이트에 실행 완전성 조건을 두었습니다(<a href="#4-1-게이트-단계와-기준">4-1</a>).</li>
+<li><strong>문서의 주장은 코드와 검사로 확인합니다.</strong> 요구사항↔테스트 연결이나 문서·사이트의 내부 링크가 끊기면 CI의 unit job이 실패합니다. 문서에는 코드에서 찾아 확인할 수 있는 문장만 씁니다.</li>
+<li><strong>수치는 원자료에서 다시 셉니다.</strong> 실행 결과 파일을 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">evidence</a>에 남기고, 다시 세는 명령을 함께 적습니다.</li>
+<li><strong>코드를 쓴 AI와 다른 AI에게 검토를 맡깁니다.</strong> 2026-11-24에는 Codex에게 동작이 아니라 예외 상황만 찾아 달라고 따로 맡겼습니다. Codex가 재현 코드와 함께 보인 5건을 Claude Code가 고치며 같은 범위를 다시 읽어 4건을 더 찾았고, 모두 고치기 전에는 실패하고 고친 뒤 통과하는 단위 테스트로 남겼습니다. 반영은 두 기기 × 3회 실행과 Release 게이트를 본 뒤 정했습니다(<a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a>).</li>
+</ol>
+<h3 id="검증에서-잡혀-고친-사례"><a class="anchor" href="#검증에서-잡혀-고친-사례" aria-hidden="true">#</a>검증에서 잡혀 고친 사례</h3>
+<div class="table"><table><thead><tr>
+<th>무엇이 틀렸나</th>
+<th>어떻게 드러났나</th>
+<th>고친 것</th>
+</tr>
+</thead><tbody><tr>
+<td>문서에는 &#39;Release 게이트 다섯 조건&#39;, &#39;고정 sleep은 쓰지 않습니다&#39;라고 썼는데, 조건 셋은 검사하는 코드가 없었고 sleep이 3곳 있었습니다.</td>
+<td>외부 검토가 문서와 코드를 대조했습니다(2026-11-19).</td>
+<td>게이트가 결과 파일로 조건을 모두 확인하게 하고, sleep 3곳을 <code>stays</code>로 바꿨습니다.<br><a href="phase9-bench.html#7-외부-검토-반영-2026-11-19">9단계 기록 7절</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/9870972" target="_blank" rel="noopener"><code>9870972</code></a></td>
+</tr>
+<tr>
+<td>반복 실행 통계가 5회 원자료가 아니라 누적 기록을 읽어, 따로 돌린 15개짜리 실행이 섞였습니다.</td>
+<td>원자료를 저장소에 남기고 다시 세다가 찾았습니다.</td>
+<td>원자료 10개만 읽게 다시 만들고 정정 기록을 남겼습니다.<br><a href="flaky-report.html#읽는-법과-한계">반복 실행 통계의 정정</a></td>
+</tr>
+<tr>
+<td><code>run_<wbr>bench.<wbr>py --repeat 0</code>이 아무것도 돌리지 않고 종료 코드 0으로 끝났습니다. 게이트는 실패 수만 보고 실행이 끝까지 됐는지는 보지 않았습니다. 알려진 결함의 xfail이 어떤 오류든 &#39;알려진 결함&#39;으로 받았습니다.</td>
+<td>외부 검토(2026-11-20)에서 나왔습니다.</td>
+<td>실행 완전성 조건을 더하고, 반복 횟수는 1 이상만 받게 했습니다. xfail은 <code>raises=DefectReproduced</code>로 증상일 때만 받습니다.<br><a href="phase9-bench.html#8-외부-검토-반영-2026-11-20-게이트가-보증하는-범위">9단계 기록 8절</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/de733dd" target="_blank" rel="noopener"><code>de733dd</code></a></td>
+</tr>
+<tr>
+<td>README에 &quot;&#39;바뀌지 않아야 함&#39;은 1.5초 동안 계속 본다&quot;고 썼지만 10곳은 한 번만 읽었습니다.</td>
+<td>외부 검토가 코드에서 해당 줄을 찾아 대조했습니다(2026-11-21).</td>
+<td>10곳을 <code>stays</code>로 바꿨습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/commit/d41337a" target="_blank" rel="noopener"><code>d41337a</code></a></td>
+</tr>
+<tr>
+<td>결과 페이지에 폴드 칸을 더한 뒤 추적표 도구만 그 칸 이름을 몰라 멈췄고, 추적표는 두 기기 칸으로 남았습니다. 표를 다시 만들어 보는 검사가 없어 CI는 통과했습니다.</td>
+<td>테스트 범위를 다시 점검하다 찾았습니다(2026-11-23).</td>
+<td>칸 이름을 맞추고, 두 도구의 칸 이름이 다르거나 추적표가 코드와 다르면 unit job이 실패하게 했습니다. 결과가 아직 없는 테스트는 따로 셉니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/55419f7" target="_blank" rel="noopener"><code>55419f7</code></a></td>
+</tr>
+<tr>
+<td>테스트 도구가 에뮬레이터의 주행 상태를 못 읽으면 &#39;제한 없음&#39;으로 처리해, 정차를 기다리는 단계가 기다리지 않고 지나갔습니다.</td>
+<td>외부 리뷰의 예상 질문(출력을 정규식으로 읽는 방식의 한계)에 답을 정리하며 코드와 대조하다 찾았습니다(2026-11-24).</td>
+<td>못 읽으면 다른 읽기처럼 오류를 내게 고치고 단위 테스트 6개를 더한 뒤, 두 기기 × 3회를 다시 돌렸습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/300b081" target="_blank" rel="noopener"><code>300b081</code></a></td>
+</tr>
+<tr>
+<td>Test Bench API가 같은 기기의 실행 요청을 동시에 받으면 둘 다 시작했고, 테스트가 도는 기기에도 신호·전원 변경을 받았습니다. 실행 파일이 없으면 작업이 &#39;running&#39;에 남아 그 기기를 다시 쓸 수 없었습니다. CAN 게이트웨이는 차량 쪽이 느리면 프레임이 쌓여 최신 값이 약 1.7초 늦게 들어갔습니다.</td>
+<td>동작이 아니라 예외 상황을 찾아 달라고 따로 요청한 외부 검토가 실행 순서를 맞춘 재현 코드로 보였습니다(2026-11-24).</td>
+<td>기기 점유를 한 잠금 안에서 정하고, 테스트 중 변경은 409로 거절하고, 실패와 시간 초과도 점유를 풀게 했습니다. 게이트웨이는 상태 신호를 최신 값으로 합치고 기어와 도어는 순서대로 넣어, 같은 조건에서 약 50 ms가 됐습니다. 다시 읽어 네 가지를 더 고치고, 음악·안내·통화 중 공조 조작 같은 동시 조작 E2E 6개를 더했습니다.<br><a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a></td>
+</tr>
+<tr>
+<td>게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었습니다. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈췄습니다.</td>
+<td>두 기기에서 전체를 다시 돌렸습니다(2026-11-21).</td>
+<td>창 없이 다시 켜게 고치고, 처음부터 3회 돌려 750건이 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
+</tr>
+</tbody></table></div>
+<h3 id="추천을-따르지-않은-사례"><a class="anchor" href="#추천을-따르지-않은-사례" aria-hidden="true">#</a>추천을 따르지 않은 사례</h3>
+<p>Claude가 보기와 추천을 내면 제가 골랐습니다. 아래는 추천과 다르게 정한 경우이고, 무엇을 골랐는지는 작업 기록과 커밋에 남아 있습니다(날짜는 2026년).</p>
+<div class="table"><table><thead><tr>
+<th>언제</th>
+<th>Claude의 추천</th>
+<th>고른 것과 이유</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">11-23</td>
+<td>앱이 지원할 가장 작은 화면을 폭 580·높이 500dp로 정해 세로 화면까지 지원합니다.</td>
+<td><strong>폭 760·높이 500dp, 가로만.</strong> 차량 IVI 화면은 가로가 기본이라, 세로까지 지원하는 큰 변경보다 가로로 범위를 좁혀 확실히 검증하는 쪽을 골랐습니다.</td>
+<td>앱을 가로 전용으로 정하고 배치를 고쳤습니다. 760×500dp 화면에서 140개를 돌려 앱 테스트가 모두 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/40" target="_blank" rel="noopener">#40</a> · <a href="#4-4-테스트-범위-점검">4-4</a></td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td>태블릿 확인은 에뮬레이터로 대신합니다. 화면 폭이 같아 같은 배치를 쓰기 때문입니다.</td>
+<td><strong>태블릿을 연결해 확인.</strong> 폭이 같으니 결과도 같을 것이라는 추정 대신, 실제 기기의 결과 파일로 확인하는 쪽을 골랐습니다.</td>
+<td>같은 APK로 태블릿에서 122개가 통과하고 Release 게이트를 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 기록</a></td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td>결과 페이지에는 폴드 칸 없이 사례로만 보여 줍니다.</td>
+<td><strong>폴드 칸 추가.</strong> 사례로만 두면 같은 테스트의 기기별 화면을 나란히 비교할 수 없어서, 도구를 고쳐 칸을 나눴습니다.</td>
+<td>결과 도구가 같은 Mock 기기끼리 서로 덮어쓰던 구조를 모델별 칸으로 나눴습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/41" target="_blank" rel="noopener">#41</a></td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td>테스트가 140개로 늘어도 첫 화면 헤드라인은 11-21 결과로 둡니다.</td>
+<td><strong>140개 × 3회를 다시 돌리기.</strong> 첫 화면 숫자가 지금 코드로 돌린 결과가 아니면 안 된다고 보고, 1시간 넘게 걸려도 다시 돌렸습니다.</td>
+<td>813건 중 실패 0으로 헤드라인을 바꿨습니다. 그 뒤 4개를 더했을 때(837건)와 동시 조작 6개를 더했을 때(873건)도 다시 돌렸습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/46" target="_blank" rel="noopener">#46</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/pull/48" target="_blank" rel="noopener">#48</a></td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td>Claude가 쓴 역할 문구에 &#39;Test Bench에서 E2E를 직접 돌려 확인&#39;이 들어 있었습니다.</td>
+<td><strong>고르지 않음.</strong> 하지 않은 일을 역할에 적으면 면접에서 사실과 달라지므로 뺐습니다.</td>
+<td>README, 포트폴리오, 사이트 세 곳에서 뺐습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/commit/7fe2df3" target="_blank" rel="noopener"><code>7fe2df3</code></a></td>
+</tr>
+</tbody></table></div>
+<p>화면으로 보면 이렇습니다.</p>
+<div class="table"><table><thead><tr>
+<th>세로 폴드 (세로까지 지원하려던 화면)</th>
+<th>가로 760×500dp (고른 범위)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/override/fold-portrait.png" width="250" alt="세로로 든 갤럭시 폴드에서 아래 바가 겹치고 시계가 사라진 홈 화면"></td>
+<td><img src="../../docs/images/override/emulator-760x500dp.png" width="400" alt="760×500dp로 줄인 에뮬레이터에서 제대로 보이는 빠른 제어 화면"></td>
+</tr>
+</tbody></table></div>
+<div class="table"><table><thead><tr>
+<th>에뮬레이터 (추천: 이것으로 대신)</th>
+<th>태블릿 (직접 연결해 확인)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/override/radio-emulator.webp" width="380" alt="에뮬레이터의 라디오 화면"></td>
+<td><img src="../../docs/images/override/radio-tablet.webp" width="380" alt="태블릿의 라디오 화면"></td>
+</tr>
+</tbody></table></div>
+<img src="../../docs/images/override/results-3-devices.png" width="760" alt="결과 페이지에서 같은 라디오 테스트의 에뮬레이터, 태블릿, 갤럭시 폴드 화면이 나란히 보이는 칸">
+
+<h3 id="직접-써-보며-준-피드백-fqa"><a class="anchor" href="#직접-써-보며-준-피드백-fqa" aria-hidden="true">#</a>직접 써 보며 준 피드백 (FQA)</h3>
+<p>초기 버전부터 앱을 태블릿과 에뮬레이터에서 직접 써 보며, 새로 필요한 기능과 지금 기능이 제대로 도는지, 사용자로서 어색한 곳이 없는지 보고 고칠 것을 정했습니다. 아래는 작업 기록에 남은 것과 그때의 화면입니다(날짜는 2026년).</p>
+<p><strong>앱 첫 화면이 바뀐 과정</strong> (AAOS 에뮬레이터)</p>
+<div class="table"><table><thead><tr>
+<th>11-13 재점검 전 (2~4단계)</th>
+<th>11-13 재점검 뒤 (5단계, 주행 중)</th>
+<th>11-14 3영역 개편 (7단계)</th>
+<th>11-18 지금 (9단계)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/before-home.png" width="230" alt="재점검 전 홈 화면: 속도와 기어 카드, 비어 있는 공조 카드, 아래 시스템 바는 화씨 70°와 61°"></td>
+<td><img src="../../docs/images/home-driving.png" width="230" alt="재점검 뒤 홈 화면: 속도 게이지, 미디어 카드, 공조 카드"></td>
+<td><img src="../../docs/images/p7-home.png" width="230" alt="3영역으로 바꾼 홈 화면: 왼쪽 주행 정보, 가운데 지도, 오른쪽 미디어, 아래 공조 바"></td>
+<td><img src="../../docs/images/p9-home.png" width="230" alt="지금 홈 화면: 목적지 검색, 아래 시스템 바 대신 앱의 공조 바"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-14-공조-온도가-태블릿과-다르게-보였습니다"><a class="anchor" href="#11-14-공조-온도가-태블릿과-다르게-보였습니다" aria-hidden="true">#</a>11-14 공조 온도가 태블릿과 다르게 보였습니다</h4>
+<p>에뮬레이터에서는 앱이 16.0°C, 아래 시스템 바가 화씨 61°로 보였습니다. 운전석·조수석을 22.0°C, 섭씨로 맞췄습니다. 이 변경으로 화씨를 가정하던 1단계 테스트 4개가 실패해, 표시 단위를 읽어 기대값을 계산하게 고쳤습니다. <a href="phase7-layout.html#에뮬레이터-공조-값을-태블릿과-같게">7단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/7590d42" target="_blank" rel="noopener"><code>7590d42</code></a></p>
+<div class="table"><table><thead><tr>
+<th>전</th>
+<th>후</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/fqa/1114-climate-before.png" width="400" alt="앱은 16.0°C, 아래 시스템 바는 화씨 61°로 보이는 공조 화면"></td>
+<td><img src="../../docs/images/p7-climate.png" width="400" alt="운전석, 조수석, 아래 시스템 바가 모두 22.0°C로 보이는 공조 화면"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-16-고쳤던-온도가-재부팅-뒤-다시-63로-돌아왔습니다"><a class="anchor" href="#11-16-고쳤던-온도가-재부팅-뒤-다시-63로-돌아왔습니다" aria-hidden="true">#</a>11-16 고쳤던 온도가 재부팅 뒤 다시 63°로 돌아왔습니다</h4>
+<p>같은 지적을 다시 했습니다. 지금 값만 바꾸던 방식을 VHAL 초기값 덮어쓰기로 바꿔, 에뮬레이터를 다시 켜도 22.0°C가 유지되게 했습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/5d95212" target="_blank" rel="noopener"><code>5d95212</code></a></p>
+<h4 id="11-16-공조에-최대-냉방full이-없었습니다"><a class="anchor" href="#11-16-공조에-최대-냉방full이-없었습니다" aria-hidden="true">#</a>11-16 공조에 최대 냉방(FULL)이 없었습니다</h4>
+<p>FULL 기능과 E2E 4개(켜기, 끄면 이전 값 복원, 신호→화면, 풍량을 바꾸면 풀림)를 더했습니다. FULL을 켜면 온도는 16.0°C, 풍량은 7이 됩니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/3c60f2d" target="_blank" rel="noopener"><code>3c60f2d</code></a></p>
+<div class="table"><table><thead><tr>
+<th>전</th>
+<th>후 (FULL 켬)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/p8-climate.png" width="400" alt="FULL 버튼이 없는 공조 화면: A/C, AUTO, SYNC"></td>
+<td><img src="../../docs/images/p9-climate-full.png" width="400" alt="FULL을 켠 공조 화면: 16.0°C, 풍량 7"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-16-영상-화면-아래에-블랙박스-제품-이름이-보였습니다"><a class="anchor" href="#11-16-영상-화면-아래에-블랙박스-제품-이름이-보였습니다" aria-hidden="true">#</a>11-16 영상 화면 아래에 블랙박스 제품 이름이 보였습니다</h4>
+<p>영상 아래 줄을 잘라 내고 재생하게 했습니다. 영상은 직접 찍은 블랙박스 주행 영상입니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/9b36711" target="_blank" rel="noopener"><code>9b36711</code></a></p>
+<div class="table"><table><thead><tr>
+<th>후</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/p9-video.png" width="400" alt="아래 줄을 잘라 낸 블랙박스 주행 영상 화면"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-16-11-18-테스트-결과를-글자로만-확인할-수-있었습니다"><a class="anchor" href="#11-16-11-18-테스트-결과를-글자로만-확인할-수-있었습니다" aria-hidden="true">#</a>11-16, 11-18 테스트 결과를 글자로만 확인할 수 있었습니다</h4>
+<p>테스트마다 판정 직후 화면을 남기고, 결과 페이지에서 두 기기의 화면을 나란히 보게 했습니다. <a href="https://github.com/bugspeaker/opencabin-ivi/commit/0aa184f" target="_blank" rel="noopener"><code>0aa184f</code></a> · <a href="test-results.html">테스트 결과</a></p>
+<div class="table"><table><thead><tr>
+<th>후 (지금 결과 페이지)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/fqa/results-page.png" width="640" alt="테스트 결과 페이지: 기기별 요약과, 테스트마다 AAOS와 태블릿의 판정 직후 화면"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-18-우대사항-3개가-비어-있었습니다"><a class="anchor" href="#11-18-우대사항-3개가-비어-있었습니다" aria-hidden="true">#</a>11-18 우대사항 3개가 비어 있었습니다</h4>
+<p>차량 네트워크, REST·원격 전원, 기능 안전 항목이 비어 있어 지금 방법으로는 정말 안 되는지 물었습니다. Test Bench REST API, 원격 전원, 가상 CAN, 요구사항 추적표를 모의 환경으로 만들고 &#39;일부&#39;로 표시했습니다. <a href="phase9-bench.html">9단계 기록</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/84b63d6" target="_blank" rel="noopener"><code>84b63d6</code></a></p>
+<h4 id="11-23-테스트-범위가-충분한지-다시-봐-달라고-했습니다"><a class="anchor" href="#11-23-테스트-범위가-충분한지-다시-봐-달라고-했습니다" aria-hidden="true">#</a>11-23 테스트 범위가 충분한지 다시 봐 달라고 했습니다</h4>
+<p>요구사항 조건, 앱의 화면 요소(testTag), 주행 중 제한의 허용 쪽, 경계값, 기기·화면, 단위 테스트 커버리지로 다시 대 보게 했습니다. 테스트가 없던 조건 2개와 화면 요소 약 30개를 찾아 E2E 11개를 더했고, 추적표 도구가 폴드 칸 때문에 멈춰 있던 것도 이때 드러나 고쳤습니다. 테스트가 늘었으니 헤드라인도 새 실행으로 바꾸자고 해서, 두 기기 × 3회를 다시 돌리고 이전 반복 자료는 그대로 남겼습니다. <a href="#4-4-테스트-범위-점검">4-4</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/55419f7" target="_blank" rel="noopener"><code>55419f7</code></a></p>
+<h4 id="11-23-aaos-qa-자료를-찾아-더-볼-곳이-있는지-물었습니다"><a class="anchor" href="#11-23-aaos-qa-자료를-찾아-더-볼-곳이-있는지-물었습니다" aria-hidden="true">#</a>11-23 AAOS QA 자료를 찾아 더 볼 곳이 있는지 물었습니다</h4>
+<p>AOSP의 주행 중 UX 제한 문서와 차량 앱 품질 기준을 찾아보고, 에뮬레이터에서 후보 12가지를 직접 돌려 봤습니다. 그중 UX 제한 설정을 읽다가 D 기어로 멈춰 있을 때(신호 대기) 플랫폼은 영상만 막는데, AAOS 앱은 검색까지 막고 태블릿은 영상을 막지 않는 결함을 찾았습니다. 규칙은 플랫폼을 따르기로 정했고, 앱이 제한 종류를 보고 막게 고쳤습니다(앱 0.4.2). <a href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">3장 13번</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/de9d062" target="_blank" rel="noopener"><code>de9d062</code></a></p>
+<div class="table"><table><thead><tr>
+<th>전 (0.4.1, D 기어 0 km/h)</th>
+<th>후 (0.4.2, D 기어 0 km/h)</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw"><img src="../../docs/images/fqa/1123-stopped-before.png" width="400" alt="수정 전: D 기어 0 km/h에서 '주행 중 · 일부 기능 제한' 배지와 '주행 중 검색 제한'"></td>
+<td><img src="../../docs/images/fqa/1123-stopped-after.png" width="400" alt="수정 후: D 기어 0 km/h에서 '정지 중 · 영상만 제한' 배지, 검색 칸은 '어디로 갈까요?'로 쓸 수 있음"></td>
+</tr>
+</tbody></table></div>
+<h4 id="11-23-0-kmh-한-점만-볼-것-같아-시간을-바꿔-가며-보자고-했습니다"><a class="anchor" href="#11-23-0-kmh-한-점만-볼-것-같아-시간을-바꿔-가며-보자고-했습니다" aria-hidden="true">#</a>11-23 0 km/h 한 점만 볼 것 같아 시간을 바꿔 가며 보자고 했습니다</h4>
+<p>속도와 기어를 시간에 따라 바꾸는 신호 대기 시나리오 테스트를 더했습니다. P → D 정지(3초) → 3 km/h(2초) → 정지(3초) → 60 km/h(3초) → N 정지(2초) → P 순서로, 단계마다 UX 제한, 검색 입력, 상단 배지가 바로 바뀌는지 보고 머무는 동안 흔들리지 않는지 봅니다. 신호를 넣고 화면이 따라오기까지 걸린 시간을 결과에 남겨, 마지막 반복에서 세 기기 모두 단계마다 0.2~0.9초였습니다. <a href="test-results.html#test_restrictions_follow_stop_and_go_timeline"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></p>
+<p>지적은 대부분 외부 검토(AI 검토 포함)와 기기 실행에서 나왔습니다. 지적마다 반영할지는 제가 정했고, 반영한 것은 위처럼 코드와 기록으로 남겼습니다. 같은 종류의 실수가 다시 들어오지 않도록 링크 검사, 추적 검사, 게이트 조건을 CI와 게이트에 넣었습니다.</p>
+<hr>
+<h2 id="10-한계와-다음-단계"><a class="anchor" href="#10-한계와-다음-단계" aria-hidden="true">#</a>10. 한계와 다음 단계</h2>
 <h3 id="한계"><a class="anchor" href="#한계" aria-hidden="true">#</a>한계</h3>
 <ul>
 <li>테스트 대상은 AAOS 에뮬레이터의 CarService와 VHAL(가상 차량 값)입니다. 실제 차량이나 HIL, 실물 Test Bench에서 해 본 것이 아닙니다.</li>
@@ -1262,7 +1293,7 @@
 <li>차량 네트워크는 SOME/IP와 DDS도 같은 방식의 모의 환경으로 해 보고, 실제 CAN 인터페이스가 생기면 게이트웨이를 그대로 붙여 보려고 합니다. ISO 26262와 A-SPICE는 계속 공부하려고 합니다.</li>
 </ol>
 <hr>
-<h2 id="10-저장소-안내"><a class="anchor" href="#10-저장소-안내" aria-hidden="true">#</a>10. 저장소 안내</h2>
+<h2 id="11-저장소-안내"><a class="anchor" href="#11-저장소-안내" aria-hidden="true">#</a>11. 저장소 안내</h2>
 <div class="table"><table><thead><tr>
 <th>경로</th>
 <th>내용</th>
@@ -1345,7 +1376,7 @@
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#추천을-따르지-않은-사례">추천을 따르지 않은 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l3" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</a><a class="l3" href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">플랫폼 설정을 읽다 찾은 정지 상태 결함</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l3" href="#4-4-테스트-범위-점검">4-4. 테스트 범위 점검</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#한눈에-보기">한눈에 보기</a><a class="l3" href="#결과">결과</a><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l3" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</a><a class="l3" href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">플랫폼 설정을 읽다 찾은 정지 상태 결함</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l3" href="#4-4-테스트-범위-점검">4-4. 테스트 범위 점검</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-ai-결과를-어떻게-검증했나">9. AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#추천을-따르지-않은-사례">추천을 따르지 않은 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#10-한계와-다음-단계">10. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#11-저장소-안내">11. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
