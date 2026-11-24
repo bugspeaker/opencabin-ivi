@@ -60,7 +60,8 @@ def run_once(devices, run_id, pytest_args):
         cmd = [sys.executable, "-m", "pytest", "--serial", serial, "--system-port", str(BASE_SYSTEM_PORT + index * 10),
                "--run-id", run_id, "-q", *pytest_args]
         handle = log.open("w", encoding="utf-8")
-        procs.append((serial, subprocess.Popen(cmd, cwd=ROOT, stdout=handle, stderr=subprocess.STDOUT), handle, log))
+        env = {**os.environ, "PYTHONIOENCODING": "utf-8"}  # 로그 파일과 같은 utf-8 로 쓰게 (Python 3.12 Windows 기본은 cp949)
+        procs.append((serial, subprocess.Popen(cmd, cwd=ROOT, env=env, stdout=handle, stderr=subprocess.STDOUT), handle, log))
         print(f"  ▶ {serial}  (systemPort {BASE_SYSTEM_PORT + index * 10})  로그: {log.relative_to(ROOT)}")
 
     results = []

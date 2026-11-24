@@ -13,14 +13,21 @@
     GET  /api/runs?limit=5                 최근 실행 요약 (reports/runs/*.json)
     GET  /api/runs/{name}                  실행 하나 전체 (name = <run_id>-<serial>)
     POST /api/jobs                         테스트 실행 시작 {"serial": "...", "markers": "smoke"} → 202
-    GET  /api/jobs/{id}                    실행 상태 (running, passed, failed)
+    GET  /api/jobs/{id}                    실행 상태 (running, passed, failed, timeout, error)
+
+기기 하나에는 바꾸는 일을 한 번에 하나만 한다. 테스트가 도는 동안 그 기기의 신호 넣기와 전원 조작은 409 로 거절한다
+(테스트 결과가 바깥 조작으로 오염되지 않게). 읽기(신호, 전원 상태)는 된다. 신호·전원 요청끼리는 차례로 처리하고,
+그 사이에 온 실행 요청은 앞 요청이 끝난 뒤에 시작한다.
 
 실행: python tools/bench_api.py  (기본 127.0.0.1:8770, 벤치 PC 밖으로 열지 않는다)
 """
 import json
+import math
+import os
 import re
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import uuid
@@ -40,6 +47,8 @@ LIMITS = {
 }
 GEARS = ("P", "R", "D")
 MARKERS = re.compile(r"^[\w\s()]{1,80}$")  # "smoke or sanity" 같은 마커 식만 받는다
+MAX_BODY = 64 * 1024  # 요청 본문 상한. 신호 몇 개를 넣는 API 라 이보다 클 일이 없다
+JOB_TIMEOUT = 3600.0  # 실행 작업 하나의 시간 제한(초). 기기 하나 전체 E2E 가 12분 안팎이다
 
 
 class ApiError(Exception):
@@ -54,11 +63,18 @@ class BenchDevice:
 
     def __init__(self, serial, kind, model, vehicle, power=None):
         self.serial, self.kind, self.model, self.vehicle, self.power = serial, kind, model, vehicle, power
-        self.lock = threading.Lock()  # 한 기기에 요청이 겹치지 않게
+        self.lock = threading.Lock()  # 한 기기에 요청이 겹치지 않게. job 을 읽고 바꿀 때도 잡는다
+        self.job = None               # 이 기기에서 도는 실행 작업 id. 있는 동안 신호·전원 변경을 거절한다
 
     def describe(self):
         return {"serial": self.serial, "kind": self.kind, "model": self.model,
-                "power": self.power.name if self.power else None}
+                "power": self.power.name if self.power else None, "job": self.job}
+
+    def ensure_idle(self):
+        """lock 을 잡은 채로 부른다. 테스트가 돌고 있으면 409."""
+        if self.job:
+            raise ApiError(HTTPStatus.CONFLICT, f"{self.serial} 에서 테스트가 실행 중이라 바꾸지 않는다. 끝난 뒤에 다시 보낸다",
+                           job=self.job)
 
 
 def validate_signals(body):
@@ -83,6 +99,9 @@ def validate_signals(body):
         if isinstance(value, bool) or not isinstance(value, (int, float)):
             errors.append(f"{name} 는 숫자")
             continue
+        if not math.isfinite(value):  # NaN, Infinity. 뒤의 int() 가 OverflowError 로 502 를 내던 자리
+            errors.append(f"{name} 는 유한한 숫자")
+            continue
         if expected is int and value != int(value):
             errors.append(f"{name} 는 정수")
             continue
@@ -92,7 +111,8 @@ def validate_signals(body):
     if "speed_kmh" in body and body.get("gear") != "D":
         errors.append("speed_kmh 는 gear 가 D 일 때만 넣는다")
     for seat in ("temp_driver", "temp_passenger"):
-        if seat in body and isinstance(body[seat], (int, float)) and (body[seat] * 2) != int(body[seat] * 2):
+        value = body.get(seat)
+        if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value * 2 != int(value * 2):
             errors.append(f"{seat} 는 0.5 단위")
     if errors:
         raise ApiError(HTTPStatus.BAD_REQUEST, "; ".join(errors))
@@ -104,11 +124,12 @@ def validate_signals(body):
 class Bench:
     """REST 경로가 하는 일. HTTP 와 떼어 두어 단위 테스트에서 바로 부를 수 있다."""
 
-    def __init__(self, devices, runs_dir=None, pytest_cmd=None, cwd=None):
+    def __init__(self, devices, runs_dir=None, pytest_cmd=None, cwd=None, job_timeout=JOB_TIMEOUT):
         self.devices = {d.serial: d for d in devices}
         self.runs_dir = Path(runs_dir) if runs_dir else None
         self.pytest_cmd = pytest_cmd or [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"]
         self.cwd = cwd
+        self.job_timeout = job_timeout
         self.jobs = {}
 
     def device(self, serial):
@@ -133,6 +154,7 @@ class Bench:
         d = self.device(serial)
         cabin, gear, speed, temps = validate_signals(body)
         with d.lock:
+            d.ensure_idle()
             for seat, celsius in temps.items():
                 d.vehicle.set_temperature(seat, celsius)
             if cabin:
@@ -160,6 +182,7 @@ class Bench:
         if not d.power:
             raise ApiError(HTTPStatus.NOT_IMPLEMENTED, f"{serial} 에는 전원 제어가 없다")
         with d.lock:
+            d.ensure_idle()
             try:
                 if action == "cycle":
                     return {"serial": serial, "action": action, "boot_seconds": round(d.power.cycle(), 1)}
@@ -174,19 +197,41 @@ class Bench:
     def _run_files(self):
         if not self.runs_dir or not self.runs_dir.exists():
             return []
-        return sorted(self.runs_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+
+        def mtime(path):
+            try:
+                return path.stat().st_mtime
+            except OSError:  # 목록을 만든 사이 지워진 파일
+                return 0.0
+        return sorted(self.runs_dir.glob("*.json"), key=mtime, reverse=True)
+
+    @staticmethod
+    def _read_run(path):
+        """결과 파일을 읽는다. 실행이 아직 쓰는 중이거나 형식이 다르면 None."""
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+        return data if isinstance(data, dict) and isinstance(data.get("summary"), dict) else None
 
     def list_runs(self, limit=10):
         rows = []
         for path in self._run_files()[:limit]:
-            summary = json.loads(path.read_text(encoding="utf-8"))["summary"]
+            data = self._read_run(path)
+            if data is None:  # 파일 하나 때문에 목록 전체가 실패하지 않게 그 줄만 표시한다
+                rows.append({"name": path.stem, "error": "읽을 수 없는 결과 파일 (쓰는 중이거나 형식이 다르다)"})
+                continue
+            summary = data["summary"]
             rows.append({"name": path.stem, **{k: summary.get(k) for k in ("run_id", "serial", "kind", "counts", "gate", "duration")}})
         return {"runs": rows}
 
     def get_run(self, name):
         for path in self._run_files():
             if path.stem == name:
-                return json.loads(path.read_text(encoding="utf-8"))
+                data = self._read_run(path)
+                if data is None:
+                    raise ApiError(HTTPStatus.SERVICE_UNAVAILABLE, f"결과 파일을 읽을 수 없다 (쓰는 중이거나 형식이 다르다): {name}")
+                return data
         raise ApiError(HTTPStatus.NOT_FOUND, f"없는 실행: {name}")
 
     # ---- 원격 실행 ----
@@ -194,29 +239,73 @@ class Bench:
         if not isinstance(body, dict):
             raise ApiError(HTTPStatus.BAD_REQUEST, "본문은 JSON 객체")
         serial = body.get("serial")
-        self.device(serial)
+        if not isinstance(serial, str):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "serial 은 기기 serial 문자열", devices=sorted(self.devices))
+        d = self.device(serial)
         markers = body.get("markers")
         if markers is not None and not (isinstance(markers, str) and MARKERS.match(markers)):
             raise ApiError(HTTPStatus.BAD_REQUEST, "markers 는 'smoke or sanity' 같은 마커 식")
-        if any(j["serial"] == serial and j["status"] == "running" for j in self.jobs.values()):
-            raise ApiError(HTTPStatus.CONFLICT, f"{serial} 에서 이미 실행 중이다")
         command = [*self.pytest_cmd, "--serial", serial, *(["-m", markers] if markers else [])]
-        job = {"id": uuid.uuid4().hex[:12], "serial": serial, "markers": markers, "status": "running",
-               "started": time.strftime("%Y-%m-%dT%H:%M:%S"), "returncode": None, "output_tail": ""}
-        self.jobs[job["id"]] = job
-        threading.Thread(target=self._run_job, args=(job, command), daemon=True).start()
-        return job
+        with d.lock:  # '실행 중인지 보기'와 '등록'을 한 번에. 따로 하면 동시에 온 두 요청이 모두 통과한다
+            if d.job:
+                raise ApiError(HTTPStatus.CONFLICT, f"{serial} 에서 이미 실행 중이다", job=d.job)
+            job = {"id": uuid.uuid4().hex[:12], "serial": serial, "markers": markers, "status": "running",
+                   "started": time.strftime("%Y-%m-%dT%H:%M:%S"), "finished": None, "returncode": None,
+                   "error": None, "output_tail": ""}
+            self.jobs[job["id"]] = job
+            d.job = job["id"]
+        try:
+            threading.Thread(target=self._run_job, args=(job, command, d), name=f"job-{job['id']}", daemon=True).start()
+        except BaseException as error:
+            self._finish(job, d, {"status": "error", "error": f"실행을 시작하지 못했다: {error!r}"})
+            raise
+        return dict(job)
 
-    def _run_job(self, job, command):
-        done = subprocess.run(command, cwd=self.cwd, capture_output=True, text=True, encoding="utf-8", errors="replace")
-        job["returncode"] = done.returncode
-        job["output_tail"] = (done.stdout + done.stderr).strip()[-2000:]
-        job["status"] = "passed" if done.returncode == 0 else "failed"
+    def _run_job(self, job, command, device):
+        """테스트를 돌려 결과를 job 에 적는다. 어떤 길로 끝나든 running 에 남기지 않고 기기 점유를 푼다."""
+        result = {"status": "error", "error": "알 수 없는 이유로 끝났다"}
+        try:
+            result = self._execute(command)
+        except BaseException as error:  # noqa: BLE001 - 여기서 놓치면 작업이 running 에 남고 기기가 잠긴다
+            result = {"status": "error", "error": f"{type(error).__name__}: {error}"}
+        finally:
+            self._finish(job, device, result)
+
+    def _execute(self, command):
+        # 출력은 파이프 대신 임시 파일로 받는다. 테스트가 띄운 프로세스가 파이프를 물고 있으면 pytest 가 끝나도
+        # 읽기가 끝나지 않고, 시간 초과 뒤 정리(communicate)도 같은 이유로 멈출 수 있다.
+        env = {**os.environ, "PYTHONIOENCODING": "utf-8"}  # Windows 에서 자식 출력이 cp949 로 나와 한글이 깨지던 것
+        with tempfile.TemporaryFile() as out:
+            try:
+                process = subprocess.Popen(command, cwd=self.cwd, env=env, stdin=subprocess.DEVNULL,
+                                           stdout=out, stderr=subprocess.STDOUT)
+            except OSError as error:  # 실행 파일이나 작업 폴더가 없다
+                return {"status": "error", "error": f"테스트를 시작하지 못했다: {type(error).__name__}: {error}"}
+            try:
+                returncode = process.wait(timeout=self.job_timeout)
+                result = {"status": "passed" if returncode == 0 else "failed", "returncode": returncode}
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=30)
+                result = {"status": "timeout", "returncode": process.returncode,
+                          "error": f"{self.job_timeout:g}초 안에 끝나지 않아 멈췄다"}
+            out.seek(0, os.SEEK_END)
+            out.seek(max(0, out.tell() - 8192))
+            result["output_tail"] = out.read().decode("utf-8", errors="replace").strip()[-2000:]
+            return result
+
+    @staticmethod
+    def _finish(job, device, result):
+        # 기기를 먼저 푼다. 상태가 끝났다고 보이는 순간에는 같은 기기에 바로 다음 요청을 보낼 수 있어야 한다
+        with device.lock:
+            if device.job == job["id"]:
+                device.job = None
+        job.update({**result, "finished": time.strftime("%Y-%m-%dT%H:%M:%S")})
 
     def job(self, job_id):
         if job_id not in self.jobs:
             raise ApiError(HTTPStatus.NOT_FOUND, f"없는 실행 작업: {job_id}")
-        return self.jobs[job_id]
+        return dict(self.jobs[job_id])
 
 
 # ---------------- HTTP ----------------
@@ -236,6 +325,10 @@ ROUTES = [
 ]
 
 
+def _reject_constant(name):
+    raise json.JSONDecodeError(f"{name} 는 JSON 숫자가 아니다", name, 0)
+
+
 def _handler(bench):
     class Handler(BaseHTTPRequestHandler):
         server_version = "OpenCabinBench/1.0"
@@ -252,11 +345,18 @@ def _handler(bench):
             self.wfile.write(data)
 
         def _body(self):
-            length = int(self.headers.get("Content-Length") or 0)
+            try:
+                length = int(self.headers.get("Content-Length") or 0)
+            except ValueError as error:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "Content-Length 가 숫자가 아니다") from error
+            if length < 0:  # 음수면 read(-1) 이 연결이 닫힐 때까지 기다렸다
+                raise ApiError(HTTPStatus.BAD_REQUEST, "Content-Length 가 음수다")
+            if length > MAX_BODY:
+                raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, f"본문은 {MAX_BODY} 바이트까지 받는다")
             if not length:
                 return {}
             try:
-                return json.loads(self.rfile.read(length).decode("utf-8"))
+                return json.loads(self.rfile.read(length).decode("utf-8"), parse_constant=_reject_constant)
             except (UnicodeDecodeError, json.JSONDecodeError) as error:
                 raise ApiError(HTTPStatus.BAD_REQUEST, f"JSON 이 아니다: {error}") from error
 

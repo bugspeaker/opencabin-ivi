@@ -31,7 +31,7 @@ def collect(tests="tests"):
         out = Path(tmp) / "inventory.json"
         proc = subprocess.run(
             [sys.executable, "-m", "pytest", tests, "--collect-only", "-q", "-p", "tools.collect_tests"],
-            cwd=ROOT, env={**os.environ, OUT_ENV: str(out)},
+            cwd=ROOT, env={**os.environ, OUT_ENV: str(out), "PYTHONIOENCODING": "utf-8"},
             capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
         )
         if proc.returncode != 0 or not out.exists():
