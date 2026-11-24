@@ -53,12 +53,12 @@
 <th>알려진 결함</th>
 </tr>
 </thead><tbody><tr>
-<td class="nw">64회</td>
-<td>7,413건</td>
-<td>7,373건</td>
+<td class="nw">80회</td>
+<td>8,483건</td>
+<td>8,436건</td>
 <td>7건</td>
-<td>9건</td>
-<td>24건</td>
+<td>13건</td>
+<td>27건</td>
 </tr>
 </tbody></table></div>
 <ul>
@@ -76,25 +76,25 @@
 </tr>
 </thead><tbody><tr>
 <td class="nw">AAOS 에뮬레이터</td>
-<td>30회</td>
-<td>3,476건</td>
-<td>3,444건</td>
+<td>38회</td>
+<td>3,948건</td>
+<td>3,909건</td>
 <td>5건</td>
-<td>3건</td>
+<td>7건</td>
 </tr>
 <tr>
 <td class="nw">갤럭시 폴드</td>
-<td>8회</td>
-<td>804건</td>
-<td>799건</td>
+<td>10회</td>
+<td>955건</td>
+<td>950건</td>
 <td>0건</td>
 <td>5건</td>
 </tr>
 <tr>
 <td class="nw">태블릿</td>
-<td>26회</td>
-<td>3,133건</td>
-<td>3,130건</td>
+<td>32회</td>
+<td>3,580건</td>
+<td>3,577건</td>
 <td>2건</td>
 <td>1건</td>
 </tr>
@@ -280,6 +280,42 @@
 <td>0건</td>
 <td>0건</td>
 </tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-concurrency/README.md">동시 조작 테스트 첫 확인 (커밋 전)</a></td>
+<td><code>410a052</code></td>
+<td>AAOS 에뮬레이터, 갤럭시 폴드, 태블릿</td>
+<td>49건</td>
+<td>4건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-concurrency/README.md">빠른 누름 간격 줄여 보기 (저장소에 넣지 않은 임시 테스트)</a></td>
+<td><code>410a052</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>6건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-concurrency/README.md">반복 3회 (150개)</a></td>
+<td><code>101de99</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>873건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-concurrency/README.md">폴드 1회 (150개)</a></td>
+<td><code>101de99</code></td>
+<td>갤럭시 폴드</td>
+<td>142건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
 </tbody></table></div>
 <h2 id="실패-오류-재시도-후-통과가-나온-곳"><a class="anchor" href="#실패-오류-재시도-후-통과가-나온-곳" aria-hidden="true">#</a>실패, 오류, 재시도 후 통과가 나온 곳</h2>
 <div class="table"><table><thead><tr>
@@ -433,6 +469,38 @@
 <td><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_<wbr>typed_<wbr>command_<wbr>sets_<wbr>vehicle_<wbr>temperature</code></a></td>
 <td>재시도 후 통과</td>
 <td><strong>환경</strong> 실행을 시작할 무렵 USB를 연결해 태블릿에 뜬 시스템 창(USB 연결 방식 선택)이 앱을 가렸습니다. 첫 시도로 남기고 3회를 다시 돌렸습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-153908</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_quick_taps_are_all_applied" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied[driver]</code></a></td>
+<td>실패</td>
+<td><strong>테스트 도구</strong> AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. adb input tap으로 바꿔 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-153908</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_quick_taps_are_all_applied" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied[passenger]</code></a></td>
+<td>실패</td>
+<td><strong>테스트 도구</strong> AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. adb input tap으로 바꿔 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-154050</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_quick_taps_are_all_applied" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied[driver]</code></a></td>
+<td>실패</td>
+<td><strong>테스트 도구</strong> AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-154050</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_quick_taps_are_all_applied" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied[passenger]</code></a></td>
+<td>실패</td>
+<td><strong>테스트 도구</strong> AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다.</td>
 </tr>
 </tbody></table></div>
 <p>다시 만드는 방법 (<code>ivi-tests</code>에서):</p>

@@ -1,0 +1,68 @@
+{
+  "summary": {
+    "run_id": "20261124-154132",
+    "serial": "emulator-5554",
+    "kind": "aaos",
+    "model": "Car on x86_64 emulator",
+    "commit": "410a0526da45491bebc5da3c1e6d8655be703933",
+    "dirty": true,
+    "app": {
+      "version": "0.4.2 (6)",
+      "apk_sha256": "c977c9069411cf122116510eb94ddd431d1164efb9c1de3632e99530be89bd30"
+    },
+    "command": "pytest tests/test_concurrency.py::test_quick_taps_are_all_applied --serial emulator-5554 --system-port 8200",
+    "launcher": "",
+    "duration": 15.6,
+    "counts": {
+      "passed": 2
+    },
+    "relaunches": 0,
+    "infra_retries": 0,
+    "session_restarts": 0,
+    "exitstatus": 0,
+    "collected": 2,
+    "gate": "pass"
+  },
+  "tests": [
+    {
+      "run_id": "20261124-154132",
+      "time": "2026-11-24T15:41:32",
+      "serial": "emulator-5554",
+      "kind": "aaos",
+      "model": "Car on x86_64 emulator",
+      "nodeid": "tests/test_concurrency.py::test_quick_taps_are_all_applied[driver]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 9.6,
+      "message": "",
+      "first_error": "",
+      "quarantined": false,
+      "signals": [
+        "HVAC_TEMPERATURE_SET[0x1]=24.0"
+      ]
+    },
+    {
+      "run_id": "20261124-154132",
+      "time": "2026-11-24T15:41:32",
+      "serial": "emulator-5554",
+      "kind": "aaos",
+      "model": "Car on x86_64 emulator",
+      "nodeid": "tests/test_concurrency.py::test_quick_taps_are_all_applied[passenger]",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 5.733,
+      "message": "",
+      "first_error": "",
+      "quarantined": false,
+      "signals": [
+        "HVAC_TEMPERATURE_SET[0x4]=24.0"
+      ]
+    }
+  ]
+}

@@ -221,37 +221,37 @@
 <tr>
 <td class="nw">SYS-02.1</td>
 <td>음악을 틀어 둔 채 공조(두 좌석 온도, 풍량, A/C)를 바꾸면 값은 모두 차량에 들어가고, 음악은 같은 곡으로 재생 중입니다</td>
-<td><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code></td>
+<td><a class="test-link" href="test-results.html#test_music_keeps_playing_while_climate_is_operated" title="테스트 결과와 화면 보기"><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code></a></td>
 <td>차량 <code>wait_value</code> 22.5·21.5°C, <code>wait_signal</code> 풍량 4·A/C 꺼짐, 음악 화면 <code>wait_<wbr>text(&quot;now_<wbr>playing_<wbr>title&quot;, title)</code>와 <code>wait_<wbr>text(&quot;playback_<wbr>state&quot;, &quot;재생 중&quot;)</code></td>
 </tr>
 <tr>
 <td class="nw">SYS-02.2</td>
 <td>음악 화면을 보는 동안 차량 쪽 온도가 바뀌어도 재생은 그대로입니다</td>
-<td><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code></td>
+<td><a class="test-link" href="test-results.html#test_music_keeps_playing_while_climate_is_operated" title="테스트 결과와 화면 보기"><code>test_<wbr>music_<wbr>keeps_<wbr>playing_<wbr>while_<wbr>climate_<wbr>is_<wbr>operated</code></a></td>
 <td><code>car.<wbr>set_<wbr>temperature(Seat.<wbr>DRIVER, 24.<wbr>0)</code> 뒤 아래 바 <code>wait_<wbr>temperature(24.<wbr>0)</code>, 1.5초 동안 <code>stays(재생 중이고 같은 곡)</code></td>
 </tr>
 <tr>
 <td class="nw">SYS-02.3</td>
 <td>경로 안내와 음악 중에 달리며 아래 바로 온도를 바꾸면, 온도는 차량에 들어가고 안내는 같은 목적지로 계속 줄고 음악은 재생 중입니다</td>
-<td><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code></td>
+<td><a class="test-link" href="test-results.html#test_guidance_and_music_continue_while_temperature_changes_on_the_move" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code></a></td>
 <td>120 km/h에서 차량 <code>wait_value</code> 22.5·21.5°C, 주행 정보 경로가 &#39;회사&#39;로 시작하고 8.5 km 이하로 <code>wait_until</code>, 음악 <code>wait_text</code>, 내비 <code>destination() == &quot;회사&quot;</code></td>
 </tr>
 <tr>
 <td class="nw">SYS-02.4</td>
 <td>통화 중에 공조를 바꾸면 차량에 들어가고 통화는 이어지며, 끝나면 듣던 곡이 다시 나오고 공조 값은 그대로입니다</td>
-<td><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code></td>
+<td><a class="test-link" href="test-results.html#test_climate_works_during_call_and_music_resumes_after" title="테스트 결과와 화면 보기"><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code></a></td>
 <td>차량 <code>wait_value</code> 22.5°C와 풍량 4, 음악 &#39;통화 중&#39;, 통화 시간이 늘어나는지 <code>wait_until</code>, 끊은 뒤 &#39;재생 중&#39;과 같은 곡, <code>assert car.<wbr>temperature(Seat.<wbr>DRIVER) == 22.<wbr>5</code></td>
 </tr>
 <tr>
 <td class="nw">SYS-02.5</td>
 <td>화면 조작과 차량 쪽 변경이 겹쳐도 화면과 차량 신호가 같은 값으로 끝나고, 다른 좌석은 그대로입니다</td>
-<td><code>test_<wbr>screen_<wbr>and_<wbr>vehicle_<wbr>changes_<wbr>at_<wbr>once_<wbr>end_<wbr>in_<wbr>same_<wbr>value</code></td>
+<td><a class="test-link" href="test-results.html#test_screen_and_vehicle_changes_at_once_end_in_same_value" title="테스트 결과와 화면 보기"><code>test_<wbr>screen_<wbr>and_<wbr>vehicle_<wbr>changes_<wbr>at_<wbr>once_<wbr>end_<wbr>in_<wbr>same_<wbr>value</code></a></td>
 <td>다른 스레드가 차량 쪽에 25.0·24.0·26.0°C를 쓰는 동안 + 세 번, <code>wait_<wbr>until(화면 == 차량)</code>과 1.5초 <code>stays</code>, 범위와 0.5°C 단위, 조수석 22.0°C</td>
 </tr>
 <tr>
 <td class="nw">SYS-02.6</td>
 <td>버튼을 빠르게(누름 사이 0.1초) 네 번 누르면 네 번 모두 차량에 들어갑니다</td>
-<td><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied</code></td>
+<td><a class="test-link" href="test-results.html#test_quick_taps_are_all_applied" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied</code></a></td>
 <td>adb 셸 한 번에 <code>input tap</code> 네 번, 차량 <code>wait_<wbr>value(24.<wbr>0)</code>, 화면 <code>wait_<wbr>temperature(24.<wbr>0)</code>, 1.5초 <code>stays</code>. 좌석 2</td>
 </tr>
 <tr>
