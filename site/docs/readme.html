@@ -75,9 +75,64 @@
 <td align="center">원인과 조치를 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue" target="_blank" rel="noopener">이슈</a>로 기록</td>
 </tr>
 </tbody></table></div>
+<p><strong>테스트 하나의 흐름</strong>: 조작(Appium, adb) → 읽기(화면 글자, VHAL·Mock 차량 신호) → <strong>판정(둘 다 맞아야 통과, 판정 직후 화면 저장)</strong> → 반복(두 기기 × 3회, 재시도 통과는 flaky로 집계) → Release 게이트(여섯 조건)</p>
 <h2 id="왜-만들었나"><a class="anchor" href="#왜-만들었나" aria-hidden="true">#</a>왜 만들었나</h2>
 <p>IVI는 화면이 맞아도 차량에는 틀린 값이 갈 수 있습니다. A/C를 끄면 화면의 버튼은 &#39;꺼짐&#39;으로 바뀌지만, 앱이 운전석 값만 끄면 나머지 좌석은 계속 켜져 있습니다. 화면만 보는 UI 테스트는 이 경우도 통과로 판정합니다.</p>
-<p>그래서 화면과 차량 신호(VHAL)를 따로 읽어 둘 다 맞아야 통과로 보는 E2E 테스트를 만들었습니다. 실차도, 헤드 유닛도 없어서, 테스트할 IVI 앱부터 테스트 도구까지 AI 코딩 도구(Claude Code)로 만들고 같은 테스트를 AAOS 에뮬레이터와 실제 태블릿에서 돌렸습니다. 2026-11-23에는 갤럭시 폴드를 세 번째 기기로 붙였습니다.</p>
+<p>그래서 화면과 차량 신호(VHAL)를 따로 읽어 둘 다 맞아야 통과로 보는 E2E 테스트를 만들었습니다. 실차가 없어 차량 쪽은 AAOS 에뮬레이터의 가상 VHAL과 태블릿 앱 안의 Mock 차량으로 대신했고, 같은 테스트를 두 기기에서 동시에 돌립니다. 2026-11-23에는 갤럭시 폴드를 세 번째 기기로 붙였습니다.</p>
+<h2 id="주행-검증"><a class="anchor" href="#주행-검증" aria-hidden="true">#</a>주행 검증</h2>
+<p>IVI는 구동이나 제동을 직접 제어하지 않습니다. 대신 속도와 기어 신호를 넣어, 주행 상태가 바뀔 때 화면이 지킬 규칙을 확인했습니다. 테스트 150개 중 34개가 속도나 기어 신호를 넣습니다.</p>
+<div class="table"><table><thead><tr>
+<th>묶음</th>
+<th>확인하는 것</th>
+</tr>
+</thead><tbody><tr>
+<td>주행 중 제한<br>DRIVE-02, 03</td>
+<td>P가 아니면 영상을, 달리는 중에는 글자 입력, 키패드, 긴 목록을 막고, 주행 중에도 쓸 것은 막지 않는지 봅니다. 신호 대기 → 출발 → 정지 → 60 km/h → 중립 → 주차를 단계마다 2~3초씩 유지하며 제한이 바로 바뀌고 흔들리지 않는지 봅니다.</td>
+</tr>
+<tr>
+<td>후방 카메라<br>CAM-01, 02</td>
+<td>R로 바꾸면 어느 화면에서든 2.0초 안에 카메라가 뜨는지 다섯 번 재 봅니다. FMVSS 111 기준을 빌렸고, 11-24에는 AAOS 0.64초였습니다.</td>
+</tr>
+<tr>
+<td>속도·기어 표시<br>DRIVE-01</td>
+<td>속도, 기어, 주행 거리, 차선 보조 표시가 신호를 따라오는지, 가상 CAN 버스의 주행 프레임이 화면까지 오는지 봅니다.</td>
+</tr>
+<tr>
+<td>경로 안내, 주행 가능 거리<br>NAV-01, ENERGY-02</td>
+<td>안내 남은 거리가 속도 신호를 따라 줄고 서 있을 때는 그대로인지, 주행 가능 거리가 30 km 이하면 충전소 안내로 이어지는지 봅니다.</td>
+</tr>
+</tbody></table></div>
+<p>차량 신호는 에뮬레이터 VHAL과 Mock이 만든 값이고, 구동, 제동, ADAS 제어는 범위 밖입니다.</p>
+<h2 id="찾은-결함"><a class="anchor" href="#찾은-결함" aria-hidden="true">#</a>찾은 결함</h2>
+<p>반복 실행 873건은 이미 통과한 테스트가 흔들리지 않는지 보는 실행이라 실패 0이 목표입니다. 결함 15건은 새 테스트를 쓰며 5건, 새 기기·설정에서 4건, 실행 기록을 분석하며 5건, 플랫폼 자료와 대조하며 1건이 나왔습니다. 원인은 앱 7건, 테스트 코드 3건, 태블릿 기기 2건, 플랫폼·테스트 도구·미확인 각 1건입니다.</p>
+<div class="table"><table><thead><tr>
+<th>찾은 경로</th>
+<th>결함</th>
+<th>원인과 수정</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">새 테스트<br>(경계값)</td>
+<td>22.3°C에서 +를 누르면 22.8°C가 차량에 써졌습니다.</td>
+<td>버튼이 &#39;지금 값 + 0.5&#39;로 계산했습니다. 0.5°C 단위에 맞춘 다음 값으로 고치고 경계값 E2E 6개를 더했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/28" target="_blank" rel="noopener">#28</a>).</td>
+</tr>
+<tr>
+<td class="nw">새 기기<br>(갤럭시 폴드)</td>
+<td>129개 중 5개가 실패했습니다. 라디오 ⏭가 화면 밖으로 밀렸습니다.</td>
+<td>좁은 화면에서 배치가 넘쳤습니다. 앱을 가로 전용으로 정하고 좁은 배치를 더했고, 가려진 버튼은 누르지 않고 실패로 남기게 했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/42" target="_blank" rel="noopener">#42</a>~<a href="https://github.com/bugspeaker/opencabin-ivi/issues/44" target="_blank" rel="noopener">#44</a>).</td>
+</tr>
+<tr>
+<td class="nw">실행 기록<br>(실행 시간)</td>
+<td>태블릿에서 탭 한 번에 10초가 걸렸습니다.</td>
+<td>이 기기의 UiAutomator 터치가 느렸습니다. 누르는 동작만 adb로 바꿔 전체 실행이 7분 22초에서 1분 32초로 줄었습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/19" target="_blank" rel="noopener">#19</a>).</td>
+</tr>
+<tr>
+<td>플랫폼 자료<br>(UX 제한 설정)</td>
+<td>D 기어로 멈춰 있을 때 두 기기의 제한이 서로 달랐습니다.</td>
+<td>앱이 제한 종류를 보지 않았습니다. 플랫폼이 알려 준 제한 종류대로 막게 하고, 신호 대기 시나리오 E2E 4개를 더했습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/47" target="_blank" rel="noopener">#47</a>).</td>
+</tr>
+</tbody></table></div>
+<h2 id="운영하며-더한-기능"><a class="anchor" href="#운영하며-더한-기능" aria-hidden="true">#</a>운영하며 더한 기능</h2>
+<p>결함과는 별개로, 테스트를 운영하면서 막힌 곳을 도구의 기능으로 풀었습니다.</p>
 <div class="table"><table><thead><tr>
 <th>막힌 곳</th>
 <th>도구에 더한 것</th>
@@ -110,22 +165,15 @@
 <td>추적 누락 0이어도 확인하지 않은 조건이 있었습니다.</td>
 <td>조건, 화면 요소, 경계값으로 다시 점검해 테스트 11개를 더했습니다.</td>
 </tr>
-<tr>
-<td>D 기어로 멈춰 있을 때 기기마다 제한이 달랐습니다.</td>
-<td>플랫폼이 알려 준 제한 종류를 따르게 하고, 속도를 시간에 따라 바꾸는 시나리오로 확인했습니다.</td>
-</tr>
-<tr>
-<td>좁은 폴드 화면에서 버튼이 가려졌습니다.</td>
-<td>가려진 버튼은 누르지 않고 실패로 남기게 했습니다.</td>
-</tr>
 </tbody></table></div>
-<p>찾은 문제와 원인은 <a href="portfolio.html#3-결함과-원인-분석">상세 문서 3장</a>에, 게이트 기준은 <a href="portfolio.html#4-검증-전략">4장</a>에 있습니다.</p>
+<p>결함 15건 전체와 원인은 <a href="portfolio.html#3-결함과-원인-분석">상세 문서 3장</a>에, 게이트 기준은 <a href="portfolio.html#4-검증-전략">4장</a>에 있습니다.</p>
 <h2 id="만든-사람과-만든-방식"><a class="anchor" href="#만든-사람과-만든-방식" aria-hidden="true">#</a>만든 사람과 만든 방식</h2>
 <ul>
 <li><strong>경력</strong>: 게임 QA 8년차입니다(2017.12부터 약 7년 10개월, 회사 4곳). 멀티플랫폼 호환성, 라이브 업데이트·BM, 글로벌 현지화를 검수했고, 외부 QA사·퍼블리셔와 협업했으며, AI R&amp;D 조직과 테스트 대시보드를 만들었습니다. ISTQB CTFL을 땄습니다.</li>
 <li><strong>이전에 만든 도구</strong>: 개인 포트폴리오로 웹 BVT 도구를 바이브 코딩으로 만들었습니다. 엑셀 BVT 대시보드에 Playwright·pytest를 붙여 공개 웹 서비스의 BVT 70개 중 47개를 자동화했습니다(<a href="portfolio.html#만든-사람과-만든-방식">데모</a>). 업무에 쓰는 TC 관리 도구 Bugspeaker Zone에는 이 프로젝트의 결과를 읽어 들이는 화면을 붙였습니다(같은 곳에 GIF). 모바일 자동화는 Appium 실습 경험을 바탕으로 이 프로젝트에서 AAOS까지 넓혀 업무 수준으로 적용했습니다.</li>
 <li><strong>기간</strong>: 2026-11-13부터, 혼자 진행했습니다.</li>
 <li><strong>역할</strong>: AI 코딩 도구 Claude Code로 앱과 테스트 도구를 만들었습니다. 무엇을 만들지 정하고, E2E 테스트 설계는 Claude와 함께 했습니다. AI가 낸 변경과 외부 검토 항목은 기기 실행 기록과 자동 검사로 확인하여 반영 여부를 결정했고, PR을 병합했습니다. 무엇을 고르고 버렸는지는 <a href="decisions.html">결정 기록</a>에 있습니다.</li>
+<li><strong>다른 AI로 교차 검증</strong>: 2026-11-24에는 Codex에게 동작이 아니라 예외 상황만 찾아 달라고 따로 맡겼습니다. Codex가 재현 코드와 함께 보인 5건을 Claude Code가 고치며 같은 범위에서 4건을 더 찾았고, 고치기 전에는 실패하고 고친 뒤 통과하는 단위 테스트와 두 기기 × 3회 실행으로 확인한 뒤 반영했습니다(<a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a>).</li>
 <li><strong>AI 결과 검증</strong>: AI의 &#39;통과&#39;는 기기 실행 결과 파일, Release 게이트, CI의 추적·링크 검사로만 받아들였습니다. 검증에서 잡혀 고친 사례 8건, Claude의 추천과 다르게 정한 사례 5건, 앱을 직접 써 보며 준 피드백 6건은 <a href="portfolio.html#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a>에 있습니다.</li>
 </ul>
 <h2 id="결과-자료와-검증-시점"><a class="anchor" href="#결과-자료와-검증-시점" aria-hidden="true">#</a>결과 자료와 검증 시점</h2>
@@ -262,7 +310,7 @@ site/                 소개 사이트 (GitHub Pages)</code></pre>
 </details>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#한눈에-보기">한눈에 보기</a><a class="l2" href="#왜-만들었나">왜 만들었나</a><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#결과-자료와-검증-시점">결과 자료와 검증 시점</a><a class="l2" href="#한계">한계</a><a class="l2" href="#저장소-구성">저장소 구성</a><a class="l2" href="#문서">문서</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#한눈에-보기">한눈에 보기</a><a class="l2" href="#왜-만들었나">왜 만들었나</a><a class="l2" href="#주행-검증">주행 검증</a><a class="l2" href="#찾은-결함">찾은 결함</a><a class="l2" href="#운영하며-더한-기능">운영하며 더한 기능</a><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#결과-자료와-검증-시점">결과 자료와 검증 시점</a><a class="l2" href="#한계">한계</a><a class="l2" href="#저장소-구성">저장소 구성</a><a class="l2" href="#문서">문서</a></nav>
 </div>
 
 <script src="../glossary.js" defer></script>
