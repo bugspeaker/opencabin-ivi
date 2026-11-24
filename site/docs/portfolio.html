@@ -60,7 +60,7 @@
 <img src="../../docs/images/bugspeaker-zone-opencabin.gif" width="760" alt="Bugspeaker Zone 의 OpenCabin 화면: TC마다 AAOS와 태블릿 판정과 판정 직후 화면, smoke 거르기, 알려진 결함, 요구사항 추적, 조건별 확인, 회차 3번의 실행 750건 flaky 0 통계를 차례로 넘겨 보는 모습">
 
 <h2 id="ai-결과를-어떻게-검증했나"><a class="anchor" href="#ai-결과를-어떻게-검증했나" aria-hidden="true">#</a>AI 결과를 어떻게 검증했나</h2>
-<p>이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 &#39;직접 써 보며 준 피드백&#39;). 지적마다 반영할지는 제가 정했습니다.</p>
+<p>이 프로젝트에서 신경 쓴 것은 AI가 &quot;통과했다&quot;, &quot;고쳤다&quot;고 할 때 그 말을 무엇으로 확인하느냐였습니다. 그래서 AI 결과는 AI의 설명이 아니라 기기 실행, 원자료, 자동 검사로 판정하게 했고, 앱은 태블릿과 에뮬레이터에서 직접 써 보며 기능과 사용감을 확인했습니다(아래 &#39;직접 써 보며 준 피드백&#39;). 지적마다 반영할지는 제가 정했고, Claude의 추천과 다르게 정한 경우는 아래 &#39;추천을 따르지 않은 사례&#39;에 있습니다.</p>
 <h3 id="원칙"><a class="anchor" href="#원칙" aria-hidden="true">#</a>원칙</h3>
 <ol>
 <li><strong>&#39;통과&#39;는 기기 실행 결과 파일로만 받아들입니다.</strong> 결과 파일마다 커밋, 커밋하지 않은 변경 여부, APK sha256, 종료 코드가 남고, Release 게이트가 <code>--commit</code>으로 그 커밋의 결과인지 확인합니다. 단위 테스트 통과는 기기 실행을 대신하지 않습니다.</li>
@@ -103,6 +103,45 @@
 <td>게이트·대기·픽스처 변경이 단위 테스트로만 확인되고 기기에서는 돈 적이 없었습니다. 지금 코드로 다시 돌리자, 화면이 꺼진 PC에서 전원 테스트가 에뮬레이터를 다시 켜다 멈췄습니다.</td>
 <td>두 기기에서 전체를 다시 돌렸습니다(2026-11-21).</td>
 <td>창 없이 다시 켜게 고치고, 처음부터 3회 돌려 750건이 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">원자료</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/commit/d54741b" target="_blank" rel="noopener"><code>d54741b</code></a></td>
+</tr>
+</tbody></table></div>
+<h3 id="추천을-따르지-않은-사례"><a class="anchor" href="#추천을-따르지-않은-사례" aria-hidden="true">#</a>추천을 따르지 않은 사례</h3>
+<p>Claude가 보기와 추천을 내면 제가 골랐습니다. 아래는 추천과 다르게 정한 경우이고, 무엇을 골랐는지는 작업 기록과 커밋에 남아 있습니다(날짜는 2026년).</p>
+<div class="table"><table><thead><tr>
+<th>언제</th>
+<th>Claude의 추천</th>
+<th>고른 것과 이유</th>
+<th>결과</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">11-23</td>
+<td>앱이 지원할 가장 작은 화면을 폭 580·높이 500dp로 정해 세로 화면까지 지원합니다.</td>
+<td><strong>폭 760·높이 500dp, 가로만.</strong> 차량 IVI 화면은 가로가 기본이라, 세로까지 지원하는 큰 변경보다 가로로 범위를 좁혀 확실히 검증하는 쪽을 골랐습니다.</td>
+<td>앱을 가로 전용으로 정하고 배치를 고쳤습니다. 760×500dp 화면에서 140개를 돌려 앱 테스트가 모두 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/40" target="_blank" rel="noopener">#40</a> · <a href="#4-4-테스트-범위-점검">4-4</a></td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td>태블릿 확인은 에뮬레이터로 대신합니다. 화면 폭이 같아 같은 배치를 쓰기 때문입니다.</td>
+<td><strong>태블릿을 연결해 확인.</strong> 폭이 같으니 결과도 같을 것이라는 추정 대신, 실제 기기의 결과 파일로 확인하는 쪽을 골랐습니다.</td>
+<td>같은 APK로 태블릿에서 122개가 통과하고 Release 게이트를 통과했습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 기록</a></td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td>결과 페이지에는 폴드 칸 없이 사례로만 보여 줍니다.</td>
+<td><strong>폴드 칸 추가.</strong> 사례로만 두면 같은 테스트의 기기별 화면을 나란히 비교할 수 없어서, 도구를 고쳐 칸을 나눴습니다.</td>
+<td>결과 도구가 같은 Mock 기기끼리 서로 덮어쓰던 구조를 모델별 칸으로 나눴습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/41" target="_blank" rel="noopener">#41</a></td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td>테스트가 140개로 늘어도 첫 화면 헤드라인은 11-21 결과로 둡니다.</td>
+<td><strong>140개 × 3회를 다시 돌리기.</strong> 첫 화면 숫자가 지금 코드로 돌린 결과가 아니면 안 된다고 보고, 1시간 넘게 걸려도 다시 돌렸습니다.</td>
+<td>813건 중 실패 0으로 헤드라인을 바꿨습니다. 그 뒤 4개를 더했을 때도 다시 돌렸습니다(837건).<br><a href="https://github.com/bugspeaker/opencabin-ivi/pull/46" target="_blank" rel="noopener">#46</a> · <a href="https://github.com/bugspeaker/opencabin-ivi/pull/48" target="_blank" rel="noopener">#48</a></td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td>Claude가 쓴 역할 문구에 &#39;Test Bench에서 E2E를 직접 돌려 확인&#39;이 들어 있었습니다.</td>
+<td><strong>고르지 않음.</strong> 하지 않은 일을 역할에 적으면 면접에서 사실과 달라지므로 뺐습니다.</td>
+<td>README, 포트폴리오, 사이트 세 곳에서 뺐습니다.<br><a href="https://github.com/bugspeaker/opencabin-ivi/commit/7fe2df3" target="_blank" rel="noopener"><code>7fe2df3</code></a></td>
 </tr>
 </tbody></table></div>
 <h3 id="직접-써-보며-준-피드백-fqa"><a class="anchor" href="#직접-써-보며-준-피드백-fqa" aria-hidden="true">#</a>직접 써 보며 준 피드백 (FQA)</h3>
@@ -1239,7 +1278,7 @@
 </tbody></table></div>
 
   </main>
-  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l3" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</a><a class="l3" href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">플랫폼 설정을 읽다 찾은 정지 상태 결함</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l3" href="#4-4-테스트-범위-점검">4-4. 테스트 범위 점검</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
+  <nav class="toc" aria-label="이 문서의 목차"><p class="eyebrow">이 문서</p><a class="l2" href="#만든-사람과-만든-방식">만든 사람과 만든 방식</a><a class="l2" href="#ai-결과를-어떻게-검증했나">AI 결과를 어떻게 검증했나</a><a class="l3" href="#원칙">원칙</a><a class="l3" href="#검증에서-잡혀-고친-사례">검증에서 잡혀 고친 사례</a><a class="l3" href="#추천을-따르지-않은-사례">추천을 따르지 않은 사례</a><a class="l3" href="#직접-써-보며-준-피드백-fqa">직접 써 보며 준 피드백 (FQA)</a><a class="l2" href="#목차">목차</a><a class="l2" href="#1-공고-요구사항과-한-일">1. 공고 요구사항과 한 일</a><a class="l3" href="#주요-업무">주요 업무</a><a class="l3" href="#자격요건">자격요건</a><a class="l3" href="#우대사항">우대사항</a><a class="l2" href="#2-테스트-환경-구조">2. 테스트 환경 구조</a><a class="l2" href="#3-결함과-원인-분석">3. 결함과 원인 분석</a><a class="l3" href="#세-번째-기기에서-찾은-배치-결함-갤럭시-폴드">세 번째 기기에서 찾은 배치 결함 (갤럭시 폴드)</a><a class="l3" href="#플랫폼-설정을-읽다-찾은-정지-상태-결함">플랫폼 설정을 읽다 찾은 정지 상태 결함</a><a class="l2" href="#4-검증-전략">4. 검증 전략</a><a class="l3" href="#4-1-게이트-단계와-기준">4-1. 게이트 단계와 기준</a><a class="l3" href="#4-2-서비스별-검증">4-2. 서비스별 검증</a><a class="l3" href="#4-3-판정-기준">4-3. 판정 기준</a><a class="l3" href="#4-4-테스트-범위-점검">4-4. 테스트 범위 점검</a><a class="l2" href="#5-e2e-테스트-설계">5. E2E 테스트 설계</a><a class="l3" href="#5-1-양방향-검증과-area-단위-판정">5-1. 양방향 검증과 area 단위 판정</a><a class="l3" href="#5-2-설계-기법">5-2. 설계 기법</a><a class="l3" href="#5-3-테스트-격리">5-3. 테스트 격리</a><a class="l3" href="#5-4-신호-주입-명령">5-4. 신호 주입 명령</a><a class="l2" href="#6-테스트하기-쉽게-앱을-바꾼-점">6. 테스트하기 쉽게 앱을 바꾼 점</a><a class="l2" href="#7-기술-스택">7. 기술 스택</a><a class="l2" href="#8-운영과-ci">8. 운영과 CI</a><a class="l3" href="#8-1-flaky-관리">8-1. flaky 관리</a><a class="l3" href="#8-2-ci-파이프라인">8-2. CI 파이프라인</a><a class="l3" href="#8-3-github-실행-기록">8-3. GitHub 실행 기록</a><a class="l2" href="#9-한계와-다음-단계">9. 한계와 다음 단계</a><a class="l3" href="#한계">한계</a><a class="l3" href="#다음-단계">다음 단계</a><a class="l2" href="#10-저장소-안내">10. 저장소 안내</a></nav>
 </div>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
