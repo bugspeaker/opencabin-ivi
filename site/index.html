@@ -77,7 +77,7 @@
         <a class="stat" href="docs/flaky-report.html">
           <p class="stat-label">반복 실행 837건</p>
           <p class="stat-num">실패 0</p>
-          <p class="stat-note">두 기기 × 3회 (11-23)<br>재시도로 통과한 것도 0건</p>
+          <p class="stat-note">두 기기 × 3회 (11-24)<br>재시도로 통과한 것도 0건</p>
         </a>
         <a class="stat" href="#results">
           <p class="stat-label">두 기기 병렬 실행</p>
@@ -296,7 +296,7 @@
       <div class="sec-head">
         <p class="label">검증 결과</p>
         <h2 id="results-title">두 기기에서 3번씩,<br><em>837건 중 실패 0건</em></h2>
-        <p class="lead">2026년 11월 23일, 정지 상태 결함을 고친 앱(0.4.2)과 테스트 144개를 같은 코드로 두 기기에서 세 번 돌린 결과입니다. <br class="pc">재시도로 통과한 테스트도 없었습니다. 아래는 마지막 회차입니다.</p>
+        <p class="lead">2026년 11월 24일, 앱(0.4.2)과 테스트 144개를 같은 코드로 두 기기에서 세 번 돌린 결과입니다. <br class="pc">재시도로 통과한 테스트도 없었습니다. 아래는 마지막 회차입니다.</p>
       </div>
       <!-- devices:start (build-docs.mjs 가 results.json 으로 채운다) -->
   <div class="runs">
@@ -306,7 +306,7 @@
             <div class="stack" role="img" aria-label="통과 142, 알려진 결함 1, 건너뜀 1"><span class="s-passed" style="--n: 142"></span><span class="s-xfailed" style="--n: 1"></span><span class="s-skipped" style="--n: 1"></span></div>
             <ul class="stack-legend"><li><i class="s-passed"></i>통과 142</li><li><i class="s-xfailed"></i>알려진 결함 1</li><li><i class="s-skipped"></i>건너뜀 1</li></ul>
           </div>
-          <p class="run-time">12분 10초<span>3회차</span></p>
+          <p class="run-time">11분 59초<span>3회차</span></p>
         </div>
         <div class="card run">
           <div class="run-name"><b>Android 태블릿</b><span>앱 안의 Mock 차량을 씁니다. AAOS 전용 테스트는 건너뜁니다</span></div>
@@ -314,7 +314,7 @@
             <div class="stack" role="img" aria-label="통과 136, 건너뜀 8"><span class="s-passed" style="--n: 136"></span><span class="s-skipped" style="--n: 8"></span></div>
             <ul class="stack-legend"><li><i class="s-passed"></i>통과 136</li><li><i class="s-skipped"></i>건너뜀 8</li></ul>
           </div>
-          <p class="run-time">12분 41초<span>3회차</span></p>
+          <p class="run-time">12분 43초<span>3회차</span></p>
         </div>
       </div>
       <!-- devices:end -->
@@ -324,6 +324,20 @@
         <a class="shot" href="docs/test-results.html#test_low_range_card_starts_guidance_to_nearest_charger"><img src="results/img/mock/test_low_range_card_starts_guidance_to_nearest_charger.webp" loading="lazy" width="960" height="600" alt="주행 가능 거리 부족 카드에서 충전소 안내가 시작된 화면 (태블릿)"><span>주행 가능 거리가 부족하면 충전소 안내로 이어지는지 봅니다</span></a>
       </div>
       <p class="note">알려진 결함 1건은 에뮬레이터 기본 화면(SystemUI)에서 운전석 온도 ▲ 버튼이 홈 버튼에 가려 눌리지 않는 문제입니다. <br class="pc">앱에서 고칠 수 없는 플랫폼 쪽 문제라 '알려진 결함'으로 표시해 두었고, 고쳐지면 바로 알 수 있게 했습니다.</p>
+      <!-- history:start (build-docs.mjs 가 history.json 으로 채운다) -->
+  <div class="card history">
+        <div class="history-head">
+          <p class="history-title">원자료가 남은 E2E 실행을 모두 합치면 <span>(11-18~11-24, 첫 시도와 확인용 실행 포함)</span></p>
+          <a class="history-link" href="docs/run-history.html">전체 실행 기록 <span aria-hidden="true">→</span></a>
+        </div>
+        <ul class="history-nums">
+          <li><b>64<small>회</small></b><span>기기별 실행</span></li>
+          <li><b>7,413<small>건</small></b><span>테스트 실행</span></li>
+          <li><b>9<small>건</small></b><span>실패·오류, 원인 모두 기록</span></li>
+          <li><b>7<small>건</small></b><span>재시도 후 통과</span></li>
+        </ul>
+      </div>
+      <!-- history:end -->
       <article class="card fold-case" aria-labelledby="fold-title">
         <div class="fold-text">
           <span class="chip blue">세 번째 기기 · 11-23</span>

@@ -1,0 +1,574 @@
+{
+ "total": {
+  "sessions": 64,
+  "executed": 7413,
+  "passed": 7373,
+  "flaky": 7,
+  "bad": 9,
+  "xfailed": 24,
+  "skipped": 254,
+  "reruns": 15
+ },
+ "by_device": {
+  "AAOS 에뮬레이터": {
+   "sessions": 30,
+   "executed": 3476,
+   "passed": 3444,
+   "flaky": 5,
+   "bad": 3,
+   "xfailed": 24
+  },
+  "갤럭시 폴드": {
+   "sessions": 8,
+   "executed": 804,
+   "passed": 799,
+   "flaky": 0,
+   "bad": 5,
+   "xfailed": 0
+  },
+  "태블릿": {
+   "sessions": 26,
+   "executed": 3133,
+   "passed": 3130,
+   "flaky": 2,
+   "bad": 1,
+   "xfailed": 0
+  }
+ },
+ "groups": [
+  {
+   "folder": "2026-11-18-repeat5/runs",
+   "purpose": "반복 5회 (129개)",
+   "intentional": false,
+   "date": "11-18",
+   "commits": [],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 10,
+   "executed": 1250,
+   "passed": 1245,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 5
+  },
+  {
+   "folder": "2026-11-19-after-review/runs",
+   "purpose": "대기 방식을 바꾼 뒤 전체 1회",
+   "intentional": false,
+   "date": "11-19",
+   "commits": [],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 2,
+   "executed": 250,
+   "passed": 249,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 1
+  },
+  {
+   "folder": "2026-11-20-session-recovery/runs",
+   "purpose": "세션 복구 확인 (A·B는 세션을 일부러 끊은 실행)",
+   "intentional": false,
+   "date": "11-20",
+   "commits": [],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 4,
+   "executed": 326,
+   "passed": 321,
+   "flaky": 4,
+   "bad": 0,
+   "xfailed": 1
+  },
+  {
+   "folder": "2026-11-21-main/crash-check",
+   "purpose": "앱 크래시 판정 확인 (앱을 일부러 죽인 실행)",
+   "intentional": true,
+   "date": "11-21",
+   "commits": [
+    "d41337a"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 2,
+   "executed": 2,
+   "passed": 0,
+   "flaky": 0,
+   "bad": 2,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-21-main/attempt1/runs",
+   "purpose": "반복 3회의 첫 시도 (1회차에서 멈춤)",
+   "intentional": false,
+   "date": "11-21",
+   "commits": [
+    "d41337a"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 2,
+   "executed": 250,
+   "passed": 248,
+   "flaky": 0,
+   "bad": 1,
+   "xfailed": 1
+  },
+  {
+   "folder": "2026-11-21-main/runs",
+   "purpose": "반복 3회 (129개)",
+   "intentional": false,
+   "date": "11-21",
+   "commits": [
+    "d54741b"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 6,
+   "executed": 750,
+   "passed": 747,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 3
+  },
+  {
+   "folder": "2026-11-23-fold/runs",
+   "purpose": "갤럭시 폴드 첫 실행 (배치 수정 전)",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "c112673"
+   ],
+   "devices": [
+    "갤럭시 폴드"
+   ],
+   "sessions": 2,
+   "executed": 145,
+   "passed": 140,
+   "flaky": 0,
+   "bad": 5,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-23-fold/runs-after",
+   "purpose": "배치 수정 후 세 기기",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "7aaab6f"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "갤럭시 폴드",
+    "태블릿"
+   ],
+   "sessions": 4,
+   "executed": 494,
+   "passed": 493,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 1
+  },
+  {
+   "folder": "2026-11-23-coverage/runs-new-tests",
+   "purpose": "새 테스트 11개 첫 확인",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "89177b5"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "갤럭시 폴드",
+    "태블릿"
+   ],
+   "sessions": 4,
+   "executed": 35,
+   "passed": 34,
+   "flaky": 0,
+   "bad": 1,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-23-coverage/runs-min760",
+   "purpose": "가장 작은 화면 760×500dp 전체",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "89177b5"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터"
+   ],
+   "sessions": 1,
+   "executed": 139,
+   "passed": 138,
+   "flaky": 0,
+   "bad": 1,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-23-coverage/runs",
+   "purpose": "반복 3회 (140개)",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "55419f7"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 6,
+   "executed": 813,
+   "passed": 810,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 3
+  },
+  {
+   "folder": "2026-11-23-coverage/runs-fold",
+   "purpose": "폴드 1회 (140개)",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "55419f7"
+   ],
+   "devices": [
+    "갤럭시 폴드"
+   ],
+   "sessions": 1,
+   "executed": 132,
+   "passed": 132,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-23-idling/runs-first",
+   "purpose": "정지 상태 수정 첫 확인",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "4144f52"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터"
+   ],
+   "sessions": 1,
+   "executed": 21,
+   "passed": 20,
+   "flaky": 1,
+   "bad": 0,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-23-idling/runs",
+   "purpose": "반복 3회 (144개)",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "de9d062"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 6,
+   "executed": 837,
+   "passed": 834,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 3
+  },
+  {
+   "folder": "2026-11-23-idling/runs-fold",
+   "purpose": "폴드 1회 (144개)",
+   "intentional": false,
+   "date": "11-23",
+   "commits": [
+    "de9d062"
+   ],
+   "devices": [
+    "갤럭시 폴드"
+   ],
+   "sessions": 1,
+   "executed": 136,
+   "passed": 136,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-24-driving-state/runs-first",
+   "purpose": "주행 상태 읽기 수정 첫 확인",
+   "intentional": false,
+   "date": "11-24",
+   "commits": [
+    "300b081"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터"
+   ],
+   "sessions": 1,
+   "executed": 25,
+   "passed": 24,
+   "flaky": 1,
+   "bad": 0,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-24-driving-state/attempt1/runs",
+   "purpose": "반복 3회의 첫 시도 (1회차 태블릿 실패)",
+   "intentional": false,
+   "date": "11-24",
+   "commits": [
+    "300b081"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 6,
+   "executed": 837,
+   "passed": 832,
+   "flaky": 1,
+   "bad": 1,
+   "xfailed": 3
+  },
+  {
+   "folder": "2026-11-24-driving-state/runs-fold",
+   "purpose": "폴드 1회 (144개)",
+   "intentional": false,
+   "date": "11-24",
+   "commits": [
+    "300b081"
+   ],
+   "devices": [
+    "갤럭시 폴드"
+   ],
+   "sessions": 1,
+   "executed": 136,
+   "passed": 136,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 0
+  },
+  {
+   "folder": "2026-11-24-driving-state/runs",
+   "purpose": "반복 3회 (144개)",
+   "intentional": false,
+   "date": "11-24",
+   "commits": [
+    "300b081"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 6,
+   "executed": 837,
+   "passed": 834,
+   "flaky": 0,
+   "bad": 0,
+   "xfailed": 3
+  }
+ ],
+ "problems": [
+  {
+   "date": "11-20",
+   "run_id": "20261120-session-a",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_typed_command_sets_vehicle_temperature",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "실행 120초에 UiAutomator2 서버를 일부러 강제 종료했습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-20",
+   "run_id": "20261120-session-a",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_signal_is_shown_on_climate_and_home[driver]",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "실행 120초에 UiAutomator2 서버를 일부러 강제 종료했습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-20",
+   "run_id": "20261120-session-a",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_mph_setting_converts_vehicle_speed",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "실행 120초에 UiAutomator2 서버를 일부러 강제 종료했습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-20",
+   "run_id": "20261120-session-b",
+   "device": "태블릿",
+   "test": "test_driving_signals_are_shown",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "실행 45초에 Appium 서버를 일부러 껐다 켰습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-21",
+   "run_id": "20261121-probe2",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_probe_app_killed_midtest",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "앱 크래시 판정을 확인하려고 테스트 도중 앱을 일부러 죽였습니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-21",
+   "run_id": "20261121-probe5",
+   "device": "태블릿",
+   "test": "test_probe_app_killed_midtest",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "앱 크래시 판정을 확인하려고 테스트 도중 앱을 일부러 죽였습니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-21",
+   "run_id": "20261121-115127-r1",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_power_cycle_brings_back_app_and_cabin_defaults",
+   "outcome": "실패",
+   "kind": "환경",
+   "why": "PC 화면이 꺼진 상태에서 창 모드로 다시 켠 에뮬레이터가 멈췄습니다. 창 없이 켜게 고치고 처음부터 다시 돌렸습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-fold-full-portrait",
+   "device": "갤럭시 폴드",
+   "test": "test_ambiguous_destination_offers_candidates",
+   "outcome": "실패",
+   "kind": "앱 결함",
+   "why": "좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-fold-full-portrait",
+   "device": "갤럭시 폴드",
+   "test": "test_tune_and_seek",
+   "outcome": "실패",
+   "kind": "앱 결함",
+   "why": "좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-fold-full-portrait",
+   "device": "갤럭시 폴드",
+   "test": "test_preset_save_and_recall",
+   "outcome": "실패",
+   "kind": "앱 결함",
+   "why": "좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-fold-full-portrait",
+   "device": "갤럭시 폴드",
+   "test": "test_preset_and_frequency_survive_app_restart",
+   "outcome": "실패",
+   "kind": "앱 결함",
+   "why": "좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-fold-full-portrait",
+   "device": "갤럭시 폴드",
+   "test": "test_seat_heat_signal_is_shown_everywhere",
+   "outcome": "실패",
+   "kind": "앱 결함",
+   "why": "좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-new-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_folded_mirror_can_be_unfolded_while_driving",
+   "outcome": "실패",
+   "kind": "테스트 도구",
+   "why": "막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상). 그 테스트만 다시 돌려 통과했습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-min760",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_driver_temp_up_is_not_covered_by_home",
+   "outcome": "실패",
+   "kind": "플랫폼",
+   "why": "1024×768에서만 나는 SystemUI 겹침(#21)이 760×500dp에서는 재현되지 않아, 알려진 결함 표시(xfail strict)가 실패로 뒤집혔습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-23",
+   "run_id": "20261123-ux-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_driving_locks_typing_and_refuses_mirror_fold",
+   "outcome": "재시도 후 통과",
+   "kind": "테스트 도구",
+   "why": "막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상).",
+   "intentional": false
+  },
+  {
+   "date": "11-24",
+   "run_id": "20261124-driving-state-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_driving_signals_are_shown",
+   "outcome": "재시도 후 통과",
+   "kind": "테스트 도구",
+   "why": "막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상).",
+   "intentional": false
+  },
+  {
+   "date": "11-24",
+   "run_id": "20261124-110716-r1",
+   "device": "태블릿",
+   "test": "test_zone_applies_command_to_speaking_seat",
+   "outcome": "오류",
+   "kind": "환경",
+   "why": "실행을 시작할 무렵 USB를 연결해 태블릿에 뜬 시스템 창(USB 연결 방식 선택)이 앱을 가렸습니다. 첫 시도로 남기고 3회를 다시 돌렸습니다.",
+   "intentional": false
+  },
+  {
+   "date": "11-24",
+   "run_id": "20261124-110716-r1",
+   "device": "태블릿",
+   "test": "test_typed_command_sets_vehicle_temperature",
+   "outcome": "재시도 후 통과",
+   "kind": "환경",
+   "why": "실행을 시작할 무렵 USB를 연결해 태블릿에 뜬 시스템 창(USB 연결 방식 선택)이 앱을 가렸습니다. 첫 시도로 남기고 3회를 다시 돌렸습니다.",
+   "intentional": false
+  }
+ ],
+ "first": "11-18",
+ "last": "11-24"
+}

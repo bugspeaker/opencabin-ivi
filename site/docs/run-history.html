@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전체 실행 기록 · OpenCabin IVI</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+<a class="skip" href="#content">본문으로 건너뛰기</a>
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>OpenCabin IVI</a>
+  <span class="crumb">문서 · 전체 실행 기록</span>
+  <a class="home" href="../index.html">포트폴리오</a>
+  <a class="src" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/run-history.md">원문 .md</a>
+</header>
+<div class="layout wide">
+  <aside class="side">
+    <nav aria-label="문서 목록">
+        <a href="portfolio.html">포트폴리오</a>
+        <a href="test-results.html">테스트 결과</a>
+        <a href="flaky-report.html">반복 실행 통계</a>
+        <a href="run-history.html" aria-current="page">전체 실행 기록</a>
+        <a href="decisions.html">결정 기록</a>
+        <a href="traceability.html">요구사항 추적표</a>
+        <a href="requirements.html">요구사항</a>
+        <a href="readme.html">README</a>
+        <a href="run.html">실행 방법</a>
+        <a href="phase1-spike.html">1. 기술 검증</a>
+        <a href="phase2-app.html">2. 앱</a>
+        <a href="phase3-framework.html">3. 테스트 프레임워크</a>
+        <a href="phase4-operations.html">4. 운영 · CI</a>
+        <a href="phase5-design.html">5. 재점검과 디자인</a>
+        <a href="phase6-features.html">6. 기능 확장</a>
+        <a href="phase7-layout.html">7. 3영역 화면 개편</a>
+        <a href="phase8-signals.html">8. 차량 신호 확장</a>
+        <a href="phase9-bench.html">9. Test Bench 확장</a>
+    </nav>
+  </aside>
+  <main id="content" class="doc wide-doc">
+<h1 id="전체-실행-기록"><a class="anchor" href="#전체-실행-기록" aria-hidden="true">#</a>전체 실행 기록</h1>
+<p><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">근거 자료</a>에 결과 파일(원자료)이 남은 E2E 실행을 모두 합친 기록입니다(2026년 11-18부터 11-24까지). <code>ivi-tests/<wbr>tools/<wbr>run_<wbr>history.<wbr>py</code>가 결과 파일에서 다시 세어 만듭니다. 결과 파일을 남기기 전인 11-13부터 11-17까지의 실행은 들어 있지 않습니다.</p>
+<p>실패, 오류, 재시도 후 통과는 하나도 빼지 않고 원인과 함께 적었습니다. 다만 판정 기능을 확인하려고 앱을 일부러 죽인 실행(2회)은 합계에서 빼고 아래 표에만 둡니다. 세션을 일부러 끊은 실행은 그 상황에서도 끝까지 통과하는지 본 것이라 합계에 넣었습니다.</p>
+<h2 id="합계"><a class="anchor" href="#합계" aria-hidden="true">#</a>합계</h2>
+<div class="table"><table><thead><tr>
+<th>실행</th>
+<th>테스트 실행</th>
+<th>통과</th>
+<th>재시도 후 통과</th>
+<th>실패·오류</th>
+<th>알려진 결함</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">64회</td>
+<td>7,413건</td>
+<td>7,373건</td>
+<td>7건</td>
+<td>9건</td>
+<td>24건</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>테스트 실행은 건너뜀을 뺀 수입니다. 알려진 결함은 플랫폼 결함 하나(#21)를 <code>xfail(strict=True)</code>로 걸어 둔 것입니다.</li>
+<li>실패·오류와 재시도 후 통과의 원인은 아래 &#39;나온 곳&#39; 표에 있습니다.</li>
+</ul>
+<h2 id="기기별"><a class="anchor" href="#기기별" aria-hidden="true">#</a>기기별</h2>
+<div class="table"><table><thead><tr>
+<th>기기</th>
+<th>실행</th>
+<th>테스트 실행</th>
+<th>통과</th>
+<th>재시도 후 통과</th>
+<th>실패·오류</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">AAOS 에뮬레이터</td>
+<td>30회</td>
+<td>3,476건</td>
+<td>3,444건</td>
+<td>5건</td>
+<td>3건</td>
+</tr>
+<tr>
+<td class="nw">갤럭시 폴드</td>
+<td>8회</td>
+<td>804건</td>
+<td>799건</td>
+<td>0건</td>
+<td>5건</td>
+</tr>
+<tr>
+<td class="nw">태블릿</td>
+<td>26회</td>
+<td>3,133건</td>
+<td>3,130건</td>
+<td>2건</td>
+<td>1건</td>
+</tr>
+</tbody></table></div>
+<h2 id="날짜별"><a class="anchor" href="#날짜별" aria-hidden="true">#</a>날짜별</h2>
+<div class="table"><table><thead><tr>
+<th>날짜</th>
+<th>무엇을 확인했나</th>
+<th>코드</th>
+<th>기기</th>
+<th>테스트 실행</th>
+<th>실패·오류</th>
+<th>재시도 후 통과</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">11-18</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-18-repeat5/README.md">반복 5회 (129개)</a></td>
+<td>기록 없음</td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>1,250건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-19</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-19-after-review/README.md">대기 방식을 바꾼 뒤 전체 1회</a></td>
+<td>기록 없음</td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>250건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-20</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-20-session-recovery/README.md">세션 복구 확인 (A·B는 세션을 일부러 끊은 실행)</a></td>
+<td>기록 없음</td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>326건</td>
+<td>0건</td>
+<td>4건</td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">앱 크래시 판정 확인 (앱을 일부러 죽인 실행)</a></td>
+<td><code>d41337a</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>2건</td>
+<td>2건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">반복 3회의 첫 시도 (1회차에서 멈춤)</a></td>
+<td><code>d41337a</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>250건</td>
+<td>1건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-21-main/README.md">반복 3회 (129개)</a></td>
+<td><code>d54741b</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>750건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">갤럭시 폴드 첫 실행 (배치 수정 전)</a></td>
+<td><code>c112673</code></td>
+<td>갤럭시 폴드</td>
+<td>145건</td>
+<td>5건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">배치 수정 후 세 기기</a></td>
+<td><code>7aaab6f</code></td>
+<td>AAOS 에뮬레이터, 갤럭시 폴드, 태블릿</td>
+<td>494건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">새 테스트 11개 첫 확인</a></td>
+<td><code>89177b5</code></td>
+<td>AAOS 에뮬레이터, 갤럭시 폴드, 태블릿</td>
+<td>35건</td>
+<td>1건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">가장 작은 화면 760×500dp 전체</a></td>
+<td><code>89177b5</code></td>
+<td>AAOS 에뮬레이터</td>
+<td>139건</td>
+<td>1건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">반복 3회 (140개)</a></td>
+<td><code>55419f7</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>813건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-coverage/README.md">폴드 1회 (140개)</a></td>
+<td><code>55419f7</code></td>
+<td>갤럭시 폴드</td>
+<td>132건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-idling/README.md">정지 상태 수정 첫 확인</a></td>
+<td><code>4144f52</code></td>
+<td>AAOS 에뮬레이터</td>
+<td>21건</td>
+<td>0건</td>
+<td>1건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-idling/README.md">반복 3회 (144개)</a></td>
+<td><code>de9d062</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>837건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-idling/README.md">폴드 1회 (144개)</a></td>
+<td><code>de9d062</code></td>
+<td>갤럭시 폴드</td>
+<td>136건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">주행 상태 읽기 수정 첫 확인</a></td>
+<td><code>300b081</code></td>
+<td>AAOS 에뮬레이터</td>
+<td>25건</td>
+<td>0건</td>
+<td>1건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">반복 3회의 첫 시도 (1회차 태블릿 실패)</a></td>
+<td><code>300b081</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>837건</td>
+<td>1건</td>
+<td>1건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">폴드 1회 (144개)</a></td>
+<td><code>300b081</code></td>
+<td>갤럭시 폴드</td>
+<td>136건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-driving-state/README.md">반복 3회 (144개)</a></td>
+<td><code>300b081</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>837건</td>
+<td>0건</td>
+<td>0건</td>
+</tr>
+</tbody></table></div>
+<h2 id="실패-오류-재시도-후-통과가-나온-곳"><a class="anchor" href="#실패-오류-재시도-후-통과가-나온-곳" aria-hidden="true">#</a>실패, 오류, 재시도 후 통과가 나온 곳</h2>
+<div class="table"><table><thead><tr>
+<th>날짜</th>
+<th>실행</th>
+<th>기기</th>
+<th>테스트</th>
+<th>결과</th>
+<th>원인</th>
+</tr>
+</thead><tbody><tr>
+<td class="nw">11-20</td>
+<td><code>20261120-session-a</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_<wbr>typed_<wbr>command_<wbr>sets_<wbr>vehicle_<wbr>temperature</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 실행 120초에 UiAutomator2 서버를 일부러 강제 종료했습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-20</td>
+<td><code>20261120-session-a</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_signal_is_shown_on_climate_and_home" title="테스트 결과와 화면 보기"><code>test_<wbr>signal_<wbr>is_<wbr>shown_<wbr>on_<wbr>climate_<wbr>and_<wbr>home[driver]</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 실행 120초에 UiAutomator2 서버를 일부러 강제 종료했습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-20</td>
+<td><code>20261120-session-a</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_mph_setting_converts_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>mph_<wbr>setting_<wbr>converts_<wbr>vehicle_<wbr>speed</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 실행 120초에 UiAutomator2 서버를 일부러 강제 종료했습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-20</td>
+<td><code>20261120-session-b</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_driving_signals_are_shown" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>signals_<wbr>are_<wbr>shown</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 실행 45초에 Appium 서버를 일부러 껐다 켰습니다. 세션을 다시 붙이고 재시도에서 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td><code>20261121-probe2</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><code>test_<wbr>probe_<wbr>app_<wbr>killed_<wbr>midtest</code></td>
+<td>실패</td>
+<td><strong>확인용</strong> 앱 크래시 판정을 확인하려고 테스트 도중 앱을 일부러 죽였습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td><code>20261121-probe5</code></td>
+<td>태블릿</td>
+<td><code>test_<wbr>probe_<wbr>app_<wbr>killed_<wbr>midtest</code></td>
+<td>실패</td>
+<td><strong>확인용</strong> 앱 크래시 판정을 확인하려고 테스트 도중 앱을 일부러 죽였습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-21</td>
+<td><code>20261121-115127-r1</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_power_cycle_brings_back_app_and_cabin_defaults" title="테스트 결과와 화면 보기"><code>test_<wbr>power_<wbr>cycle_<wbr>brings_<wbr>back_<wbr>app_<wbr>and_<wbr>cabin_<wbr>defaults</code></a></td>
+<td>실패</td>
+<td><strong>환경</strong> PC 화면이 꺼진 상태에서 창 모드로 다시 켠 에뮬레이터가 멈췄습니다. 창 없이 켜게 고치고 처음부터 다시 돌렸습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-fold-full-portrait</code></td>
+<td>갤럭시 폴드</td>
+<td><a class="test-link" href="test-results.html#test_ambiguous_destination_offers_candidates" title="테스트 결과와 화면 보기"><code>test_<wbr>ambiguous_<wbr>destination_<wbr>offers_<wbr>candidates</code></a></td>
+<td>실패</td>
+<td><strong>앱 결함</strong> 좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-fold-full-portrait</code></td>
+<td>갤럭시 폴드</td>
+<td><a class="test-link" href="test-results.html#test_tune_and_seek" title="테스트 결과와 화면 보기"><code>test_<wbr>tune_<wbr>and_<wbr>seek</code></a></td>
+<td>실패</td>
+<td><strong>앱 결함</strong> 좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-fold-full-portrait</code></td>
+<td>갤럭시 폴드</td>
+<td><a class="test-link" href="test-results.html#test_preset_save_and_recall" title="테스트 결과와 화면 보기"><code>test_<wbr>preset_<wbr>save_<wbr>and_<wbr>recall</code></a></td>
+<td>실패</td>
+<td><strong>앱 결함</strong> 좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-fold-full-portrait</code></td>
+<td>갤럭시 폴드</td>
+<td><a class="test-link" href="test-results.html#test_preset_and_frequency_survive_app_restart" title="테스트 결과와 화면 보기"><code>test_<wbr>preset_<wbr>and_<wbr>frequency_<wbr>survive_<wbr>app_<wbr>restart</code></a></td>
+<td>실패</td>
+<td><strong>앱 결함</strong> 좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-fold-full-portrait</code></td>
+<td>갤럭시 폴드</td>
+<td><a class="test-link" href="test-results.html#test_seat_heat_signal_is_shown_everywhere" title="테스트 결과와 화면 보기"><code>test_<wbr>seat_<wbr>heat_<wbr>signal_<wbr>is_<wbr>shown_<wbr>everywhere</code></a></td>
+<td>실패</td>
+<td><strong>앱 결함</strong> 좁고 낮은 폴드 화면에서 배치가 넘쳤습니다(#42, #43, #44). 앱 0.4.1에서 고쳤습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-new-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_folded_mirror_can_be_unfolded_while_driving" title="테스트 결과와 화면 보기"><code>test_<wbr>folded_<wbr>mirror_<wbr>can_<wbr>be_<wbr>unfolded_<wbr>while_<wbr>driving</code></a></td>
+<td>실패</td>
+<td><strong>테스트 도구</strong> 막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상). 그 테스트만 다시 돌려 통과했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-min760</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_driver_temp_up_is_not_covered_by_home" title="테스트 결과와 화면 보기"><code>test_<wbr>driver_<wbr>temp_<wbr>up_<wbr>is_<wbr>not_<wbr>covered_<wbr>by_<wbr>home</code></a></td>
+<td>실패</td>
+<td><strong>플랫폼</strong> 1024×768에서만 나는 SystemUI 겹침(#21)이 760×500dp에서는 재현되지 않아, 알려진 결함 표시(xfail strict)가 실패로 뒤집혔습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-23</td>
+<td><code>20261123-ux-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_driving_locks_typing_and_refuses_mirror_fold" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>locks_<wbr>typing_<wbr>and_<wbr>refuses_<wbr>mirror_<wbr>fold</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>테스트 도구</strong> 막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상).</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-driving-state-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_driving_signals_are_shown" title="테스트 결과와 화면 보기"><code>test_<wbr>driving_<wbr>signals_<wbr>are_<wbr>shown</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>테스트 도구</strong> 막 켠 에뮬레이터에서 UiAutomator2 계측 프로세스가 죽었습니다(#29와 같은 현상).</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-110716-r1</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_zone_applies_command_to_speaking_seat" title="테스트 결과와 화면 보기"><code>test_<wbr>zone_<wbr>applies_<wbr>command_<wbr>to_<wbr>speaking_<wbr>seat</code></a></td>
+<td>오류</td>
+<td><strong>환경</strong> 실행을 시작할 무렵 USB를 연결해 태블릿에 뜬 시스템 창(USB 연결 방식 선택)이 앱을 가렸습니다. 첫 시도로 남기고 3회를 다시 돌렸습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-24</td>
+<td><code>20261124-110716-r1</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_typed_command_sets_vehicle_temperature" title="테스트 결과와 화면 보기"><code>test_<wbr>typed_<wbr>command_<wbr>sets_<wbr>vehicle_<wbr>temperature</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>환경</strong> 실행을 시작할 무렵 USB를 연결해 태블릿에 뜬 시스템 창(USB 연결 방식 선택)이 앱을 가렸습니다. 첫 시도로 남기고 3회를 다시 돌렸습니다.</td>
+</tr>
+</tbody></table></div>
+<p>다시 만드는 방법 (<code>ivi-tests</code>에서):</p>
+<pre class="code"><code data-lang="powershell">.venv\Scripts\python tools\run_history.py</code></pre>
+
+  </main>
+  
+</div>
+
+<script src="../glossary.js" defer></script>
+</body>
+</html>
