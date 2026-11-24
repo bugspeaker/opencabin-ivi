@@ -68,6 +68,7 @@
 <li><strong>&#39;실패 0&#39;과 &#39;정한 범위를 끝까지 돌렸다&#39;를 따로 봅니다.</strong> 범위가 줄었거나 중간에 멈춘 실행이 통과로 보이지 않도록 Release 게이트에 실행 완전성 조건을 두었습니다(<a href="#4-1-게이트-단계와-기준">4-1</a>).</li>
 <li><strong>문서의 주장은 코드와 검사로 확인합니다.</strong> 요구사항↔테스트 연결이나 문서·사이트의 내부 링크가 끊기면 CI의 unit job이 실패합니다. 문서에는 코드에서 찾아 확인할 수 있는 문장만 씁니다.</li>
 <li><strong>수치는 원자료에서 다시 셉니다.</strong> 실행 결과 파일을 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">evidence</a>에 남기고, 다시 세는 명령을 함께 적습니다.</li>
+<li><strong>코드를 쓴 AI와 다른 AI에게 검토를 맡깁니다.</strong> 2026-11-24에는 Codex에게 동작이 아니라 예외 상황만 찾아 달라고 따로 맡겼습니다. Codex가 재현 코드와 함께 보인 5건을 Claude Code가 고치며 같은 범위를 다시 읽어 4건을 더 찾았고, 모두 고치기 전에는 실패하고 고친 뒤 통과하는 단위 테스트로 남겼습니다. 반영은 두 기기 × 3회 실행과 Release 게이트를 본 뒤 정했습니다(<a href="phase9-bench.html#9-외부-검토-반영-2026-11-24-예외-경로와-동시-조작">9단계 기록 9절</a>).</li>
 </ol>
 <h3 id="검증에서-잡혀-고친-사례"><a class="anchor" href="#검증에서-잡혀-고친-사례" aria-hidden="true">#</a>검증에서 잡혀 고친 사례</h3>
 <div class="table"><table><thead><tr>
@@ -426,6 +427,33 @@
 <hr>
 <h2 id="3-결함과-원인-분석"><a class="anchor" href="#3-결함과-원인-분석" aria-hidden="true">#</a>3. 결함과 원인 분석</h2>
 <p>1번부터 9번까지는 <a href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue" target="_blank" rel="noopener">GitHub 이슈</a>로도 옮겨 두었습니다(라벨 <code>migrated</code>. 6번은 세 건으로 나눴습니다). 이슈의 생성일은 옮긴 날(2026-11-21)이고, 실제 발견일은 본문 첫 줄에 적었습니다. 10번부터 12번까지는 갤럭시 폴드에서 나온 것으로, 처음부터 이슈로 올렸습니다(라벨 <code>device:fold</code>). 열린 이슈는 알려진 결함(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/21" target="_blank" rel="noopener">#21</a>)과 원인을 모르는 흔들림(<a href="https://github.com/bugspeaker/opencabin-ivi/issues/27" target="_blank" rel="noopener">#27</a>) 두 건입니다.</p>
+<p>반복 실행은 이미 통과한 테스트가 흔들리지 않는지 보는 실행이라 실패 0이 목표이고, 결함은 테스트를 새로 쓰거나 환경을 바꿀 때 주로 나왔습니다. 이슈 15건을 찾은 경로는 아래와 같습니다.</p>
+<div class="table"><table><thead><tr>
+<th>찾은 경로</th>
+<th>건수</th>
+<th>표의 번호</th>
+</tr>
+</thead><tbody><tr>
+<td>새 테스트를 쓰며 (경계값, 회귀, 기술 검증)</td>
+<td>5건</td>
+<td>3, 6(세 건), 8</td>
+</tr>
+<tr>
+<td>새 기기·설정에서 (갤럭시 폴드, 섭씨 표시)</td>
+<td>4건</td>
+<td>5, 10, 11, 12</td>
+</tr>
+<tr>
+<td>실행 기록을 분석하며 (실행 시간, logcat, 전체·반복 실행)</td>
+<td>5건</td>
+<td>1, 2, 4, 7, 9</td>
+</tr>
+<tr>
+<td>플랫폼 자료와 대조하며 (AAOS UX 제한 설정)</td>
+<td>1건</td>
+<td>13</td>
+</tr>
+</tbody></table></div>
 <div class="table"><table><thead><tr>
 <th>번호</th>
 <th>증상</th>
@@ -784,7 +812,7 @@
 <td><strong>HVAC</strong><br>HVAC-01~06</td>
 <td>다른 좌석 area에 값을 쓰거나, 범위 밖이나 단위가 어긋난 값을 쓰거나, 화면과 신호가 다를 수 있습니다.</td>
 <td><strong>화면→신호</strong> 버튼, 아래 바, 음성이 <code>HVAC_<wbr>TEMPERATURE_<wbr>SET</code>과 A/C 전 좌석 area를 바꾸는지 봅니다.<br><strong>신호→화면</strong> VHAL 값이 공조 화면, 홈, 아래 바에 같은 값으로 보이는지 봅니다.</td>
-<td>1 / 11 / 33</td>
+<td>1 / 11 / 39</td>
 <td>실제 공조 ECU의 응답 지연과 거절, 실차의 area 구성</td>
 </tr>
 <tr>
@@ -805,11 +833,18 @@
 <td><strong>미디어</strong><br>MEDIA-01, 02<br>DRIVE-02</td>
 <td>주행 중에 영상이 재생되거나(운전자 주의 분산), 소리가 겹칠 수 있습니다.</td>
 <td><strong>신호→화면</strong> 주행 중에는 영상을 막고, 정차하면 이어 보는지 봅니다.<br><strong>앱 안</strong> 음악, 라디오, 통화가 한 번에 하나만 소리를 내는지 봅니다.</td>
-<td>0 / 4 / 22</td>
+<td>0 / 4 / 25</td>
 <td>실제 스피커 출력, 블루투스 기기, 차량 오디오 시스템</td>
 </tr>
+<tr>
+<td><strong>주행 상태 규칙</strong><br>DRIVE-02, 03<br>CAM-01, 02</td>
+<td>멈춘 상태를 주행으로 보거나 그 반대로 보아 제한이 틀리거나, 주행 중에도 써야 할 기능까지 막거나, R에서 후방 카메라가 늦게 뜰 수 있습니다.</td>
+<td><strong>신호→화면</strong> 기어와 속도를 시간에 따라 바꾸며(P → D 정지 → 3 km/h → 정지 → 60 km/h → N → P) 단계마다 제한과 화면이 바로 바뀌고 2~3초 동안 흔들리지 않는지 봅니다. R로 바꾸면 2.0초 안에 카메라가 뜨는지 다섯 번 잽니다.</td>
+<td>0 / 3 / 18</td>
+<td>실제 주행 상태 신호의 지연, 실제 카메라 영상, 구동·제동·ADAS 제어</td>
+</tr>
 </tbody></table></div>
-<p>서비스 이름 아래는 <a href="requirements.html">요구사항</a> 번호이고, 주행 정보 패널은 앱 왼쪽의 계기판 역할 화면입니다. 테스트 수는 요구사항 표시(<code>@pytest.<wbr>mark.<wbr>req</code>)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 후방 카메라, 음성, CAN, Test Bench는 <a href="traceability.html">추적표</a>에 있습니다.</p>
+<p>서비스 이름 아래는 <a href="requirements.html">요구사항</a> 번호이고, 주행 정보 패널은 앱 왼쪽의 계기판 역할 화면입니다. 테스트 수는 요구사항 표시(<code>@pytest.<wbr>mark.<wbr>req</code>)로 센 parametrize 케이스 수입니다. 한 테스트가 두 서비스에 걸치면 양쪽에 셉니다. 내비게이션, 음성, CAN, Test Bench, 동시 조작은 <a href="traceability.html">추적표</a>에 있습니다.</p>
 <p><strong>검증 단계.</strong> 앞 단계일수록 빠르고 기기가 필요 없으며, 뒤 단계일수록 실제 차량에 가깝습니다. 이 프로젝트는 3단계까지 했습니다.</p>
 <div class="table"><table><thead><tr>
 <th>단계</th>
@@ -833,7 +868,7 @@
 <td>3. 에뮬레이터·태블릿 E2E</td>
 <td>AAOS 에뮬레이터(CarService, 가상 VHAL)와 태블릿(앱 안 Mock 차량)</td>
 <td>화면 ↔ 차량 신호, 위 표의 서비스별 위험</td>
-<td>144개 × 2기기<br>Test Bench(작업 PC)에서</td>
+<td>150개 × 2기기<br>Test Bench(작업 PC)에서</td>
 </tr>
 <tr>
 <td class="nw">4. HIL, 실차</td>
