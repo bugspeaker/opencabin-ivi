@@ -21,9 +21,12 @@ def can_net(app, device):
     net = SimpleNamespace(gateway=gateway, ecu=EcuNode(ecu_bus, gateway.db), listener=listener, db=gateway.db)
     yield net
     net.ecu.stop()
-    gateway.stop()
-    for bus in (gateway.bus, ecu_bus, listener):
-        bus.shutdown()
+    try:
+        gateway.stop()  # 차량 호출이 끝나지 않아 못 멈추면 GatewayStopTimeout 으로 이 테스트의 정리 오류가 된다
+    finally:
+        print(f"CAN 게이트웨이 진단: {gateway.diagnostics()}")  # 받은 수, 합친 수, 지연(ms). -rA 출력에 남는다
+        for bus in (gateway.bus, ecu_bus, listener):
+            bus.shutdown()
 
 
 @pytest.mark.req("NET-01", "DRIVE-01")

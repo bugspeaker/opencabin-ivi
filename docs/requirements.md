@@ -7,6 +7,7 @@ OpenCabin IVI 앱과 Test Bench가 지켜야 할 것을 ID를 붙여 적었습�
 | ID | 요구사항 | 출처 |
 |---|---|---|
 | SYS-01 | 앱은 기기에 맞는 차량 데이터(AAOS는 CarService, 그 밖의 기기는 Mock)에 연결하고, 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 줍니다. | 기능 |
+| SYS-02 | 한 기능(음악, 경로 안내, 통화)이 도는 동안 다른 기능(공조, 주행)을 조작해도 앞 기능의 상태는 그대로입니다. 화면 조작과 차량 쪽 변경이 겹쳐도 화면과 차량 신호는 같은 값으로 끝나고, 버튼을 빠르게 눌러도 누른 만큼 바뀝니다. | 기능 (동시 조작) |
 | UI-01 | 화면 틀(아래 바, 분할 화면, 위젯, 알림 센터, 앱 목록, 이전 실행 앱)이 어느 화면에서든 동작합니다. | 기능 |
 | DRIVE-01 | 속도와 기어 신호를 주행 정보에 바로 보여 줍니다. | 기능 |
 | DRIVE-02 | P 기어가 아니면(D·N·R로 멈춰 있어도) 영상을 볼 수 없고, P로 바꾸면 멈춘 자리부터 이어서 볼 수 있습니다. 음악은 주행 중에도 쓸 수 있습니다. | 운전자 주의 분산 |
@@ -47,6 +48,12 @@ DRIVE-02와 DRIVE-03의 '주행 중'은 AAOS의 UX 제한(CarUxRestrictions) 표
 | SYS-01.2 | 연결한 차량 값이 시작 화면에 맞게 보입니다 | `test_parked_on_start` | `wait_text("speed_value", "0")`, `assert home.gear() == "P"` |
 | SYS-01.3 | 권한이 있으면 공조를 제어할 수 있습니다 | `test_hvac_is_controllable` | `assert not climate.unavailable()` 뒤 화면 + 한 번이 차량 22.5°C로 |
 | SYS-01.4 | 권한이 없는 신호는 앱이 멈추지 않고 '값 없음'으로 보여 줍니다 | `test_signal_without_permission_shows_no_value` | AAOS에서 `pm revoke`로 CAR_ENERGY를 뺀 뒤 앱을 새로 띄우고 `wait_visible("range_unavailable")`, 거리·배터리 표시가 없는지 봅니다. 권한이 있는 외기 온도(18.0°C)와 속도(50)는 그대로 보이고, 거리 12 km를 넣어도 경고와 충전소 카드가 뜨지 않는지 `stays`로 봅니다. 태블릿의 Mock 차량에는 권한이 없어 AAOS에서만 확인합니다 |
+| SYS-02.1 | 음악을 틀어 둔 채 공조(두 좌석 온도, 풍량, A/C)를 바꾸면 값은 모두 차량에 들어가고, 음악은 같은 곡으로 재생 중입니다 | `test_music_keeps_playing_while_climate_is_operated` | 차량 `wait_value` 22.5·21.5°C, `wait_signal` 풍량 4·A/C 꺼짐, 음악 화면 `wait_text("now_playing_title", title)`와 `wait_text("playback_state", "재생 중")` |
+| SYS-02.2 | 음악 화면을 보는 동안 차량 쪽 온도가 바뀌어도 재생은 그대로입니다 | `test_music_keeps_playing_while_climate_is_operated` | `car.set_temperature(Seat.DRIVER, 24.0)` 뒤 아래 바 `wait_temperature(24.0)`, 1.5초 동안 `stays(재생 중이고 같은 곡)` |
+| SYS-02.3 | 경로 안내와 음악 중에 달리며 아래 바로 온도를 바꾸면, 온도는 차량에 들어가고 안내는 같은 목적지로 계속 줄고 음악은 재생 중입니다 | `test_guidance_and_music_continue_while_temperature_changes_on_the_move` | 120 km/h에서 차량 `wait_value` 22.5·21.5°C, 주행 정보 경로가 '회사'로 시작하고 8.5 km 이하로 `wait_until`, 음악 `wait_text`, 내비 `destination() == "회사"` |
+| SYS-02.4 | 통화 중에 공조를 바꾸면 차량에 들어가고 통화는 이어지며, 끝나면 듣던 곡이 다시 나오고 공조 값은 그대로입니다 | `test_climate_works_during_call_and_music_resumes_after` | 차량 `wait_value` 22.5°C와 풍량 4, 음악 '통화 중', 통화 시간이 늘어나는지 `wait_until`, 끊은 뒤 '재생 중'과 같은 곡, `assert car.temperature(Seat.DRIVER) == 22.5` |
+| SYS-02.5 | 화면 조작과 차량 쪽 변경이 겹쳐도 화면과 차량 신호가 같은 값으로 끝나고, 다른 좌석은 그대로입니다 | `test_screen_and_vehicle_changes_at_once_end_in_same_value` | 다른 스레드가 차량 쪽에 25.0·24.0·26.0°C를 쓰는 동안 + 세 번, `wait_until(화면 == 차량)`과 1.5초 `stays`, 범위와 0.5°C 단위, 조수석 22.0°C |
+| SYS-02.6 | 버튼을 빠르게(누름 사이 0.1초) 네 번 누르면 네 번 모두 차량에 들어갑니다 | `test_quick_taps_are_all_applied` | adb 셸 한 번에 `input tap` 네 번, 차량 `wait_value(24.0)`, 화면 `wait_temperature(24.0)`, 1.5초 `stays`. 좌석 2 |
 | HVAC-02.1 | 버튼 한 번에 0.5°C 바뀝니다 | `test_button_changes_signal_by_one_step` | 차량 값 `wait_value(car.temperature(seat), 22.5)`(▼는 21.5)와 화면 `wait_temperature`를 따로 봅니다. 좌석 2 × 방향 2 |
 | HVAC-02.2 | 끝값(16.0, 28.0°C)에서는 그 방향 버튼이 꺼지고 반대쪽은 눌립니다 | `test_buttons_disabled_at_limits` | `wait_enabled("<좌석>_temp_down", False)`와 `assert climate.can_increase(seat)`. 28.0°C는 반대 |
 | HVAC-02.3 | 버튼으로 끝값에 닿으면 그 버튼이 꺼지고, 꺼진 버튼을 눌러도 범위를 넘지 않습니다 | `test_step_reaches_limit_and_disables` | 16.5→16.0°C `wait_value`, `wait_enabled(False)`, 꺼진 버튼을 누른 뒤 1.5초 동안 `stays(car.temperature(seat) == 16.0)`. 28.0°C도 같습니다 |

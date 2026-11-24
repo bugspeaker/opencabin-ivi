@@ -181,7 +181,8 @@ def run_flow(tmp_path):
     (tmp_path / "pytest.ini").write_text("[pytest]\nmarkers =\n    log(name)\n    adb_fails\n", encoding="utf-8")
     out = tmp_path / "flow.json"
     env = {**os.environ, "PYTHONPATH": str(ROOT), "IVI_REAL_CONFTEST": str(ROOT / "tests" / "conftest.py"),
-           "IVI_FLOW_OUT": str(out), "APP_LOG": APPIUM_FATAL + APP_FATAL, "APPIUM_LOG": APPIUM_FATAL}
+           "IVI_FLOW_OUT": str(out), "APP_LOG": APPIUM_FATAL + APP_FATAL, "APPIUM_LOG": APPIUM_FATAL,
+           "PYTHONIOENCODING": "utf-8"}  # 자식 출력을 utf-8 로 읽는다. Python 3.12 Windows 는 기본이 cp949
     proc = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(tmp_path)],
                           cwd=tmp_path, env=env, capture_output=True, text=True, encoding="utf-8")
     assert out.exists(), proc.stdout + proc.stderr

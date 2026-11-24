@@ -330,7 +330,7 @@ def test_known_defect_xfail_does_not_swallow_other_failures(tmp_path):
     결함이 고쳐져 통과하면 strict 라 failed 가 된다. (pytest 를 따로 띄워 실제 판정을 본다)"""
     (tmp_path / "test_demo.py").write_text(KNOWN_DEFECT_DEMO, encoding="utf-8")
     proc = subprocess.run([sys.executable, "-m", "pytest", "-q", "-rA", "-p", "no:cacheprovider", str(tmp_path)],
-                          cwd=tmp_path, env={**os.environ, "PYTHONPATH": str(release_gate.ROOT)},
+                          cwd=tmp_path, env={**os.environ, "PYTHONPATH": str(release_gate.ROOT), "PYTHONIOENCODING": "utf-8"},
                           capture_output=True, text=True, encoding="utf-8")
     out = proc.stdout
     assert "XFAIL test_demo.py::test_symptom" in out

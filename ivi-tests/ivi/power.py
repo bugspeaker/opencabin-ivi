@@ -125,7 +125,8 @@ class EmulatorPower(PowerController):
                          creationflags=flags, close_fds=True)
 
     def _listed(self):
-        out = subprocess.run(["adb", "devices"], capture_output=True, text=True).stdout
+        # 시간 제한이 없으면 adb 서버가 멈췄을 때 여기서 끝없이 기다려, 바깥 wait_until 의 제한 시간도 소용없었다
+        out = subprocess.run(["adb", "devices"], capture_output=True, text=True, timeout=10).stdout
         return any(line.startswith(self.serial + "\t") for line in out.splitlines())
 
     def is_on(self):

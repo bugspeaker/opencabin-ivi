@@ -18,13 +18,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from ivi.bench_api import Bench, BenchDevice, make_server  # noqa: E402
+from ivi.bench_api import JOB_TIMEOUT, Bench, BenchDevice, make_server  # noqa: E402
 from ivi.device import Device  # noqa: E402
 from ivi.power import AdbRebootPower, EmulatorPower, HttpRelayPower  # noqa: E402
 
 
 def connected_serials():
-    out = subprocess.run(["adb", "devices"], capture_output=True, text=True).stdout
+    out = subprocess.run(["adb", "devices"], capture_output=True, text=True, timeout=30).stdout
     return [line.split()[0] for line in out.splitlines()[1:] if line.strip().endswith("device")]
 
 
@@ -33,6 +33,8 @@ def main():
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8770)
     parser.add_argument("--relay", action="append", default=[], metavar="SERIAL=URL", help="HTTP 릴레이로 전원을 제어할 기기")
+    parser.add_argument("--job-timeout", type=float, default=JOB_TIMEOUT, metavar="SECONDS",
+                        help=f"실행 작업 하나의 시간 제한. 넘으면 멈추고 timeout 으로 남긴다 (기본 {JOB_TIMEOUT:g}초)")
     args = parser.parse_args()
 
     relays = dict(item.split("=", 1) for item in args.relay)
@@ -50,7 +52,7 @@ def main():
         devices.append(BenchDevice(serial, device.kind, device.model, device.vehicle, power))
         print(f"  {serial}  {device.label}  전원: {power.name}")
 
-    bench = Bench(devices, runs_dir=ROOT / "reports" / "runs", cwd=ROOT)
+    bench = Bench(devices, runs_dir=ROOT / "reports" / "runs", cwd=ROOT, job_timeout=args.job_timeout)
     server = make_server(bench, args.host, args.port)
     print(f"Test Bench API: http://{args.host}:{args.port}/api  (Ctrl+C 로 끝냄)")
     try:
