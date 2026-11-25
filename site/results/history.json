@@ -461,6 +461,38 @@
    "flaky": 0,
    "bad": 0,
    "xfailed": 0
+  },
+  {
+   "folder": "2026-11-25-fault-injection/runs",
+   "purpose": "결함 주입 실험 (결함을 하나씩 일부러 넣은 빌드와 대조군)",
+   "intentional": true,
+   "date": "11-25",
+   "commits": [
+    "1817325",
+    "1bc8233",
+    "2801830",
+    "3d46bbd",
+    "4279f92",
+    "4523cf1",
+    "56c2b58",
+    "574d5df",
+    "66ea6ba",
+    "875dbaf",
+    "90f408a",
+    "a41b948",
+    "a734fea",
+    "d4d1b2e"
+   ],
+   "devices": [
+    "AAOS 에뮬레이터",
+    "태블릿"
+   ],
+   "sessions": 24,
+   "executed": 2156,
+   "passed": 2112,
+   "flaky": 4,
+   "bad": 29,
+   "xfailed": 11
   }
  ],
  "problems": [
@@ -683,8 +715,338 @@
    "kind": "테스트 도구",
    "why": "AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다.",
    "intentional": false
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F01-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_signal_is_shown_on_climate_and_home[passenger]",
+   "outcome": "재시도 후 통과",
+   "kind": "환경",
+   "why": "결함과 상관없는 테스트입니다. adb 서버 연결이 잠깐 끊겨(cannot connect to daemon) 실패하고 재시도에서 통과했습니다. 끊긴 원인은 확인하지 못했습니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F01-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_ac_toggle_reaches_every_seat",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F01)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F02-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_off_grid_signal_steps_back_to_grid[up-22.5]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F02)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F02-mock",
+   "device": "태블릿",
+   "test": "test_off_grid_signal_steps_back_to_grid[up-22.5]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F02)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_stopped_in_gear_blocks_only_video[D]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_stopped_in_gear_blocks_only_video[N]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_restrictions_follow_stop_and_go_timeline",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-mock",
+   "device": "태블릿",
+   "test": "test_stopped_in_gear_blocks_only_video[D]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-mock",
+   "device": "태블릿",
+   "test": "test_stopped_in_gear_blocks_only_video[N]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-mock",
+   "device": "태블릿",
+   "test": "test_video_screen_is_blocked_while_stopped_in_drive",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F03-mock",
+   "device": "태블릿",
+   "test": "test_restrictions_follow_stop_and_go_timeline",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F04-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_rear_camera_appears_within_two_seconds",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F04)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F04-mock",
+   "device": "태블릿",
+   "test": "test_rear_camera_appears_within_two_seconds",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F04)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_trip_distance_follows_speed_signal",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_guidance_and_music_continue_while_temperature_changes_on_the_move",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_guidance_counts_down_with_vehicle_speed",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_parked_vehicle_does_not_advance_route",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_arrival",
+   "outcome": "재시도 후 통과",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-mock",
+   "device": "태블릿",
+   "test": "test_guidance_counts_down_with_vehicle_speed",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-mock",
+   "device": "태블릿",
+   "test": "test_arrival",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-mock",
+   "device": "태블릿",
+   "test": "test_trip_distance_follows_speed_signal",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F05-mock",
+   "device": "태블릿",
+   "test": "test_guidance_and_music_continue_while_temperature_changes_on_the_move",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F06-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_door_lock_button_drives_every_door",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F06)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F07-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_mph_setting_converts_vehicle_speed",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F07)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F07-mock",
+   "device": "태블릿",
+   "test": "test_mph_setting_converts_vehicle_speed",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F07)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F08-aaos-gap",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_seat_heat_signal_is_shown_everywhere",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F08)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F08-mock-gap",
+   "device": "태블릿",
+   "test": "test_seat_heat_signal_is_shown_everywhere",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F08)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F09-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_low_range_threshold[30.0-True]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F09)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F09-mock",
+   "device": "태블릿",
+   "test": "test_low_range_threshold[30.0-True]",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F09)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F10-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_climate_works_during_call_and_music_resumes_after",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F10-aaos",
+   "device": "AAOS 에뮬레이터",
+   "test": "test_call_pauses_radio_then_resumes",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F10-mock",
+   "device": "태블릿",
+   "test": "test_call_pauses_radio_then_resumes",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
+  },
+  {
+   "date": "11-25",
+   "run_id": "fi-F10-mock",
+   "device": "태블릿",
+   "test": "test_climate_works_during_call_and_music_resumes_after",
+   "outcome": "실패",
+   "kind": "확인용",
+   "why": "결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.",
+   "intentional": true
   }
  ],
  "first": "11-18",
- "last": "11-24"
+ "last": "11-25"
 }

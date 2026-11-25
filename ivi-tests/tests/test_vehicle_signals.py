@@ -243,13 +243,22 @@ def test_seat_heat_cycles_levels_on_vehicle(app, car, seat):
 @pytest.mark.req("HVAC-05")
 @pytest.mark.regression
 def test_seat_heat_signal_is_shown_everywhere(app, car):
-    """차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다."""
+    """차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다.
+    빠른 제어를 열어 둔 채 차량 쪽 단계가 바뀌어도 글자가 따라 바뀌고, 타일을 누르면 차량 신호가 다음 단계로 바뀝니다.
+    """
     climate = app.climate()
     car.set_signal(Signal.HEAT_DRIVER, 1)
     wait_value(lambda: climate.seat_heat(Seat.DRIVER), 1, what="공조 화면 운전석 열선 단계")
     wait_value(lambda: app.bar().seat_heat(Seat.DRIVER), 1, what="아래 바 운전석 열선 단계")
     stays(lambda: app.bar().seat_heat(Seat.PASSENGER) == 0, what="아래 바 조수석 열선 0단 유지")
-    app.vehicle_controls().wait_text("qc_seat_heat_value", "1단")
+    qc = app.vehicle_controls()
+    qc.wait_text("qc_seat_heat_value", "1단")
+    # 화면을 새로 열 때만 맞는 글자는 놓친다 (결함 주입 F08, 2026-11-25): 열어 둔 채 신호를 바꾸고, 타일도 눌러 본다
+    car.set_signal(Signal.HEAT_DRIVER, 2)
+    qc.wait_text("qc_seat_heat_value", "2단")
+    qc.tap("qc_seat_heat")  # 2단 → 1단 (HvacSpec.nextSeatHeat)
+    wait_signal(car, Signal.HEAT_DRIVER, 1)
+    qc.wait_text("qc_seat_heat_value", "1단")
 
 
 @pytest.mark.req("HVAC-05", "UI-01")

@@ -1,0 +1,30 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..69ae802 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F03"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
+index 8fcc075..7a5bc86 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
+@@ -47,10 +47,10 @@ data class VehicleState(
+     fun seatHeat(seat: Seat) = if (seat == Seat.DRIVER) driverSeatHeat else passengerSeatHeat
+ 
+     /** 무엇이든 UX 제한이 걸려 있는가 (상단 배지). P 가 아니면 멈춰 있어도 영상 제한이 걸린다. */
+-    val restricted get() = uxRestrictions != UxRules.NONE
++    val restricted get() = moving && uxRestrictions != UxRules.NONE
+ 
+     /** 이 종류의 제한이 걸려 있는가. 예: blocks(UxRules.NO_VIDEO) */
+-    fun blocks(rule: Int) = (uxRestrictions and rule) != 0
++    fun blocks(rule: Int) = moving && (uxRestrictions and rule) != 0
+ 
+     /**
+      * 차가 움직이는가 (P 가 아니고 속도 > 0). UX 제한에 없는 앱의 차량 제어 잠금(사이드 미러 접기, 트렁크)과

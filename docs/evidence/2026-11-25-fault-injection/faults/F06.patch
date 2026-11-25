@@ -1,0 +1,34 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..6439e24 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F06"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt
+index d77d5b7..4d1d32e 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt
+@@ -90,7 +90,7 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
+     override fun setSeatHeat(seat: Seat, level: Int) =
+         writeAll(VehiclePropertyIds.HVAC_SEAT_TEMPERATURE, level.coerceIn(0, HvacSpec.SEAT_HEAT_MAX), only = seat.areaId)
+ 
+-    override fun setDoorsLocked(locked: Boolean) = writeAll(VehiclePropertyIds.DOOR_LOCK, locked)
++    override fun setDoorsLocked(locked: Boolean) = writeAll(VehiclePropertyIds.DOOR_LOCK, locked, only = DOOR_FRONT)
+ 
+     /**
+      * property 의 모든 area(좌석·문)에 같은 값을 쓴다. only 를 주면 그 좌석(창)을 포함하는 area 에만 쓴다.
+@@ -244,6 +244,7 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
+         const val WINDOW_FRONT = 0x1
+         const val WINDOW_REAR = 0x2
+         const val DOOR_DRIVER = 0x1
++        const val DOOR_FRONT = 0x5 // ROW_1_LEFT | ROW_1_RIGHT
+ 
+         val HVAC_EXTRA = intArrayOf(
+             VehiclePropertyIds.HVAC_AC_ON, VehiclePropertyIds.HVAC_AUTO_ON, VehiclePropertyIds.HVAC_MAX_AC_ON, VehiclePropertyIds.HVAC_FAN_SPEED,

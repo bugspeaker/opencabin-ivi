@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="28" time="329.368" timestamp="2026-11-25T09:09:11.795731+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_navigation" name="test_guidance_counts_down_with_vehicle_speed" time="31.102" /><testcase classname="tests.test_navigation" name="test_guidance_counts_down_with_vehicle_speed" time="24.822"><failure message="ivi.waits.WaitTimeout: 20초 안에 남은 거리 0.2 km 이상 감소이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x0000024137016990&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x0000024135C4FCB0&gt;
+
+    @pytest.mark.req("NAV-01")
+    @pytest.mark.sanity
+    def test_guidance_counts_down_with_vehicle_speed(app, car):
+        """경로 안내의 남은 거리가 차량 속도 신호만큼 줄어듭니다.
+        120 km/h로 3초를 달리면 0.1 km쯤 줄어듭니다.
+        """
+        nav = app.navigation()
+        nav.pick(0)  # 집 12.4 km
+        nav.start()
+        start = nav.remaining_km()
+        assert start == pytest.approx(12.4)
+        assert "앞" in nav.maneuver()
+    
+        car.drive(120.0)
+&gt;       wait_until(lambda: nav.remaining_km() &lt;= start - 0.2, timeout=20, what="남은 거리 0.2 km 이상 감소")
+
+tests\test_navigation.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function test_guidance_counts_down_with_vehicle_speed.&lt;locals&gt;.&lt;lambda&gt; at 0x0000024137071DD0&gt;
+timeout = 20, interval = 0.25, what = '남은 거리 0.2 km 이상 감소'
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 20초 안에 남은 거리 0.2 km 이상 감소이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_navigation" name="test_parked_vehicle_does_not_advance_route" time="7.333" /><testcase classname="tests.test_navigation" name="test_search_locked_while_driving_but_favorites_work" time="4.104" /><testcase classname="tests.test_navigation" name="test_category_shortcut_works_while_driving[charger-nearest0-6]" time="5.423" /><testcase classname="tests.test_navigation" name="test_category_shortcut_works_while_driving[parking-nearest1-8]" time="5.379" /><testcase classname="tests.test_navigation" name="test_cancel_preview_returns_to_search" time="4.334" /><testcase classname="tests.test_navigation" name="test_search_filters_destinations" time="2.971" /><testcase classname="tests.test_navigation" name="test_arrival" time="24.391" /><testcase classname="tests.test_navigation" name="test_arrival" time="24.458"><failure message="ivi.waits.WaitTimeout: 20초 안에 'nav_arrived' 표시이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x000002413714D350&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x0000024135C4FCB0&gt;
+
+    @pytest.mark.req("NAV-01")
+    @pytest.mark.regression
+    def test_arrival(app, car):
+        """0.1 km 떨어진 편의점으로 안내를 시작하고 120 km/h로 달리면 도착 화면이 뜹니다.
+        '확인'을 누르면 찾기 화면으로 돌아가고 주행 정보의 경로 표시도 사라집니다.
+        """
+        nav = app.navigation()
+        nav.search("편의점")
+        wait_value(lambda: nav.results(), ["편의점"], what="'편의점' 검색 결과")
+        nav.pick(5)  # 0.1 km
+        nav.start()
+        car.drive(120.0)
+&gt;       nav.wait_visible("nav_arrived", timeout=20)
+
+tests\test_navigation.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:61: in wait_visible
+    wait_until(lambda: self.visible(tag) == expected, timeout=timeout,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_visible.&lt;locals&gt;.&lt;lambda&gt; at 0x000002413719C670&gt;
+timeout = 20, interval = 0.25, what = "'nav_arrived' 표시"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 20초 안에 'nav_arrived' 표시이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_navigation" name="test_stop_guidance_returns_to_search_and_clears_cluster_route" time="5.952" /><testcase classname="tests.test_cockpit" name="test_bottom_bar_temperature_drives_vehicle[driver]" time="3.617" /><testcase classname="tests.test_cockpit" name="test_bottom_bar_temperature_drives_vehicle[passenger]" time="3.649" /><testcase classname="tests.test_cockpit" name="test_sync_mirrors_driver_temperature_to_passenger" time="3.879" /><testcase classname="tests.test_cockpit" name="test_passenger_change_releases_sync" time="6.394" /><testcase classname="tests.test_cockpit" name="test_trip_distance_follows_speed_signal" time="16.906" /><testcase classname="tests.test_cockpit" name="test_trip_distance_follows_speed_signal" time="17.035"><failure message="ivi.waits.WaitTimeout: 15초 안에 주행 거리 0.1 km 이상이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x000002413712DD90&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x0000024135C4FCB0&gt;
+
+    @pytest.mark.req("DRIVE-01")
+    @pytest.mark.regression
+    def test_trip_distance_follows_speed_signal(app, car):
+        """현 주행 정보의 거리는 속도 신호에 따라 늘고, 차를 세우면 멈춥니다.
+        120 km/h로 3초를 달리면 0.1 km쯤 늘어납니다.
+        """
+        cluster = app.cluster()
+        assert cluster.trip_km() == 0.0
+        car.drive(120.0)
+&gt;       wait_until(lambda: cluster.trip_km() &gt;= 0.1, timeout=15, what="주행 거리 0.1 km 이상")
+
+tests\test_cockpit.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function test_trip_distance_follows_speed_signal.&lt;locals&gt;.&lt;lambda&gt; at 0x000002413719E6C0&gt;
+timeout = 15, interval = 0.25, what = '주행 거리 0.1 km 이상'
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 15초 안에 주행 거리 0.1 km 이상이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_cockpit" name="test_lane_assist_indicator_follows_speed" time="2.084" /><testcase classname="tests.test_cockpit" name="test_utility_widget_pages" time="3.284" /><testcase classname="tests.test_cockpit" name="test_split_screen_toggle" time="4.291" /><testcase classname="tests.test_cockpit" name="test_quick_control_mirror_locked_while_driving" time="5.408" /><testcase classname="tests.test_cockpit" name="test_folded_mirror_can_be_unfolded_while_driving" time="4.526" /><testcase classname="tests.test_cockpit" name="test_notifications_record_guidance_and_restriction" time="5.012" /><testcase classname="tests.test_cockpit" name="test_clearing_notifications_leaves_empty_panel" time="5.762" /><testcase classname="tests.test_cockpit" name="test_recent_app_slot" time="4.709" /><testcase classname="tests.test_concurrency" name="test_music_keeps_playing_while_climate_is_operated" time="9.188" /><testcase classname="tests.test_concurrency" name="test_guidance_and_music_continue_while_temperature_changes_on_the_move" time="27.326" /><testcase classname="tests.test_concurrency" name="test_guidance_and_music_continue_while_temperature_changes_on_the_move" time="27.294"><failure message="ivi.waits.WaitTimeout: 20초 안에 안내 남은 거리 8.5 km 이하이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x00000241371D6510&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x0000024135C4FCB0&gt;
+
+    @pytest.mark.req("SYS-02", "NAV-01", "MEDIA-02", "HVAC-01")
+    def test_guidance_and_music_continue_while_temperature_changes_on_the_move(app, car):
+        """경로 안내를 받고 음악을 들으며 120 km/h로 달리는 중에 아래 바로 두 좌석 온도를 바꿉니다.
+        온도는 차량에 들어가고, 안내는 같은 목적지로 계속 줄고, 음악은 같은 곡으로 재생 중입니다."""
+        nav = app.navigation()
+        nav.pick(1)  # 회사 8.7 km
+        nav.start()
+        media = app.media()
+        title = media.select_track(4)
+        media.wait_text("playback_state", "재생 중")
+    
+        car.drive(120.0)
+        app.wait_visible("restriction_banner")
+        bar = app.bar()
+        bar.increase(Seat.DRIVER)
+        bar.decrease(Seat.PASSENGER)
+        wait_value(lambda: car.temperature(Seat.DRIVER), 22.5, what="차량 운전석 온도")
+        wait_value(lambda: car.temperature(Seat.PASSENGER), 21.5, what="차량 조수석 온도")
+    
+        cluster = app.cluster()
+        assert cluster.route().startswith("회사")
+&gt;       wait_until(lambda: route_km(cluster) &lt;= 8.5, timeout=20, what="안내 남은 거리 8.5 km 이하")
+
+tests\test_concurrency.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function test_guidance_and_music_continue_while_temperature_changes_on_the_move.&lt;locals&gt;.&lt;lambda&gt; at 0x0000024137116350&gt;
+timeout = 20, interval = 0.25, what = '안내 남은 거리 8.5 km 이하'
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 20초 안에 안내 남은 거리 8.5 km 이하이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_concurrency" name="test_climate_works_during_call_and_music_resumes_after" time="10.175" /><testcase classname="tests.test_concurrency" name="test_screen_and_vehicle_changes_at_once_end_in_same_value" time="6.266" /><testcase classname="tests.test_concurrency" name="test_quick_taps_are_all_applied[driver]" time="5.115" /><testcase classname="tests.test_concurrency" name="test_quick_taps_are_all_applied[passenger]" time="5.365" /></testsuite></testsuites>

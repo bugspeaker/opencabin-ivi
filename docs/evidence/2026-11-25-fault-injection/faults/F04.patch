@@ -1,0 +1,35 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..410602d 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F04"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt
+index e45d4b3..681d926 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt
+@@ -234,7 +234,16 @@ fun IviRoot(
+                             }
+                             if (cockpit.notificationsOpen) NotificationPanel(cockpit, Modifier.align(Alignment.TopEnd))
+                             // 후방 카메라: 기어 R 이면 앱 화면 위에 뜬다 (주행 정보는 그대로 보인다)
+-                            if (state.gear == Gear.REVERSE) RearCamera()
++                            // 카메라 영상이 안정될 때까지 기다렸다가 띄운다
++                            var cameraReady by remember { mutableStateOf(false) }
++                            LaunchedEffect(state.gear == Gear.REVERSE) {
++                                cameraReady = false
++                                if (state.gear == Gear.REVERSE) {
++                                    delay(2_100)
++                                    cameraReady = true
++                                }
++                            }
++                            if (state.gear == Gear.REVERSE && cameraReady) RearCamera()
+                         }
+                     }
+                 }

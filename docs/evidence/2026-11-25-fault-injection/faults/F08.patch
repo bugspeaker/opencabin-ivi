@@ -1,0 +1,36 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..dbf7e7a 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F08"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Climate.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Climate.kt
+index 5308fbc..998c5d9 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Climate.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Climate.kt
+@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
+ import androidx.compose.material3.ButtonDefaults
+ import androidx.compose.material3.Text
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+@@ -238,7 +239,9 @@ fun VehicleScreen(state: VehicleState, cockpit: CockpitState, vehicle: VehicleDa
+             QuickTile(G.LIGHT, "실내등", if (cockpit.interiorLight) "켜짐" else "꺼짐", "qc_interior_light", cockpit.interiorLight, true, Modifier.weight(1f)) {
+                 cockpit.interiorLight = !cockpit.interiorLight
+             }
+-            QuickTile(G.SEAT_HEAT, "운전석 열선", if (state.driverSeatHeat > 0) "${state.driverSeatHeat}단" else "꺼짐", "qc_seat_heat", state.driverSeatHeat > 0, state.hvacAvailable, Modifier.weight(1f)) {
++            // 단계 글자는 처음 그릴 때 한 번만 만든다
++            val seatHeatLabel = remember { if (state.driverSeatHeat > 0) "${state.driverSeatHeat}단" else "꺼짐" }
++            QuickTile(G.SEAT_HEAT, "운전석 열선", seatHeatLabel, "qc_seat_heat", state.driverSeatHeat > 0, state.hvacAvailable, Modifier.weight(1f)) {
+                 vehicle.setSeatHeat(Seat.DRIVER, HvacSpec.nextSeatHeat(state.driverSeatHeat))
+             }
+         }

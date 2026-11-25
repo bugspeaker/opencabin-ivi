@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="55.057" timestamp="2026-11-25T09:32:19.468174+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_rear_camera" name="test_reverse_gear_shows_camera" time="8.886" /><testcase classname="tests.test_rear_camera" name="test_camera_returns_to_previous_screen" time="7.250" /><testcase classname="tests.test_rear_camera" name="test_gear_value_shows_reverse" time="2.805" /><testcase classname="tests.test_rear_camera" name="test_rear_camera_appears_within_two_seconds" time="16.086"><properties><property name="camera_seconds" value="2.66, 2.47, 2.52, 2.74, 2.54" /></properties></testcase><testcase classname="tests.test_rear_camera" name="test_rear_camera_appears_within_two_seconds" time="16.825"><properties><property name="camera_seconds" value="2.66, 2.47, 2.52, 2.74, 2.54" /><property name="camera_seconds" value="2.71, 2.74, 2.72, 2.54, 2.70" /></properties><failure message="AssertionError: 후방 카메라가 2.74초 만에 떴다 (측정값 [2.7094888999999966, 2.7353090999968117, 2.723567799999728, 2.544527400008519, 2.698874199995771])&#10;assert 2.7353090999968117 &lt;= 2.0&#10; +  where 2.7353090999968117 = max([2.7094888999999966, 2.7353090999968117, 2.723567799999728, 2.544527400008519, 2.698874199995771])">app = &lt;ivi.screens.IviApp object at 0x0000020C7E382520&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x0000020C7CFEFCB0&gt;
+request = &lt;FixtureRequest for &lt;Function test_rear_camera_appears_within_two_seconds&gt;&gt;
+
+    @pytest.mark.req("CAM-02")
+    @pytest.mark.regression
+    def test_rear_camera_appears_within_two_seconds(app, car, request):
+        """기어를 R로 바꾼 뒤 2.0초 안에 후방 카메라 화면이 떠야 합니다(FMVSS 111).
+        다섯 번 재서 가장 느린 값으로 판정하고, 신호를 넣는 adb 시간까지 포함해 잽니다.
+        """
+        times = []
+        for _ in range(5):
+            car.park()
+            app.wait_visible("rear_camera", expected=False)
+            started = time.monotonic()
+            car.reverse()
+            wait_until(app.rear_camera, timeout=5, interval=0.05, what="후방 카메라")
+            times.append(time.monotonic() - started)
+        request.node.user_properties.append(("camera_seconds", ", ".join(f"{t:.2f}" for t in times)))
+&gt;       assert max(times) &lt;= CAMERA_LIMIT, f"후방 카메라가 {max(times):.2f}초 만에 떴다 (측정값 {times})"
+E       AssertionError: 후방 카메라가 2.74초 만에 떴다 (측정값 [2.7094888999999966, 2.7353090999968117, 2.723567799999728, 2.544527400008519, 2.698874199995771])
+E       assert 2.7353090999968117 &lt;= 2.0
+E        +  where 2.7353090999968117 = max([2.7094888999999966, 2.7353090999968117, 2.723567799999728, 2.544527400008519, 2.698874199995771])
+
+tests\test_rear_camera.py:59: AssertionError</failure></testcase></testsuite></testsuites>

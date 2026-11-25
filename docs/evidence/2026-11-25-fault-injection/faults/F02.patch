@@ -1,0 +1,36 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..1712c22 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F02"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
+index 8fcc075..d04fdc1 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
+@@ -3,6 +3,7 @@ package dev.opencabin.ivi.vehicle
+ import kotlinx.coroutines.flow.StateFlow
+ import kotlin.math.ceil
+ import kotlin.math.floor
++import kotlin.math.round
+ 
+ /** 화면이 보는 차량 상태. 단위는 화면 기준(km/h, °C)으로 맞춘다. */
+ data class VehicleState(
+@@ -128,8 +129,8 @@ object HvacSpec {
+      * 차량 쪽에서 22.3°C 처럼 단위가 어긋난 값이 오면 + 는 22.5, - 는 22.0 (2026-11-18 경계값 테스트에서 찾은 결함:
+      * 전에는 22.3 ± 0.5 = 22.8 / 21.8 을 그대로 차량에 썼다).
+      */
+-    fun stepUp(celsius: Float) = clamp(floor(celsius / STEP_C + EPS) * STEP_C + STEP_C)
+-    fun stepDown(celsius: Float) = clamp(ceil(celsius / STEP_C - EPS) * STEP_C - STEP_C)
++    fun stepUp(celsius: Float) = clamp(round(celsius / STEP_C) * STEP_C + STEP_C)
++    fun stepDown(celsius: Float) = clamp(round(celsius / STEP_C) * STEP_C - STEP_C)
+     private const val EPS = 1e-3f
+ 
+     /** HVAC_FAN_SPEED 범위 (에뮬레이터 config: 1 ~ 7). */

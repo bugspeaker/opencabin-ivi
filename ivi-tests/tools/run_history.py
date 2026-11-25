@@ -9,6 +9,7 @@ docs/evidence 아래의 결과 파일(summary + tests 를 가진 JSON)을 모두
 """
 import argparse
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -44,6 +45,7 @@ PURPOSE = {
     "2026-11-24-concurrency/probe": ("빠른 누름 간격 줄여 보기 (저장소에 넣지 않은 임시 테스트)", False),
     "2026-11-24-concurrency/runs": ("반복 3회 (150개)", False),
     "2026-11-24-concurrency/runs-fold": ("폴드 1회 (150개)", False),
+    "2026-11-25-fault-injection/runs": ("결함 주입 실험 (결함을 하나씩 일부러 넣은 빌드와 대조군)", True),
 }
 
 # 실행 id → 그 실행의 실패·오류·재시도 통과의 원인. 원인 분류는 사이트의 결함 분류와 같은 말을 쓴다
@@ -62,6 +64,34 @@ CAUSES = {
     "20261124-153908": ("테스트 도구", "AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. adb input tap으로 바꿔 통과했습니다."),
     "20261124-154050": ("테스트 도구", "AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다."),
 }
+
+
+# (실행 id, 테스트) → 원인. 한 실행 안에서 테스트마다 원인이 다를 때 CAUSES 보다 먼저 본다
+TEST_CAUSES = {
+    ("fi-F01-aaos", "tests/test_climate.py::test_signal_is_shown_on_climate_and_home[passenger]"): (
+        "환경", "결함과 상관없는 테스트입니다. adb 서버 연결이 잠깐 끊겨(cannot connect to daemon) 실패하고 재시도에서 통과했습니다. 끊긴 원인은 확인하지 못했습니다."),
+}
+
+# 결함 주입 실험의 실행(run id fi-<결함>-<기기>). 결함을 넣은 빌드의 실패는 결함 때문에 난 것이라 실행마다 따로 적지 않는다.
+# 결함을 잡았는지는 대조군과 견주어 tools/fault_report.py 가 판정한다. 대조군(F00)의 실패는 결함이 없는데 난 실패라 따로 적어야 한다
+FAULT_RUN = re.compile(r"^fi-(F\d+)-")
+
+# 합계에서 뺀 실행(intentional)을 머리말에서 부르는 이름. 없으면 PURPOSE 의 설명을 쓴다
+INTENTIONAL_NAME = {
+    "2026-11-21-main/crash-check": "앱을 일부러 죽인 실행",
+    "2026-11-25-fault-injection/runs": "결함을 하나씩 넣은 결함 주입 실행과 그 대조군",
+}
+
+
+def cause_of(run_id, nodeid=""):
+    if (run_id, nodeid) in TEST_CAUSES:
+        return TEST_CAUSES[(run_id, nodeid)]
+    if run_id in CAUSES:
+        return CAUSES[run_id]
+    found = FAULT_RUN.match(run_id)
+    if found and found[1] != "F00":
+        return ("확인용", f"결함 주입 빌드({found[1]})에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.")
+    return ("", "")
 
 
 def load(evidence):
@@ -86,6 +116,13 @@ def load(evidence):
 
 def device_of(s):
     return DEVICE.get(s.get("model", ""), DEVICE.get(s.get("kind", ""), s.get("model", "") or s.get("kind", "")))
+
+
+def run_date(run_id, test):
+    """월-일. run id 가 날짜(YYYYMMDD)로 시작하지 않으면(결함 주입 fi-F01-aaos 등) 테스트를 시작한 시각에서 읽는다."""
+    if run_id[:8].isdigit():
+        return f"{run_id[4:6]}-{run_id[6:8]}"
+    return (test.get("time") or "")[5:10]
 
 
 def outcome_counts(tests):
@@ -126,11 +163,11 @@ def summarize(runs):
             for t in r["tests"]:
                 if t["outcome"] in BAD or t["outcome"] == "flaky":
                     run_id = s["run_id"]
-                    kind, why = CAUSES.get(run_id, ("", ""))
+                    kind, why = cause_of(run_id, t["nodeid"])
                     if not why:
                         missing["cause"].append(f"{run_id} {t['nodeid']}")
                     problems.append({
-                        "date": f"{run_id[4:6]}-{run_id[6:8]}", "run_id": run_id, "device": device_of(s),
+                        "date": run_date(run_id, t), "run_id": run_id, "device": device_of(s),
                         "test": t["nodeid"].split("::", 1)[-1], "outcome": "재시도 후 통과" if t["outcome"] == "flaky" else "실패" if t["outcome"] == "failed" else "오류",
                         "kind": kind, "why": why, "intentional": intentional,
                     })
@@ -148,6 +185,14 @@ def summarize(runs):
     }
 
 
+def skipped_runs(groups):
+    """합계에서 뺀 실행을 이름별 횟수로. 예: '앱을 일부러 죽인 실행 2회, 결함 주입 실행 24회'"""
+    count = Counter()
+    for g in groups:
+        count[INTENTIONAL_NAME.get(g["folder"], g["purpose"])] += g["sessions"]
+    return ", ".join(f"{name} {n}회" for name, n in count.items())
+
+
 def markdown(h):
     t = h["total"]
     intentional = [g for g in h["groups"] if g["intentional"]]
@@ -158,7 +203,7 @@ def markdown(h):
         "`ivi-tests/tools/run_history.py`가 결과 파일에서 다시 세어 만듭니다. 결과 파일을 남기기 전인 11-13부터 11-17까지의 실행은 들어 있지 않습니다.",
         "",
         "실패, 오류, 재시도 후 통과는 하나도 빼지 않고 원인과 함께 적었습니다. "
-        + (f"다만 판정 기능을 확인하려고 앱을 일부러 죽인 실행({sum(g['sessions'] for g in intentional)}회)은 합계에서 빼고 아래 표에만 둡니다. " if intentional else "")
+        + (f"다만 판정 기능이나 테스트의 탐지력을 확인하려고 일부러 실패를 만든 실행({skipped_runs(intentional)})은 합계에서 빼고 아래 표에만 둡니다. " if intentional else "")
         + "세션을 일부러 끊은 실행은 그 상황에서도 끝까지 통과하는지 본 것이라 합계에 넣었습니다.",
         "",
         "## 합계",

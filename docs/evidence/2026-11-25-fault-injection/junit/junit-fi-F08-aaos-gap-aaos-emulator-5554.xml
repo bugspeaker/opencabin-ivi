@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="32" time="177.488" timestamp="2026-11-25T10:46:42.368890+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_vehicle_signals" name="test_ac_toggle_reaches_every_seat" time="7.756" /><testcase classname="tests.test_vehicle_signals" name="test_ac_signal_is_shown_on_climate_and_bottom_bar" time="3.090" /><testcase classname="tests.test_vehicle_signals" name="test_fan_button_changes_signal_by_one[up-4]" time="3.754" /><testcase classname="tests.test_vehicle_signals" name="test_fan_button_changes_signal_by_one[down-2]" time="3.717" /><testcase classname="tests.test_vehicle_signals" name="test_fan_buttons_disabled_at_limits[1-climate_fan_down]" time="4.765" /><testcase classname="tests.test_vehicle_signals" name="test_fan_buttons_disabled_at_limits[7-climate_fan_up]" time="4.725" /><testcase classname="tests.test_vehicle_signals" name="test_max_ac_sets_signal_and_coldest_settings" time="4.766" /><testcase classname="tests.test_vehicle_signals" name="test_max_ac_off_restores_previous_settings" time="4.012" /><testcase classname="tests.test_vehicle_signals" name="test_max_ac_signal_is_shown_on_toggle" time="3.127" /><testcase classname="tests.test_vehicle_signals" name="test_manual_fan_releases_max_ac" time="6.174" /><testcase classname="tests.test_vehicle_signals" name="test_turning_ac_off_releases_max_ac" time="4.358" /><testcase classname="tests.test_vehicle_signals" name="test_manual_temperature_releases_max_ac" time="6.027" /><testcase classname="tests.test_vehicle_signals" name="test_turning_auto_on_releases_max_ac" time="4.499" /><testcase classname="tests.test_vehicle_signals" name="test_manual_fan_releases_auto" time="4.374" /><testcase classname="tests.test_vehicle_signals" name="test_defrost_changes_only_its_window[defrost_front-defrost_front-defrost_rear]" time="5.240" /><testcase classname="tests.test_vehicle_signals" name="test_defrost_changes_only_its_window[defrost_rear-defrost_rear-defrost_front]" time="5.209" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_cycles_levels_on_vehicle[driver]" time="6.163" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_cycles_levels_on_vehicle[passenger]" time="5.809" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_signal_is_shown_everywhere" time="15.645" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_signal_is_shown_everywhere" time="15.536"><failure message="ivi.waits.WaitTimeout: 10초 안에 'qc_seat_heat_value' = '2단'이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x0000029839DA8B90&gt;
+car = &lt;ivi.vehicle.AaosVehicle object at 0x00000298388EFCB0&gt;
+
+    @pytest.mark.req("HVAC-05")
+    @pytest.mark.regression
+    def test_seat_heat_signal_is_shown_everywhere(app, car):
+        """차량의 열선 단계가 공조 화면, 아래 바, 빠른 제어 세 곳에 같은 값으로 보입니다.
+        빠른 제어를 열어 둔 채 차량 쪽 단계가 바뀌어도 글자가 따라 바뀌고, 타일을 누르면 차량 신호가 다음 단계로 바뀝니다.
+        """
+        climate = app.climate()
+        car.set_signal(Signal.HEAT_DRIVER, 1)
+        wait_value(lambda: climate.seat_heat(Seat.DRIVER), 1, what="공조 화면 운전석 열선 단계")
+        wait_value(lambda: app.bar().seat_heat(Seat.DRIVER), 1, what="아래 바 운전석 열선 단계")
+        stays(lambda: app.bar().seat_heat(Seat.PASSENGER) == 0, what="아래 바 조수석 열선 0단 유지")
+        qc = app.vehicle_controls()
+        qc.wait_text("qc_seat_heat_value", "1단")
+        # 화면을 새로 열 때만 맞는 글자는 놓친다 (결함 주입 F08, 2026-11-25): 열어 둔 채 신호를 바꾸고, 타일도 눌러 본다
+        car.set_signal(Signal.HEAT_DRIVER, 2)
+&gt;       qc.wait_text("qc_seat_heat_value", "2단")
+
+tests\test_vehicle_signals.py:258: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in wait_text
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x0000029839D97530&gt;
+timeout = 10.0, interval = 0.25, what = "'qc_seat_heat_value' = '2단'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 'qc_seat_heat_value' = '2단'이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_vehicle_signals" name="test_bottom_bar_seat_heat_works_from_any_screen" time="5.103" /><testcase classname="tests.test_vehicle_signals" name="test_assistant_seat_heat_follows_speaker_zone" time="6.064" /><testcase classname="tests.test_vehicle_signals" name="test_door_lock_button_drives_every_door" time="4.042" /><testcase classname="tests.test_vehicle_signals" name="test_door_lock_signal_is_shown" time="3.094" /><testcase classname="tests.test_vehicle_signals" name="test_energy_signals_are_shown_on_cluster" time="2.568" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_threshold[31.0-False]" time="2.801" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_threshold[30.0-True]" time="3.010" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_threshold[29.0-True]" time="2.999" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_card_starts_guidance_to_nearest_charger" time="4.971" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_is_recorded_in_notifications" time="3.194" /><testcase classname="tests.test_vehicle_signals" name="test_range_recovers_after_charging" time="3.854" /><testcase classname="tests.test_vehicle_signals" name="test_signal_without_permission_shows_no_value" time="8.310" /><testcase classname="tests.test_vehicle_signals" name="test_range_follows_speed_unit_setting" time="5.902" /></testsuite></testsuites>

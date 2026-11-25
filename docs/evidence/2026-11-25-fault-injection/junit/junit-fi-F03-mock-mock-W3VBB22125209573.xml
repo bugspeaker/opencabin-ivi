@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="36" time="300.019" timestamp="2026-11-25T08:45:48.778692+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_driving" name="test_driving_signals_are_shown" time="7.741" /><testcase classname="tests.test_driving" name="test_video_button_locked_while_driving" time="4.078" /><testcase classname="tests.test_driving" name="test_video_is_blocked_while_driving" time="3.378" /><testcase classname="tests.test_driving" name="test_video_plays_when_parked" time="3.298" /><testcase classname="tests.test_driving" name="test_video_blocked_screen_follows_parking" time="4.371" /><testcase classname="tests.test_driving" name="test_video_resumes_where_it_stopped" time="13.107" /><testcase classname="tests.test_driving" name="test_video_next_clip" time="3.984" /><testcase classname="tests.test_driving" name="test_stopped_in_gear_blocks_only_video[D]" time="11.929" /><testcase classname="tests.test_driving" name="test_stopped_in_gear_blocks_only_video[D]" time="11.897"><failure message="ivi.waits.WaitTimeout: 10초 안에 'restriction_banner' = '정지 중 · 영상만 제한'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)">check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DC8EF00&gt;
+timeout = 10.0, interval = 0.25, what = "'restriction_banner' = '정지 중 · 영상만 제한'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+&gt;               last = check()
+                       ^^^^^^^
+
+ivi\waits.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in &lt;lambda&gt;
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+                       ^^^^^^^^^^^^^^
+ivi\screens.py:65: in text
+    return self.find(tag).text
+           ^^^^^^^^^^^^^^
+ivi\screens.py:53: in find
+    return self.driver.find_element(*by_tag(tag))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:974: in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:566: in execute
+    self.error_handler.check_response(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;appium.webdriver.errorhandler.MobileErrorHandler object at 0x000001911DC11FD0&gt;
+response = {'status': 404, 'value': '{"value":{"error":"no such element","message":"An element could not be located on the page u...ode_modules\\\\appium\\\\node_modules\\\\@appium\\\\base-driver\\\\lib\\\\basedriver\\\\commands\\\\find.ts:75:12)"}}'}
+
+    def check_response(self, response: dict[str, Any]) -&gt; None:
+        """
+        https://www.w3.org/TR/webdriver/#errors
+        """
+        payload = response.get('value', '')
+        if isinstance(payload, dict):
+            payload_dict = payload
+        else:
+            try:
+                payload_dict = json.loads(payload)
+            except (json.JSONDecodeError, TypeError):
+                return
+            if not isinstance(payload_dict, dict):
+                return
+        value = payload_dict.get('value')
+        if not isinstance(value, dict):
+            return
+        error = value.get('error')
+        if not error:
+            return
+    
+        message = value.get('message', error)
+        stacktrace = value.get('stacktrace', '')
+        # In theory, we should also be checking HTTP status codes.
+        # Java client, for example, prints a warning if the actual `error`
+        # value does not match to the response's HTTP status code.
+        exception_class: type[sel_exceptions.WebDriverException] = ERROR_TO_EXC_MAPPING.get(
+            error, sel_exceptions.WebDriverException
+        )
+        if exception_class is sel_exceptions.WebDriverException and message:
+            if message == 'No such context found.':
+                exception_class = appium_exceptions.NoSuchContextException
+            elif message == 'That command could not be executed in the current context.':
+                exception_class = appium_exceptions.InvalidSwitchToTargetException
+    
+        if exception_class is sel_exceptions.UnexpectedAlertPresentException:
+            raise sel_exceptions.UnexpectedAlertPresentException(
+                msg=message,
+                stacktrace=format_stacktrace(stacktrace),
+                alert_text=value.get('data'),
+            )
+&gt;       raise exception_class(msg=message, stacktrace=format_stacktrace(stacktrace))
+E       selenium.common.exceptions.NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+E       Stacktrace:
+E       NoSuchElementError: An element could not be located on the page using the given search parameters.
+E           at AndroidUiautomator2Driver.findElOrEls (%USERPROFILE%\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\lib\commands\find.ts:86:11)
+E           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+E           at AndroidUiautomator2Driver.findElOrElsWithProcessing (%USERPROFILE%\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:60:12)
+E           at AndroidUiautomator2Driver.findElement (%USERPROFILE%\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:75:12)
+
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\appium\webdriver\errorhandler.py:126: NoSuchElementException
+
+The above exception was the direct cause of the following exception:
+
+app = &lt;ivi.screens.IviApp object at 0x000001911DD68C50&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x000001911C84FCB0&gt;, gear = 'D'
+
+    @pytest.mark.req("DRIVE-02", "DRIVE-03")
+    @pytest.mark.regression
+    @pytest.mark.parametrize("gear", ["D", "N"])
+    def test_stopped_in_gear_blocks_only_video(app, car, gear):
+        """P가 아닌 기어(D, N)로 멈춰 있으면 플랫폼 UX 제한은 영상만 막습니다(NO_VIDEO 0x10).
+        영상 버튼은 꺼지지만 내비 검색, 전화 키패드, 사이드 미러와 트렁크는 그대로 쓸 수 있습니다. P로 바꾸면 영상 버튼이 켜집니다.
+        """
+        car.drive(0.0, gear=gear)
+        wait_value(car.ux_restrictions, Ux.NO_VIDEO, what="UX 제한 (영상만)")
+&gt;       app.wait_text("restriction_banner", STOPPED_BANNER)
+
+tests\test_driving.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in wait_text
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DC8EF00&gt;
+timeout = 10.0, interval = 0.25, what = "'restriction_banner' = '정지 중 · 영상만 제한'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 'restriction_banner' = '정지 중 · 영상만 제한'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_driving" name="test_stopped_in_gear_blocks_only_video[N]" time="12.293" /><testcase classname="tests.test_driving" name="test_stopped_in_gear_blocks_only_video[N]" time="11.953"><failure message="ivi.waits.WaitTimeout: 10초 안에 'restriction_banner' = '정지 중 · 영상만 제한'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)">check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DDB4720&gt;
+timeout = 10.0, interval = 0.25, what = "'restriction_banner' = '정지 중 · 영상만 제한'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+&gt;               last = check()
+                       ^^^^^^^
+
+ivi\waits.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in &lt;lambda&gt;
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+                       ^^^^^^^^^^^^^^
+ivi\screens.py:65: in text
+    return self.find(tag).text
+           ^^^^^^^^^^^^^^
+ivi\screens.py:53: in find
+    return self.driver.find_element(*by_tag(tag))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:974: in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:566: in execute
+    self.error_handler.check_response(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;appium.webdriver.errorhandler.MobileErrorHandler object at 0x000001911DC11FD0&gt;
+response = {'status': 404, 'value': '{"value":{"error":"no such element","message":"An element could not be located on the page u...ode_modules\\\\appium\\\\node_modules\\\\@appium\\\\base-driver\\\\lib\\\\basedriver\\\\commands\\\\find.ts:75:12)"}}'}
+
+    def check_response(self, response: dict[str, Any]) -&gt; None:
+        """
+        https://www.w3.org/TR/webdriver/#errors
+        """
+        payload = response.get('value', '')
+        if isinstance(payload, dict):
+            payload_dict = payload
+        else:
+            try:
+                payload_dict = json.loads(payload)
+            except (json.JSONDecodeError, TypeError):
+                return
+            if not isinstance(payload_dict, dict):
+                return
+        value = payload_dict.get('value')
+        if not isinstance(value, dict):
+            return
+        error = value.get('error')
+        if not error:
+            return
+    
+        message = value.get('message', error)
+        stacktrace = value.get('stacktrace', '')
+        # In theory, we should also be checking HTTP status codes.
+        # Java client, for example, prints a warning if the actual `error`
+        # value does not match to the response's HTTP status code.
+        exception_class: type[sel_exceptions.WebDriverException] = ERROR_TO_EXC_MAPPING.get(
+            error, sel_exceptions.WebDriverException
+        )
+        if exception_class is sel_exceptions.WebDriverException and message:
+            if message == 'No such context found.':
+                exception_class = appium_exceptions.NoSuchContextException
+            elif message == 'That command could not be executed in the current context.':
+                exception_class = appium_exceptions.InvalidSwitchToTargetException
+    
+        if exception_class is sel_exceptions.UnexpectedAlertPresentException:
+            raise sel_exceptions.UnexpectedAlertPresentException(
+                msg=message,
+                stacktrace=format_stacktrace(stacktrace),
+                alert_text=value.get('data'),
+            )
+&gt;       raise exception_class(msg=message, stacktrace=format_stacktrace(stacktrace))
+E       selenium.common.exceptions.NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+E       Stacktrace:
+E       NoSuchElementError: An element could not be located on the page using the given search parameters.
+E           at AndroidUiautomator2Driver.findElOrEls (%USERPROFILE%\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\lib\commands\find.ts:86:11)
+E           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+E           at AndroidUiautomator2Driver.findElOrElsWithProcessing (%USERPROFILE%\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:60:12)
+E           at AndroidUiautomator2Driver.findElement (%USERPROFILE%\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:75:12)
+
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\appium\webdriver\errorhandler.py:126: NoSuchElementException
+
+The above exception was the direct cause of the following exception:
+
+app = &lt;ivi.screens.IviApp object at 0x000001911DD13C50&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x000001911C84FCB0&gt;, gear = 'N'
+
+    @pytest.mark.req("DRIVE-02", "DRIVE-03")
+    @pytest.mark.regression
+    @pytest.mark.parametrize("gear", ["D", "N"])
+    def test_stopped_in_gear_blocks_only_video(app, car, gear):
+        """P가 아닌 기어(D, N)로 멈춰 있으면 플랫폼 UX 제한은 영상만 막습니다(NO_VIDEO 0x10).
+        영상 버튼은 꺼지지만 내비 검색, 전화 키패드, 사이드 미러와 트렁크는 그대로 쓸 수 있습니다. P로 바꾸면 영상 버튼이 켜집니다.
+        """
+        car.drive(0.0, gear=gear)
+        wait_value(car.ux_restrictions, Ux.NO_VIDEO, what="UX 제한 (영상만)")
+&gt;       app.wait_text("restriction_banner", STOPPED_BANNER)
+
+tests\test_driving.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in wait_text
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DDB4720&gt;
+timeout = 10.0, interval = 0.25, what = "'restriction_banner' = '정지 중 · 영상만 제한'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 'restriction_banner' = '정지 중 · 영상만 제한'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_driving" name="test_video_screen_is_blocked_while_stopped_in_drive" time="12.253" /><testcase classname="tests.test_driving" name="test_video_screen_is_blocked_while_stopped_in_drive" time="12.113"><failure message="ivi.waits.WaitTimeout: 10초 안에 D 기어 정지 중 영상 차단이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x000001911DC419B0&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x000001911C84FCB0&gt;
+device = Device(serial='W3VBB22125209573', adb=&lt;ivi.adb.Adb object at 0x000001911C84EE40&gt;, automotive=False, user=0, model='DBY-W09', brand='HUAWEI')
+driver = &lt;ivi.session.SessionHolder object at 0x000001911DC11160&gt;
+
+    @pytest.mark.req("DRIVE-02")
+    @pytest.mark.regression
+    def test_video_screen_is_blocked_while_stopped_in_drive(app, car, device, driver):
+        """D 기어로 멈춰 있을 때 영상 화면을 바로 열어도 막힙니다. P로 바꾸면 같은 화면에서 재생 화면이 나옵니다."""
+        car.drive(0.0)
+        wait_value(car.ux_restrictions, Ux.NO_VIDEO, what="UX 제한 (영상만)")
+        device.launch(VIDEO)
+        video = app.video()
+&gt;       wait_until(lambda: device.video_blocked(video), what="D 기어 정지 중 영상 차단")
+
+tests\test_driving.py:200: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function test_video_screen_is_blocked_while_stopped_in_drive.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DDB4720&gt;
+timeout = 10.0, interval = 0.25, what = 'D 기어 정지 중 영상 차단'
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 D 기어 정지 중 영상 차단이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_driving" name="test_restrictions_follow_stop_and_go_timeline" time="15.982" /><testcase classname="tests.test_driving" name="test_restrictions_follow_stop_and_go_timeline" time="15.918"><failure message="ivi.waits.WaitTimeout: 10초 안에 'restriction_banner' = '정지 중 · 영상만 제한'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)">check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DDB4D50&gt;
+timeout = 10.0, interval = 0.25, what = "'restriction_banner' = '정지 중 · 영상만 제한'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+&gt;               last = check()
+                       ^^^^^^^
+
+ivi\waits.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in &lt;lambda&gt;
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+                       ^^^^^^^^^^^^^^
+ivi\screens.py:65: in text
+    return self.find(tag).text
+           ^^^^^^^^^^^^^^
+ivi\screens.py:53: in find
+    return self.driver.find_element(*by_tag(tag))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:974: in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:566: in execute
+    self.error_handler.check_response(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;appium.webdriver.errorhandler.MobileErrorHandler object at 0x000001911DC11FD0&gt;
+response = {'status': 404, 'value': '{"value":{"error":"no such element","message":"An element could not be located on the page u...ode_modules\\\\appium\\\\node_modules\\\\@appium\\\\base-driver\\\\lib\\\\basedriver\\\\commands\\\\find.ts:75:12)"}}'}
+
+    def check_response(self, response: dict[str, Any]) -&gt; None:
+        """
+        https://www.w3.org/TR/webdriver/#errors
+        """
+        payload = response.get('value', '')
+        if isinstance(payload, dict):
+            payload_dict = payload
+        else:
+            try:
+                payload_dict = json.loads(payload)
+            except (json.JSONDecodeError, TypeError):
+                return
+            if not isinstance(payload_dict, dict):
+                return
+        value = payload_dict.get('value')
+        if not isinstance(value, dict):
+            return
+        error = value.get('error')
+        if not error:
+            return
+    
+        message = value.get('message', error)
+        stacktrace = value.get('stacktrace', '')
+        # In theory, we should also be checking HTTP status codes.
+        # Java client, for example, prints a warning if the actual `error`
+        # value does not match to the response's HTTP status code.
+        exception_class: type[sel_exceptions.WebDriverException] = ERROR_TO_EXC_MAPPING.get(
+            error, sel_exceptions.WebDriverException
+        )
+        if exception_class is sel_exceptions.WebDriverException and message:
+            if message == 'No such context found.':
+                exception_class = appium_exceptions.NoSuchContextException
+            elif message == 'That command could not be executed in the current context.':
+                exception_class = appium_exceptions.InvalidSwitchToTargetException
+    
+        if exception_class is sel_exceptions.UnexpectedAlertPresentException:
+            raise sel_exceptions.UnexpectedAlertPresentException(
+                msg=message,
+                stacktrace=format_stacktrace(stacktrace),
+                alert_text=value.get('data'),
+            )
+&gt;       raise exception_class(msg=message, stacktrace=format_stacktrace(stacktrace))
+E       selenium.common.exceptions.NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+E       Stacktrace:
+E       NoSuchElementError: An element could not be located on the page using the given search parameters.
+E           at AndroidUiautomator2Driver.findElOrEls (%USERPROFILE%\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\lib\commands\find.ts:86:11)
+E           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+E           at AndroidUiautomator2Driver.findElOrElsWithProcessing (%USERPROFILE%\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:60:12)
+E           at AndroidUiautomator2Driver.findElement (%USERPROFILE%\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:75:12)
+
+..\..\opencabin-ivi\ivi-tests\.venv\Lib\site-packages\appium\webdriver\errorhandler.py:126: NoSuchElementException
+
+The above exception was the direct cause of the following exception:
+
+app = &lt;ivi.screens.IviApp object at 0x000001911DD67790&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x000001911C84FCB0&gt;
+request = &lt;FixtureRequest for &lt;Function test_restrictions_follow_stop_and_go_timeline&gt;&gt;
+
+    @pytest.mark.req("DRIVE-02", "DRIVE-03")
+    @pytest.mark.regression
+    def test_restrictions_follow_stop_and_go_timeline(app, car, request):
+        """속도와 기어를 시간에 따라 바꾸는 시나리오(신호 대기, 3 km/h 출발, 정지, 60 km/h, 중립, 주차)에서
+        단계마다 UX 제한과 화면(내비 검색 입력, 상단 배지)이 바로 바뀌고, 그 단계에 머무는 동안 흔들리지 않습니다.
+        단계마다 신호를 넣고 화면이 따라오기까지 걸린 시간을 결과에 남깁니다.
+        """
+        nav = app.navigation()
+        took = []
+        for gear, kmh, hold, ux, typing, banner in STOP_AND_GO:
+            step = f"{gear} {kmh} km/h"
+            started = time.monotonic()
+            if gear == "P":
+                car.park()
+            else:
+                car.drive(float(kmh), gear=gear)
+            wait_value(car.ux_restrictions, ux, what=f"{step}: UX 제한")
+            nav.wait_enabled("nav_search", typing)
+            if banner:
+&gt;               app.wait_text("restriction_banner", banner)
+
+tests\test_driving.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in wait_text
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x000001911DDB4D50&gt;
+timeout = 10.0, interval = 0.25, what = "'restriction_banner' = '정지 중 · 영상만 제한'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 'restriction_banner' = '정지 중 · 영상만 제한'이(가) 맞지 않았다 (마지막 오류: NoSuchElementException: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_navigation" name="test_guidance_counts_down_with_vehicle_speed" time="8.952" /><testcase classname="tests.test_navigation" name="test_parked_vehicle_does_not_advance_route" time="7.393" /><testcase classname="tests.test_navigation" name="test_search_locked_while_driving_but_favorites_work" time="4.235" /><testcase classname="tests.test_navigation" name="test_category_shortcut_works_while_driving[charger-nearest0-6]" time="5.284" /><testcase classname="tests.test_navigation" name="test_category_shortcut_works_while_driving[parking-nearest1-8]" time="5.376" /><testcase classname="tests.test_navigation" name="test_cancel_preview_returns_to_search" time="4.830" /><testcase classname="tests.test_navigation" name="test_search_filters_destinations" time="2.950" /><testcase classname="tests.test_navigation" name="test_arrival" time="8.602" /><testcase classname="tests.test_navigation" name="test_stop_guidance_returns_to_search_and_clears_cluster_route" time="5.859" /><testcase classname="tests.test_phone" name="test_call_contact_shows_call_screen_and_recent" time="6.665" /><testcase classname="tests.test_phone" name="test_keypad_dial" time="7.838" /><testcase classname="tests.test_phone" name="test_keypad_limits_length_and_edits" time="12.083" /><testcase classname="tests.test_phone" name="test_driving_locks_keypad_and_limits_contacts" time="5.404" /><testcase classname="tests.test_phone" name="test_call_pauses_radio_then_resumes" time="7.996" /><testcase classname="tests.test_media" name="test_selecting_track_starts_it[0]" time="3.945" /><testcase classname="tests.test_media" name="test_selecting_track_starts_it[2]" time="3.612" /><testcase classname="tests.test_media" name="test_selecting_track_starts_it[4]" time="3.667" /><testcase classname="tests.test_media" name="test_play_pause_toggles" time="4.653" /><testcase classname="tests.test_media" name="test_media_stays_usable_while_driving" time="3.763" /><testcase classname="tests.test_assistant" name="test_zone_applies_command_to_speaking_seat" time="6.362" /><testcase classname="tests.test_assistant" name="test_typed_command_sets_vehicle_temperature" time="3.877" /><testcase classname="tests.test_assistant" name="test_multiple_commands_in_one_sentence" time="4.572" /><testcase classname="tests.test_assistant" name="test_ambiguous_destination_offers_candidates" time="4.671" /><testcase classname="tests.test_assistant" name="test_driving_locks_typing_and_refuses_mirror_fold" time="6.345" /><testcase classname="tests.test_assistant" name="test_voice_popup_and_assistant_share_history" time="4.310" /></testsuite></testsuites>

@@ -1,0 +1,26 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..94f4d14 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F09"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
+index 8fcc075..310b829 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/VehicleDataSource.kt
+@@ -59,7 +59,7 @@ data class VehicleState(
+     val moving get() = gear != Gear.PARK && speedKmh > 0f
+ 
+     /** 주행 가능 거리가 이 값 이하면 충전소 안내를 권한다. */
+-    val lowRange get() = rangeKm != null && rangeKm <= LOW_RANGE_KM
++    val lowRange get() = rangeKm != null && rangeKm < LOW_RANGE_KM
+ 
+     companion object {
+         const val LOW_RANGE_KM = 30f

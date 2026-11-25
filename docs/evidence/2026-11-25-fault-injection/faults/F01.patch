@@ -1,0 +1,26 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..4c2cbd3 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F01"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt
+index d77d5b7..fce2518 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/vehicle/CarVehicleDataSource.kt
+@@ -76,7 +76,7 @@ class CarVehicleDataSource(private val context: Context) : VehicleDataSource {
+     }
+ 
+     // ---- 8단계: 쓰기 ----
+-    override fun setAc(on: Boolean) = writeAll(VehiclePropertyIds.HVAC_AC_ON, on)
++    override fun setAc(on: Boolean) = writeAll(VehiclePropertyIds.HVAC_AC_ON, on, only = Seat.DRIVER.areaId)
+ 
+     override fun setAuto(on: Boolean) = writeAll(VehiclePropertyIds.HVAC_AUTO_ON, on)
+ 
