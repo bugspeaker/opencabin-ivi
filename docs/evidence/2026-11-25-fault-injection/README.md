@@ -41,7 +41,7 @@ F01과 F06은 area가 여러 개인 VHAL 신호를 쓰는 코드(`CarVehicleData
 | F01 | 잡을 것으로 봤습니다. | 탐지: `test_ac_toggle_reaches_every_seat` | 해당 없음 | 10초 안에 전 좌석 A/C가 꺼지지 않았습니다. |
 | F02 | 잡을 것으로 봤습니다. | 탐지: `test_off_grid_signal_steps_back_to_grid[up-22.5]` | 탐지: 같은 테스트 | 차량 운전석 온도가 22.5가 아니라 23.0이었습니다. |
 | F03 | 잡을 것으로 봤습니다. | 탐지: `test_stopped_in_gear_blocks_only_video[D]`, `[N]`, `test_restrictions_follow_stop_and_go_timeline` | 탐지: 같은 3개와 `test_video_screen_is_blocked_while_stopped_in_drive` | 상단 배지 '정지 중 · 영상만 제한'이 없었습니다. 태블릿은 D 기어 정지 중에 영상도 막히지 않았습니다. |
-| F04 | 잡을 것으로 봤습니다. | 탐지: `test_rear_camera_appears_within_two_seconds` | 탐지: 같은 테스트 | 다섯 번 잰 시간이 에뮬레이터 2.29~2.34초, 태블릿 2.54~2.74초였습니다(대조군은 에뮬레이터 0.61~0.63초, 태블릿 0.27~0.35초). |
+| F04 | 잡을 것으로 봤습니다. | 탐지: `test_rear_camera_appears_within_two_seconds` | 탐지: 같은 테스트 | 다섯 번 잰 시간이 에뮬레이터 2.29\~2.34초, 태블릿 2.54\~2.74초였습니다(대조군은 에뮬레이터 0.61\~0.63초, 태블릿 0.27\~0.35초). |
 | F05 | 잡을 것으로 봤습니다. | 탐지: `test_trip_distance_follows_speed_signal`, `test_guidance_and_music_continue_while_temperature_changes_on_the_move` | 탐지: 같은 2개와 `test_guidance_counts_down_with_vehicle_speed`, `test_arrival` | 에뮬레이터는 15초 안에 주행 거리가 0.1 km가 되지 않았습니다. 태블릿은 120 km/h로 20초를 달려도 남은 거리가 0.2 km 줄지 않았습니다. |
 | F06 | 잡을 것으로 봤습니다. | 탐지: `test_door_lock_button_drives_every_door` | 해당 없음 | 도어 버튼을 눌러도 10초 안에 네 문의 잠금이 모두 풀리지 않았습니다. |
 | F07 | 잡을 것으로 봤습니다. | 탐지: `test_mph_setting_converts_vehicle_speed` | 탐지: 같은 테스트 | 속도 표시가 ('31', 'mph')가 아니라 ('50', 'mph')였습니다. |
