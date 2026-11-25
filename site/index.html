@@ -333,8 +333,38 @@
           </dl>
         </article>
       </div>
+
+      <h3 class="small-title">결함을 일부러 넣어 보면</h3>
+      <article class="card fi-card">
+        <div class="fi-head">
+          <span class="chip blue">결함 주입 · 2026-11-25</span>
+          <h3>결함 10개를 하나씩 넣자 <br class="pc">E2E가 <em>9개</em>를 잡았습니다</h3>
+          <ul class="fi-nums" aria-label="기기별 결함 주입 결과">
+            <li><b>9<small>/10</small></b><span>AAOS 에뮬레이터</span><small>테스트 150개 전체</small></li>
+            <li><b>7<small>/8</small></b><span>태블릿 (Mock)</span><small>관련 테스트 파일</small></li>
+          </ul>
+        </div>
+        <ol class="fi-grid" aria-label="넣은 결함 10개와 AAOS 에뮬레이터 결과">
+          <li><b>F01</b><span>A/C를 운전석에만</span><i>탐지</i></li>
+          <li><b>F02</b><span>온도 칸 반올림</span><i>탐지</i></li>
+          <li><b>F03</b><span>D 기어 정지를 제한 없음으로</span><i>탐지</i></li>
+          <li><b>F04</b><span>후방 카메라 2.1초</span><i>탐지</i></li>
+          <li><b>F05</b><span>경로가 속도를 안 따름</span><i>탐지</i></li>
+          <li><b>F06</b><span>앞문 둘만 잠금</span><i>탐지</i></li>
+          <li><b>F07</b><span>mph 값 변환 누락</span><i>탐지</i></li>
+          <li class="miss"><b>F08</b><span>열선 글자가 안 바뀜</span><i>놓침 → 보강 뒤 탐지</i></li>
+          <li><b>F09</b><span>30 km 경계</span><i>탐지</i></li>
+          <li><b>F10</b><span>통화 중에도 재생</span><i>탐지</i></li>
+        </ol>
+        <dl class="case-steps">
+          <div><dt>방법</dt><dd>결함마다 따로 빌드해 설치하고, 결함이 없는 대조군과 같은 테스트를 돌렸습니다. 재시도 뒤에도 실패한 테스트가 있어야 탐지로 셉니다.</dd></div>
+          <div><dt>놓친 것</dt><dd>F08은 빠른 제어를 연 채로 신호가 바뀌면 열선 글자가 그대로인 결함입니다. 테스트가 화면을 새로 열어서만 봐서 놓쳤습니다.</dd></div>
+          <div><dt>보강</dt><dd>화면을 열어 둔 채 신호를 바꾸고 타일을 누르는 확인을 더해 두 기기 모두 잡았고, main 앱에서는 통과합니다.</dd></div>
+        </dl>
+      </article>
       <div class="btn-row more">
         <a class="btn line" href="docs/portfolio.html#3-결함과-원인-분석">결함 15건 전체 보기</a>
+        <a class="btn line" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-25-fault-injection/README.md">결함 주입 기록</a>
         <a class="btn line" href="https://github.com/bugspeaker/opencabin-ivi/issues?q=is%3Aissue">GitHub 이슈</a>
         <a class="btn line" href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-23-fold/README.md">폴드 수정 전후 기록</a>
       </div>
@@ -425,7 +455,7 @@
       <!-- history:start (build-docs.mjs 가 history.json 으로 채운다) -->
   <div class="card history">
         <div class="history-head">
-          <p class="history-title">원자료가 남은 E2E 실행을 모두 합치면 <span>(11-18~11-24, 첫 시도와 확인용 실행 포함)</span></p>
+          <p class="history-title">원자료가 남은 E2E 실행을 모두 합치면 <span>(11-18~11-25, 첫 시도와 확인용 실행 포함)</span></p>
           <a class="history-link" href="docs/run-history.html">전체 실행 기록 <span aria-hidden="true">→</span></a>
         </div>
         <ul class="history-nums">

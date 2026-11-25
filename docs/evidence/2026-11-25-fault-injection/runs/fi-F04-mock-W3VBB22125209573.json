@@ -1,0 +1,103 @@
+{
+  "summary": {
+    "run_id": "fi-F04-mock",
+    "serial": "W3VBB22125209573",
+    "kind": "mock",
+    "model": "DBY-W09",
+    "commit": "a41b948f4971ac9c217d370f3314f59f76dac90d",
+    "dirty": false,
+    "app": {
+      "version": "0.4.2-fi.F04 (6)",
+      "apk_sha256": "37bba9a8bec4563a7eef25974971bbe28e0f629ece3efb60527458863710556c"
+    },
+    "command": "pytest --serial W3VBB22125209573 --system-port 8210 --run-id fi-F04-mock -q --reruns 1 tests/test_rear_camera.py",
+    "launcher": "fault-injection F04 (fi/F04-rear-camera-late a41b948)",
+    "duration": 55.3,
+    "counts": {
+      "passed": 3,
+      "failed": 1
+    },
+    "relaunches": 0,
+    "infra_retries": 0,
+    "session_restarts": 0,
+    "exitstatus": 1,
+    "collected": 4,
+    "gate": "fail",
+    "problems": [
+      "failed 1, error 0"
+    ]
+  },
+  "tests": [
+    {
+      "run_id": "fi-F04-mock",
+      "time": "2026-11-25T09:32:19",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_rear_camera.py::test_reverse_gear_shows_camera",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 8.887,
+      "message": "",
+      "first_error": "",
+      "quarantined": false
+    },
+    {
+      "run_id": "fi-F04-mock",
+      "time": "2026-11-25T09:32:19",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_rear_camera.py::test_camera_returns_to_previous_screen",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 7.25,
+      "message": "",
+      "first_error": "",
+      "quarantined": false
+    },
+    {
+      "run_id": "fi-F04-mock",
+      "time": "2026-11-25T09:32:19",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_rear_camera.py::test_gear_value_shows_reverse",
+      "outcome": "passed",
+      "reruns": 0,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 2.805,
+      "message": "",
+      "first_error": "",
+      "quarantined": false
+    },
+    {
+      "run_id": "fi-F04-mock",
+      "time": "2026-11-25T09:32:19",
+      "serial": "W3VBB22125209573",
+      "kind": "mock",
+      "model": "DBY-W09",
+      "nodeid": "tests/test_rear_camera.py::test_rear_camera_appears_within_two_seconds",
+      "outcome": "failed",
+      "reruns": 1,
+      "relaunches": 0,
+      "infra_retries": 0,
+      "session_restarts": 0,
+      "duration": 32.912,
+      "message": "AssertionError: 후방 카메라가 2.74초 만에 떴다 (측정값 [2.7094888999999966, 2.7353090999968117, 2.723567799999728, 2.544527400008519, 2.698874199995771])\nassert 2.7\n…\n999968117 <= 2.0\n +  where 2.7353090999968117 = max([2.7094888999999966, 2.7353090999968117, 2.723567799999728, 2.544527400008519, 2.698874199995771])",
+      "first_error": "AssertionError: 후방 카메라가 2.74초 만에 떴다 (측정값 [2.659632499999134, 2.473415300002671, 2.516426700007287, 2.7396868000068935, 2.5448522999940906])\nassert 2.7\n…\n000068935 <= 2.0\n +  where 2.7396868000068935 = max([2.659632499999134, 2.473415300002671, 2.516426700007287, 2.7396868000068935, 2.5448522999940906])",
+      "quarantined": false,
+      "measures": {
+        "camera_seconds": "2.71, 2.74, 2.72, 2.54, 2.70"
+      }
+    }
+  ]
+}

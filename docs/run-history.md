@@ -1,8 +1,8 @@
 # 전체 실행 기록
 
-[근거 자료](evidence/README.md)에 결과 파일(원자료)이 남은 E2E 실행을 모두 합친 기록입니다(2026년 11-18부터 11-24까지). `ivi-tests/tools/run_history.py`가 결과 파일에서 다시 세어 만듭니다. 결과 파일을 남기기 전인 11-13부터 11-17까지의 실행은 들어 있지 않습니다.
+[근거 자료](evidence/README.md)에 결과 파일(원자료)이 남은 E2E 실행을 모두 합친 기록입니다(2026년 11-18부터 11-25까지). `ivi-tests/tools/run_history.py`가 결과 파일에서 다시 세어 만듭니다. 결과 파일을 남기기 전인 11-13부터 11-17까지의 실행은 들어 있지 않습니다.
 
-실패, 오류, 재시도 후 통과는 하나도 빼지 않고 원인과 함께 적었습니다. 다만 판정 기능을 확인하려고 앱을 일부러 죽인 실행(2회)은 합계에서 빼고 아래 표에만 둡니다. 세션을 일부러 끊은 실행은 그 상황에서도 끝까지 통과하는지 본 것이라 합계에 넣었습니다.
+실패, 오류, 재시도 후 통과는 하나도 빼지 않고 원인과 함께 적었습니다. 다만 판정 기능이나 테스트의 탐지력을 확인하려고 일부러 실패를 만든 실행(앱을 일부러 죽인 실행 2회, 결함을 하나씩 넣은 결함 주입 실행과 그 대조군 24회)은 합계에서 빼고 아래 표에만 둡니다. 세션을 일부러 끊은 실행은 그 상황에서도 끝까지 통과하는지 본 것이라 합계에 넣었습니다.
 
 ## 합계
 
@@ -48,6 +48,7 @@
 | 11-24 | [빠른 누름 간격 줄여 보기 (저장소에 넣지 않은 임시 테스트)](evidence/2026-11-24-concurrency/README.md) | `410a052` | AAOS 에뮬레이터, 태블릿 | 6건 | 0건 | 0건 |
 | 11-24 | [반복 3회 (150개)](evidence/2026-11-24-concurrency/README.md) | `101de99` | AAOS 에뮬레이터, 태블릿 | 873건 | 0건 | 0건 |
 | 11-24 | [폴드 1회 (150개)](evidence/2026-11-24-concurrency/README.md) | `101de99` | 갤럭시 폴드 | 142건 | 0건 | 0건 |
+| 11-25 | [결함 주입 실험 (결함을 하나씩 일부러 넣은 빌드와 대조군)](evidence/2026-11-25-fault-injection/README.md) | `1817325`, `1bc8233`, `2801830`, `3d46bbd`, `4279f92`, `4523cf1`, `56c2b58`, `574d5df`, `66ea6ba`, `875dbaf`, `90f408a`, `a41b948`, `a734fea`, `d4d1b2e` | AAOS 에뮬레이터, 태블릿 | 2,156건 | 29건 | 4건 |
 
 ## 실패, 오류, 재시도 후 통과가 나온 곳
 
@@ -75,6 +76,39 @@
 | 11-24 | `20261124-153908` | AAOS 에뮬레이터 | `test_quick_taps_are_all_applied[passenger]` | 실패 | **테스트 도구** AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. adb input tap으로 바꿔 통과했습니다. |
 | 11-24 | `20261124-154050` | AAOS 에뮬레이터 | `test_quick_taps_are_all_applied[driver]` | 실패 | **테스트 도구** AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다. |
 | 11-24 | `20261124-154050` | AAOS 에뮬레이터 | `test_quick_taps_are_all_applied[passenger]` | 실패 | **테스트 도구** AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다. |
+| 11-25 | `fi-F01-aaos` | AAOS 에뮬레이터 | `test_signal_is_shown_on_climate_and_home[passenger]` | 재시도 후 통과 | **환경** 결함과 상관없는 테스트입니다. adb 서버 연결이 잠깐 끊겨(cannot connect to daemon) 실패하고 재시도에서 통과했습니다. 끊긴 원인은 확인하지 못했습니다. |
+| 11-25 | `fi-F01-aaos` | AAOS 에뮬레이터 | `test_ac_toggle_reaches_every_seat` | 실패 | **확인용** 결함 주입 빌드(F01)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F02-aaos` | AAOS 에뮬레이터 | `test_off_grid_signal_steps_back_to_grid[up-22.5]` | 실패 | **확인용** 결함 주입 빌드(F02)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F02-mock` | 태블릿 | `test_off_grid_signal_steps_back_to_grid[up-22.5]` | 실패 | **확인용** 결함 주입 빌드(F02)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-aaos` | AAOS 에뮬레이터 | `test_stopped_in_gear_blocks_only_video[D]` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-aaos` | AAOS 에뮬레이터 | `test_stopped_in_gear_blocks_only_video[N]` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-aaos` | AAOS 에뮬레이터 | `test_restrictions_follow_stop_and_go_timeline` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-mock` | 태블릿 | `test_stopped_in_gear_blocks_only_video[D]` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-mock` | 태블릿 | `test_stopped_in_gear_blocks_only_video[N]` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-mock` | 태블릿 | `test_video_screen_is_blocked_while_stopped_in_drive` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F03-mock` | 태블릿 | `test_restrictions_follow_stop_and_go_timeline` | 실패 | **확인용** 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F04-aaos` | AAOS 에뮬레이터 | `test_rear_camera_appears_within_two_seconds` | 실패 | **확인용** 결함 주입 빌드(F04)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F04-mock` | 태블릿 | `test_rear_camera_appears_within_two_seconds` | 실패 | **확인용** 결함 주입 빌드(F04)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-aaos` | AAOS 에뮬레이터 | `test_trip_distance_follows_speed_signal` | 실패 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-aaos` | AAOS 에뮬레이터 | `test_guidance_and_music_continue_while_temperature_changes_on_the_move` | 실패 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-aaos` | AAOS 에뮬레이터 | `test_guidance_counts_down_with_vehicle_speed` | 재시도 후 통과 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-aaos` | AAOS 에뮬레이터 | `test_parked_vehicle_does_not_advance_route` | 재시도 후 통과 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-aaos` | AAOS 에뮬레이터 | `test_arrival` | 재시도 후 통과 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-mock` | 태블릿 | `test_guidance_counts_down_with_vehicle_speed` | 실패 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-mock` | 태블릿 | `test_arrival` | 실패 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-mock` | 태블릿 | `test_trip_distance_follows_speed_signal` | 실패 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F05-mock` | 태블릿 | `test_guidance_and_music_continue_while_temperature_changes_on_the_move` | 실패 | **확인용** 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F06-aaos` | AAOS 에뮬레이터 | `test_door_lock_button_drives_every_door` | 실패 | **확인용** 결함 주입 빌드(F06)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F07-aaos` | AAOS 에뮬레이터 | `test_mph_setting_converts_vehicle_speed` | 실패 | **확인용** 결함 주입 빌드(F07)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F07-mock` | 태블릿 | `test_mph_setting_converts_vehicle_speed` | 실패 | **확인용** 결함 주입 빌드(F07)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F08-aaos-gap` | AAOS 에뮬레이터 | `test_seat_heat_signal_is_shown_everywhere` | 실패 | **확인용** 결함 주입 빌드(F08)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F08-mock-gap` | 태블릿 | `test_seat_heat_signal_is_shown_everywhere` | 실패 | **확인용** 결함 주입 빌드(F08)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F09-aaos` | AAOS 에뮬레이터 | `test_low_range_threshold[30.0-True]` | 실패 | **확인용** 결함 주입 빌드(F09)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F09-mock` | 태블릿 | `test_low_range_threshold[30.0-True]` | 실패 | **확인용** 결함 주입 빌드(F09)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F10-aaos` | AAOS 에뮬레이터 | `test_climate_works_during_call_and_music_resumes_after` | 실패 | **확인용** 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F10-aaos` | AAOS 에뮬레이터 | `test_call_pauses_radio_then_resumes` | 실패 | **확인용** 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F10-mock` | 태블릿 | `test_call_pauses_radio_then_resumes` | 실패 | **확인용** 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
+| 11-25 | `fi-F10-mock` | 태블릿 | `test_climate_works_during_call_and_music_resumes_after` | 실패 | **확인용** 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다. |
 
 다시 만드는 방법 (`ivi-tests`에서):
 

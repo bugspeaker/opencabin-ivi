@@ -1,0 +1,13 @@
+[
+  {"id": "F00", "area": "대조군", "title": "결함 없음 (버전 이름만 0.4.2-fi.F00)", "devices": ["aaos", "mock"], "patch": "faults/F00.patch"},
+  {"id": "F01", "area": "공조", "title": "A/C를 운전석 area에만 씁니다", "devices": ["aaos"], "patch": "faults/F01.patch"},
+  {"id": "F02", "area": "공조", "title": "온도 버튼이 0.5°C 칸에 반올림으로 맞춘 뒤 한 칸 움직입니다", "devices": ["aaos", "mock"], "patch": "faults/F02.patch"},
+  {"id": "F03", "area": "주행 중 제한", "title": "D 기어 정지(0 km/h)를 제한 없음으로 봅니다", "devices": ["aaos", "mock"], "patch": "faults/F03.patch"},
+  {"id": "F04", "area": "후방 카메라", "title": "R 기어가 된 뒤 2.1초 기다렸다가 카메라를 띄웁니다", "devices": ["aaos", "mock"], "patch": "faults/F04.patch"},
+  {"id": "F05", "area": "경로 안내", "title": "남은 거리가 앱을 켤 때의 속도만 쓰고 속도 신호를 따르지 않습니다", "devices": ["aaos", "mock"], "patch": "faults/F05.patch"},
+  {"id": "F06", "area": "도어", "title": "도어 잠금을 앞좌석 두 문에만 씁니다", "devices": ["aaos"], "patch": "faults/F06.patch"},
+  {"id": "F07", "area": "단위", "title": "mph 설정에서 단위 글자만 바꾸고 속도 값은 변환하지 않습니다", "devices": ["aaos", "mock"], "patch": "faults/F07.patch"},
+  {"id": "F08", "area": "신호→화면 갱신", "title": "빠른 제어의 열선 단계 글자를 처음 그릴 때 한 번만 만듭니다", "devices": ["aaos", "mock"], "patch": "faults/F08.patch"},
+  {"id": "F09", "area": "경계값", "title": "주행 가능 거리 경고가 30 km 이하가 아니라 30 km 미만에서 뜹니다", "devices": ["aaos", "mock"], "patch": "faults/F09.patch"},
+  {"id": "F10", "area": "오디오", "title": "통화 중에도 라디오와 미디어를 '재생 중'으로 둡니다", "devices": ["aaos", "mock"], "patch": "faults/F10.patch"}
+]

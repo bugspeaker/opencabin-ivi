@@ -41,8 +41,8 @@
   </aside>
   <main id="content" class="doc wide-doc">
 <h1 id="전체-실행-기록"><a class="anchor" href="#전체-실행-기록" aria-hidden="true">#</a>전체 실행 기록</h1>
-<p><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">근거 자료</a>에 결과 파일(원자료)이 남은 E2E 실행을 모두 합친 기록입니다(2026년 11-18부터 11-24까지). <code>ivi-tests/<wbr>tools/<wbr>run_<wbr>history.<wbr>py</code>가 결과 파일에서 다시 세어 만듭니다. 결과 파일을 남기기 전인 11-13부터 11-17까지의 실행은 들어 있지 않습니다.</p>
-<p>실패, 오류, 재시도 후 통과는 하나도 빼지 않고 원인과 함께 적었습니다. 다만 판정 기능을 확인하려고 앱을 일부러 죽인 실행(2회)은 합계에서 빼고 아래 표에만 둡니다. 세션을 일부러 끊은 실행은 그 상황에서도 끝까지 통과하는지 본 것이라 합계에 넣었습니다.</p>
+<p><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">근거 자료</a>에 결과 파일(원자료)이 남은 E2E 실행을 모두 합친 기록입니다(2026년 11-18부터 11-25까지). <code>ivi-tests/<wbr>tools/<wbr>run_<wbr>history.<wbr>py</code>가 결과 파일에서 다시 세어 만듭니다. 결과 파일을 남기기 전인 11-13부터 11-17까지의 실행은 들어 있지 않습니다.</p>
+<p>실패, 오류, 재시도 후 통과는 하나도 빼지 않고 원인과 함께 적었습니다. 다만 판정 기능이나 테스트의 탐지력을 확인하려고 일부러 실패를 만든 실행(앱을 일부러 죽인 실행 2회, 결함을 하나씩 넣은 결함 주입 실행과 그 대조군 24회)은 합계에서 빼고 아래 표에만 둡니다. 세션을 일부러 끊은 실행은 그 상황에서도 끝까지 통과하는지 본 것이라 합계에 넣었습니다.</p>
 <h2 id="합계"><a class="anchor" href="#합계" aria-hidden="true">#</a>합계</h2>
 <div class="table"><table><thead><tr>
 <th>실행</th>
@@ -316,6 +316,15 @@
 <td>0건</td>
 <td>0건</td>
 </tr>
+<tr>
+<td class="nw">11-25</td>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-25-fault-injection/README.md">결함 주입 실험 (결함을 하나씩 일부러 넣은 빌드와 대조군)</a></td>
+<td><code>1817325</code>, <code>1bc8233</code>, <code>2801830</code>, <code>3d46bbd</code>, <code>4279f92</code>, <code>4523cf1</code>, <code>56c2b58</code>, <code>574d5df</code>, <code>66ea6ba</code>, <code>875dbaf</code>, <code>90f408a</code>, <code>a41b948</code>, <code>a734fea</code>, <code>d4d1b2e</code></td>
+<td>AAOS 에뮬레이터, 태블릿</td>
+<td>2,156건</td>
+<td>29건</td>
+<td>4건</td>
+</tr>
 </tbody></table></div>
 <h2 id="실패-오류-재시도-후-통과가-나온-곳"><a class="anchor" href="#실패-오류-재시도-후-통과가-나온-곳" aria-hidden="true">#</a>실패, 오류, 재시도 후 통과가 나온 곳</h2>
 <div class="table"><table><thead><tr>
@@ -501,6 +510,270 @@
 <td><a class="test-link" href="test-results.html#test_quick_taps_are_all_applied" title="테스트 결과와 화면 보기"><code>test_<wbr>quick_<wbr>taps_<wbr>are_<wbr>all_<wbr>applied[passenger]</code></a></td>
 <td>실패</td>
 <td><strong>테스트 도구</strong> AAOS 에뮬레이터에서 빠른 누름을 Appium W3C 동작으로 보내자 UiAutomator2의 MOVE 이벤트 주입이 실패했습니다. 누름 사이 대기를 빼도 같아서 adb input tap으로 바꿨습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F01-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_signal_is_shown_on_climate_and_home" title="테스트 결과와 화면 보기"><code>test_<wbr>signal_<wbr>is_<wbr>shown_<wbr>on_<wbr>climate_<wbr>and_<wbr>home[passenger]</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>환경</strong> 결함과 상관없는 테스트입니다. adb 서버 연결이 잠깐 끊겨(cannot connect to daemon) 실패하고 재시도에서 통과했습니다. 끊긴 원인은 확인하지 못했습니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F01-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_ac_toggle_reaches_every_seat" title="테스트 결과와 화면 보기"><code>test_<wbr>ac_<wbr>toggle_<wbr>reaches_<wbr>every_<wbr>seat</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F01)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F02-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_<wbr>off_<wbr>grid_<wbr>signal_<wbr>steps_<wbr>back_<wbr>to_<wbr>grid[up-22.<wbr>5]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F02)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F02-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_off_grid_signal_steps_back_to_grid" title="테스트 결과와 화면 보기"><code>test_<wbr>off_<wbr>grid_<wbr>signal_<wbr>steps_<wbr>back_<wbr>to_<wbr>grid[up-22.<wbr>5]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F02)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video[D]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video[N]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_restrictions_follow_stop_and_go_timeline" title="테스트 결과와 화면 보기"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video[D]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_stopped_in_gear_blocks_only_video" title="테스트 결과와 화면 보기"><code>test_<wbr>stopped_<wbr>in_<wbr>gear_<wbr>blocks_<wbr>only_<wbr>video[N]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_video_screen_is_blocked_while_stopped_in_drive" title="테스트 결과와 화면 보기"><code>test_<wbr>video_<wbr>screen_<wbr>is_<wbr>blocked_<wbr>while_<wbr>stopped_<wbr>in_<wbr>drive</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F03-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_restrictions_follow_stop_and_go_timeline" title="테스트 결과와 화면 보기"><code>test_<wbr>restrictions_<wbr>follow_<wbr>stop_<wbr>and_<wbr>go_<wbr>timeline</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F03)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F04-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_<wbr>rear_<wbr>camera_<wbr>appears_<wbr>within_<wbr>two_<wbr>seconds</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F04)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F04-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_rear_camera_appears_within_two_seconds" title="테스트 결과와 화면 보기"><code>test_<wbr>rear_<wbr>camera_<wbr>appears_<wbr>within_<wbr>two_<wbr>seconds</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F04)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_trip_distance_follows_speed_signal" title="테스트 결과와 화면 보기"><code>test_<wbr>trip_<wbr>distance_<wbr>follows_<wbr>speed_<wbr>signal</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_guidance_and_music_continue_while_temperature_changes_on_the_move" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_guidance_counts_down_with_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>counts_<wbr>down_<wbr>with_<wbr>vehicle_<wbr>speed</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_parked_vehicle_does_not_advance_route" title="테스트 결과와 화면 보기"><code>test_<wbr>parked_<wbr>vehicle_<wbr>does_<wbr>not_<wbr>advance_<wbr>route</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_arrival" title="테스트 결과와 화면 보기"><code>test_arrival</code></a></td>
+<td>재시도 후 통과</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_guidance_counts_down_with_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>counts_<wbr>down_<wbr>with_<wbr>vehicle_<wbr>speed</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_arrival" title="테스트 결과와 화면 보기"><code>test_arrival</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_trip_distance_follows_speed_signal" title="테스트 결과와 화면 보기"><code>test_<wbr>trip_<wbr>distance_<wbr>follows_<wbr>speed_<wbr>signal</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F05-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_guidance_and_music_continue_while_temperature_changes_on_the_move" title="테스트 결과와 화면 보기"><code>test_<wbr>guidance_<wbr>and_<wbr>music_<wbr>continue_<wbr>while_<wbr>temperature_<wbr>changes_<wbr>on_<wbr>the_<wbr>move</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F05)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F06-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_door_lock_button_drives_every_door" title="테스트 결과와 화면 보기"><code>test_<wbr>door_<wbr>lock_<wbr>button_<wbr>drives_<wbr>every_<wbr>door</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F06)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F07-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_mph_setting_converts_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>mph_<wbr>setting_<wbr>converts_<wbr>vehicle_<wbr>speed</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F07)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F07-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_mph_setting_converts_vehicle_speed" title="테스트 결과와 화면 보기"><code>test_<wbr>mph_<wbr>setting_<wbr>converts_<wbr>vehicle_<wbr>speed</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F07)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F08-aaos-gap</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_seat_heat_signal_is_shown_everywhere" title="테스트 결과와 화면 보기"><code>test_<wbr>seat_<wbr>heat_<wbr>signal_<wbr>is_<wbr>shown_<wbr>everywhere</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F08)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F08-mock-gap</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_seat_heat_signal_is_shown_everywhere" title="테스트 결과와 화면 보기"><code>test_<wbr>seat_<wbr>heat_<wbr>signal_<wbr>is_<wbr>shown_<wbr>everywhere</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F08)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F09-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_low_range_threshold" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>threshold[30.<wbr>0-True]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F09)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F09-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_low_range_threshold" title="테스트 결과와 화면 보기"><code>test_<wbr>low_<wbr>range_<wbr>threshold[30.<wbr>0-True]</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F09)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F10-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_climate_works_during_call_and_music_resumes_after" title="테스트 결과와 화면 보기"><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F10-aaos</code></td>
+<td>AAOS 에뮬레이터</td>
+<td><a class="test-link" href="test-results.html#test_call_pauses_radio_then_resumes" title="테스트 결과와 화면 보기"><code>test_<wbr>call_<wbr>pauses_<wbr>radio_<wbr>then_<wbr>resumes</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F10-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_call_pauses_radio_then_resumes" title="테스트 결과와 화면 보기"><code>test_<wbr>call_<wbr>pauses_<wbr>radio_<wbr>then_<wbr>resumes</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
+</tr>
+<tr>
+<td class="nw">11-25</td>
+<td><code>fi-F10-mock</code></td>
+<td>태블릿</td>
+<td><a class="test-link" href="test-results.html#test_climate_works_during_call_and_music_resumes_after" title="테스트 결과와 화면 보기"><code>test_<wbr>climate_<wbr>works_<wbr>during_<wbr>call_<wbr>and_<wbr>music_<wbr>resumes_<wbr>after</code></a></td>
+<td>실패</td>
+<td><strong>확인용</strong> 결함 주입 빌드(F10)에서 난 실패입니다. 결함을 잡았는지는 대조군과 견주어 결함 주입 기록(evidence/2026-11-25-fault-injection/README.md)에서 판정합니다.</td>
 </tr>
 </tbody></table></div>
 <p>다시 만드는 방법 (<code>ivi-tests</code>에서):</p>

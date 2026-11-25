@@ -477,6 +477,29 @@ a.fit-row:hover { border-color: var(--brand); transform: translateY(-2px); }
 .mini-table .ok { font-weight: 700; color: var(--brand-dark); }
 .mini-table .bad { font-weight: 700; color: var(--red); }
 
+/* 결함 주입: 일부러 넣은 결함마다 한 칸. 잡은 것은 파란 글자, 놓친 것은 빨간 테두리 */
+.fi-card { display: grid; gap: 22px; }
+.fi-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 32px; align-items: end; }
+.fi-head > .chip { grid-column: 1; justify-self: start; }
+.fi-head h3 { grid-column: 1; margin: 0; font-size: 20px; line-height: 1.45; }
+.fi-head .fi-nums { grid-column: 2; grid-row: 1 / span 2; }
+.fi-head h3 em { font-style: normal; color: var(--brand); }
+.fi-nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.fi-nums li { display: grid; gap: 2px; padding: 14px 16px; border-radius: var(--r-sm); background: var(--bg-soft); }
+.fi-nums b { font-size: 28px; line-height: 1.15; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
+.fi-nums b small { margin-left: 2px; font-size: 15px; font-weight: 700; color: var(--ink-3); }
+.fi-nums span { font-size: 14.5px; font-weight: 700; color: var(--ink); }
+.fi-nums li > small { font-size: 12.5px; color: var(--ink-3); }
+.fi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.fi-grid li { display: flex; flex-direction: column; gap: 4px; min-height: 96px; padding: 10px 12px; border: 1px solid transparent; border-radius: 10px; background: var(--bg-soft); }
+.fi-grid b { font-size: 12.5px; font-weight: 800; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.fi-grid span { font-size: 13.5px; font-weight: 600; line-height: 1.45; color: var(--ink); text-wrap: balance; }
+.fi-grid i { margin-top: auto; font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--brand-dark); }
+.fi-grid li.miss { border-color: var(--red); background: #fff; }
+.fi-grid li.miss i { color: var(--red); }
+@media (max-width: 1024px) { .fi-head { grid-template-columns: minmax(0, 1fr); } .fi-head .fi-nums { grid-column: 1; grid-row: auto; } }
+@media (max-width: 560px) { .fi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fi-grid li { min-height: 0; } }
+
 /* 역할 절이 연회색 바탕으로 바뀌어, 회색 칸은 흰색으로 */
 .soft .checklist li { background: #fff; }
 .soft .hands { border-color: var(--bg-soft); }

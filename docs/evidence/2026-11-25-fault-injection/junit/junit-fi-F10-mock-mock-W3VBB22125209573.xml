@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="24" time="222.947" timestamp="2026-11-25T09:21:07.810033+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_phone" name="test_call_contact_shows_call_screen_and_recent" time="10.894" /><testcase classname="tests.test_phone" name="test_keypad_dial" time="8.711" /><testcase classname="tests.test_phone" name="test_keypad_limits_length_and_edits" time="12.622" /><testcase classname="tests.test_phone" name="test_driving_locks_keypad_and_limits_contacts" time="5.550" /><testcase classname="tests.test_phone" name="test_call_pauses_radio_then_resumes" time="17.068" /><testcase classname="tests.test_phone" name="test_call_pauses_radio_then_resumes" time="17.012"><failure message="ivi.waits.WaitTimeout: 10초 안에 'radio_state' = '통화 중'이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x00000256F387A9F0&gt;
+
+    @pytest.mark.req("MEDIA-01")
+    @pytest.mark.regression
+    def test_call_pauses_radio_then_resumes(app):
+        """라디오를 듣다가 전화를 걸면 라디오가 멈추고, 통화를 끝내면 다시 나옵니다."""
+        radio = app.radio()
+        radio.power()
+        radio.wait_text("radio_state", "재생 중")
+    
+        phone = app.phone()
+        phone.tab("contacts")
+        phone.call_contact(0)
+        radio = app.radio()
+&gt;       radio.wait_text("radio_state", "통화 중")
+
+tests\test_phone.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in wait_text
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x00000256F82794E0&gt;
+timeout = 10.0, interval = 0.25, what = "'radio_state' = '통화 중'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 'radio_state' = '통화 중'이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_radio" name="test_power_on_plays_default_station" time="4.169" /><testcase classname="tests.test_radio" name="test_tune_and_seek" time="6.352" /><testcase classname="tests.test_radio" name="test_am_band_uses_khz_steps" time="4.901" /><testcase classname="tests.test_radio" name="test_seek_wraps_around_band_ends" time="5.285" /><testcase classname="tests.test_radio" name="test_each_band_keeps_its_own_frequency" time="5.936" /><testcase classname="tests.test_radio" name="test_preset_save_and_recall" time="7.295" /><testcase classname="tests.test_radio" name="test_preset_and_frequency_survive_app_restart" time="11.155" /><testcase classname="tests.test_radio" name="test_radio_and_media_play_one_at_a_time" time="6.560" /><testcase classname="tests.test_media" name="test_selecting_track_starts_it[0]" time="3.810" /><testcase classname="tests.test_media" name="test_selecting_track_starts_it[2]" time="3.700" /><testcase classname="tests.test_media" name="test_selecting_track_starts_it[4]" time="3.680" /><testcase classname="tests.test_media" name="test_play_pause_toggles" time="4.859" /><testcase classname="tests.test_media" name="test_media_stays_usable_while_driving" time="3.885" /><testcase classname="tests.test_concurrency" name="test_music_keeps_playing_while_climate_is_operated" time="9.626" /><testcase classname="tests.test_concurrency" name="test_guidance_and_music_continue_while_temperature_changes_on_the_move" time="11.035" /><testcase classname="tests.test_concurrency" name="test_climate_works_during_call_and_music_resumes_after" time="18.113" /><testcase classname="tests.test_concurrency" name="test_climate_works_during_call_and_music_resumes_after" time="17.778"><failure message="ivi.waits.WaitTimeout: 10초 안에 'playback_state' = '통화 중'이(가) 맞지 않았다 (마지막 값: False)">app = &lt;ivi.screens.IviApp object at 0x00000256F8223450&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x00000256F6E5FCB0&gt;
+
+    @pytest.mark.req("SYS-02", "MEDIA-01", "HVAC-01")
+    def test_climate_works_during_call_and_music_resumes_after(app, car):
+        """음악을 듣다가 전화를 겁니다. 통화하는 동안 공조 화면에서 온도와 풍량을 바꾸면 차량에 들어가고, 통화는 이어지고,
+        음악은 '통화 중'으로 멈춰 있습니다. 통화를 끝내면 같은 곡이 다시 나오고 바꾼 공조 값은 그대로입니다."""
+        media = app.media()
+        title = media.select_track(1)
+        media.wait_text("playback_state", "재생 중")
+        phone = app.phone()
+        phone.tab("contacts")
+        name = phone.call_contact(0)
+    
+        climate = app.climate()
+        climate.increase(Seat.DRIVER)
+        climate.fan_up()
+        wait_value(lambda: car.temperature(Seat.DRIVER), 22.5, what="차량 운전석 온도")
+        wait_signal(car, Signal.FAN, 4)
+    
+        media = app.media()
+&gt;       media.wait_text("playback_state", "통화 중")
+
+tests\test_concurrency.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ivi\screens.py:68: in wait_text
+    wait_until(lambda: self.text(tag) == expected, timeout=timeout, what=f"'{tag}' = {expected!r}")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+check = &lt;function Screen.wait_text.&lt;locals&gt;.&lt;lambda&gt; at 0x00000256F839F3D0&gt;
+timeout = 10.0, interval = 0.25, what = "'playback_state' = '통화 중'"
+ignore = (&lt;class 'selenium.common.exceptions.WebDriverException'&gt;, &lt;class 'RuntimeError'&gt;, &lt;class 'ValueError'&gt;, &lt;class 'IndexError'&gt;, &lt;class 'AssertionError'&gt;, &lt;class 'OSError'&gt;, ...)
+
+    def wait_until(check, timeout=10.0, interval=0.25, what="조건", ignore=RETRY_ERRORS):
+        """check() 가 참 값을 돌려줄 때까지 기다린다.
+    
+        고정 sleep 은 느린 기기에서는 flaky, 빠른 기기에서는 시간 낭비라 쓰지 않는다.
+        check 안에서 난 예외 가운데 ignore 에 든 것(요소가 아직 없음 등)만 '아직 아님'으로 보고 다시 본다.
+        """
+        deadline = time.monotonic() + timeout
+        last, error = None, None
+        while time.monotonic() &lt; deadline:
+            _state.depth = getattr(_state, "depth", 0) + 1
+            try:
+                last = check()
+                error = None
+                if last:
+                    return last
+            except ignore as err:
+                if session_lost(err):
+                    raise SessionLost(f"Appium 세션이 끊겨 {what}을(를) 더 기다리지 않는다: {_first_line(err)}") from err
+                error = err
+            finally:
+                _state.depth -= 1
+            time.sleep(interval)
+        detail = f"마지막 값: {last!r}" if error is None else f"마지막 오류: {_describe(error)}"
+        # 마지막 오류를 원인으로 이어 둔다: 실패 자료의 traceback 에서 어느 줄에서 났는지 바로 보인다
+&gt;       raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) 맞지 않았다 ({detail})", last, error) from error
+E       ivi.waits.WaitTimeout: 10초 안에 'playback_state' = '통화 중'이(가) 맞지 않았다 (마지막 값: False)
+
+ivi\waits.py:84: WaitTimeout</failure></testcase><testcase classname="tests.test_concurrency" name="test_screen_and_vehicle_changes_at_once_end_in_same_value" time="6.109" /><testcase classname="tests.test_concurrency" name="test_quick_taps_are_all_applied[driver]" time="5.431" /><testcase classname="tests.test_concurrency" name="test_quick_taps_are_all_applied[passenger]" time="5.477" /></testsuite></testsuites>

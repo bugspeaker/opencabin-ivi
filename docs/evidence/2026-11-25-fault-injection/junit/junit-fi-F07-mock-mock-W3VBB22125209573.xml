@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="1" tests="37" time="200.248" timestamp="2026-11-25T09:14:44.865306+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_settings" name="test_mph_setting_converts_vehicle_speed" time="19.858" /><testcase classname="tests.test_settings" name="test_mph_setting_converts_vehicle_speed" time="15.054"><failure message="ivi.waits.WaitTimeout: 10초 안에 속도 표시이(가) ('31', 'mph')이(가) 되지 않았다 (마지막으로 읽은 값: ('50', 'mph'))">app = &lt;ivi.screens.IviApp object at 0x000002480DCEAAD0&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x000002480C91FCB0&gt;
+
+    @pytest.mark.req("SET-01", "DRIVE-01")
+    @pytest.mark.sanity
+    def test_mph_setting_converts_vehicle_speed(app, car):
+        """속도 단위를 mph로 바꾸면 차량 속도 50 km/h가 31 mph로 보입니다."""
+        settings = app.settings()
+        assert not settings.checked("unit_mph")
+        settings.toggle("unit_mph")
+    
+        car.drive(50.0)
+&gt;       wait_value(lambda: app.speed(), ("31", "mph"), what="속도 표시")
+
+tests\test_settings.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+read = &lt;function test_mph_setting_converts_vehicle_speed.&lt;locals&gt;.&lt;lambda&gt; at 0x000002480DD9E980&gt;
+expected = ('31', 'mph'), timeout = 10.0, interval = 0.25, what = '속도 표시'
+
+    def wait_value(read, expected, timeout=10.0, interval=0.25, what="값"):
+        """read() 가 expected 가 될 때까지 기다린다. 실패 메시지에 마지막으로 읽은 값을 남긴다
+        (`wait_until(lambda: read() == expected)` 는 '마지막 값: False' 만 남아 실제 값을 실패 자료에서 찾아야 했다)."""
+        seen = []
+    
+        def check():
+            seen[:] = [read()]
+            return seen[0] == expected
+    
+        try:
+            return wait_until(check, timeout=timeout, interval=interval, what=f"{what} {expected!r}")
+        except WaitTimeout as err:
+            if not seen:
+                raise
+            # 값을 한 번 읽은 뒤 읽기 자체가 실패하기 시작했으면(adb 끊김 등) 그 오류도 함께 남긴다.
+            # 값만 남기면 '22.0 에 머물렀다'로 읽혀, 실제 원인인 읽기 실패를 놓친다
+            detail = f"마지막으로 읽은 값: {seen[0]!r}"
+            if err.error is not None:
+                detail += f", 그 뒤 읽기 오류: {_describe(err.error)}"
+&gt;           raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) {expected!r}이(가) 되지 않았다 ({detail})",
+                              seen[0], err.error) from err.error
+E           ivi.waits.WaitTimeout: 10초 안에 속도 표시이(가) ('31', 'mph')이(가) 되지 않았다 (마지막으로 읽은 값: ('50', 'mph'))
+
+ivi\waits.py:114: WaitTimeout</failure></testcase><testcase classname="tests.test_settings" name="test_volume_steps" time="5.832" /><testcase classname="tests.test_settings" name="test_settings_survive_app_restart" time="11.327" /><testcase classname="tests.test_settings" name="test_reset_restores_defaults" time="6.956" /><testcase classname="tests.test_settings" name="test_12_hour_clock_on_tablet" time="4.714" /><testcase classname="tests.test_vehicle_signals" name="test_ac_toggle_reaches_every_seat" time="3.813" /><testcase classname="tests.test_vehicle_signals" name="test_ac_signal_is_shown_on_climate_and_bottom_bar" time="3.092" /><testcase classname="tests.test_vehicle_signals" name="test_fan_button_changes_signal_by_one[up-4]" time="4.216" /><testcase classname="tests.test_vehicle_signals" name="test_fan_button_changes_signal_by_one[down-2]" time="3.734" /><testcase classname="tests.test_vehicle_signals" name="test_fan_buttons_disabled_at_limits[1-climate_fan_down]" time="4.728" /><testcase classname="tests.test_vehicle_signals" name="test_fan_buttons_disabled_at_limits[7-climate_fan_up]" time="4.761" /><testcase classname="tests.test_vehicle_signals" name="test_max_ac_sets_signal_and_coldest_settings" time="4.506" /><testcase classname="tests.test_vehicle_signals" name="test_max_ac_off_restores_previous_settings" time="4.265" /><testcase classname="tests.test_vehicle_signals" name="test_max_ac_signal_is_shown_on_toggle" time="3.134" /><testcase classname="tests.test_vehicle_signals" name="test_manual_fan_releases_max_ac" time="6.116" /><testcase classname="tests.test_vehicle_signals" name="test_turning_ac_off_releases_max_ac" time="4.567" /><testcase classname="tests.test_vehicle_signals" name="test_manual_temperature_releases_max_ac" time="6.029" /><testcase classname="tests.test_vehicle_signals" name="test_turning_auto_on_releases_max_ac" time="4.851" /><testcase classname="tests.test_vehicle_signals" name="test_manual_fan_releases_auto" time="4.631" /><testcase classname="tests.test_vehicle_signals" name="test_defrost_changes_only_its_window[defrost_front-defrost_front-defrost_rear]" time="5.143" /><testcase classname="tests.test_vehicle_signals" name="test_defrost_changes_only_its_window[defrost_rear-defrost_rear-defrost_front]" time="5.268" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_cycles_levels_on_vehicle[driver]" time="6.390" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_cycles_levels_on_vehicle[passenger]" time="6.343" /><testcase classname="tests.test_vehicle_signals" name="test_seat_heat_signal_is_shown_everywhere" time="5.849" /><testcase classname="tests.test_vehicle_signals" name="test_bottom_bar_seat_heat_works_from_any_screen" time="5.151" /><testcase classname="tests.test_vehicle_signals" name="test_assistant_seat_heat_follows_speaker_zone" time="6.226" /><testcase classname="tests.test_vehicle_signals" name="test_door_lock_button_drives_every_door" time="4.416" /><testcase classname="tests.test_vehicle_signals" name="test_door_lock_signal_is_shown" time="2.895" /><testcase classname="tests.test_vehicle_signals" name="test_energy_signals_are_shown_on_cluster" time="2.328" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_threshold[31.0-False]" time="2.072" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_threshold[30.0-True]" time="2.311" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_threshold[29.0-True]" time="2.088" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_card_starts_guidance_to_nearest_charger" time="3.902" /><testcase classname="tests.test_vehicle_signals" name="test_low_range_is_recorded_in_notifications" time="3.232" /><testcase classname="tests.test_vehicle_signals" name="test_range_recovers_after_charging" time="2.269" /><testcase classname="tests.test_vehicle_signals" name="test_signal_without_permission_shows_no_value" time="0.000"><skipped type="pytest.skip" message="AAOS 전용 (현재 기기: mock:DBY-W09)">C:\dev\opencabin-fi-tab\ivi-tests\tests\test_vehicle_signals.py:408: AAOS 전용 (현재 기기: mock:DBY-W09)</skipped></testcase><testcase classname="tests.test_vehicle_signals" name="test_range_follows_speed_unit_setting" time="4.849" /></testsuite></testsuites>

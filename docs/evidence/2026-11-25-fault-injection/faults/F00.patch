@@ -1,0 +1,13 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..74515e3 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F00"
+     }
+ 
+     buildTypes {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="28" time="164.459" timestamp="2026-11-25T08:34:16.044995+09:00" hostname="DESKTOP-1QFI9BB"><testcase classname="tests.test_climate" name="test_signal_is_shown_on_climate_and_home[driver]" time="8.861" /><testcase classname="tests.test_climate" name="test_signal_is_shown_on_climate_and_home[passenger]" time="5.038" /><testcase classname="tests.test_climate" name="test_button_changes_signal_by_one_step[up-driver]" time="3.886" /><testcase classname="tests.test_climate" name="test_button_changes_signal_by_one_step[up-passenger]" time="4.021" /><testcase classname="tests.test_climate" name="test_button_changes_signal_by_one_step[down-driver]" time="3.802" /><testcase classname="tests.test_climate" name="test_button_changes_signal_by_one_step[down-passenger]" time="3.917" /><testcase classname="tests.test_climate" name="test_buttons_disabled_at_limits[driver]" time="3.601" /><testcase classname="tests.test_climate" name="test_buttons_disabled_at_limits[passenger]" time="4.005" /><testcase classname="tests.test_climate" name="test_step_reaches_limit_and_disables[driver]" time="8.960" /><testcase classname="tests.test_climate" name="test_step_reaches_limit_and_disables[passenger]" time="9.574" /><testcase classname="tests.test_climate" name="test_out_of_range_signal_is_shown_safely[below_min]" time="4.012" /><testcase classname="tests.test_climate" name="test_out_of_range_signal_is_shown_safely[above_max]" time="3.958" /><testcase classname="tests.test_climate" name="test_off_grid_signal_steps_back_to_grid[up-22.5]" time="13.425" /><testcase classname="tests.test_climate" name="test_off_grid_signal_steps_back_to_grid[up-22.5]" time="13.464"><failure message="ivi.waits.WaitTimeout: 10초 안에 차량 driver 온도이(가) 22.5이(가) 되지 않았다 (마지막으로 읽은 값: 23.0)">app = &lt;ivi.screens.IviApp object at 0x0000011A82B218D0&gt;
+car = &lt;ivi.vehicle.MockVehicle object at 0x0000011A8165FCB0&gt;, direction = 'up'
+expected = 22.5
+
+    @pytest.mark.req("HVAC-02")
+    @pytest.mark.regression
+    @pytest.mark.parametrize("direction, expected", [("up", 22.5), ("down", 22.0)])
+    def test_off_grid_signal_steps_back_to_grid(app, car, direction, expected):
+        """차량 쪽에서 0.5°C 단위가 아닌 온도(22.3°C)가 와도, 버튼을 한 번 누르면 차량 온도가 0.5°C 단위(+는 22.5°C, -는 22.0°C)로 맞춰집니다."""
+        seat = Seat.DRIVER
+        climate = app.climate()
+        car.inject_temperature(seat, 22.3)
+        climate.wait_temperature(seat, 22.3)
+    
+        (climate.increase if direction == "up" else climate.decrease)(seat)
+&gt;       wait_value(lambda: car.temperature(seat), expected, what=f"차량 {seat.tag} 온도")
+
+tests\test_climate.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+read = &lt;function test_off_grid_signal_steps_back_to_grid.&lt;locals&gt;.&lt;lambda&gt; at 0x0000011A82B903B0&gt;
+expected = 22.5, timeout = 10.0, interval = 0.25, what = '차량 driver 온도'
+
+    def wait_value(read, expected, timeout=10.0, interval=0.25, what="값"):
+        """read() 가 expected 가 될 때까지 기다린다. 실패 메시지에 마지막으로 읽은 값을 남긴다
+        (`wait_until(lambda: read() == expected)` 는 '마지막 값: False' 만 남아 실제 값을 실패 자료에서 찾아야 했다)."""
+        seen = []
+    
+        def check():
+            seen[:] = [read()]
+            return seen[0] == expected
+    
+        try:
+            return wait_until(check, timeout=timeout, interval=interval, what=f"{what} {expected!r}")
+        except WaitTimeout as err:
+            if not seen:
+                raise
+            # 값을 한 번 읽은 뒤 읽기 자체가 실패하기 시작했으면(adb 끊김 등) 그 오류도 함께 남긴다.
+            # 값만 남기면 '22.0 에 머물렀다'로 읽혀, 실제 원인인 읽기 실패를 놓친다
+            detail = f"마지막으로 읽은 값: {seen[0]!r}"
+            if err.error is not None:
+                detail += f", 그 뒤 읽기 오류: {_describe(err.error)}"
+&gt;           raise WaitTimeout(f"{timeout:g}초 안에 {what}이(가) {expected!r}이(가) 되지 않았다 ({detail})",
+                              seen[0], err.error) from err.error
+E           ivi.waits.WaitTimeout: 10초 안에 차량 driver 온도이(가) 22.5이(가) 되지 않았다 (마지막으로 읽은 값: 23.0)
+
+ivi\waits.py:114: WaitTimeout</failure></testcase><testcase classname="tests.test_climate" name="test_off_grid_signal_steps_back_to_grid[down-22.0]" time="3.894" /><testcase classname="tests.test_climate" name="test_seats_are_independent" time="5.497" /><testcase classname="tests.test_cockpit" name="test_bottom_bar_temperature_drives_vehicle[driver]" time="3.836" /><testcase classname="tests.test_cockpit" name="test_bottom_bar_temperature_drives_vehicle[passenger]" time="3.703" /><testcase classname="tests.test_cockpit" name="test_sync_mirrors_driver_temperature_to_passenger" time="3.821" /><testcase classname="tests.test_cockpit" name="test_passenger_change_releases_sync" time="6.578" /><testcase classname="tests.test_cockpit" name="test_trip_distance_follows_speed_signal" time="7.400" /><testcase classname="tests.test_cockpit" name="test_lane_assist_indicator_follows_speed" time="1.983" /><testcase classname="tests.test_cockpit" name="test_utility_widget_pages" time="3.438" /><testcase classname="tests.test_cockpit" name="test_split_screen_toggle" time="4.508" /><testcase classname="tests.test_cockpit" name="test_quick_control_mirror_locked_while_driving" time="5.479" /><testcase classname="tests.test_cockpit" name="test_folded_mirror_can_be_unfolded_while_driving" time="4.549" /><testcase classname="tests.test_cockpit" name="test_notifications_record_guidance_and_restriction" time="5.364" /><testcase classname="tests.test_cockpit" name="test_clearing_notifications_leaves_empty_panel" time="5.603" /><testcase classname="tests.test_cockpit" name="test_recent_app_slot" time="4.919" /></testsuite></testsuites>

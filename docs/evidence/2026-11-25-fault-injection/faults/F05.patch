@@ -1,0 +1,26 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..ae73b86 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F05"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt
+index e45d4b3..81add05 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/ui/Shell.kt
+@@ -250,7 +250,7 @@ fun IviRoot(
+ /** 1초 주기 일(경로 진행·현 주행 정보)과 알림을 만드는 일. */
+ @Composable
+ private fun ShellEffects(state: VehicleState, cabin: CabinController, cockpit: CockpitState) {
+-    val speed by rememberUpdatedState(state.speedKmh)
++    val speed = state.speedKmh
+     // 경로 안내·현 주행 정보: 1초마다 차량 속도만큼 진행. 정차 중에는 화면을 바꾸지 않는다 (UiAutomator 대기에 영향 없게)
+     LaunchedEffect(Unit) {
+         while (true) {

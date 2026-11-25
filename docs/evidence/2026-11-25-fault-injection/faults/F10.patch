@@ -1,0 +1,25 @@
+diff --git a/ivi-app/app/build.gradle.kts b/ivi-app/app/build.gradle.kts
+index aa7dffd..0e2e450 100644
+--- a/ivi-app/app/build.gradle.kts
++++ b/ivi-app/app/build.gradle.kts
+@@ -15,7 +15,7 @@ android {
+         minSdk = 31          // 태블릿(Android 12)
+         targetSdk = 34       // AAOS 에뮬레이터(API 34)
+         versionCode = 6
+-        versionName = "0.4.2"
++        versionName = "0.4.2-fi.F10"
+     }
+ 
+     buildTypes {
+diff --git a/ivi-app/app/src/main/java/dev/opencabin/ivi/state/CabinController.kt b/ivi-app/app/src/main/java/dev/opencabin/ivi/state/CabinController.kt
+index 6c6913f..cde63b3 100644
+--- a/ivi-app/app/src/main/java/dev/opencabin/ivi/state/CabinController.kt
++++ b/ivi-app/app/src/main/java/dev/opencabin/ivi/state/CabinController.kt
+@@ -75,7 +75,6 @@ class CabinController(private val settings: SettingsStore) {
+     /** 화면에 보이는 재생 상태. 통화 중이면 소리가 멈춘다. */
+     fun playbackLabel(source: AudioSource) = when {
+         audioSource != source -> if (source == AudioSource.RADIO) "꺼짐" else "일시 정지"
+-        call != null -> "통화 중"
+         else -> "재생 중"
+     }
+ 

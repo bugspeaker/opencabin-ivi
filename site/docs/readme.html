@@ -105,6 +105,7 @@
 <p>차량 신호는 에뮬레이터 VHAL과 Mock이 만든 값이고, 구동, 제동, ADAS 제어는 범위 밖입니다.</p>
 <h2 id="찾은-결함"><a class="anchor" href="#찾은-결함" aria-hidden="true">#</a>찾은 결함</h2>
 <p>반복 실행 873건은 이미 통과한 테스트가 흔들리지 않는지 보는 실행이라 실패 0이 목표입니다. 결함 15건은 새 테스트를 쓰며 5건, 새 기기·설정에서 4건, 실행 기록을 분석하며 5건, 플랫폼 자료와 대조하며 1건이 나왔습니다. 원인은 앱 7건, 테스트 코드 3건, 태블릿 기기 2건, 플랫폼·테스트 도구·미확인 각 1건입니다.</p>
+<p>테스트가 결함을 잡는지는 앱에 결함을 하나씩 일부러 넣어 셌습니다. AAOS 에뮬레이터에서 10개 중 9개를 처음 테스트로 잡았고, 놓친 1개는 테스트를 보강해 잡았습니다(<a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-25-fault-injection/README.md">결함 주입 기록</a>).</p>
 <div class="table"><table><thead><tr>
 <th>찾은 경로</th>
 <th>결함</th>
@@ -182,6 +183,10 @@
 <th>결과</th>
 </tr>
 </thead><tbody><tr>
+<td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-25-fault-injection/README.md">결함 주입 실험</a><br>2026-11-25, 결함마다 <code>574d5df</code> + 결함 커밋 하나</td>
+<td>앱에 결함을 하나씩 넣어 따로 빌드하고, 결함이 없는 대조군과 같은 E2E를 돌렸습니다.<br>AAOS 에뮬레이터는 10개 중 9개, 태블릿은 8개 중 7개를 처음 테스트로 잡았습니다. 놓친 1개(F08)는 테스트를 보강해 두 기기에서 잡았습니다.</td>
+</tr>
+<tr>
 <td><a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/2026-11-24-concurrency/README.md">예외 경로 수정과 동시 조작 테스트 뒤 반복 실행 3회</a><br>2026-11-24 오후, 코드 <code>101de99</code></td>
 <td>외부 검토가 찾은 예외 경로(같은 기기 동시 실행, 끝나지 않는 작업, CAN 프레임 지연)를 고치고, 동시 조작 테스트 6개를 더한 150개를 두 기기에서 3회 돌렸습니다.<br>실패 0, flaky 0으로 Release 게이트를 통과했습니다. 폴드도 같은 코드로 한 번 통과했습니다.</td>
 </tr>
@@ -210,7 +215,7 @@
 <td>세 번째 기기에서 129개 중 5개가 실패했습니다(좁은 화면의 배치).<br>앱을 고친 뒤(0.4.1) 폴드, 태블릿, 에뮬레이터 모두 게이트를 통과했습니다.</td>
 </tr>
 </tbody></table></div>
-<p>반복 실행은 커밋하지 않은 변경 없이 돌렸고, 같은 커밋으로 갤럭시 폴드도 한 번 돌려 통과했습니다. 그 뒤에 바뀐 것은 문서, 소개 사이트, 결과 자료, 원자료를 모두 합치는 도구입니다. 첫 시도와 확인용 실행까지 합친 수와 실패마다의 원인은 <a href="run-history.html">전체 실행 기록</a>에 있습니다. 이전 실행과 그때의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">결과 원자료 목록</a>에 있습니다.</p>
+<p>반복 실행은 커밋하지 않은 변경 없이 돌렸고, 같은 커밋으로 갤럭시 폴드도 한 번 돌려 통과했습니다. 그 뒤에 바뀐 것은 문서, 소개 사이트, 결과 자료, 원자료를 모두 합치는 도구와 결함 주입 집계 도구, 그리고 결함 주입 실험에서 보강한 테스트 하나(<a class="test-link" href="test-results.html#test_seat_heat_signal_is_shown_everywhere" title="테스트 결과와 화면 보기"><code>test_<wbr>seat_<wbr>heat_<wbr>signal_<wbr>is_<wbr>shown_<wbr>everywhere</code></a>)입니다. 보강한 테스트는 두 기기에서 main 앱으로 통과를 확인했고, 보강 뒤에 반복 실행은 다시 하지 않았습니다. 첫 시도와 확인용 실행까지 합친 수와 실패마다의 원인은 <a href="run-history.html">전체 실행 기록</a>에 있습니다. 이전 실행과 그때의 코드 시점은 <a href="https://github.com/bugspeaker/opencabin-ivi/blob/main/docs/evidence/README.md">결과 원자료 목록</a>에 있습니다.</p>
 <h2 id="한계"><a class="anchor" href="#한계" aria-hidden="true">#</a>한계</h2>
 <ul>
 <li>실제 차량, HIL, CAN 장비는 쓰지 않았습니다. VHAL은 에뮬레이터의 가상 값이고, CAN과 원격 전원은 PC 안의 모의 환경입니다.</li>

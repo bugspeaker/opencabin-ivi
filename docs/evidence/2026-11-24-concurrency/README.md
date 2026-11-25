@@ -48,7 +48,7 @@
 
 ## 이 실행 뒤에 바뀐 것
 
-이 실행 뒤의 커밋은 문서, 소개 사이트, 결과 자료와 실행 기록 등록부(`ivi-tests/tools/run_history.py`)입니다. E2E 테스트 코드(`ivi-tests/tests`, `ivi-tests/ivi`)와 앱(`ivi-app`)은 `101de99`와 같습니다.
+이 실행 뒤의 커밋은 문서, 소개 사이트, 결과 자료와 실행 기록 등록부(`ivi-tests/tools/run_history.py`), 결함 주입 집계 도구(`ivi-tests/tools/fault_report.py`)입니다. 앱(`ivi-app`)은 `101de99`와 같습니다. E2E 테스트 코드는 2026-11-25 [결함 주입 실험](../2026-11-25-fault-injection/README.md#놓친-결함-f08)에서 `test_seat_heat_signal_is_shown_everywhere` 하나를 보강한 것만 다릅니다(테스트 수는 150개 그대로). 보강한 테스트는 두 기기에서 main 앱으로 통과를 확인했고, 보강 뒤에 반복 실행은 다시 하지 않았습니다.
 
 ```powershell
 git diff --stat 101de99 HEAD -- ivi-tests/tests ivi-tests/ivi ivi-app
